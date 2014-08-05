@@ -4,3 +4,6 @@
 [submodule "code/deps/common/box2d"]
 	path = code/deps/common/box2d
 	url = https://github.com/crafn/clover-box2d.git
+[submodule "code/deps/common/glfw"]
+	path = code/deps/common/glfw
+	url = https://github.com/crafn/clover-glfw.git
