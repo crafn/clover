@@ -1,0 +1,52 @@
+#ifdef RESOURCE_HEADERS
+
+#include "animation/armature.hpp"
+#include "animation/clip.hpp"
+#include "audio/sound.hpp"
+#include "collision/shape.hpp"
+#include "game/physicalmaterial.hpp"
+#include "game/physicalmaterialpair.hpp"
+#include "nodes//compositionnodelogicgroup.hpp"
+#include "nodes//nodeeventtype.hpp"
+#include "nodes//nodetype.hpp"
+#include "game/world_gen/workertype.hpp"
+#include "game/worldentity.hpp"
+#include "physics/entity_def.hpp"
+#include "physics/material.hpp"
+#include "visual/material.hpp"
+#include "visual/mesh.hpp"
+#include "visual/model.hpp"
+#include "visual/entity_def.hpp"
+#include "visual/entity_def_compound.hpp"
+#include "visual/entity_def_light.hpp"
+#include "visual/entity_def_model.hpp"
+#include "script/module.hpp"
+
+#else
+
+// All resource types that resources::Cache will use
+// Determines also loading order
+
+RESOURCE(animation::Armature)
+RESOURCE(animation::Clip)
+RESOURCE(visual::Texture)
+RESOURCE(visual::Material)
+RESOURCE(visual::TriMesh)
+RESOURCE(visual::Model)
+RESOURCE(visual::EntityDef)
+RESOURCE(visual::ModelEntityDef)
+RESOURCE(visual::LightEntityDef)
+RESOURCE(visual::CompoundEntityDef)
+RESOURCE(audio::Sound)
+RESOURCE(game::PhysicalMaterial)
+RESOURCE(game::PhysicalMaterialPair)
+RESOURCE(collision::Shape)
+RESOURCE(physics::EntityDef)
+RESOURCE(script::Module)
+RESOURCE(nodes::NodeEventType)
+RESOURCE(nodes::NodeType)
+RESOURCE(nodes::CompositionNodeLogicGroup)
+RESOURCE(game::WeType)
+RESOURCE(game::world_gen::WorkerType)
+
+#endif

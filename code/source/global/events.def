@@ -1,0 +1,75 @@
+// Definitions of all possible events + variables
+
+EVT(OnLocalPlayerCreate, Object)
+EVT(OnLocalPlayerDestroy, Object)
+EVT(OnLightActivation, Active, Object)
+EVT(OnLightShadowsActivation, Active, Object)
+EVT(OnParticleSourceActivation, Active, Object)
+EVT(OnCameraCreate, Active, Object)
+EVT(OnCameraDestroy, Object)							
+EVT(OnCameraSelect, Object)
+EVT(OnPhysObjectCreate, Object)
+EVT(OnPhysObjectDestroy, Object)
+EVT(OnPhysJointCreate, Object)
+EVT(OnPhysJointDestroy, Object)
+//EVT(OnPhysJointAbandon, Object)
+EVT(OnPhysMaterialChange, Material)		// Sent when physics::Material is changed. Not sent if material is not set to anybody
+EVT(OnCollisionShapeChange, Shape)
+//EVT(OnPhysFixtureDefChange, Fixture)	// Sent when physics::FixtureDef is changed (like when material or density is changed). Not sent if fixdef is not set to anybody
+EVT(OnGuiCallbackTrigger, Object)		// Sent in GuiCallback::trigger(). Object: GuiCallback
+EVT(OnSoundInstanceCreate, Object)
+EVT(OnSoundInstanceDestroy, Object)
+EVT(OnAudioSourceCreate, Object)
+EVT(OnAudioSourceDestroy, Object)
+EVT(OnAudioReceiverCreate, Object)
+EVT(OnAudioReceiverDestroy, Object)
+EVT(OnVisualModelEntityActivation, Active, Object)
+EVT(OnScriptMgrCreate, Object) // Object: script::ScriptMgr*
+
+// Devstuff
+EVT(OnPerformanceTimersUpdate)			// DevLogic sends when performance calculations are updated
+EVT(OnEditorCreate, Object)
+EVT(OnEditorDestroy, Object)
+EVT(OnEditorViewCreate, Object)
+EVT(OnEditorViewDestroy, Object)
+EVT(EditorComponentUiDestroyRequest, Object) // BaseEditorComponentUi sends when wants to be destroyed
+EVT(OnEditorComponentUiUserResize, Object)
+EVT(OnEditorResourceSelect,	Resource, TypeName) // A resource is selected in editor. Resource: resources::Resource*, TypeName: util::Str8
+EVT(OnConsoleBufferUpdate, Object) // Object: DebugPrint::Buffer*
+EVT(OnNodeUiMove, Object)
+EVT(OnNodeUiSlotRadiusChange, Object)
+EVT(NodeUiAddLinesRequest, Object)
+EVT(OnNodeSlotAdd, Node, SlotIdentifier) // Node: CompositionNodeLogic*
+EVT(OnNodeSlotRemove, Node, SlotIdentifier)
+EVT(OnHidTagChange, ContextChannelName, Tag) // ContextChannelName: util::Str8, Tag: util::Str8. Tag is empty if there's no active tags left
+
+// Variable names
+
+VAR(Position)
+VAR(Rotation)
+VAR(Value)
+VAR(Radius)
+VAR(Name)
+VAR(Type)
+VAR(Strength)
+VAR(Distance)
+VAR(Sharpness)
+VAR(Active)
+VAR(Object)
+VAR(Handle)
+VAR(Entity)
+VAR(Player)
+VAR(Function)
+VAR(Resource)
+VAR(TypeName)
+VAR(Material)
+VAR(Shape)
+VAR(Fixture)
+VAR(Input)
+VAR(Output)
+VAR(Node)
+VAR(SlotIdentifier)
+VAR(Action)
+VAR(ActionListener)
+VAR(Tag)
+VAR(ContextChannelName)

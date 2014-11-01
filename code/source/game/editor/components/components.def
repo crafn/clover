@@ -1,0 +1,55 @@
+#if defined(EC_HEADERS)
+	
+	#include "audio/sound.hpp"
+	#include "collision/shape.hpp"
+	#include "ec_performance.hpp"
+	#include "ec_resourcelist.hpp"
+	#include "ec_resource.hpp"
+	#include "ec_console.hpp"
+	#include "ec_nodes.hpp"
+	#include "ec_physicstools.hpp"
+	#include "ec_we_tools.hpp"
+	#include "nodes//nodeeventtype.hpp"
+	#include "game/physicalmaterial.hpp"
+	#include "game/physicalmaterialpair.hpp"
+	#include "game/worldentity.hpp"
+	#include "visual/texture.hpp"
+	#include "visual/material.hpp"
+	#include "visual/mesh.hpp"
+	#include "visual/model.hpp"
+	#include "visual/entity_def_light.hpp"
+	#include "visual/entity_def_model.hpp"
+
+	#include "ui/game/editor/ui_components/ec_ui_resource.hpp"
+	#include "ui/game/editor/ui_components/ec_ui_performance.hpp"
+	#include "ui/game/editor/ui_components/ec_ui_resourcelist.hpp"
+	#include "ui/game/editor/ui_components/ec_ui_console.hpp"
+	#include "ui/game/editor/ui_components/ec_ui_nodes.hpp"
+	#include "ui/game/editor/ui_components/ec_ui_physicstools.hpp"
+	#include "ui/game/editor/ui_components/ec_ui_we_tools.hpp"
+
+	
+#else // defined(EC_HEADERS)
+
+// All editor component classes
+// EC(UiClass)
+EC(ui::game::editor::ResourceListEcUi)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::Texture>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::Material>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::TriMesh>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::Model>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<nodes::NodeEventType>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<audio::Sound>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<collision::Shape>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<game::PhysicalMaterial>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<game::PhysicalMaterialPair>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::LightEntityDef>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::ModelEntityDef>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<game::WeType>>)
+EC(ui::game::editor::PerformanceEcUi)
+EC(ui::game::editor::ConsoleEcUi)
+EC(ui::game::editor::NodesEcUi)
+EC(ui::game::editor::PhysicsToolsEcUi)
+EC(ui::game::editor::WeToolsEcUi)
+
+#endif // else defined(EC_HEADERS)

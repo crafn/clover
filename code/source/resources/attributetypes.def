@@ -1,0 +1,39 @@
+#if defined(ATTRIBUTE_FIELD_HEADERS)
+	
+	#include "gui/attributefieldelementfactory.hpp"
+	#include "gui/element_attributefield_array.hpp"
+	#include "gui/element_attributefield_baseshape.hpp"
+	#include "gui/element_attributefield_string.hpp"
+	#include "gui/element_attributefield_resource.hpp"
+	#include "gui/element_attributefield_resourcepair.hpp"
+	#include "gui/element_attributefield_path.hpp"
+	#include "gui/element_attributefield_scalar.hpp"
+	#include "gui/element_attributefield_vector2.hpp"
+	#include "gui/element_attributefield_vector4.hpp"
+	#include "gui/element_attributefield_boolean.hpp"
+	#include "gui/element_attributefield_color.hpp"
+	#include "gui/element_attributefield_signalargument.hpp"
+	
+#else
+
+PLAIN_ATTRIBUTE(String)
+PLAIN_ATTRIBUTE(Resource)
+PLAIN_ATTRIBUTE(ResourcePair)
+PLAIN_ATTRIBUTE(Path)
+PLAIN_ATTRIBUTE(Real)
+PLAIN_ATTRIBUTE(Integer)
+PLAIN_ATTRIBUTE(Vector2)
+PLAIN_ATTRIBUTE(Vector4)
+PLAIN_ATTRIBUTE(Boolean)
+PLAIN_ATTRIBUTE(Color)
+PLAIN_ATTRIBUTE(BaseShape)
+PLAIN_ATTRIBUTE(SignalArgument) // Contains name and value type
+PLAIN_ATTRIBUTE(Vertex)
+PLAIN_ATTRIBUTE(TriIndices)
+PLAIN_ATTRIBUTE(JointDef)
+PLAIN_ATTRIBUTE(ArmatureAttachmentDef)
+PLAIN_ATTRIBUTE(SrtTransform3)
+PLAIN_ATTRIBUTE(PhysObjectDef)
+PLAIN_ATTRIBUTE(PhysJointDef)
+
+#endif

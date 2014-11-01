@@ -1,0 +1,39 @@
+#ifdef NODEINSTANCE_HEADERS
+
+#include "nodeinstance_actionlistener.hpp"
+#include "nodeinstance_cameratarget.hpp"
+#include "nodeinstance_clippose.hpp"
+#include "nodeinstance_clipplayer.hpp"
+#include "nodeinstance_eventfactory.hpp"
+#include "nodeinstance_eventhandler.hpp"
+#include "nodeinstance_guiinput.hpp"
+#include "nodeinstance_logicor.hpp"
+#include "nodeinstance_lerp_pose.hpp"
+#include "nodeinstance_we_interface.hpp"
+#include "nodeinstance_we_physicsentity.hpp"
+#include "nodeinstance_we_physicsobject.hpp"
+#include "nodeinstance_we_shapedvisualentity.hpp"
+#include "nodeinstance_we_spatialeventdispatcher.hpp"
+#include "nodeinstance_we_spatialaudiosource.hpp"
+#include "nodeinstance_we_visualentity.hpp"
+
+#else
+
+NODEINSTANCE(ActionListenerNodeInstance)
+NODEINSTANCE(CameraTargetNodeInstance)
+NODEINSTANCE(ClipPlayerNodeInstance)
+NODEINSTANCE(ClipPoseNodeInstance)
+NODEINSTANCE(GuiInputNodeInstance)
+NODEINSTANCE(EventFactoryNodeInstance)
+NODEINSTANCE(EventHandlerNodeInstance)
+NODEINSTANCE(LogicOrNodeInstance)
+NODEINSTANCE(PoseLerpNodeInstance)
+NODEINSTANCE(WeInterfaceNodeInstance)
+NODEINSTANCE(WePhysicsEntityNodeInstance)
+NODEINSTANCE(WePhysicsObjectNodeInstance)
+NODEINSTANCE(WeShapedVisualEntityNodeInstance)
+NODEINSTANCE(WeSpatialEventDispatcherNodeInstance)
+NODEINSTANCE(WeSpatialAudioSourceNodeInstance)
+NODEINSTANCE(WeVisualEntityNodeInstance)
+
+#endif

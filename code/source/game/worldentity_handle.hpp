@@ -1,0 +1,102 @@
+#ifndef CLOVER_GAME_WORLDENTITY_HANDLE_HPP
+#define CLOVER_GAME_WORLDENTITY_HANDLE_HPP
+
+#include "build.hpp"
+#include "script/typestring.hpp"
+#include "worldentity_table.hpp"
+
+#include <boost/serialization/split_member.hpp>
+
+namespace clover {
+namespace game {
+
+class WorldEntity;
+class StrictHandleConnection;
+
+/// Smart WorldEntity handle
+class WeHandle {
+public:
+    WeHandle(const game::WorldEntity* e=0);
+	virtual ~WeHandle();
+	
+	WeHandle(const WeHandle& h);
+	WeHandle(WeHandle&& h);
+	
+	WeHandle& operator=(const WeHandle& h);
+	
+	bool operator==(const WeHandle& h) const { return entityId == h.entityId; }
+
+	void setId(game::WorldEntityId id);
+	game::WorldEntityId getId() const { return entityId; }
+	
+	void reset();
+	bool isAssigned();
+	
+    game::WorldEntity* get() const;
+	game::WorldEntity& ref() const;
+
+	/// @return Is usable
+    explicit operator bool();
+	explicit operator bool() const;
+
+    game::WorldEntity* operator->() const;
+
+	static void fixLostHandles(game::WorldEntity* w);
+	static void fixLostHandles();
+	
+	static bool isNewLostHandles(){ return newLostHandle; }
+	
+	static uint32 countLostHandles();
+	
+	void setStrict(game::WorldEntity& owner);
+	bool isStrict() const { return strictConnection; }
+	
+	template <typename Archive>
+	void save(Archive& ar, const uint32 ver) const {
+		ensure_msg(!isStrict(), "Strict handle node-serialization not yet supported");
+
+		game::WorldEntityId id= getId();
+		ar & id;
+	}
+
+	template <typename Archive>
+	void load(Archive& ar, const uint32 ver){
+		game::WorldEntityId id;
+		ar & id;
+
+		setId(id);
+	}
+
+	BOOST_SERIALIZATION_SPLIT_MEMBER()	
+private:
+    game::WorldEntityId entityId;
+
+    uint32 tableIndex;
+	int32 lostIndex;
+
+	static util::PtrTable<WeHandle> lostTable;
+
+	/// True when there is at least one lost handle
+	static bool newLostHandle;
+
+	/// @return Handle can be used
+	bool isGood() const;
+	bool isLost() const;
+	void updateLostness();
+	
+	/// For saving and loading
+	StrictHandleConnection *strictConnection;
+};
+
+} // game
+namespace util {
+
+template <>
+struct TypeStringTraits<game::WeHandle> {
+	static util::Str8 type(){ return "WeHandle"; }
+};
+
+} // util
+} // clover
+
+#endif // CLOVER_GAME_WORLDENTITY_HANDLE_HPP
