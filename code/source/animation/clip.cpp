@@ -1,6 +1,5 @@
 #include "clip.hpp"
 #include "armature.hpp"
-#include "assimp_util.hpp"
 #include "bvh_util.hpp"
 #include "global/file.hpp"
 #include "resources/cache.hpp"
@@ -84,12 +83,13 @@ void Clip::load(){
 		setResourceState(State::Unloaded); // Reload
 	});
 
-	AssimpData ai_data= parseAssimp(fileAttribute.get().whole());
+	release_ensure(0 && "ADD BVH CLIP LOADING");
+	/*AssimpData ai_data= parseAssimp(fileAttribute.get().whole());
 	fps= ai_data.fps;
 	samples= inBindByLocalSamples(getArmature(), localPosesFromAssimp(
 				ai_data,
 				jointNameToIdMap(getArmature())));
-
+*/
 	if (samples.empty()){
 		throw resources::ResourceException(
 			"animation::Clip %s has no data", getName().cStr());

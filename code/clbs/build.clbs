@@ -1,0 +1,265 @@
+# Build instructions
+# `clbs -j4` - build clover_dev in 4 threads
+# `clbs debug`, `clbs dev` or `clbs release` - build respective targets
+# `clbs <target> clean` - removes all objects, libraries and executables
+# Flag `-v` can be used to see actual compilation and linking commands
+
+def buildInfo(env, target):
+	if target == "default":
+		target= "dev"
+
+	## @todo Windows build
+
+	c_compiler= "gcc"
+	cpp_compiler= "g++"
+	linker= "gold" # Required for -gsplit-dwarf
+	lib_dir= "./lib"
+	dep_include_paths= []
+	dep_libs= []
+
+	target_defines= []
+	target_flags= [ "gsplit-dwarf" ] # Fast linking with separate debug info
+	if target == "debug":
+		target_defines += [ "DEBUG" ]
+		target_flags += [ "g", "Og" ] 
+	elif target == "dev":
+		target_flags += [ "g", "O2" ]
+	elif target == "release":
+		target_defines += [ "RELEASE", "NDEBUG" ]
+		target_flags += [ "O3" ]
+
+	### Dependencies ###
+
+	# AngelScript
+	ascript_dir= "../deps/common/angelscript"
+	ascript= Project()
+	ascript.name= "angelscript_" + target
+	ascript.type= "obj"
+	ascript.targetDir= lib_dir
+	ascript.includeDirs= [ ascript_dir, ascript_dir + "/angelscript/include" ]
+	ascript.headers= findFiles(ascript_dir, "*.h")
+	ascript.src= findFiles(ascript_dir, "*.cpp")
+	ascript.flags= target_flags
+	ascript.defines= target_defines
+	ascript.compiler= cpp_compiler
+	ascript.linker= linker
+	dep_include_paths += [
+		ascript_dir + "/angelscript/include",
+		ascript_dir + "/add_on"
+	]
+	dep_libs.append(ascript)
+
+	# Assimp
+	assimp_dir= "../deps/common/assimp"
+	assimp= Project()
+	assimp.name= "assimp_" + target
+	assimp.type= "obj"
+	assimp.targetDir= lib_dir
+	assimp.includeDirs= [ assimp_dir + "/code" ]
+	assimp.headers= findFiles(assimp_dir, "*.h")
+	assimp.src= findNotMatching(
+		findFiles(assimp_dir, [ "*.cpp", "*.cc" ]),
+		"*clipper*")
+	assimp.flags= target_flags
+	assimp.defines= target_defines
+	assimp.compiler= cpp_compiler
+	assimp.linker= linker
+	dep_include_paths.append(assimp_dir + "/include")
+	dep_libs.append(assimp)
+
+	assimp_c_deps_dir= "../deps/common/assimp/contrib"
+	assimp_c_deps= Project()
+	assimp_c_deps.name= "assimp_c_deps_" + target
+	assimp_c_deps.type= "obj"
+	assimp_c_deps.targetDir= lib_dir
+	assimp_c_deps.src= findNotMatching(
+		findFiles(assimp_c_deps_dir, "*.c"),
+		"*clipper*")
+	assimp_c_deps.flags= target_flags
+	assimp_c_deps.defines= target_defines
+	assimp_c_deps.compiler= c_compiler
+	assimp_c_deps.linker= linker
+	dep_libs.append(assimp_c_deps)
+
+	# Box2D
+	b2d_dir= "../deps/common/box2d"
+	b2d= Project()
+	b2d.name= "box2d_" + target
+	b2d.type= "obj"
+	b2d.targetDir= lib_dir
+	b2d.includeDirs= [ b2d_dir ]
+	b2d.headers= findFiles(b2d_dir, "*.h")
+	b2d.src= findFiles(b2d_dir, "*.cpp")
+	b2d.flags= target_flags
+	b2d.defines= target_defines
+	b2d.compiler= cpp_compiler
+	b2d.linker= linker
+	dep_include_paths.append(b2d_dir)
+	dep_libs.append(b2d)
+
+	# ClipperLib
+	clipper_dir= "../deps/common/clipper"
+	clipper= Project()
+	clipper.name= "clipper_" + target
+	clipper.type= "obj"
+	clipper.targetDir= lib_dir
+	clipper.includeDirs= [ clipper_dir ]
+	clipper.headers= [ clipper_dir + "/clipper/clipper.hpp" ]
+	clipper.src= [ clipper_dir + "/clipper/clipper.cpp" ]
+	clipper.flags= target_flags
+	clipper.defines= target_defines
+	clipper.compiler= cpp_compiler
+	clipper.linker= linker
+	dep_include_paths.append(clipper_dir)
+	dep_libs.append(clipper)
+
+	# GLEW
+	glew_dir= "../deps/common/glew"
+	glew= Project()
+	glew.name= "glew_" + target
+	glew.type= "obj"
+	glew.targetDir= lib_dir
+	glew.includeDirs= [ glew_dir + "/include" ]
+	glew.headers= [ glew_dir + "/include/glew.h" ]
+	glew.src= [ glew_dir + "/src/glew.c" ]
+	glew.flags= target_flags
+	glew.defines= target_defines
+	glew.compiler= c_compiler
+	glew.linker= linker
+	dep_include_paths.append(glew_dir + "/include")
+	dep_libs.append(glew)
+
+	# GLFW
+	glfw_dir= "../deps/common/glfw"
+	glfw= Project()
+	glfw.name= "glfw3_" + target
+	glfw.type= "obj"
+	glfw.targetDir= lib_dir
+	glfw.includeDirs= [ glfw_dir, glfw_dir + "/src" ]
+	glfw.headers= findFiles(glfw_dir + "/src", "*.h")
+	glfw.src= findNotMatching(
+		findFiles(glfw_dir + "/src", "*.c"),
+		[ "*cocoa*", "*win32*", "*egl*", "*nsgl*", "*wgl*" ])
+	glfw.flags= target_flags
+	glfw.defines= target_defines + [
+		"_GLFW_X11",
+		"_GLFW_GLX",
+		"_GLFW_HAS_GLXGETPROCADDRESS",
+		"_GLFW_HAS_GLXGETPROCADDRESSARB",
+		"_GLFW_USE_OPENGL",
+		"_GLFW_VERSION_FULL=\\\"glfw-3.0.3\\\"" ]
+	glfw.compiler= c_compiler
+	glfw.linker= linker
+	dep_include_paths.append(glfw_dir + "/include")
+	dep_libs.append(glfw)
+
+	# JsonCpp
+	json_dir= "../deps/common/jsoncpp"
+	json= Project()
+	json.name= "jsoncpp_" + target
+	json.type= "obj"
+	json.targetDir= lib_dir
+	json.includeDirs= [ json_dir + "/include" ]
+	json.headers += findFiles(json_dir + "/include", "*.h")
+	json.headers += findFiles(json_dir + "/src/lib_json", "*.h")
+	json.src= findFiles(json_dir + "/src/lib_json", "*.cpp")
+	json.flags= target_flags
+	json.defines= target_defines
+	json.compiler= cpp_compiler
+	json.linker= linker
+	dep_include_paths.append(json_dir + "/include")
+	dep_libs.append(json)
+
+	# UtfCpp
+	dep_include_paths.append("../deps/common/utfcpp/source")
+
+	dep_include_paths.append("/usr/include/freetype2")
+
+	### Combined deps ###
+
+	all_deps_proj= Project()
+	all_deps_proj.name= "all_deps_" + target
+	all_deps_proj.type= "lib"
+	all_deps_proj.targetDir= lib_dir
+	all_deps_proj.compiler= cpp_compiler
+	all_deps_proj.linker= linker
+	for d in dep_libs:
+		all_deps_proj.deps.append(d)
+		all_deps_proj.links.append(d)
+
+	### Clover ###
+
+	clover_dir= "../source"
+	clover_flags= target_flags + [
+		"Wall", "Werror",
+		"Wno-unused-variable",
+		"Wno-unused-but-set-variable", "Wno-unused-local-typedefs",
+		"Wno-maybe-uninitialized", # False positives with gcc 4.8.2
+		"std=c++11" ]
+	clover_defines= target_defines
+
+	subsystem_dirs= [
+		"animation",
+		"audio",
+		"collision",
+		"debug",
+		"game",
+		"global",
+		"gui",
+		"hardware",
+		"net",
+		"nodes",
+		"physics",
+		"resources",
+		"script",
+		"ui",
+		"util",
+		"visual",
+	]
+	
+	subsystem_names= []
+	subsystem_projs= []
+	for s_dir in subsystem_dirs:
+		dir= "../source/" + s_dir
+		p= Project()
+		p.name= "clover_" + s_dir + "_" + target
+		p.type= "lib"
+		p.targetDir= lib_dir
+		p.includeDirs= [ clover_dir ] + dep_include_paths
+		p.headers= findFiles(dir, ["*.hpp", "*.tpp", "*.def"])
+		p.src= findFiles(dir, ["*.cpp"])
+		p.flags= clover_flags
+		p.defines= clover_defines
+		p.compiler= cpp_compiler
+		p.linker= linker
+		subsystem_names.append(p.name)
+		subsystem_projs.append(p)
+
+	clover= Project()
+	clover.name= "clover_" + target
+	clover.type= "exe"
+	clover.targetDir= "../../builds/linux" + env.arch[1:] + "_clbs"
+	clover.includeDirs= [ clover_dir ] + dep_include_paths
+	clover.libDirs= [ lib_dir ]
+	clover.headers= [
+		clover_dir + "/build.hpp",
+		clover_dir + "/app.hpp" ]
+	clover.src= [
+		clover_dir + "/build.cpp",
+		clover_dir + "/main.cpp",
+		clover_dir + "/app.cpp" ]
+	clover.flags= clover_flags
+	clover.defines= clover_defines
+	clover.compiler= cpp_compiler
+	clover.linker= linker
+	clover.deps += subsystem_projs + [ all_deps_proj ]
+	## @todo Remove link group when circular refs are removed from subs
+	clover.links += [ subsystem_names ] + [ all_deps_proj.name ] 
+	## @todo Distribute these to clover subsystems
+	clover.links += [ "png", "OpenCL", "freetype", "portaudio", "vorbis", "ogg" ]
+	clover.links += [
+		"GL", "GLU", "pthread", "Xrandr", "Xxf86vm", "Xi",
+		"X11", "boost_system", "boost_filesystem", "boost_thread",
+		"boost_serialization" ]
+	
+	return clover

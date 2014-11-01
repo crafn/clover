@@ -1,5 +1,5 @@
 #include "armature.hpp"
-#include "assimp_util.hpp"
+#include "bvh_util.hpp"
 
 namespace clover {
 namespace animation {
@@ -97,8 +97,9 @@ void Armature::resourceUpdate(bool load, bool force){
 				joints= createJoints(jointDefsAttribute.get());
 			}
 			else {
-				util::Str8 path= importAttribute.get().whole();
-				joints= createJoints(jointDefsFromAssimp(parseAssimp(path)));
+				release_ensure(0 && "ADD BVH IMPORT");
+				//util::Str8 path= importAttribute.get().whole();
+				//joints= createJoints(jointDefsFromAssimp(parseAssimp(path)));
 			}
 			bindPose= makeBindPose(*this);
 			setResourceState(State::Loaded);
