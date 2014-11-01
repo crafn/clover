@@ -1,0 +1,8 @@
+Temp and build files
+*.swp
+*.swo
+*~
+*.cache
+code/clbs/lib
+code/clbs/obj
+
