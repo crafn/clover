@@ -19,6 +19,3 @@
 [submodule "code/deps/common/clipper"]
 	path = code/deps/common/clipper
 	url = https://github.com/crafn/clover-clipper.git
-[submodule "code/deps/common/glew"]
-	path = code/deps/common/glew
-	url = https://github.com/crafn/clover-glew.git
