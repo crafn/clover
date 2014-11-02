@@ -24,7 +24,7 @@ namespace clover {
 namespace game {
 
 /// Abstract base for a SaveMgr task
-/// @warning 	Don't start asynchronous operations in the constructor because
+/// @warning	Don't start asynchronous operations in the constructor because
 ///				tasks are queued before starting!
 class SaveMgr::Task {
 public:

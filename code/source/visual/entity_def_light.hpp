@@ -21,7 +21,7 @@ struct ResourceTraits<visual::LightEntityDef> {
 	typedef ResourceTraits<visual::EntityDef> BaseTraits;
 	
 	static util::DynArray<AttributeDef> getAttributeDefs(){
-		return 	std::move(
+		return	std::move(
 					BaseTraits::getAttributeDefs().pushBacked(util::DynArray<AttributeDef> {
 						AttributeDef::Real("halfValueRadius"),
 						AttributeDef::Real("intensity"),

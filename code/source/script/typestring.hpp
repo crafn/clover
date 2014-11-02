@@ -229,7 +229,7 @@ template <SizeType N>
 struct ArgumentStringComposer {
 	template <typename Arg, typename... RestOfArgs>
 	static util::Str8 getString(const util::Str8& head= ""){
-		return 	std::move(
+		return	std::move(
 					ArgumentStringComposer<N-1>::template getString<RestOfArgs...>(
 						head + TypeString<Arg>().asParam()() + ", "
 					)
@@ -259,7 +259,7 @@ template <SizeType N>
 struct FuncdefArgumentStringComposer {
 	template <typename Arg, typename... RestOfArgs>
 	static util::Str8 getString(const util::Str8& head= ""){
-		return 	FuncdefArgumentStringComposer<N-1>::template getString<RestOfArgs...>(
+		return	FuncdefArgumentStringComposer<N-1>::template getString<RestOfArgs...>(
 						head + TypeString<Arg>().getFuncdefStr() + "_");
 	}
 
@@ -304,7 +304,7 @@ struct TypeString<R(Args...), false> {
 	/// E.g. void (int, int) -> f_void_int_int
 	util::Str8 getFuncdefStr() const {
 		constexpr SizeType arg_count= sizeof...(Args);
-		return 	TypeString<R>().getFuncdefStr() + "_" +
+		return	TypeString<R>().getFuncdefStr() + "_" +
 				FuncdefArgumentStringComposer<arg_count>::template getString<Args...>();
 	}
 

@@ -17,7 +17,7 @@ class BaseActionListener;
 /// Context in which VirtualControls are defined.
 /// Context sends actions from VirtualControls it owns to ContextChannels
 /// It also manages channel enabling/disabling based on current Tags
-/// @note 	Indirection of tag enabling through multiple contexts is removed from tag functions
+/// @note	Indirection of tag enabling through multiple contexts is removed from tag functions
 ///			which means that 'getTags().size() >= "tags" && getEnableTags().size() >= "enableTags"'
 class Context : public util::Callbacker<OnActionCb>, public global::EventReceiver {
 public:

@@ -16,9 +16,9 @@ public:
 
 	enum Type {
 		None,
-		World,    // World coordinate
+		World,	  // World coordinate
 		View_Scale, // (-1, -1) -> (1,1) fills whole screen (but doesn't fit)
-		View_Fit,   // (-1, -1) -> (1,1) will always fit on screen (but leaves empty areas depending on aspect ratio)
+		View_Fit,	// (-1, -1) -> (1,1) will always fit on screen (but leaves empty areas depending on aspect ratio)
 		View_Stretch,  // (-1, -1) -> (1,1) fills whole screen but doesn't preserve aspect ratio
 		View_Pixels
 	};

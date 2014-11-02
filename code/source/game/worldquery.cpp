@@ -13,26 +13,26 @@ WorldQuery::WorldQuery(){
 }
 
 game::WESet WorldQuery::getEntitiesInRadius(util::Vec2d pos, real32 radius, const util::Str8& type_name){
-    game::WESet ret;
+	game::WESet ret;
 
-    util::Set<game::WorldChunk*> chunks= game::gWorldMgr->getChunkMgr().getChunksInRadius(pos, radius);
+	util::Set<game::WorldChunk*> chunks= game::gWorldMgr->getChunkMgr().getChunksInRadius(pos, radius);
 
-    for (auto chunk : chunks){
-        util::PtrTable<game::WorldEntity>& entities= chunk->getEntityTable();
+	for (auto chunk : chunks){
+		util::PtrTable<game::WorldEntity>& entities= chunk->getEntityTable();
 
-        for (uint32 e=0; e<entities.size(); e++){
+		for (uint32 e=0; e<entities.size(); e++){
 			if (!entities[e])
 				continue;
 
-            if (type_name.empty() || entities[e]->getTypeName() == type_name){
-                if (util::Vec2d(entities[e]->getPosition()-pos).lengthSqr() < radius*radius)
-                    ret.add(entities[e]);
-            }
-        }
+			if (type_name.empty() || entities[e]->getTypeName() == type_name){
+				if (util::Vec2d(entities[e]->getPosition()-pos).lengthSqr() < radius*radius)
+					ret.add(entities[e]);
+			}
+		}
 
-    }
+	}
 
-    return ret;
+	return ret;
 }
 
 game::WorldEntity* WorldQuery::getEntityPtrById(game::WorldEntityId id){

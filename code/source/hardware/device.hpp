@@ -18,35 +18,35 @@ namespace hardware {
 /// Interface to devices and window
 class Device {
 public:
-    Device();
-    virtual ~Device();
+	Device();
+	virtual ~Device();
 	
 	void create(util::Str8 title);
 	
-    static bool isBigEndian();
+	static bool isBigEndian();
 
-    real32 getFrameTime();
-    void updateFrameTime();
+	real32 getFrameTime();
+	void updateFrameTime();
 	
-    void updateEvents();
-    void sleep(real32 d);
+	void updateEvents();
+	void sleep(real32 d);
 
-    void getViewportSize(int& x, int32 &y);
-    util::Vec2i getViewportSize();
+	void getViewportSize(int& x, int32 &y);
+	util::Vec2i getViewportSize();
 
-    //x/y
-    real32 getAspectRatio() const { return aspectRatio; }
+	//x/y
+	real32 getAspectRatio() const { return aspectRatio; }
 
 	/// @return vector with other component being 1.0 and other >= 1.0 in regards to aspect ratio
 	/// @todo Shouldn't be here
 	util::Vec2d getAspectVector() const { return aspectVector; }
 
-    void clearBuffers();
+	void clearBuffers();
 
-    void setViewport();
-    void setViewport(util::Vec2i v);
+	void setViewport();
+	void setViewport(util::Vec2i v);
 
-    void swapBuffers();
+	void swapBuffers();
 	
 	ui::hid::HidMgr& getHidMgr() const { ensure(hidMgr); return *hidMgr; }
 	
@@ -66,12 +66,12 @@ private:
 
 	GLFWwindow* window;
 
-    int32 viewportX, viewportY;
-    real32 aspectRatio;
-    util::Vec2d aspectVector;
+	int32 viewportX, viewportY;
+	real32 aspectRatio;
+	util::Vec2d aspectVector;
 
-    real32 prevFrameTime;
-    real32 curFrameTime;
+	real32 prevFrameTime;
+	real32 curFrameTime;
 	
 	using HidMgrPtr= std::unique_ptr<ui::hid::HidMgr>;
 	HidMgrPtr hidMgr;

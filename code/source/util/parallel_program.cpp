@@ -11,7 +11,7 @@ namespace util {
 
 ParallelProgram::ParallelProgram(util::Str8 path):attachedQueue(0){
 	program.id= 0;
-    compile(path);
+	compile(path);
 }
 
 ParallelProgram::ParallelProgram():attachedQueue(0){
@@ -23,10 +23,10 @@ ParallelProgram::ParallelProgram(ParallelProgram&& other){
 }
 
 ParallelProgram::~ParallelProgram(){
-    for (auto& m : kernels){
+	for (auto& m : kernels){
 
-        hardware::gClState->destroyKernel(m.kernel);
-    }
+		hardware::gClState->destroyKernel(m.kernel);
+	}
 	kernels.clear();
 
 	if (program.id != 0)
@@ -52,13 +52,13 @@ void ParallelProgram::compile(util::Str8 path){
 }
 
 util::ParallelKernel& ParallelProgram::createKernel(util::Str8 kernelname){
-    ensure(program.id);
+	ensure(program.id);
 
-    kernels.pushBack(std::move(util::ParallelKernel(hardware::gClState->createKernel(program, kernelname))));
+	kernels.pushBack(std::move(util::ParallelKernel(hardware::gClState->createKernel(program, kernelname))));
 	if (attachedQueue)
 		kernels.back().attachToQueue(*attachedQueue);
 
-    return kernels.back();
+	return kernels.back();
 }
 
 void ParallelProgram::attachToQueue(util::ParallelQueue& q){

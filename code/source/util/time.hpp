@@ -19,19 +19,19 @@ std::chrono::nanoseconds asNanoseconds(double seconds);
 /// Measures time between frames
 class Clock {
 public:
-    static void updateAll();
+	static void updateAll();
 
-    Clock();
-    virtual ~Clock();
+	Clock();
+	virtual ~Clock();
 
-    void reset();
-    void update();
+	void reset();
+	void update();
 
-    real32 getDeltaTime();
-    real64 getTime();
+	real32 getDeltaTime();
+	real64 getTime();
 
-    void setTimeScale(real32 scale);
-    real32 getTimeScale();
+	void setTimeScale(real32 scale);
+	real32 getTimeScale();
 	
 	/// Sets return value of getDeltaTime
 	void setFixedDeltaTime(real32 dt){ fixedDeltaTime= dt; }
@@ -39,59 +39,59 @@ public:
 	/// Removes fixed time step
 	void unsetFixedDeltaTime(){ fixedDeltaTime= 0.0; }
 
-    void setPaused(bool b);
-    void toggle();
+	void setPaused(bool b);
+	void toggle();
 
-    bool isPaused();
+	bool isPaused();
 	
 private:
-    static const int32 clockRes= 10000;
+	static const int32 clockRes= 10000;
 
-    uint32 timeFromStart;
-    uint32 frameCount;
+	uint32 timeFromStart;
+	uint32 frameCount;
 
-    real32 deltaTime;
+	real32 deltaTime;
 	real32 fixedDeltaTime; // Not used if <= 0.0
-    real32 timeScale;
+	real32 timeScale;
 
-    bool paused;
+	bool paused;
 	
-    int32 tableIndex;
+	int32 tableIndex;
 };
 
 class Timer {
 public:
-    Timer(const util::Str8& name= util::Str8(""));
-    virtual ~Timer();
+	Timer(const util::Str8& name= util::Str8(""));
+	virtual ~Timer();
 
-    util::Str8 getName();
+	util::Str8 getName();
 
-    void run();
+	void run();
 	bool isRunning() const { return running; }
-    void pause();
+	void pause();
 
 	void nextFrame();
 
 	static void nextFrames();
 
-    void reset();
+	void reset();
 
-    // Palauttaa start():n ja stop():n välisen ajan (keskiarvo, jos suoritettu monta kertaa peräkkäin ilman resettiä)
-    real32 getAverage();
+	// Palauttaa start():n ja stop():n välisen ajan (keskiarvo, jos suoritettu monta kertaa peräkkäin ilman resettiä)
+	real32 getAverage();
 	
 	// Palauttaa kokonaisajan, ei saa kutsua pausettamatta
 	real32 getTime();
 
 private:
 	bool running;
-    int32 frameCount;
-    real32 totalTime;
+	int32 frameCount;
+	real32 totalTime;
 
-    std::chrono::high_resolution_clock::time_point start;
+	std::chrono::high_resolution_clock::time_point start;
 
-    util::Str8 name;
+	util::Str8 name;
 
-    int32 tableIndex;
+	int32 tableIndex;
 };
 
 /// @todo These really shouldn't be globals.

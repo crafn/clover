@@ -137,7 +137,7 @@ public:
 	bool isAwake() const;
 
 	void setPartiallyBreakable(bool b= true) override { bodyDef.setPartiallyBreakable(b); }
-	bool isPartiallyBreakable() const override { return  bodyDef.isPartiallyBreakable(); }
+	bool isPartiallyBreakable() const override { return	 bodyDef.isPartiallyBreakable(); }
 
 	real64 getBreakStress() const;
 	void breakSome(const collision::Shape& break_area, bool boolean_and= false);

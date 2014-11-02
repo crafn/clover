@@ -11,13 +11,13 @@ bool WeHandle::newLostHandle= false;
 
 WeHandle::WeHandle(const game::WorldEntity* e)
 		: entityId(0)
-        , tableIndex(0)
+		, tableIndex(0)
 		, lostIndex(-1)
 		, strictConnection(0){
-    if (e){
-            entityId= e->uniqueId;
-            tableIndex= e->tableIndex;
-    }
+	if (e){
+			entityId= e->uniqueId;
+			tableIndex= e->tableIndex;
+	}
 }
 
 WeHandle::~WeHandle(){
@@ -111,7 +111,7 @@ bool WeHandle::isAssigned(){
 }
 
 game::WorldEntity *WeHandle::get() const {
-    if (!isGood()) return 0;
+	if (!isGood()) return 0;
 	return gWETable[tableIndex];
 }
 
@@ -131,7 +131,7 @@ WeHandle::operator bool() const {
 
 game::WorldEntity* WeHandle::operator->() const {
 	ensure_msg(isGood(), "WEHandle::operator->(): invalid handle for id: %lld", entityId)
-    return get();
+	return get();
 }
 
 void WeHandle::fixLostHandles(game::WorldEntity* w){

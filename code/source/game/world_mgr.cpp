@@ -39,7 +39,7 @@ WorldMgr::WorldMgr()
 		time -= util::gGameClock->getDeltaTime()*300;
 	}){
 
-    time= getDayDuration()*0.45; // Start from day
+	time= getDayDuration()*0.45; // Start from day
 
 	bgDefs[0].setModel("background_sky_evening");
 	bgDefs[1].setModel("background_sky_day");
@@ -56,8 +56,8 @@ WorldMgr::WorldMgr()
 	}
 
 	lightBackgroundDef.setModel("lightBackground");
-    lightBackgroundDef.setEnvLight(1.0);
-    lightBackgroundDef.setLightAlphaAdd(0.3);
+	lightBackgroundDef.setEnvLight(1.0);
+	lightBackgroundDef.setLightAlphaAdd(0.3);
 	lightBackgroundDef.setColorMul(util::Color{1.0f,0.7f,0.3f,0});
 	lightBackground.setDef(lightBackgroundDef);
 	lightBackground.setScale(util::Vec3d(1));
@@ -70,8 +70,8 @@ WorldMgr::WorldMgr()
 	sunReDef.setEnvLight(1.0);
 	sunRE.setDef(sunReDef);
 
-    visual::TriMesh gtData;
-    gtData.addRectByCenter(util::Vec2f(0),util::Vec2f(2));
+	visual::TriMesh gtData;
+	gtData.addRectByCenter(util::Vec2f(0),util::Vec2f(2));
 }
 
 WorldMgr::~WorldMgr(){
@@ -79,7 +79,7 @@ WorldMgr::~WorldMgr(){
 }
 
 void WorldMgr::update(){
-    weMgr.update();
+	weMgr.update();
 
 	{ // Grid test
 		uint32 count= 0;
@@ -128,7 +128,7 @@ void WorldMgr::update(){
 		util::Color c_cur = util::Color{illumination*1.3f, illumination*1.3f, illumination*1.1f};
 
 		// Bluish night
-		real32 bluemul=  pow(util::abs(sin(phase*util::tau)), 0.5);
+		real32 bluemul=	 pow(util::abs(sin(phase*util::tau)), 0.5);
 
 		if (phase < 0.5) bluemul= 0;
 
@@ -157,8 +157,8 @@ void WorldMgr::update(){
 
 	updateWorldIO();
 
-    weMgr.spawnNewEntities();
-    weMgr.removeFlagged();
+	weMgr.spawnNewEntities();
+	weMgr.removeFlagged();
 	
 	time += util::gGameClock->getDeltaTime();
 }

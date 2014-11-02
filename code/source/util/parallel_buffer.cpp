@@ -80,7 +80,7 @@ void ParallelBuffer::read(){
 
 void ParallelBuffer::acquire(){
 	ensure(attachedQueue);
-    hardware::gClState->acquireBuffer(attachedQueue->queue, buffer);
+	hardware::gClState->acquireBuffer(attachedQueue->queue, buffer);
 }
 
 void ParallelBuffer::release(){

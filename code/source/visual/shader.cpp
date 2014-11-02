@@ -280,9 +280,9 @@ uint32 Shader::createShader(util::Str8 &source, uint32 type){
 		printInfoLog(shd);
 
 		std::string type_str;
-		if (type == GL_VERTEX_SHADER)           type_str= "vertex";
-		else if (type == GL_GEOMETRY_SHADER)    type_str= "geometry";
-		else                                    type_str= "fragment";
+		if (type == GL_VERTEX_SHADER)			type_str= "vertex";
+		else if (type == GL_GEOMETRY_SHADER)	type_str= "geometry";
+		else									type_str= "fragment";
 		
 		throw resources::ResourceException("Shader::compile(): %s shader didn't compile", type_str.c_str());
 	}

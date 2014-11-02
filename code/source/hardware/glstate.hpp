@@ -112,29 +112,29 @@ public:
 	using IboDId= GLuint; /// Index buffer object
 	using ProgramDid= GLuint; /// Shader program
 
-    GlState();
+	GlState();
 
-    TexDId genTex();
+	TexDId genTex();
 
 	/// If possible, use bindTex(tex, unit) instead of separately setting texture unit,
 	/// because bindTex prevents unnecessary state changes
-    void setTextureUnit(int32 unit);
+	void setTextureUnit(int32 unit);
 
 	/// Binding overrides previous bind in the same unit,
 	/// even if target is not the same
-    void bindTex(TexTarget target, TexDId tex, int32 unit= -1);
+	void bindTex(TexTarget target, TexDId tex, int32 unit= -1);
 
-    void setPolygonMode(GLenum mode);
-    void setBlendFunc(BlendFunc func);
+	void setPolygonMode(GLenum mode);
+	void setBlendFunc(BlendFunc func);
 
-    void setViewport(util::Vec2i pos, util::Vec2i size);
+	void setViewport(util::Vec2i pos, util::Vec2i size);
 
 	template <typename T>
-    void setTexParam(GLenum p, const T& v){ ensure_msg(0, "Invalid template type"); }
-    void setDefaultTexParams();
+	void setTexParam(GLenum p, const T& v){ ensure_msg(0, "Invalid template type"); }
+	void setDefaultTexParams();
 	
 
-    void submitTexData(	TexFormat format,
+	void submitTexData(	TexFormat format,
 						Type datatype,
 						util::Vec2i size,
 						const void* data,
@@ -146,17 +146,17 @@ public:
 						const void* data,
 						int miplevel= 0);
 
-    void generateMipmap();
-    void deleteTex(uint32 tex);
+	void generateMipmap();
+	void deleteTex(uint32 tex);
 
 	FboDId genFbo();
-    void bindFbo(FboDId fbo);
+	void bindFbo(FboDId fbo);
 	void attachTexToFbo(GLenum attachment, TexDId tex, int32 miplevel= 0); 
 	GLenum getFboStatus();
 	void deleteFbo(FboDId fbo);
 
-    void setClearColor(const util::Color& c);
-    void clear(GLbitfield);
+	void setClearColor(const util::Color& c);
+	void clear(GLbitfield);
 
 	void errorCheck(const util::Str8& where);
 
@@ -197,26 +197,26 @@ private:
 	GLenum activeGlTexTarget() const;
 	GLenum defaultGlLayout(TexFormat format) const;
 
-    /// @todo To non-hard-coded
-    static const int32 texUnitCount=32;
+	/// @todo To non-hard-coded
+	static const int32 texUnitCount=32;
 
-    int32 activeTexUnit;
-    TexDId boundTex[texUnitCount];
+	int32 activeTexUnit;
+	TexDId boundTex[texUnitCount];
 	TexTarget boundTexTargets[texUnitCount];
 
-    GLenum polygonMode;
+	GLenum polygonMode;
 
-    GLenum blendSource, blendDestination;
+	GLenum blendSource, blendDestination;
 
-    FboDId boundFbo;
+	FboDId boundFbo;
 	VaoDId boundVao;
 	VboDId boundVbo;
 	IboDId boundIbo;
 
 	ProgramDid activeProgram;
 
-    util::Vec2i viewportPosition;
-    util::Vec2i viewportSize;
+	util::Vec2i viewportPosition;
+	util::Vec2i viewportSize;
 
 };
 

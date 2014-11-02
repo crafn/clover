@@ -23,23 +23,23 @@ namespace util {
 class RawPack {
 public:
 
-    static size_t uint8ToBuf(void *buf, const uint8 d);
-    static size_t uint8FromBuf(const void* buf, uint8& d);
+	static size_t uint8ToBuf(void *buf, const uint8 d);
+	static size_t uint8FromBuf(const void* buf, uint8& d);
 
-    static size_t uint16ToBuf(void *buf, const uint16 d);
-    static size_t uint16FromBuf(const void *buf, uint16& d);
+	static size_t uint16ToBuf(void *buf, const uint16 d);
+	static size_t uint16FromBuf(const void *buf, uint16& d);
 
-    static size_t uint32ToBuf(void *buf, const uint32 d);
-    static size_t uint32FromBuf(const void *buf, uint32& d);
+	static size_t uint32ToBuf(void *buf, const uint32 d);
+	static size_t uint32FromBuf(const void *buf, uint32& d);
 
 	static size_t uint64ToBuf(void *buf, const uint64 d);
 	static size_t uint64FromBuf(const void *buf, uint64& d);
 
-    static size_t real32ToBuf(void *buf, const real32 d);
-    static size_t real32FromBuf(const void *buf, real32& d);
+	static size_t real32ToBuf(void *buf, const real32 d);
+	static size_t real32FromBuf(const void *buf, real32& d);
 
-    static size_t real64ToBuf(void *buf, const real64 d);
-    static size_t real64FromBuf(const void *buf, real64& d);
+	static size_t real64ToBuf(void *buf, const real64 d);
+	static size_t real64FromBuf(const void *buf, real64& d);
 
 	static size_t Vec2fToBuf(void *buf, const util::Vec2f& v);
 	static size_t Vec2fFromBuf(const void *buf, util::Vec2f& v);
@@ -61,7 +61,7 @@ public:
 
 	void addData(const uint8 * buf, uint32 size);
 
-#define PACK_OPERATOR(type_)  								\
+#define PACK_OPERATOR(type_)								\
 		RawPack& operator<<(const type_& value);			\
 		RawPack& operator>>(type_& value);
 

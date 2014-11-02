@@ -94,7 +94,7 @@ void LineGraphElement::preUpdate(){
 		const real32 bg_line_count= 5;
 		for (uint32 i=0; i<bg_line_count; ++i){
 			// Mark lines behind curves
-			util::Vec2f 	top_l= {(real32)(lineViewXAtCenter - lineViewRadius.x), i/(bg_line_count-1)},
+			util::Vec2f		top_l= {(real32)(lineViewXAtCenter - lineViewRadius.x), i/(bg_line_count-1)},
 					top_r= {(real32)(lineViewXAtCenter + lineViewRadius.x), i/(bg_line_count-1)};
 			bgmesh.addTriangle(top_l, top_r, top_r);
 			bgmesh.setColor(util::Color{0.5,0.5,0.5,0.5});
@@ -148,15 +148,15 @@ void LineGraphElement::Line::clearBefore(real64 x){
 }
 
 visual::TriMesh LineGraphElement::Line::generateMesh(real64 center_x, real64 radius_x){
-	real64 left= 	center_x - radius_x,
-			right= 	center_x + radius_x;
+	real64 left=	center_x - radius_x,
+			right=	center_x + radius_x;
 
 	visual::TriMesh m;
 	for(uint32 i=0; i<points.size()-1; ++i){
 		if (points[i+1].x < left || points[i].x >= right)
 			continue;
 
-		util::Vec2f 	left_p= points[i],
+		util::Vec2f		left_p= points[i],
 				right_p= points[i+1];
 
 		if (left_p.x < left){

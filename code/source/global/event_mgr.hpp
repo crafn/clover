@@ -11,7 +11,7 @@ class EventReceiver;
 
 class EventMgr {
 public:
-    EventMgr();
+	EventMgr();
 	
 	void registerReceiver(global::EventReceiver& recv, global::Event::EType event_type);
 	void unregisterReceiver(global::EventReceiver& recv, global::Event::EType event_type);
@@ -19,8 +19,8 @@ public:
 	void replaceReceiver(global::EventReceiver& old_recv, global::EventReceiver& new_recv);
 	util::DynArray<global::EventReceiver*> getRegisteredReceivers(global::Event::EType event_type);
 
-    /// Sends queued events to receivers
-    void dispatch();
+	/// Sends queued events to receivers
+	void dispatch();
 
 private:
 	// Automatic receivers

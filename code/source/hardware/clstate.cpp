@@ -19,7 +19,7 @@
 #include <CL/cl_gl.h>
 
 #if OS == OS_LINUX
-    #include <GL/glx.h>
+	#include <GL/glx.h>
 #endif
 
 namespace clover {
@@ -52,12 +52,12 @@ void ClState::choosePlatformWiselyAndCreateContextNicely(){
 	
 	util::DynArray<Platform> platforms= queryPlatforms();
 	print(debug::Ch::OpenCL, debug::Vb::Trivial, "Available OpenCL platforms (%lu):", (unsigned long)platforms.size());
-    
+	
 	if (platforms.empty())
 		throw global::Exception("No OpenCL platforms detected");
 	
 	for (auto &m : platforms){
-		print(debug::Ch::OpenCL, debug::Vb::Trivial, "    %s", m.name.cStr());
+		print(debug::Ch::OpenCL, debug::Vb::Trivial, "	  %s", m.name.cStr());
 	}
 	
 	while(!platforms.empty()){
@@ -95,7 +95,7 @@ void ClState::choosePlatformWiselyAndCreateContextNicely(){
 		
 		print(debug::Ch::OpenCL, debug::Vb::Trivial, "Available OpenCL devices (%lu):", (unsigned long)devices.size());
 		for (auto &m : devices){
-			print(debug::Ch::OpenCL, debug::Vb::Trivial, "    %s, Type: %i, isDefault: %i", m.name.cStr(), m.type, m.isDefault);
+			print(debug::Ch::OpenCL, debug::Vb::Trivial, "	  %s, Type: %i, isDefault: %i", m.name.cStr(), m.type, m.isDefault);
 		}
 
 		for (uint32 phase= 0; phase<4; ++phase){
@@ -137,39 +137,39 @@ void ClState::choosePlatformWiselyAndCreateContextNicely(){
 
 util::DynArray<ClState::Platform> ClState::queryPlatforms(){
 
-    char8 chBuffer[1024];
-    cl_uint platform_count= 0;
-    cl_int ciErrNum;
-    cl_uint i = 0;
+	char8 chBuffer[1024];
+	cl_uint platform_count= 0;
+	cl_int ciErrNum;
+	cl_uint i = 0;
 	
 	
 	util::DynArray<Platform> platforms;
 
-    // Get OpenCL platform count
-    ciErrNum = clGetPlatformIDs (0, NULL, &platform_count);
-    if (ciErrNum != CL_SUCCESS)
-    {
+	// Get OpenCL platform count
+	ciErrNum = clGetPlatformIDs (0, NULL, &platform_count);
+	if (ciErrNum != CL_SUCCESS)
+	{
 
-        throw(global::Exception("clGetPlatformID::(..): Error in clGetPlatformIDs(..) call: %i, %s", ciErrNum, gClState->getErrorString(ciErrNum)));
+		throw(global::Exception("clGetPlatformID::(..): Error in clGetPlatformIDs(..) call: %i, %s", ciErrNum, gClState->getErrorString(ciErrNum)));
 
-    }
-    else
-    {
-        if(platform_count == 0)
-        {
+	}
+	else
+	{
+		if(platform_count == 0)
+		{
 
-            throw(global::Exception("clGetPlatformID::(..): No OpenCL platforms found"));
-        }
-        else
-        {
+			throw(global::Exception("clGetPlatformID::(..): No OpenCL platforms found"));
+		}
+		else
+		{
 			std::vector<cl_platform_id> clPlatformIDs(platform_count);
 
-            // get platform info for each platform and trap the NVIDIA platform if found
+			// get platform info for each platform and trap the NVIDIA platform if found
 			ciErrNum = clGetPlatformIDs (platform_count, clPlatformIDs.data(), NULL);
 
-            
-            for (i=0; i<platform_count; i++){
-                ciErrNum = clGetPlatformInfo (clPlatformIDs[i], CL_PLATFORM_NAME, 1024, &chBuffer, NULL);
+			
+			for (i=0; i<platform_count; i++){
+				ciErrNum = clGetPlatformInfo (clPlatformIDs[i], CL_PLATFORM_NAME, 1024, &chBuffer, NULL);
 				
 				Platform p;
 				
@@ -178,14 +178,14 @@ util::DynArray<ClState::Platform> ClState::queryPlatforms(){
 			
 				platforms.pushBack(p);
 
-            }
+			}
 
-        }
-    }
+		}
+	}
 
 
 
-    return platforms;
+	return platforms;
 }
 
 util::DynArray<ClState::Device> ClState::queryPlatformDevices(const Platform& p){
@@ -197,8 +197,8 @@ util::DynArray<ClState::Device> ClState::queryPlatformDevices(const Platform& p)
 	
 	cl_uint device_count;
 	
-    err2 = clGetDeviceIDs(p.id, CL_DEVICE_TYPE_ALL, 0, NULL, &device_count);
-    errorCheck("ClState::ClState(): Error on clGetDeviceIDs 1: ", err2);
+	err2 = clGetDeviceIDs(p.id, CL_DEVICE_TYPE_ALL, 0, NULL, &device_count);
+	errorCheck("ClState::ClState(): Error on clGetDeviceIDs 1: ", err2);
 
 	std::vector<cl_device_id> device_ids(device_count);
 
@@ -280,44 +280,44 @@ ClState::Context ClState::createContext(const Device& d){
 	
 	cl_int err2=0;
 	
-    #if OS == OS_LINUX
+	#if OS == OS_LINUX
 
-        cl_context_properties properties[]=
-        {
-            CL_GL_CONTEXT_KHR,(cl_context_properties)glXGetCurrentContext(),
-            CL_GLX_DISPLAY_KHR,(cl_context_properties)glXGetCurrentDisplay(),
-            0
-        };
+		cl_context_properties properties[]=
+		{
+			CL_GL_CONTEXT_KHR,(cl_context_properties)glXGetCurrentContext(),
+			CL_GLX_DISPLAY_KHR,(cl_context_properties)glXGetCurrentDisplay(),
+			0
+		};
 
-        c.id = clCreateContext(properties, 1, &d.id, 0, 0, &err2);
+		c.id = clCreateContext(properties, 1, &d.id, 0, 0, &err2);
 
-    #elif OS == OS_WINDOWS
+	#elif OS == OS_WINDOWS
 
-        cl_context_properties properties[] =
-        {
-            CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
-            CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
-            CL_CONTEXT_PLATFORM, (cl_context_properties)(platform.id),
-            0
-        };
+		cl_context_properties properties[] =
+		{
+			CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
+			CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),
+			CL_CONTEXT_PLATFORM, (cl_context_properties)(platform.id),
+			0
+		};
 
 
-        c.id = clCreateContext(properties, 1, &d.id, 0, 0, &err2);
-    #elif OS == OS_MACOSX
+		c.id = clCreateContext(properties, 1, &d.id, 0, 0, &err2);
+	#elif OS == OS_MACOSX
 
-        CGLContextObj kCGLContext = CGLGetCurrentContext();
-        CGLShareGroupObj kCGLShareGroup = CGLGetShareGroup(kCGLContext);
-        cl_context_properties props[] =
-        {
-            CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE, (cl_context_properties)kCGLShareGroup,
-            0
-        };
+		CGLContextObj kCGLContext = CGLGetCurrentContext();
+		CGLShareGroupObj kCGLShareGroup = CGLGetShareGroup(kCGLContext);
+		cl_context_properties props[] =
+		{
+			CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE, (cl_context_properties)kCGLShareGroup,
+			0
+		};
 
-        c.id = clCreateContext(props, 0, 0, NULL, NULL, &err2);
+		c.id = clCreateContext(props, 0, 0, NULL, NULL, &err2);
 
-    #endif
+	#endif
 
-    errorCheck("ClState::createContext(..): Error on clCreateContext(..):", err2);
+	errorCheck("ClState::createContext(..): Error on clCreateContext(..):", err2);
 
 	return c;
 }
@@ -325,26 +325,26 @@ ClState::Context ClState::createContext(const Device& d){
 
 ClState::Program ClState::createProgram(const Context& c, const util::Str8& path){
 	Program p;
-    p.path= path;
+	p.path= path;
 
 	size_t ret_size=0;
 
-    util::Str8 source= global::File::readText(path);
-    const char8 *src[2]= { source.cStr(), 0 };
+	util::Str8 source= global::File::readText(path);
+	const char8 *src[2]= { source.cStr(), 0 };
 	
 	cl_int err=0;
-    p.id = clCreateProgramWithSource(c.id, 1, src, 0, &err);
-    errorCheck("ClState::createProgram(..): clCreateProgramWithSource failed: ", err);
+	p.id = clCreateProgramWithSource(c.id, 1, src, 0, &err);
+	errorCheck("ClState::createProgram(..): clCreateProgramWithSource failed: ", err);
 
-    err= clBuildProgram(p.id, 1, &c.device.id, "-cl-std=CL1.1", 0, 0);
+	err= clBuildProgram(p.id, 1, &c.device.id, "-cl-std=CL1.1", 0, 0);
 
 	cl_build_status build_status;
-    cl_int err2= clGetProgramBuildInfo(p.id, c.device.id, CL_PROGRAM_BUILD_STATUS, sizeof(cl_build_status), &build_status, NULL);
+	cl_int err2= clGetProgramBuildInfo(p.id, c.device.id, CL_PROGRAM_BUILD_STATUS, sizeof(cl_build_status), &build_status, NULL);
 	errorCheck("ClState::createProgram(..): clGetProgramBuildInfo 1 failed: ", err2);
 	
-    if (build_status != CL_BUILD_SUCCESS){
-        // Build failed, display log
-        err2= clGetProgramBuildInfo(p.id, c.device.id, CL_PROGRAM_BUILD_LOG, 0, NULL, &ret_size);
+	if (build_status != CL_BUILD_SUCCESS){
+		// Build failed, display log
+		err2= clGetProgramBuildInfo(p.id, c.device.id, CL_PROGRAM_BUILD_LOG, 0, NULL, &ret_size);
 		errorCheck("ClState::compile(..): clGetProgramBuildInfo 2 failed: ", err2);
 
 		ensure(ret_size > 0);
@@ -354,7 +354,7 @@ ClState::Program ClState::createProgram(const Context& c, const util::Str8& path
 		errorCheck("ClState::compile(..): clGetProgramBuildInfo 3 failed: ", err2);
 
 		print(debug::Ch::OpenCL, debug::Vb::Critical, "OpenCL program %s build log (%lu):\n%s", path.cStr(), (unsigned long)ret_size, log.data());
-    }
+	}
 
 	errorCheck("ClState::compile(..): clBuildProgram failed: ", err);
 	
@@ -466,8 +466,8 @@ ClState::CommandQueue ClState::createCommandQueue(const Device& d){
 	
 	CommandQueue c;
 	c.context= context;
-    c.id= clCreateCommandQueue(c.context.id, d.id, 0, &err);
-    errorCheck("ClState::createCommandQueue(): Error on clCreateCommandQueue(..):", err);
+	c.id= clCreateCommandQueue(c.context.id, d.id, 0, &err);
+	errorCheck("ClState::createCommandQueue(): Error on clCreateCommandQueue(..):", err);
 	
 	return c;
 }
@@ -476,56 +476,56 @@ const char* ClState::getErrorString(cl_int error)
 {
 
 	switch (error) {
-        case CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR: return "CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR";
-        case CL_SUCCESS:                          	return "Success!";
-		case -1001:				  					return "Platform not found";
-        case CL_DEVICE_NOT_FOUND:                 return "Device not found";
-        case CL_DEVICE_NOT_AVAILABLE:             return "Device not available";
-        case CL_COMPILER_NOT_AVAILABLE:           return "Compiler not available";
-        case CL_MEM_OBJECT_ALLOCATION_FAILURE:    return "Memory object allocation failure";
-        case CL_OUT_OF_RESOURCES:                 return "Out of resources";
-        case CL_OUT_OF_HOST_MEMORY:               return "Out of host memory";
-        case CL_PROFILING_INFO_NOT_AVAILABLE:     return "Profiling information not available";
-        case CL_MEM_COPY_OVERLAP:                 return "Memory copy overlap";
-        case CL_IMAGE_FORMAT_MISMATCH:            return "Image format mismatch";
-        case CL_IMAGE_FORMAT_NOT_SUPPORTED:       return "Image format not supported";
-        case CL_BUILD_PROGRAM_FAILURE:            return "Program build failure";
-        case CL_MAP_FAILURE:                      return "util::Map failure";
-        case CL_INVALID_VALUE:                    return "Invalid value";
-        case CL_INVALID_DEVICE_TYPE:              return "Invalid device type";
-        case CL_INVALID_PLATFORM:                 return "Invalid platform";
-        case CL_INVALID_DEVICE:                   return "Invalid device";
-        case CL_INVALID_CONTEXT:                  return "Invalid context";
-        case CL_INVALID_QUEUE_PROPERTIES:         return "Invalid queue properties";
-        case CL_INVALID_COMMAND_QUEUE:            return "Invalid command queue";
-        case CL_INVALID_HOST_PTR:                 return "Invalid host pointer";
-        case CL_INVALID_MEM_OBJECT:               return "Invalid memory object";
-        case CL_INVALID_IMAGE_FORMAT_DESCRIPTOR:  return "Invalid image format descriptor";
-        case CL_INVALID_IMAGE_SIZE:               return "Invalid image size";
-        case CL_INVALID_SAMPLER:                  return "Invalid sampler";
-        case CL_INVALID_BINARY:                   return "Invalid binary";
-        case CL_INVALID_BUILD_OPTIONS:            return "Invalid build options";
-        case CL_INVALID_PROGRAM:                  return "Invalid program";
-        case CL_INVALID_PROGRAM_EXECUTABLE:       return "Invalid program executable";
-        case CL_INVALID_KERNEL_NAME:              return "Invalid kernel name";
-        case CL_INVALID_KERNEL_DEFINITION:        return "Invalid kernel definition";
-        case CL_INVALID_KERNEL:                   return "Invalid kernel";
-        case CL_INVALID_ARG_INDEX:                return "Invalid argument index";
-        case CL_INVALID_ARG_VALUE:                return "Invalid argument value";
-        case CL_INVALID_ARG_SIZE:                 return "Invalid argument size";
-        case CL_INVALID_KERNEL_ARGS:              return "Invalid kernel arguments";
-        case CL_INVALID_WORK_DIMENSION:           return "Invalid work dimension";
-        case CL_INVALID_WORK_GROUP_SIZE:          return "Invalid work group size";
-        case CL_INVALID_WORK_ITEM_SIZE:           return "Invalid work item size";
-        case CL_INVALID_GLOBAL_OFFSET:            return "Invalid global offset";
-        case CL_INVALID_EVENT_WAIT_LIST:          return "Invalid event wait list";
-        case CL_INVALID_EVENT:                    return "Invalid event";
-        case CL_INVALID_OPERATION:                return "Invalid operation";
-        case CL_INVALID_GL_OBJECT:                return "Invalid OpenGL object";
-        case CL_INVALID_BUFFER_SIZE:              return "Invalid buffer size";
-        case CL_INVALID_MIP_LEVEL:                return "Invalid mip-map level";
-        default:                                  return "Unknown";
-    }
+		case CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR: return "CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR";
+		case CL_SUCCESS:							return "Success!";
+		case -1001:									return "Platform not found";
+		case CL_DEVICE_NOT_FOUND:				  return "Device not found";
+		case CL_DEVICE_NOT_AVAILABLE:			  return "Device not available";
+		case CL_COMPILER_NOT_AVAILABLE:			  return "Compiler not available";
+		case CL_MEM_OBJECT_ALLOCATION_FAILURE:	  return "Memory object allocation failure";
+		case CL_OUT_OF_RESOURCES:				  return "Out of resources";
+		case CL_OUT_OF_HOST_MEMORY:				  return "Out of host memory";
+		case CL_PROFILING_INFO_NOT_AVAILABLE:	  return "Profiling information not available";
+		case CL_MEM_COPY_OVERLAP:				  return "Memory copy overlap";
+		case CL_IMAGE_FORMAT_MISMATCH:			  return "Image format mismatch";
+		case CL_IMAGE_FORMAT_NOT_SUPPORTED:		  return "Image format not supported";
+		case CL_BUILD_PROGRAM_FAILURE:			  return "Program build failure";
+		case CL_MAP_FAILURE:					  return "util::Map failure";
+		case CL_INVALID_VALUE:					  return "Invalid value";
+		case CL_INVALID_DEVICE_TYPE:			  return "Invalid device type";
+		case CL_INVALID_PLATFORM:				  return "Invalid platform";
+		case CL_INVALID_DEVICE:					  return "Invalid device";
+		case CL_INVALID_CONTEXT:				  return "Invalid context";
+		case CL_INVALID_QUEUE_PROPERTIES:		  return "Invalid queue properties";
+		case CL_INVALID_COMMAND_QUEUE:			  return "Invalid command queue";
+		case CL_INVALID_HOST_PTR:				  return "Invalid host pointer";
+		case CL_INVALID_MEM_OBJECT:				  return "Invalid memory object";
+		case CL_INVALID_IMAGE_FORMAT_DESCRIPTOR:  return "Invalid image format descriptor";
+		case CL_INVALID_IMAGE_SIZE:				  return "Invalid image size";
+		case CL_INVALID_SAMPLER:				  return "Invalid sampler";
+		case CL_INVALID_BINARY:					  return "Invalid binary";
+		case CL_INVALID_BUILD_OPTIONS:			  return "Invalid build options";
+		case CL_INVALID_PROGRAM:				  return "Invalid program";
+		case CL_INVALID_PROGRAM_EXECUTABLE:		  return "Invalid program executable";
+		case CL_INVALID_KERNEL_NAME:			  return "Invalid kernel name";
+		case CL_INVALID_KERNEL_DEFINITION:		  return "Invalid kernel definition";
+		case CL_INVALID_KERNEL:					  return "Invalid kernel";
+		case CL_INVALID_ARG_INDEX:				  return "Invalid argument index";
+		case CL_INVALID_ARG_VALUE:				  return "Invalid argument value";
+		case CL_INVALID_ARG_SIZE:				  return "Invalid argument size";
+		case CL_INVALID_KERNEL_ARGS:			  return "Invalid kernel arguments";
+		case CL_INVALID_WORK_DIMENSION:			  return "Invalid work dimension";
+		case CL_INVALID_WORK_GROUP_SIZE:		  return "Invalid work group size";
+		case CL_INVALID_WORK_ITEM_SIZE:			  return "Invalid work item size";
+		case CL_INVALID_GLOBAL_OFFSET:			  return "Invalid global offset";
+		case CL_INVALID_EVENT_WAIT_LIST:		  return "Invalid event wait list";
+		case CL_INVALID_EVENT:					  return "Invalid event";
+		case CL_INVALID_OPERATION:				  return "Invalid operation";
+		case CL_INVALID_GL_OBJECT:				  return "Invalid OpenGL object";
+		case CL_INVALID_BUFFER_SIZE:			  return "Invalid buffer size";
+		case CL_INVALID_MIP_LEVEL:				  return "Invalid mip-map level";
+		default:								  return "Unknown";
+	}
 
 
 }
@@ -578,11 +578,11 @@ void ClState::finish(const CommandQueue& q){
 
 
 void ClState::errorCheck(util::Str8 str, int32 err){
-    if (err != CL_SUCCESS){
-        util::Str8 msg= str + ": ";
-        msg +=  getErrorString(err);
-        release_ensure_msg(0, "%s", msg.cStr());
-    }
+	if (err != CL_SUCCESS){
+		util::Str8 msg= str + ": ";
+		msg +=	getErrorString(err);
+		release_ensure_msg(0, "%s", msg.cStr());
+	}
 }
 
 } // hardware

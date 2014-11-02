@@ -15,7 +15,7 @@ namespace global {
 /// Configuration variable which can be accessed from script, console and code
 /// Named CVar because it fits and most people are probably more familiar with CVar than e.g. CfgVar
 /// Stores serialized data, not real instances of variable types
-/// @warning 	CfgVars should be destroyed after script systems have been destroyed,
+/// @warning	CfgVars should be destroyed after script systems have been destroyed,
 ///				because global properties can't be unregistered
 class CVar : public script::NoCountReference {
 public:

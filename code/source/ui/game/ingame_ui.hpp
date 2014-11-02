@@ -27,7 +27,7 @@ private:
 	
 	gui::WorldInterfaceElement worldElement;
 	visual::Camera camera;
-    audio::AudioReceiverHandle audioRecv;
+	audio::AudioReceiverHandle audioRecv;
 };
 
 }} // ui::game

@@ -81,7 +81,7 @@ void messageCallback(const asSMessageInfo* msg, void* param){
 	else if (msg->type == asMSGTYPE_WARNING)
 		vb= debug::Vb::Moderate;
 		
-	print(debug::Ch::Script, vb, "AngelScript message:\n    file %s, row %i\n    %s",
+	print(debug::Ch::Script, vb, "AngelScript message:\n	file %s, row %i\n	 %s",
 		msg->section, msg->row, msg->message);
 }
 

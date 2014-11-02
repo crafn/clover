@@ -19,7 +19,7 @@ using ThreadUid= Profiler::ThreadUid;
 // - it is extern, or
 // - the type has a non-trivial destructor (which is not allowed for __thread variables), or
 // - the type variable is initialized by a non-constant-expression
-// 	(which is also not allowed for __thread variables)
+//	(which is also not allowed for __thread variables)
 
 // So only POD thread_locals are cool.
 

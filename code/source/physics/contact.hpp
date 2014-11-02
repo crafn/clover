@@ -72,7 +72,7 @@ public:
 
 
 	enum class Group : uint16 {
-		Generic= 	1<<0,
+		Generic=	1<<0,
 		Character=	1<<1, // A bit poor place to define gameplay stuff
 		NoCollision=1<<2
 	};

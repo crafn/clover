@@ -18,7 +18,7 @@ public:
 	Font &getFont(const util::Str8& name);
 	
 private:
-	FT_Library  library;
+	FT_Library	library;
 	util::HashMap<util::Str8, Font> fonts;
 };
 

@@ -22,7 +22,7 @@ public:
 		//SoftFixture
 	};
 
-	/* 	When creating a new Traceable
+	/*	When creating a new Traceable
 
 		To class definition:
 			static constexpr collision::Traceable::TypeId staticTraceableTypeId= collision::Traceable::New_Traceable_Type_Id;

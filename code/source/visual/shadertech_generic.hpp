@@ -23,7 +23,7 @@ public:
 	virtual void use();
 
 private:
-	util::DynArray<int32> 	lightPosLoc,
+	util::DynArray<int32>	lightPosLoc,
 						lightIntensityLoc,
 						lightRangeLoc,
 						lightRotMatrixLoc,

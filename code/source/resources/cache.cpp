@@ -252,11 +252,11 @@ void Cache::loadShaders(){
 
 
 void Cache::createGenericShader(GenericShaderType t){
-	print(debug::Ch::Resources, debug::Vb::Trivial, 	"createGenericShader(..): \n"
-											"   lightCount: %i\n"
-											"   colorMap: %i\n"
+	print(debug::Ch::Resources, debug::Vb::Trivial,		"createGenericShader(..): \n"
+											"	lightCount: %i\n"
+											"	colorMap: %i\n"
 											"	normalMap: %i\n"
-											"   envShadowMap: %i\n",
+											"	envShadowMap: %i\n",
 											t.lightCount,
 											t.colorMap,
 											t.normalMap,

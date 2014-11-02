@@ -127,14 +127,14 @@ Str8::Str8(const char8 *buf){
 }
 
 Str8& Str8::operator()(const char8* buf, ...){
-    va_list arg_list;
-    va_start(arg_list, buf);
+	va_list arg_list;
+	va_start(arg_list, buf);
 
-    setFormattedArgList(buf, arg_list);
+	setFormattedArgList(buf, arg_list);
 
-    va_end(arg_list);
+	va_end(arg_list);
 
-    return *this;
+	return *this;
 }
 
 Str8& Str8::operator<<(int32 c){
@@ -157,27 +157,27 @@ Str8& Str8::operator=(const char8* buf){
 Str8& Str8::operator+=(const char8* buf){
 	strLength += toUtf8(buf, data);
 	ascii = strLength == data.size();
-    return *this;
+	return *this;
 }
 
 Str8& Str8::operator+=(const Str8& str){
 	data += str.data;
 	strLength += str.strLength;
 	ascii = ascii && str.ascii;
-    return *this;
+	return *this;
 }
 
 Str8 Str8::operator+(const char8* buf) const{
-    Str8 str= *this;
-    str += buf;
-    return str;
+	Str8 str= *this;
+	str += buf;
+	return str;
 
 }
 
 Str8 Str8::operator+(const Str8& str) const{
-    Str8 cpy(*this);
-    cpy += str;
-    return cpy;
+	Str8 cpy(*this);
+	cpy += str;
+	return cpy;
 }
 
 Str8& Str8::operator+=(uint32 unicode){
@@ -197,9 +197,9 @@ void Str8::setFormattedArgList(const char8* buf, va_list arg_list){
 		return;
 	}
 
-    const uint32 format_buf_size= 10000;
+	const uint32 format_buf_size= 10000;
 	// Can't be static because accessed from threads
-    char8 format_buf[format_buf_size];
+	char8 format_buf[format_buf_size];
 
 	vsnprintf(format_buf, format_buf_size, buf, arg_list);
 
@@ -207,7 +207,7 @@ void Str8::setFormattedArgList(const char8* buf, va_list arg_list){
 }
 
 const char* Str8::cStr() const{
-    return data.c_str();
+	return data.c_str();
 }
 
 uint32 Str8::operator[](uint32 i) const {

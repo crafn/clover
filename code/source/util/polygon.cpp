@@ -295,8 +295,8 @@ util::GenericMesh<util::Vec2d, uint32> Polygon::triangulated() const {
 
 	int32 nv = n;
 
-	/*  remove nv-2 Vertices, creating 1 triangle every time */
-	int32 count = 2*nv;   /* error detection */
+	/*	remove nv-2 Vertices, creating 1 triangle every time */
+	int32 count = 2*nv;	  /* error detection */
 
 	for(int32 m=0, v=nv-1; nv>2; )
 	{
@@ -311,9 +311,9 @@ util::GenericMesh<util::Vec2d, uint32> Polygon::triangulated() const {
 		}
 
 		/* three consecutive vertices in current polygon, <u,v,w> */
-		int32 u = v  ; if (nv <= u) u = 0;     /* previous */
-		v = u+1; if (nv <= v) v = 0;     /* new v    */
-		int32 w = v+1; if (nv <= w) w = 0;     /* next     */
+		int32 u = v	 ; if (nv <= u) u = 0;	   /* previous */
+		v = u+1; if (nv <= v) v = 0;	 /* new v	 */
+		int32 w = v+1; if (nv <= w) w = 0;	   /* next	   */
 
 		if ( snip(poly.outer, u, v, w, nv, V) )
 		{
@@ -661,7 +661,7 @@ bool Polygon::isInside(util::Vec2d point) const {
 void Polygon::dump() const {
 	print(debug::Ch::General, debug::Vb::Trivial, "Polygon vcount: %i", (int32)getVertexCount());
 	for (auto v : getVertices()){
-		print(debug::Ch::General, debug::Vb::Trivial, "  v: %f, %f", v.x, v.y);
+		print(debug::Ch::General, debug::Vb::Trivial, "	 v: %f, %f", v.x, v.y);
 	}
 }
 

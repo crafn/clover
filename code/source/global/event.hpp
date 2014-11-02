@@ -15,70 +15,70 @@ namespace global {
 /// @todo Unclumsify
 class Event {
 public:
-    enum EType {
-        NoneEvent,
+	enum EType {
+		NoneEvent,
 
-        #define EVT(a, ...) a,
-        #define VAR(b)
-        #include "events.def"
-        #undef VAR
-        #undef EVT
+		#define EVT(a, ...) a,
+		#define VAR(b)
+		#include "events.def"
+		#undef VAR
+		#undef EVT
 
-        LastEvent
-    };
+		LastEvent
+	};
 
-    enum VariableType {
-        NoneVariable,
+	enum VariableType {
+		NoneVariable,
 
-        #define EVT(a, ...)
-        #define VAR(b) b,
-        #include "events.def"
-        #undef VAR
-        #undef EVT
-        LastVariable
+		#define EVT(a, ...)
+		#define VAR(b) b,
+		#include "events.def"
+		#undef VAR
+		#undef EVT
+		LastVariable
 
-    };
+	};
 
-    static const int32 maxVariables=15;
+	static const int32 maxVariables=15;
 
-    struct EventTypeVariables {
-        VariableType vars[maxVariables];
+	struct EventTypeVariables {
+		VariableType vars[maxVariables];
 		const VariableType& operator[](int32 i) const { return vars[i]; }
-        int32 getVarCount() const;
-    };
+		int32 getVarCount() const;
+	};
 
-    static const EventTypeVariables eventTypeVariables[LastEvent];
-    static const util::Str8 eventNames[LastEvent];
-    static const util::Str8 variableNames[LastVariable];
+	static const EventTypeVariables eventTypeVariables[LastEvent];
+	static const util::Str8 eventNames[LastEvent];
+	static const util::Str8 variableNames[LastVariable];
 
-    Event(EType t);
+	Event(EType t);
 	/// Queues event
-    virtual ~Event();
+	virtual ~Event();
 
-    EType getType() const;
-    util::Str8 getName() const;
+	EType getType() const;
+	util::Str8 getName() const;
 
-    /// Argument accessor
-    util::Variant& operator()(VariableType s);
+	/// Argument accessor
+	util::Variant& operator()(VariableType s);
 
-    bool hasVariable(VariableType s);
+	bool hasVariable(VariableType s);
 	bool canHaveVariable(VariableType s);
 
-    void addReceiver(const game::WeHandle& h);
-    void addReceivers(const game::WESet& h);
+	void addReceiver(const game::WeHandle& h);
+	void addReceivers(const game::WESet& h);
 
-    int32 getReceiverCount();
+	int32 getReceiverCount();
 
-    void queue();
+	void queue();
 	bool isQueued() const { return queued; }
 
-    void send();
+	void send();
 
 private:
-    EType type;
-    bool queued;
-    game::WESet receivers;
-    util::Map<VariableType, util::Variant> vars;
+	EType type;
+	bool queued;
+	game::WESet receivers;
+	util::Map<VariableType, util::Variant> vars;
 };
 
 } // global

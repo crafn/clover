@@ -415,7 +415,7 @@ struct SignalValueUiTraits<SignalType::SrtTransform3> {
 
 	static void valueToView(const Value& v, ViewElement& e){
 		std::stringstream ss;
-		ss 	<< v.scale.x << ", " << v.scale.y << ", " << v.scale.z << " ; "
+		ss	<< v.scale.x << ", " << v.scale.y << ", " << v.scale.z << " ; "
 			<< v.rotation.axis().x <<  ", " << v.rotation.axis().y << ", " << v.rotation.axis().z << ", " << v.rotation.rotation() << " ; "
 			<< v.translation.x << ", " << v.translation.y << ", " << v.translation.z;
 		e.setText(util::Str8(ss.str()));
@@ -553,7 +553,7 @@ struct SignalValueUiTraits<SignalType::Vec4> {
 	}
 	
 	static Value valueFromEdit(const EditElement& e){
-		return Value { 	e[0].getValueAs<Value::Value>(), e[1].getValueAs<Value::Value>(),
+		return Value {	e[0].getValueAs<Value::Value>(), e[1].getValueAs<Value::Value>(),
 						e[2].getValueAs<Value::Value>(), e[3].getValueAs<Value::Value>()};
 	}
 	

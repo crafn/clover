@@ -30,7 +30,7 @@ public:
 	virtual void apply(const EntityLogic& other) override;
 	
 	/// @return Bounding box (not translated to position)
-	///	        BBox guaranteed to be set
+	///			BBox guaranteed to be set
 	BBox getBoundingBox() const;
 	
 	void setColorMul(const util::Color& c){ colorMul= c; }

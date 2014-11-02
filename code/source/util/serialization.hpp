@@ -8,7 +8,7 @@ namespace util {
 
 /// Defines field layout and additional steps needed for serialization
 /// @note Binary serialization doesn't save field names, so field order
-///       in serialization and deserialization should match
+///		  in serialization and deserialization should match
 /// @todo Should be used instead of ObjectNodeTraits
 /// @todo Version numbers
 template <typename T>

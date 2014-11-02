@@ -5,7 +5,7 @@ VertexArrayObject<V, I>::VertexArrayObject(hardware::GlState::Primitive p):
 							sizeof(V),
 							hardware::GlState::TypeToEnumType<I>::value()){
 
-	const auto& attributes=  V::getAttributes();
+	const auto& attributes=	 V::getAttributes();
 
 	uint32 id_counter= 0;
 	for (const auto& m : attributes){

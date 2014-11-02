@@ -18,12 +18,12 @@
 #include "util/map.hpp"
 
 #if OS == OS_WINDOWS
-    #include <windows.h>
-    #include <winsock.h>
+	#include <windows.h>
+	#include <winsock.h>
 #endif
 
 #if OS == OS_LINUX
-    #include <arpa/inet.h>
+	#include <arpa/inet.h>
 #endif
 
 #include <boost/filesystem.hpp>
@@ -55,8 +55,8 @@ Device::~Device(){
 	delete hardware::gKeyboard;
 	hardware::gKeyboard= nullptr;
 	
-    delete hardware::gGlState;
-    hardware::gGlState= nullptr;
+	delete hardware::gGlState;
+	hardware::gGlState= nullptr;
 	
 	delete hardware::gClState;
 	hardware::gClState= nullptr;
@@ -65,13 +65,13 @@ Device::~Device(){
 	window= nullptr;
 	glfwTerminate();
 	
-    print(debug::Ch::Device, debug::Vb::Moderate, "Device shutdown succeeded");
+	print(debug::Ch::Device, debug::Vb::Moderate, "Device shutdown succeeded");
 }
 
 void Device::create(util::Str8 title){
 	initGlfw();
 
-    createWindow(	title,
+	createWindow(	title,
 					global::gCfgMgr->get<util::Vec2i>("hardware::resolution", util::Vec2i{800, 600}),
 					global::gCfgMgr->get<int32>("hardware::multisamples", 0),
 					global::gCfgMgr->get<bool>("hardware::fullscreen", false));
@@ -82,9 +82,9 @@ void Device::create(util::Str8 title){
 	// Initialize "hardware" subsystems
 	
 	hardware::gGlState= new hardware::GlState();
-    hardware::gGlState->errorCheck("GLError after glewInit()");
-    glEnable(GL_BLEND);
-    glDisable(GL_CULL_FACE);
+	hardware::gGlState->errorCheck("GLError after glewInit()");
+	glEnable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
 
 	hardware::gClState= new hardware::ClState();
 	hardware::gClState->choosePlatformWiselyAndCreateContextNicely();
@@ -102,25 +102,25 @@ void Device::create(util::Str8 title){
 	else
 		new audio::DummyAudioDevice();
 	
-    prevFrameTime= 0.0;
-    curFrameTime= 0.0;
+	prevFrameTime= 0.0;
+	curFrameTime= 0.0;
 }
 
 bool Device::isBigEndian(){
-    if (htonl(1)==1)return true;
-    return false;
+	if (htonl(1)==1)return true;
+	return false;
 }
 
 void Device::updateFrameTime(){
-    prevFrameTime= curFrameTime;
-    curFrameTime= glfwGetTime();
+	prevFrameTime= curFrameTime;
+	curFrameTime= glfwGetTime();
 }
 
 real32 Device::getFrameTime(){
-    if(curFrameTime-prevFrameTime < 0.00001)
-        return 0.00001;
+	if(curFrameTime-prevFrameTime < 0.00001)
+		return 0.00001;
 
-    return curFrameTime-prevFrameTime;
+	return curFrameTime-prevFrameTime;
 }
 
 void Device::updateEvents(){
@@ -157,32 +157,32 @@ void Device::updateEvents(){
 
 void Device::sleep(real32 d){
 	std::chrono::milliseconds duration((int)(d*1000.0f));
-    std::this_thread::sleep_for(duration);
+	std::this_thread::sleep_for(duration);
 }
 
 void Device::getViewportSize(int& x, int32 &y){
-    x= viewportX;
-    y= viewportY;
+	x= viewportX;
+	y= viewportY;
 }
 
 util::Vec2i Device::getViewportSize(){
 	ensure(viewportX != 0 && viewportY != 0);
-    return {viewportX, viewportY};
+	return {viewportX, viewportY};
 }
 
 void Device::clearBuffers(){
-    //glClearColor(0.7, 0.7, 0.7, 0.0);
-    //glClear(GL_COLOR_BUFFER_BIT);
+	//glClearColor(0.7, 0.7, 0.7, 0.0);
+	//glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Device::setViewport(){
 
-    glViewport(0, 0, viewportX, viewportY);
+	glViewport(0, 0, viewportX, viewportY);
 
 }
 
 void Device::setViewport(util::Vec2i v){
-    glViewport(0,0,v.x,v.y);
+	glViewport(0,0,v.x,v.y);
 }
 
 void Device::swapBuffers(){
@@ -190,8 +190,8 @@ void Device::swapBuffers(){
 	hardware::gGlState->errorCheck("Before SwapBuffers");
 	#endif
 
-    //glFinish();
-    glfwSwapBuffers(window);
+	//glFinish();
+	glfwSwapBuffers(window);
 }
 
 util::Str8 Device::getWorkingDirectory() const {
@@ -220,7 +220,7 @@ void Device::initGlfw(){
 	glfwSetErrorCallback(glfwErrorCallback);
 
 	if (glfwInit() != GL_TRUE)
-        throw(global::Exception("GLFW init failed"));
+		throw(global::Exception("GLFW init failed"));
 	
 	int32 glfw_maj, glfw_min, glfw_rev;
 	glfwGetVersion(&glfw_maj, &glfw_min, &glfw_rev);
@@ -230,31 +230,31 @@ void Device::initGlfw(){
 
 void Device::initGlew(){
 	glewExperimental= GL_TRUE;
-    GLenum err = glewInit();
+	GLenum err = glewInit();
 
-    #if OS == OS_WINDOWS
+	#if OS == OS_WINDOWS
 /*
-        //Pitää määritellä käsin koska glew ei osaa
-        //Jaha. glewExperimental= GL_TRUE toimii kans
+		//Pitää määritellä käsin koska glew ei osaa
+		//Jaha. glewExperimental= GL_TRUE toimii kans
 
-        glGenVertexArrays= (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
-        glBindVertexArray= (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
-        glDeleteVertexArrays= (PFNGLDELETEVERTEXARRAYSPROC)wglGetProcAddress("glDeleteVertexArrays");
+		glGenVertexArrays= (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
+		glBindVertexArray= (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
+		glDeleteVertexArrays= (PFNGLDELETEVERTEXARRAYSPROC)wglGetProcAddress("glDeleteVertexArrays");
 
-        glGenFramebuffers= (PFNGLGENFRAMEBUFFERSEXTPROC)wglGetProcAddress("glGenFramebuffersEXT");
-        glBindFramebuffer= (PFNGLBINDFRAMEBUFFEREXTPROC)wglGetProcAddress("glBindFramebufferEXT");
-        glFramebufferTexture2D= (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)wglGetProcAddress("glFramebufferTexture2DEXT");
-        glCheckFramebufferStatus= (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)wglGetProcAddress("glCheckFramebufferStatusEXT");
-        glDeleteFramebuffers= (PFNGLDELETEFRAMEBUFFERSEXTPROC)wglGetProcAddress("glDeleteFramebuffersEXT");
+		glGenFramebuffers= (PFNGLGENFRAMEBUFFERSEXTPROC)wglGetProcAddress("glGenFramebuffersEXT");
+		glBindFramebuffer= (PFNGLBINDFRAMEBUFFEREXTPROC)wglGetProcAddress("glBindFramebufferEXT");
+		glFramebufferTexture2D= (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)wglGetProcAddress("glFramebufferTexture2DEXT");
+		glCheckFramebufferStatus= (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)wglGetProcAddress("glCheckFramebufferStatusEXT");
+		glDeleteFramebuffers= (PFNGLDELETEFRAMEBUFFERSEXTPROC)wglGetProcAddress("glDeleteFramebuffersEXT");
 
-        glGenerateMipmap= (PFNGLGENERATEMIPMAPEXTPROC)wglGetProcAddress("glGenerateMipmapEXT");*/
+		glGenerateMipmap= (PFNGLGENERATEMIPMAPEXTPROC)wglGetProcAddress("glGenerateMipmapEXT");*/
 
-    #endif
+	#endif
 
-    if (err != GLEW_OK)
-        throw global::Exception("GLEW init failed");
-    
-    print(debug::Ch::OpenGL, debug::Vb::Trivial, "GLEW version: %s", glewGetString(GLEW_VERSION));
+	if (err != GLEW_OK)
+		throw global::Exception("GLEW init failed");
+	
+	print(debug::Ch::OpenGL, debug::Vb::Trivial, "GLEW version: %s", glewGetString(GLEW_VERSION));
 }
 
 void Device::createWindow(const util::Str8& title, util::Vec2i resolution, int32 multisamples, bool fullscreen){
@@ -271,13 +271,13 @@ void Device::createWindow(const util::Str8& title, util::Vec2i resolution, int32
 			throw global::Exception("Primary monitor not found");
 	}
 
-    window= glfwCreateWindow(	resolution.x, resolution.y,
+	window= glfwCreateWindow(	resolution.x, resolution.y,
 								title.cStr(),
 								monitor,
 								nullptr);
 				
 	if (!window)
-        throw global::Exception("Window creation failed");
+		throw global::Exception("Window creation failed");
 	
 	glfwMakeContextCurrent(window);
  
@@ -286,10 +286,10 @@ void Device::createWindow(const util::Str8& title, util::Vec2i resolution, int32
 	mi= glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR);
 	print(debug::Ch::OpenGL, debug::Vb::Trivial, "OpenGL version: %i.%i", ma, mi);
 
-    viewportX= resolution.x;
-    viewportY= resolution.y;
+	viewportX= resolution.x;
+	viewportY= resolution.y;
 
-    updateAspectRatio();
+	updateAspectRatio();
 	
 	// VSync
 	glfwSwapInterval(0);

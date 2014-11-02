@@ -8,16 +8,16 @@ namespace global {
 
 class EventQueue {
 public:
-    /// Sends last and removes from queue
-    bool sendLast();
+	/// Sends last and removes from queue
+	bool sendLast();
 
-    global::Event& getLast();
-    void popLast();
+	global::Event& getLast();
+	void popLast();
 	
-    int32 size();
+	int32 size();
 
-    /// Called by Event
-    void queue(global::Event e);
+	/// Called by Event
+	void queue(global::Event e);
 
 private:
 	util::DynArray<global::Event> events;

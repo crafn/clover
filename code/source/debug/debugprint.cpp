@@ -52,20 +52,20 @@ util::Str8& DebugPrint::getVerbosityString(Vb v){
 }
 
 DebugPrint::DebugPrint(){
-    verbosity= Vb::Trivial;
-    filter.reset();
-    filter.flip();
+	verbosity= Vb::Trivial;
+	filter.reset();
+	filter.flip();
 }
 
 void DebugPrint::setVerbosity(Vb v){
 	boost::mutex::scoped_lock lock(mutex);
-    verbosity= v;
+	verbosity= v;
 }
 
 void DebugPrint::setChannelActive(Ch c, bool b){
 	ensure(static_cast<SizeType>(c) < channelCount);
 	boost::mutex::scoped_lock lock(mutex);
-    filter.set(static_cast<SizeType>(c), b);
+	filter.set(static_cast<SizeType>(c), b);
 }
 
 bool DebugPrint::isChannelActive(Ch c) const {
@@ -77,23 +77,23 @@ bool DebugPrint::isChannelActive(Ch c) const {
 void DebugPrint::operator()(Ch c, Vb v, const char8 * str, ...){
 	boost::mutex::scoped_lock lock(mutex);
 
-    va_list argList;
-    va_start(argList, str);
+	va_list argList;
+	va_start(argList, str);
 	util::Str8 msg_str;
 	msg_str.setFormattedArgList(str, argList);
-    va_end(argList);
+	va_end(argList);
 	
 	if (v == Vb::Critical)
 		msg_str= "*** " + msg_str;
 	
-    //Debuggifileeseen menee kaikki tulostus
-    gDebugLog(msg_str.cStr());
+	//Debuggifileeseen menee kaikki tulostus
+	gDebugLog(msg_str.cStr());
 
-    if (	static_cast<SizeType>(v) < static_cast<SizeType>(verbosity) ||
+	if (	static_cast<SizeType>(v) < static_cast<SizeType>(verbosity) ||
 			!filter.test(static_cast<SizeType>(c)))
 		return;
 
-    std::cout << msg_str.cStr() << "\n";
+	std::cout << msg_str.cStr() << "\n";
 	
 	Message message;
 	message.channel= c;

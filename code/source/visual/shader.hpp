@@ -38,7 +38,7 @@ public:
 	void setUniform(uint32 loc, const uint8&, int32 count=1);
 	void setUniform(uint32 loc, const uint16&, int32 count=1);
 	void setUniform(uint32 loc, const uint32&, int32 count=1);
-	void setUniform(uint32 loc, const int32&,   int32 count=1);
+	void setUniform(uint32 loc, const int32&,	int32 count=1);
 	void setUniform(uint32 loc, const real32&, int32 count=1, int32 dim=1);
 	void setUniform(uint32 loc, const real64&, int32 count= 1);
 	void setUniform(uint32 loc, const util::Vec2d&, int32 count=1);

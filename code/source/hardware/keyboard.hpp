@@ -17,12 +17,12 @@ class Keyboard {
 public:
 	Keyboard();
 	
-    bool isDown(int32 code);
-    bool isPressed(int32 code);
-    bool isReleased(int32 code);
+	bool isDown(int32 code);
+	bool isPressed(int32 code);
+	bool isReleased(int32 code);
 
-    /// @return Characters written in last frame
-    util::Str8 getWrittenStr();
+	/// @return Characters written in last frame
+	util::Str8 getWrittenStr();
 	uint32 getWrittenBackspaceCount();
 	
 protected:
@@ -31,11 +31,11 @@ protected:
 	void update();
 	void clearWriting();
 	
-    static const int32 keyCount= GLFW_KEY_LAST+1;
-    int32 currentKBStates[keyCount];
-    int32 previousKBStates[keyCount];
+	static const int32 keyCount= GLFW_KEY_LAST+1;
+	int32 currentKBStates[keyCount];
+	int32 previousKBStates[keyCount];
 
-    static util::Str8 writtenStr;
+	static util::Str8 writtenStr;
 	static uint32 backspaceCount;
 	
 	//static void GLFWCALL charCallback(int32 character, int32 action);

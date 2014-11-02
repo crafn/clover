@@ -19,15 +19,15 @@ namespace debug {
 /// Channel of message
 enum class Ch {
 	Anim,
-    WE,
-    OpenGL,
-    OpenCL,
-    Device,
-    Phys,
-    Audio,
-    Event,
+	WE,
+	OpenGL,
+	OpenCL,
+	Device,
+	Phys,
+	Audio,
+	Event,
 	Visual,
-    Resources,
+	Resources,
 	Save,
 	Gui,
 	Ui,
@@ -36,15 +36,15 @@ enum class Ch {
 	Net,
 	Nodes,
 	Dev,
-    General,
-    Last
+	General,
+	Last
 };
 
 /// Verbosity level
 enum class Vb {
 	Trivial,
 	Moderate,
-    Critical,
+	Critical,
 	Last
 };
 
@@ -57,16 +57,16 @@ public:
 	static util::Str8& getChannelString(Ch id);
 	static util::Str8& getVerbosityString(Vb v);
 
-    DebugPrint();
+	DebugPrint();
 
-    void setVerbosity(Vb);
+	void setVerbosity(Vb);
 	Vb getVerbosity() const { return verbosity; }
 
-    void setChannelActive(Ch, bool);
+	void setChannelActive(Ch, bool);
 	bool isChannelActive(Ch) const;
 
-    /// Appends a row to stdout and log
-    void operator()(Ch c, Vb v, const char* str, ...);
+	/// Appends a row to stdout and log
+	void operator()(Ch c, Vb v, const char* str, ...);
 
 	struct Message {
 		Ch channel;
@@ -82,8 +82,8 @@ public:
 private:
 	mutable boost::mutex mutex;
 
-    std::bitset<static_cast<SizeType>(Ch::Last)> filter;
-    Vb verbosity;
+	std::bitset<static_cast<SizeType>(Ch::Last)> filter;
+	Vb verbosity;
 	
 	Buffer buffer;
 };

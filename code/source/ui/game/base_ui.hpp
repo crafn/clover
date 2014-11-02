@@ -31,12 +31,12 @@ namespace ui { namespace game {
 /// Top of user interface logic
 class BaseUi : public global::EventReceiver {
 public:
-    BaseUi();
+	BaseUi();
 	virtual ~BaseUi();
 	
 	virtual void onEvent(global::Event&);
 
-    bool update();
+	bool update();
 
 	InGameUi* getInGameUi(){ return inGameUi.get(); }
 	editor::EditorUi* getEditorUi(){ return editorUi.get(); }
@@ -48,9 +48,9 @@ protected:
 	std::unique_ptr<InGameUi> inGameUi;
 	std::unique_ptr<editor::EditorUi> editorUi;
 
-    gui::Cursor& guiCursor;
+	gui::Cursor& guiCursor;
 
-    util::Vec2d cursorOnWorld;
+	util::Vec2d cursorOnWorld;
 	bool quit;
 	
 	ui::hid::ActionListener<> quitListener;

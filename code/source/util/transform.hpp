@@ -166,7 +166,7 @@ struct CommonReplaced<SrtTransform<S1, R1, T1>, RtTransform<S2, R2>> {
 	using Src= RtTransform<S2, R2>;
 	
 	static Dst value(Dst dst, Src src){
-		return 	Dst(dst.scale,
+		return	Dst(dst.scale,
 					commonReplaced(dst.rotation, src.rotation),
 					commonReplaced(dst.translation, src.translation)
 				);
@@ -180,7 +180,7 @@ struct CommonReplaced<RtTransform<S1, R1>, SrtTransform<S2, R2, T2>> {
 	using Src= SrtTransform<S2, R2, T2>;
 	
 	static Dst value(Dst dst, Src src){
-		return 	Dst(commonReplaced(dst.rotation, src.rotation),
+		return	Dst(commonReplaced(dst.rotation, src.rotation),
 					commonReplaced(dst.translation, src.translation)
 				);
 	}

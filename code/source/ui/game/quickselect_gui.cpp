@@ -9,7 +9,7 @@ QuickSelectRingGui::QuickSelectRingGui()
 	touchable= false;
 
 	for (uint32 i=0; i<Layout_Last; ++i){
-		real64 radius=  0.13*(i+1);
+		real64 radius=	0.13*(i+1);
 		layouts.pushBack(gui::RadialLayoutElement(util::Coord::VF(0), util::Coord::VF(radius)));
 
 		util::Str8 text= "default";

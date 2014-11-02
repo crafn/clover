@@ -16,7 +16,7 @@ public:
 	using ChunkSet= util::Set<ChunkVec>;
 	using ClusterSet= util::Set<ChunkSet>;
 	
-	/// @param region_request 	is called when data for new region is needed.
+	/// @param region_request	is called when data for new region is needed.
 	///							Will be called in the deserialization of chunks
 	WorldDataCache(RegionDataRequest region_request)
 			: regionDataRequest(region_request){}

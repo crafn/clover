@@ -41,15 +41,15 @@ GlState::GlState()
 		, boundIbo((IboDId)-1)
 		, activeProgram(0){
 
-    activeTexUnit=0;
-    polygonMode= GL_FILL;
+	activeTexUnit=0;
+	polygonMode= GL_FILL;
 
-    for (int32 i=0; i<texUnitCount; i++){
-        boundTex[i]= 0;
+	for (int32 i=0; i<texUnitCount; i++){
+		boundTex[i]= 0;
 		boundTexTargets[i]= TexTarget::Tex2d;
-    }
-    blendSource= 0;
-    blendDestination= 0;
+	}
+	blendSource= 0;
+	blendDestination= 0;
 	
 	/// @todo OGL debug messages
 #if 0
@@ -64,22 +64,22 @@ GlState::GlState()
 GlState::TexDId GlState::genTex(){
 	SUPER_OGL_DEBUG("genTex begin");
 
-    uint32 texture;
-    glGenTextures(1, &texture);
+	uint32 texture;
+	glGenTextures(1, &texture);
 
 	SUPER_OGL_DEBUG("genTex end");
-    return texture;
+	return texture;
 }
 
 void GlState::setTextureUnit(int32 unit){
 	SUPER_OGL_DEBUG("setTextureUnit begin");
 
 	ensure(unit < texUnitCount);
-    if (unit != activeTexUnit){
-        activeTexUnit= unit;
+	if (unit != activeTexUnit){
+		activeTexUnit= unit;
 
-        glActiveTexture(unit + GL_TEXTURE0);
-    }
+		glActiveTexture(unit + GL_TEXTURE0);
+	}
 
 	SUPER_OGL_DEBUG("setTextureUnit end");
 }
@@ -107,13 +107,13 @@ void GlState::bindTex(TexTarget target, TexDId tex, int32 unit){
 void GlState::setPolygonMode(GLenum mode){
 	SUPER_OGL_DEBUG("setPolygonMode begin");
 
-    if (mode != polygonMode){
+	if (mode != polygonMode){
 
-        polygonMode= mode;
+		polygonMode= mode;
 
-        glPolygonMode(GL_FRONT_AND_BACK, mode);
+		glPolygonMode(GL_FRONT_AND_BACK, mode);
 
-    }
+	}
 
 	SUPER_OGL_DEBUG("setPolygonMode end");
 }
@@ -121,12 +121,12 @@ void GlState::setPolygonMode(GLenum mode){
 void GlState::setBlendFunc(BlendFunc func){
 	SUPER_OGL_DEBUG("setPolygonMode begin");
 
-    if (func.srcFactor != blendSource || func.dstFactor != blendDestination){
-        glBlendFunc(func.srcFactor, func.dstFactor);
+	if (func.srcFactor != blendSource || func.dstFactor != blendDestination){
+		glBlendFunc(func.srcFactor, func.dstFactor);
 
-        blendSource= func.srcFactor;
-        blendDestination= func.dstFactor;
-    }
+		blendSource= func.srcFactor;
+		blendDestination= func.dstFactor;
+	}
 
 	SUPER_OGL_DEBUG("setPolygonMode end");
 }
@@ -134,11 +134,11 @@ void GlState::setBlendFunc(BlendFunc func){
 void GlState::setViewport(util::Vec2i pos, util::Vec2i size){
 	SUPER_OGL_DEBUG("setViewport begin");
 
-    if (pos != viewportPosition || size != viewportSize){
-        glViewport(pos.x, pos.y, size.x, size.y);
-        viewportPosition= pos;
-        viewportSize= size;
-    }
+	if (pos != viewportPosition || size != viewportSize){
+		glViewport(pos.x, pos.y, size.x, size.y);
+		viewportPosition= pos;
+		viewportSize= size;
+	}
 
 	SUPER_OGL_DEBUG("setViewport end");
 }
@@ -173,11 +173,11 @@ void GlState::setTexParam<real64>(GLenum e, const real64& v){
 void GlState::setDefaultTexParams(){
 	SUPER_OGL_DEBUG("setDefaultTexParams begin");
 
-    setTexParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    setTexParam(GL_TEXTURE_WRAP_S, GL_REPEAT);
-    setTexParam(GL_TEXTURE_WRAP_T, GL_REPEAT);
-    setTexParam(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    setTexParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	setTexParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	setTexParam(GL_TEXTURE_WRAP_S, GL_REPEAT);
+	setTexParam(GL_TEXTURE_WRAP_T, GL_REPEAT);
+	setTexParam(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	setTexParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	SUPER_OGL_DEBUG("setDefaultTexParams end");
 }
@@ -231,7 +231,7 @@ void GlState::submitTexData(TexFormat format,
 void GlState::generateMipmap(){
 	SUPER_OGL_DEBUG("generateMipmap begin");
 
-    glGenerateMipmap(activeGlTexTarget());
+	glGenerateMipmap(activeGlTexTarget());
 
 	SUPER_OGL_DEBUG("generateMipmap end");
 }
@@ -241,7 +241,7 @@ void GlState::deleteTex(uint32 tex){
 	SUPER_OGL_DEBUG("deleteTexture begin");
 
 	ensure_msg(boundTex[activeTexUnit] != tex, "todo automatic unbind");
-    glDeleteTextures(1, &tex);
+	glDeleteTextures(1, &tex);
 
 	SUPER_OGL_DEBUG("deleteTexture end");
 }
@@ -259,7 +259,7 @@ GlState::FboDId GlState::genFbo(){
 void GlState::bindFbo(FboDId fbo){
 	SUPER_OGL_DEBUG("bindFramebuffer begin");
 
-    if (fbo == boundFbo)
+	if (fbo == boundFbo)
 		return;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -296,7 +296,7 @@ void GlState::deleteFbo(FboDId fbo){
 void GlState::setClearColor(const util::Color& c){
 	SUPER_OGL_DEBUG("setClearColor begin");
 
-    glClearColor(c.r, c.g, c.b, c.a);
+	glClearColor(c.r, c.g, c.b, c.a);
 
 	SUPER_OGL_DEBUG("clearColor end");
 }
@@ -316,25 +316,25 @@ void GlState::errorCheck(const util::Str8& where){
 	uint32 err= glGetError();
 
 
-    if (err != GL_NO_ERROR){
-        util::Str8 msg= "OpenGL error: " + where;
-        msg += ": ";
+	if (err != GL_NO_ERROR){
+		util::Str8 msg= "OpenGL error: " + where;
+		msg += ": ";
 
 
-        std::stringstream tc;
-        tc << err;
+		std::stringstream tc;
+		tc << err;
 
 
 
-        util::Str8 error= tc.str().c_str();
-        error += " ";
-        error += (const char*)gluErrorString(err);
+		util::Str8 error= tc.str().c_str();
+		error += " ";
+		error += (const char*)gluErrorString(err);
 
-        msg +=  error;
+		msg +=	error;
 
-        print(debug::Ch::OpenGL, debug::Vb::Moderate, msg.cStr());
+		print(debug::Ch::OpenGL, debug::Vb::Moderate, msg.cStr());
 
-    }
+	}
 }
 
 void GlState::genVertexArrays(uint32 count, VaoDId* vao){

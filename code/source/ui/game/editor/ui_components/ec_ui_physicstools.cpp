@@ -16,22 +16,22 @@ PhysicsToolsEcUi::PhysicsToolsEcUi(PhysicsToolsEc& comp):
 	drawLayout(gui::LinearLayoutElement::Vertical, util::Coord::VF(0), util::Coord::VF({0.25, 0.3})),
 	drawCheckLayout(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.25, 0.03})),
 		drawCheck("Physics debugdraw",				util::Coord::VF(0)),
-		drawFlagCheckLayout({ 	gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
+		drawFlagCheckLayout({	gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03}))}),
-		drawFlagCheck({	gui::CheckBoxElement("Shape", 			util::Coord::VF(0)),
-						gui::CheckBoxElement("Joint", 			util::Coord::VF(0)),
-						gui::CheckBoxElement("Bounding box", 	util::Coord::VF(0)),
+		drawFlagCheck({	gui::CheckBoxElement("Shape",			util::Coord::VF(0)),
+						gui::CheckBoxElement("Joint",			util::Coord::VF(0)),
+						gui::CheckBoxElement("Bounding box",	util::Coord::VF(0)),
 						gui::CheckBoxElement("Broadphase pair",	util::Coord::VF(0)),
-						gui::CheckBoxElement("Center of mass", 	util::Coord::VF(0)),
+						gui::CheckBoxElement("Center of mass",	util::Coord::VF(0)),
 						gui::CheckBoxElement("Fluid particles", util::Coord::VF(0)),
 						gui::CheckBoxElement("Grid",			util::Coord::VF(0))}),
 		drawAlphaSliderLabel("Alpha",					util::Coord::VF(0)),
-		drawAlphaSlider(gui::SliderElement::Horizontal, util::Coord::VF(0), 			util::Coord::VF({0.2})){
+		drawAlphaSlider(gui::SliderElement::Horizontal, util::Coord::VF(0),				util::Coord::VF({0.2})){
 	
 	EditorComponentUi::getContentElement().addSubElement(contentLayout);
 	

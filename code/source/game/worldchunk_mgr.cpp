@@ -6,58 +6,58 @@ namespace clover {
 namespace game {
 
 WorldChunkMgr::ChunkSet WorldChunkMgr::getChunksInRadius(util::Vec2d p, real64 r){
-    ChunkSet c;
+	ChunkSet c;
 	
-    p -= util::Vec2d(game::WorldChunk::width*0.5);
+	p -= util::Vec2d(game::WorldChunk::width*0.5);
 	// 0.8 is a magic multiplier to produce visually somewhat correct results
-    r += game::WorldChunk::width*0.8;
+	r += game::WorldChunk::width*0.8;
 
-    for (auto it=chunks.begin(); it!= chunks.end(); ++it){
+	for (auto it=chunks.begin(); it!= chunks.end(); ++it){
 		game::WorldChunk& chunk= it->second;
 
-        util::Vec2d chunkpos{(real64)chunk.getPosition().x, (real64)chunk.getPosition().y};
-        chunkpos = chunkpos*game::WorldChunk::width;
+		util::Vec2d chunkpos{(real64)chunk.getPosition().x, (real64)chunk.getPosition().y};
+		chunkpos = chunkpos*game::WorldChunk::width;
 
-        if ( util::Vec2d(chunkpos - p).lengthSqr() <= r*r){
-            c.insert(&chunk);
-        }
-    }
+		if ( util::Vec2d(chunkpos - p).lengthSqr() <= r*r){
+			c.insert(&chunk);
+		}
+	}
 
-    return c;
+	return c;
 }
 
 WorldChunkMgr::ChunkSet WorldChunkMgr::getChunksOutRadius(util::Vec2d p, real64 r){
-    ChunkSet c;
+	ChunkSet c;
 
-    p -= util::Vec2d(game::WorldChunk::width*0.5);
-    r += game::WorldChunk::width*0.8;
+	p -= util::Vec2d(game::WorldChunk::width*0.5);
+	r += game::WorldChunk::width*0.8;
 
-    for (auto it=chunks.begin(); it!= chunks.end(); ++it){
+	for (auto it=chunks.begin(); it!= chunks.end(); ++it){
 		game::WorldChunk& chunk= it->second;
 
-        util::Vec2d chunkpos{	(real64)chunk.getPosition().x,
+		util::Vec2d chunkpos{	(real64)chunk.getPosition().x,
 						(real64)chunk.getPosition().y };
-        chunkpos = chunkpos*game::WorldChunk::width;
+		chunkpos = chunkpos*game::WorldChunk::width;
 
-        if ( util::Vec2d(chunkpos - p).lengthSqr() > r*r){
-            c.insert(&chunk);
-        }
-    }
+		if ( util::Vec2d(chunkpos - p).lengthSqr() > r*r){
+			c.insert(&chunk);
+		}
+	}
 
-    return c;
+	return c;
 }
 
 WorldChunkMgr::ChunkSet WorldChunkMgr::inhabitChunksInRadius(util::Vec2d p, real64 r){
 	ChunkSet vec;
 
-    r += game::WorldChunk::width*0.8;
+	r += game::WorldChunk::width*0.8;
 
 	util::Vec2i search_pos= game::WorldGrid::worldToChunkVec(p - util::Vec2d(r));
 	util::Vec2i start_pos= search_pos;
 	util::Vec2i last_pos= game::WorldGrid::worldToChunkVec(p + util::Vec2d(r));
 
 	// Search area of rectangle
-    while (search_pos.y <= last_pos.y){
+	while (search_pos.y <= last_pos.y){
 		if (p.distanceSqr(util::Vec2d{(real64)search_pos.x, (real64)search_pos.y}*game::WorldChunk::width) <= r*r){
 			// 'p' is inside radius
 			game::GridPoint p;
@@ -104,25 +104,25 @@ game::WorldChunk& WorldChunkMgr::createChunk(game::GridPoint pos){
 		throw global::Exception("WorldChunkManifold::createChunk(..): there's already chunk in position %i, %i", p.x, p.y);
 	}
 
-    for (auto it=chunks.begin(); it!=chunks.end(); ++it){
+	for (auto it=chunks.begin(); it!=chunks.end(); ++it){
 		game::WorldChunk &chunk= it->second;
 
-        if (p.x + 1 == chunk.getPosition().x && p.y == chunk.getPosition().y) sides[game::WorldChunk::Right]= &chunk;
-        if (p.x - 1 == chunk.getPosition().x && p.y == chunk.getPosition().y) sides[game::WorldChunk::Left]= &chunk;
-        if (p.x == chunk.getPosition().x && p.y + 1 == chunk.getPosition().y) sides[game::WorldChunk::Up]= &chunk;
-        if (p.x == chunk.getPosition().x && p.y - 1 == chunk.getPosition().y) sides[game::WorldChunk::Down]= &chunk;
-    }
+		if (p.x + 1 == chunk.getPosition().x && p.y == chunk.getPosition().y) sides[game::WorldChunk::Right]= &chunk;
+		if (p.x - 1 == chunk.getPosition().x && p.y == chunk.getPosition().y) sides[game::WorldChunk::Left]= &chunk;
+		if (p.x == chunk.getPosition().x && p.y + 1 == chunk.getPosition().y) sides[game::WorldChunk::Up]= &chunk;
+		if (p.x == chunk.getPosition().x && p.y - 1 == chunk.getPosition().y) sides[game::WorldChunk::Down]= &chunk;
+	}
 
 	game::WorldChunk& chunk= chunks[p];
 	chunk.setPosition(p);
 
-    for (int32 i=0; i<4; i++){
-        if (sides[i]){
-            chunk.setSide(*sides[i]);
-        }
-    }
+	for (int32 i=0; i<4; i++){
+		if (sides[i]){
+			chunk.setSide(*sides[i]);
+		}
+	}
 
-    return chunk;
+	return chunk;
 }
 
 WorldChunkMgr::ChunkSet WorldChunkMgr::getChunks(){

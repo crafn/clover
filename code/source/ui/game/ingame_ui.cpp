@@ -30,7 +30,7 @@ void InGameUi::update(){
 	updateCamera();
 	
 	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
-    audioRecv.setPosition(camera.getPosition());
+	audioRecv.setPosition(camera.getPosition());
 }
 
 util::DynArray<util::Str8> InGameUi::getPlayerStrings() const {

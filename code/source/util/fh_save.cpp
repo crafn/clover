@@ -33,7 +33,7 @@ const SaveFieldHolder& SaveFieldHolder::operator>>(util::RawPack& pack) const {
 
 #define TYPE(name_, type_)															\
 			case Field::name_:														\
-				/*print(debug::Ch::General, debug::Vb::Trivial,*/ 							\
+				/*print(debug::Ch::General, debug::Vb::Trivial,*/							\
 				/*	"write index: %i", pack.size());*/								\
 					pack << *static_cast<type_ *>(fields[i].getPtr());				\
 			break;
@@ -61,10 +61,10 @@ const SaveFieldHolder& SaveFieldHolder::operator>>(util::RawPack& pack) const {
 
 #define TYPE(name_, type_) \
 			case Field::name_:{														\
-				/*print(debug::Ch::General, debug::Vb::Trivial,*/ 							\
+				/*print(debug::Ch::General, debug::Vb::Trivial,*/							\
 				/*	"write index: %i", pack.size());*/								\
-				util::DynArray<type_>& vec= 												\
-					(*static_cast<util::DynArray<type_> *>(fields[i].getPtr())); 			\
+				util::DynArray<type_>& vec=													\
+					(*static_cast<util::DynArray<type_> *>(fields[i].getPtr()));			\
 				/*if (vec.size() != len) vec.resize(len);	//Turha?*/				\
 				for (uint32 a=0; a<len; ++a)										\
 					pack << vec[a];													\
@@ -159,7 +159,7 @@ SaveFieldHolder& SaveFieldHolder::operator<<(util::RawPack& pack){
 						}																\
 						else {															\
 						  /* Luetaan suoraan muuttujaan */								\
-							util::DynArray<type_>& vec= 										\
+							util::DynArray<type_>& vec=											\
 								(*static_cast<util::DynArray<type_> *>(fields[i].getPtr())); \
 							/*vec.clear();*/											\
 							if (vec.size() != len)vec.resize(len);						\

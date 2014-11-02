@@ -8,10 +8,10 @@ namespace clover {
 
 class App {
 public:
-    App(const util::Str8& executablePath);
+	App(const util::Str8& executablePath);
 	~App();
 
-    void run();
+	void run();
 };
 
 } // clover

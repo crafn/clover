@@ -5,20 +5,20 @@ namespace clover {
 namespace game {
 
 WETable::WETable():util::PtrTable<game::WorldEntity>(100000){
-    nextUniqueEntityId= 1;
+	nextUniqueEntityId= 1;
 }
 
 game::WorldEntityId WETable::assignUniqueId(){
-    nextUniqueEntityId++;
-    return nextUniqueEntityId-1;
+	nextUniqueEntityId++;
+	return nextUniqueEntityId-1;
 }
 
 game::WorldEntityId WETable::getNextUniqueId() const {
-    return nextUniqueEntityId;
+	return nextUniqueEntityId;
 }
 
 void WETable::setNextUniqueId(game::WorldEntityId id){
-    nextUniqueEntityId= id;
+	nextUniqueEntityId= id;
 }
 
 WETable gWETable;

@@ -33,7 +33,7 @@ public:														\
 	T COORDS(EMPTY, N);										\
 };															\
 template< typename T >										\
-const typename 	VectorElements<T, N>::PtrArray				\
+const typename	VectorElements<T, N>::PtrArray				\
 				VectorElements<T, N>::v = {					\
 					COORDS(WRAP, N)							\
 				};
@@ -121,7 +121,7 @@ public:
 		return v(i);
 	}
 
-    const T& operator[](uint32 i) const {
+	const T& operator[](uint32 i) const {
 		return v(i);
 	}
 
@@ -472,13 +472,13 @@ public:
 	This inversed() const {
 		This vec;
 		for (uint32 i=0; i<N; ++i){
-			vec.v(i) =  1.0 / Base::v(i);
+			vec.v(i) =	1.0 / Base::v(i);
 		}
 		return vec;
 	}
 	
 	template <int Q = 1>
-	typename std::enable_if< 	N == 2 && Q &&
+	typename std::enable_if<	N == 2 && Q &&
 								(	std::is_same<T, real32>::value || 
 									std::is_same<T, real64>::value ),
 	b2Vec2>::type b2() const {
@@ -488,7 +488,7 @@ public:
 	template<int Q = 1>
 	typename std::enable_if<	N == 3 && Q ,
 	This>::type cross(const This& o) const {
-		return { 	Base::v(1)*o.v(2) - o.v(1)*Base::v(2), 
+		return {	Base::v(1)*o.v(2) - o.v(1)*Base::v(2), 
 					o.v(0)*Base::v(2) - Base::v(0)*o.v(2), 
 					Base::v(0)*o.v(1) - o.v(0)*Base::v(1) };
 	}
@@ -664,62 +664,62 @@ struct Hash32<IntegerVector<T, N>> {
 template <typename T, int N>
 struct vector_elements
 {
-        union {
-                std::array<T, N> v;
-                struct { T x, y, z, w; };
-        };
+		union {
+				std::array<T, N> v;
+				struct { T x, y, z, w; };
+		};
 };
  
 template <typename T>
 struct vector_elements<T, 1>
 {
-        union {
-                std::array<T, 1> v;
-                T x;
-        };
+		union {
+				std::array<T, 1> v;
+				T x;
+		};
 };
  
 template <typename T>
 struct vector_elements<T, 2>
 {
-        union {
-                std::array<T, 2> v;
-                struct { T x, y; };
-        };
+		union {
+				std::array<T, 2> v;
+				struct { T x, y; };
+		};
 };
  
 template <typename T>
 struct vector_elements<T, 3>
 {
-        union {
-                std::array<T, 3> v;
-                struct { T x, y, z; };
-        };
+		union {
+				std::array<T, 3> v;
+				struct { T x, y, z; };
+		};
 };
  
 template <typename T, int N>
 struct vector : public vector_elements<T, N> {
-        typedef vector_elements<T, N> base;
+		typedef vector_elements<T, N> base;
  
-        vector(std::initializer_list<T> l)
-        {
-                std::copy(l.begin(), l.end(), base::v.begin());
-        }
+		vector(std::initializer_list<T> l)
+		{
+				std::copy(l.begin(), l.end(), base::v.begin());
+		}
  
-        vector& operator+=(const vector& o)
-        {
-                std::transform(o.v.begin(), o.v.end(), base::v.begin(), base::v.begin(), [&](T a, T b) { return a+b; });
-                return *this;
-        }
+		vector& operator+=(const vector& o)
+		{
+				std::transform(o.v.begin(), o.v.end(), base::v.begin(), base::v.begin(), [&](T a, T b) { return a+b; });
+				return *this;
+		}
  
-        vector operator+(const vector<T, N>& o) const
-        {
-                vector v(*this);
-                v += o;
-                return v;
-        }
+		vector operator+(const vector<T, N>& o) const
+		{
+				vector v(*this);
+				v += o;
+				return v;
+		}
  
-        T& operator[](std::size_t idx) { assert(idx < N); return base::v[idx]; }
+		T& operator[](std::size_t idx) { assert(idx < N); return base::v[idx]; }
 };
  
 typedef vector<float, 1> vector1f;
@@ -729,11 +729,11 @@ typedef vector<float, 4> vector4f;
 typedef vector<float, 8> vector8f;
 
 int main() {
-        vector3f v = {1.1f, 2.2f, 3.3f};
-        v += {0, 1, 0};
-        v.x += v[2];
-        vector3f v2 = v + v;
-        printf("(%.1f, %.1f, %.1f)\n", v2.x, v2.y ,v2.z);
+		vector3f v = {1.1f, 2.2f, 3.3f};
+		v += {0, 1, 0};
+		v.x += v[2];
+		vector3f v2 = v + v;
+		printf("(%.1f, %.1f, %.1f)\n", v2.x, v2.y ,v2.z);
 }
 
 // Lisää kuplahupsun koodia:
@@ -746,17 +746,17 @@ int main() {
 template <typename T, std::size_t Rows, std::size_t Cols>
 struct matrix_elements
 {
-        T x;
+		T x;
 private:
-        T m_rest[Rows*Cols-1];
+		T m_rest[Rows*Cols-1];
 };
  
 template <typename T, std::size_t Rows>
 struct matrix_elements<T, Rows, 1>
 {
-        T x, y, z, w;
+		T x, y, z, w;
 private:
-        T m_rest[Rows-4];
+		T m_rest[Rows-4];
 };
  
 template <typename T> struct matrix_elements<T, 1, 1> { T x; };
@@ -766,64 +766,64 @@ template <typename T> struct matrix_elements<T, 4, 1> { T x, y, z, w; };
  
 template <typename T, std::size_t Rows, std::size_t Cols>
 struct matrix : public matrix_elements<T, Rows, Cols> {
-        inline T* begin() { return &this->x; }
-        inline const T* begin() const { return &this->x; }
-        inline T* end() { return &this->x + Rows * Cols; }
-        inline const T* end() const { return &this->x + Rows * Cols; }
+		inline T* begin() { return &this->x; }
+		inline const T* begin() const { return &this->x; }
+		inline T* end() { return &this->x + Rows * Cols; }
+		inline const T* end() const { return &this->x + Rows * Cols; }
  
-        matrix()
-        {
-                std::fill(begin(), end(), T(0));
-        }
+		matrix()
+		{
+				std::fill(begin(), end(), T(0));
+		}
  
-        matrix(std::initializer_list<T> l)
-        {
-                std::copy(l.begin(), l.end(), begin());
-        }
+		matrix(std::initializer_list<T> l)
+		{
+				std::copy(l.begin(), l.end(), begin());
+		}
  
-        matrix& operator+=(const matrix& o)
-        {
-                std::transform(o.begin(), o.end(), begin(), begin(), [&](T a, T b) { return a+b; });
-                return *this;
-        }
+		matrix& operator+=(const matrix& o)
+		{
+				std::transform(o.begin(), o.end(), begin(), begin(), [&](T a, T b) { return a+b; });
+				return *this;
+		}
  
-        matrix operator+(const matrix& o) const
-        {
-                matrix v(*this);
-                v += o;
-                return v;
-        }
+		matrix operator+(const matrix& o) const
+		{
+				matrix v(*this);
+				v += o;
+				return v;
+		}
  
-        template <std::size_t R = Rows, std::size_t C = Cols>
-        static typename std::enable_if<R == 3 && C == 3, matrix>::type makeRotX(T angle)
-        {
-                T c = std::cos(angle), s = std::sin(angle);
-                return {1,  0,  0,
-                        0,  c, -s,
-                        0,  s,  c};
-        }
+		template <std::size_t R = Rows, std::size_t C = Cols>
+		static typename std::enable_if<R == 3 && C == 3, matrix>::type makeRotX(T angle)
+		{
+				T c = std::cos(angle), s = std::sin(angle);
+				return {1,	0,	0,
+						0,	c, -s,
+						0,	s,	c};
+		}
  
-        template <std::size_t Rows2, std::size_t Cols2>
-        matrix<T, Rows, Cols2> operator*(const matrix<T, Rows2, Cols2>& o)
-        {
-                static_assert(Cols == Rows2, "Not valid matrix multiplication");
+		template <std::size_t Rows2, std::size_t Cols2>
+		matrix<T, Rows, Cols2> operator*(const matrix<T, Rows2, Cols2>& o)
+		{
+				static_assert(Cols == Rows2, "Not valid matrix multiplication");
  
-                matrix<T, Rows, Cols2> r;
-                for (std::size_t i = 0; i < Cols2; ++i)
-                        for (std::size_t j = 0; j < Rows; ++j) {
-                                T& t = r(i, j);
-                                for (std::size_t k = 0; k < Cols; ++k)
-                                        t += (*this)(j, k) * o(k, i);
-                        }
+				matrix<T, Rows, Cols2> r;
+				for (std::size_t i = 0; i < Cols2; ++i)
+						for (std::size_t j = 0; j < Rows; ++j) {
+								T& t = r(i, j);
+								for (std::size_t k = 0; k < Cols; ++k)
+										t += (*this)(j, k) * o(k, i);
+						}
  
-                return r;
-        }
+				return r;
+		}
  
-        T& operator[](std::size_t idx) { assert(idx < Rows*Cols); return begin()[idx]; }
-        const T& operator[](std::size_t idx) const { assert(idx < Rows*Cols); return begin()[idx]; }
+		T& operator[](std::size_t idx) { assert(idx < Rows*Cols); return begin()[idx]; }
+		const T& operator[](std::size_t idx) const { assert(idx < Rows*Cols); return begin()[idx]; }
  
-        T& operator()(std::size_t r, std::size_t c = 0) { return (*this)[r*Cols + c]; }
-        const T& operator()(std::size_t r, std::size_t c = 0) const { return (*this)[r*Cols + c]; }
+		T& operator()(std::size_t r, std::size_t c = 0) { return (*this)[r*Cols + c]; }
+		const T& operator()(std::size_t r, std::size_t c = 0) const { return (*this)[r*Cols + c]; }
 };
  
 template <typename T, std::size_t N>
@@ -838,20 +838,20 @@ typedef vector<float, 8> vector8f;
 typedef matrix<float, 3, 3> matrix3f;
  
 int main() {
-        vector3f v = {1.1f, 2.2f, 3.3f};
-        v += {0, 1, 0};
-        v.x += v[2];
-        vector3f v2 = v + v;
-        printf("(%.1f, %.1f, %.1f)\n", v2.x, v2.y, v2.z);
+		vector3f v = {1.1f, 2.2f, 3.3f};
+		v += {0, 1, 0};
+		v.x += v[2];
+		vector3f v2 = v + v;
+		printf("(%.1f, %.1f, %.1f)\n", v2.x, v2.y, v2.z);
  
-        matrix3f r = matrix3f::makeRotX(1.23f);
-        matrix3f t = {1,  0,  5,
-                      0,  1,  7,
-                      0,  0,  1};
-        vector3f p = r * t * v2;
-        printf("(%.2f, %.2f, %.2f)\n", p.x, p.y, p.z);
+		matrix3f r = matrix3f::makeRotX(1.23f);
+		matrix3f t = {1,  0,  5,
+					  0,  1,  7,
+					  0,  0,  1};
+		vector3f p = r * t * v2;
+		printf("(%.2f, %.2f, %.2f)\n", p.x, p.y, p.z);
  
-        matrix<double, 14, 7> test = matrix<double, 14, 19>() * matrix<double, 19, 7>();
+		matrix<double, 14, 7> test = matrix<double, 14, 19>() * matrix<double, 19, 7>();
 }
 
 */

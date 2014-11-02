@@ -47,7 +47,7 @@ public:
 	void registerGlobalProperty(T& property, const util::Str8& name, const util::Str8& decl);
 	
 	/// Registers class as a script interface so that script classes can inherit from it
-	/// @note 	If derived types are no-count refs, use register class as object type instead.
+	/// @note	If derived types are no-count refs, use register class as object type instead.
 	///			Otherwise destructors will be called.
 	/// Usage: registerInterface<Class>();
 	template <typename T>
@@ -109,7 +109,7 @@ public:
 
 	/// @todo Rethink
 	/// Registers template method as series of normal methods to script
-	/// Example: 	registerTemplateMethod<ObjectNodeSerializableTraits>(&Class::method, "method")
+	/// Example:	registerTemplateMethod<ObjectNodeSerializableTraits>(&Class::method, "method")
 	///				registers methods "Class::method" + typename for every type that supports util::ObjectNode
 	///				serialization and is registered to script. If new util::ObjectNode -serializable type is
 	///				registered afterwards, then new template method is registered
@@ -192,16 +192,16 @@ private:
 	template <typename PlainT, typename OrigT, typename B = typename std::enable_if<!condition>::type, typename = void> \
 	void tryRegister ## method_name(){}
 	
-	DECLARE_REGISTER_METHOD(ConstructorBeh, 	(	std::is_default_constructible<PlainT>::value))
+	DECLARE_REGISTER_METHOD(ConstructorBeh,		(	std::is_default_constructible<PlainT>::value))
 	DECLARE_REGISTER_METHOD(CopyConstructorBeh, (	std::is_copy_constructible<PlainT>::value))
-	DECLARE_REGISTER_METHOD(DestructorBeh, 		(	std::is_destructible<PlainT>::value))
+	DECLARE_REGISTER_METHOD(DestructorBeh,		(	std::is_destructible<PlainT>::value))
 	DECLARE_REGISTER_METHOD(AssignmentOperator, (	std::is_copy_assignable<PlainT>::value))
-	DECLARE_REGISTER_METHOD(EqualsOperator, 	(	util::HasEqualsOperator<PlainT>::value))
-	DECLARE_REGISTER_METHOD(ReferenceBeh, 		(	util::IsBaseOf<script::Reference, PlainT>::value))
-	DECLARE_REGISTER_METHOD(NoCountReference, 	(	!std::is_abstract<PlainT>::value && 
+	DECLARE_REGISTER_METHOD(EqualsOperator,		(	util::HasEqualsOperator<PlainT>::value))
+	DECLARE_REGISTER_METHOD(ReferenceBeh,		(	util::IsBaseOf<script::Reference, PlainT>::value))
+	DECLARE_REGISTER_METHOD(NoCountReference,	(	!std::is_abstract<PlainT>::value && 
 													std::is_default_constructible<PlainT>::value &&
 													(util::IsBaseOf<NoCountReference, PlainT>::value || std::is_pointer<OrigT>::value)))
-	DECLARE_REGISTER_METHOD(ObjectNodeSupport, 	(	util::IsObjectNodeSerializable<PlainT>::value &&
+	DECLARE_REGISTER_METHOD(ObjectNodeSupport,	(	util::IsObjectNodeSerializable<PlainT>::value &&
 													!std::is_same<PlainT, util::ObjectNode>::value &&
 													!IsArray<PlainT>::value))
 	

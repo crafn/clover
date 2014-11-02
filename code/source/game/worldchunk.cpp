@@ -48,13 +48,13 @@ util::DynArray<WorldChunk::ChunkSet> WorldChunk::nearestSorted(ChunkVec target, 
 
 WorldChunk::WorldChunk(ChunkVec pos)
 		: state(State::None){
-    for (int32 i=0; i<4; i++)
-        sides[i]= 0;
+	for (int32 i=0; i<4; i++)
+		sides[i]= 0;
 
-    entities.resize(1024);
+	entities.resize(1024);
 
 	setPosition(pos);
-    
+	
 }
 
 WorldChunk::~WorldChunk(){
@@ -102,54 +102,54 @@ void WorldChunk::setPosition(ChunkVec pos){
 }
 
 util::Vec2i WorldChunk::getPosition() const {
-    return position;
+	return position;
 }
 
 void WorldChunk::setSide(WorldChunk& chunk){
 
-    if (chunk.getPosition().x == position.x + 1 &&
-        chunk.getPosition().y == position.y){
-        sides[Right]= &chunk;
+	if (chunk.getPosition().x == position.x + 1 &&
+		chunk.getPosition().y == position.y){
+		sides[Right]= &chunk;
 
-        if (chunk.getSide(Left) != this)
-            chunk.setSide(*this);
+		if (chunk.getSide(Left) != this)
+			chunk.setSide(*this);
 
-        return;
-    }
-    else if (   chunk.getPosition().x == position.x - 1 &&
-                chunk.getPosition().y == position.y){
-        sides[Left]= &chunk;
+		return;
+	}
+	else if (	chunk.getPosition().x == position.x - 1 &&
+				chunk.getPosition().y == position.y){
+		sides[Left]= &chunk;
 
-        if (chunk.getSide(Right) != this)
-            chunk.setSide(*this);
+		if (chunk.getSide(Right) != this)
+			chunk.setSide(*this);
 
-        return;
-    }
-    else if (chunk.getPosition().x == position.x &&
-            chunk.getPosition().y == position.y + 1){
-        sides[Up]= &chunk;
+		return;
+	}
+	else if (chunk.getPosition().x == position.x &&
+			chunk.getPosition().y == position.y + 1){
+		sides[Up]= &chunk;
 
-        if (chunk.getSide(Down) != this)
-            chunk.setSide(*this);
+		if (chunk.getSide(Down) != this)
+			chunk.setSide(*this);
 
-        return;
-    }
-    else if (   chunk.getPosition().x == position.x &&
-                chunk.getPosition().y == position.y - 1){
-        sides[Down]= &chunk;
+		return;
+	}
+	else if (	chunk.getPosition().x == position.x &&
+				chunk.getPosition().y == position.y - 1){
+		sides[Down]= &chunk;
 
-        if (chunk.getSide(Up) != this)
-            chunk.setSide(*this);
+		if (chunk.getSide(Up) != this)
+			chunk.setSide(*this);
 
-        return;
-    }
+		return;
+	}
 
-    throw(global::Exception("WorldChunk::setSide(..): failed"));
+	throw(global::Exception("WorldChunk::setSide(..): failed"));
 
 }
 
 WorldChunk* WorldChunk::getSide(Side s){
-    return sides[s];
+	return sides[s];
 }
 
 void WorldChunk::addEntity(game::WorldEntity& obj){
@@ -158,7 +158,7 @@ void WorldChunk::addEntity(game::WorldEntity& obj){
 		ensure_msg(m != &obj, "Entity already in chunk:, %s, %i (%i, %i)", obj.getTypeName().cStr(), obj.getId(), position.x, position.y);
 	}
 	
-    entities.findFree()= &obj;
+	entities.findFree()= &obj;
 	obj.setInChunk(this);
 	
 	if (obj.isActive() != (state == State::Active)) 
@@ -184,12 +184,12 @@ void WorldChunk::addEntity(game::WorldEntity& obj){
 
 void WorldChunk::removeEntity(game::WorldEntity& obj){
 	uint32 found=0;
-    for (uint32 i=0; i<entities.size(); i++){
-        if (&obj == entities[i]){
+	for (uint32 i=0; i<entities.size(); i++){
+		if (&obj == entities[i]){
 			removeEntity(i);
 			++found;
-        }
-    }
+		}
+	}
 	
 	ensure_msg(found == 1, "%i found (1 is correct)", found);
 }
@@ -276,7 +276,7 @@ util::DynArray<uint8> WorldChunk::serializeEntities(
 
 		ensure(pack.getVarPack().size() != 0);
 
-		entityPack 	<< entityStartTag
+		entityPack	<< entityStartTag
 					<< pack.getId()
 					<< pack.getVarBlockSize()
 					<< pack.getVarPack();

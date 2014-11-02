@@ -16,7 +16,7 @@ class StrictHandleConnection;
 /// Smart WorldEntity handle
 class WeHandle {
 public:
-    WeHandle(const game::WorldEntity* e=0);
+	WeHandle(const game::WorldEntity* e=0);
 	virtual ~WeHandle();
 	
 	WeHandle(const WeHandle& h);
@@ -32,14 +32,14 @@ public:
 	void reset();
 	bool isAssigned();
 	
-    game::WorldEntity* get() const;
+	game::WorldEntity* get() const;
 	game::WorldEntity& ref() const;
 
 	/// @return Is usable
-    explicit operator bool();
+	explicit operator bool();
 	explicit operator bool() const;
 
-    game::WorldEntity* operator->() const;
+	game::WorldEntity* operator->() const;
 
 	static void fixLostHandles(game::WorldEntity* w);
 	static void fixLostHandles();
@@ -69,9 +69,9 @@ public:
 
 	BOOST_SERIALIZATION_SPLIT_MEMBER()	
 private:
-    game::WorldEntityId entityId;
+	game::WorldEntityId entityId;
 
-    uint32 tableIndex;
+	uint32 tableIndex;
 	int32 lostIndex;
 
 	static util::PtrTable<WeHandle> lostTable;

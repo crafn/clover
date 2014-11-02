@@ -19,16 +19,16 @@
 #define THREADS_WIN32 2
 
 #if defined(__linux)
-    #define OS OS_LINUX
-    #define PLATFORM PLATFORM_UNIX
+	#define OS OS_LINUX
+	#define PLATFORM PLATFORM_UNIX
 	#define THREADS THREADS_PTHREADS
 #elif defined(__WIN32)
-    #define OS OS_WINDOWS
-    #define PLATFORM PLATFORM_WINDOWS
+	#define OS OS_WINDOWS
+	#define PLATFORM PLATFORM_WINDOWS
 	#define THREADS THREADS_PTHREADS
 #elif defined (__APPLE__) || defined(MACOSX)
-    #define OS OS_MACOSX
-    #define PLATFORM PLATFORM_UNIX
+	#define OS OS_MACOSX
+	#define PLATFORM PLATFORM_UNIX
 	#define THRAEDS THREADS_PTHREADS
 #else
 	#define OS OS_UNKNOWN
@@ -53,9 +53,9 @@ namespace clover {
 const char* getBuildStr();
 
 // Clover can be built in 3 modes: debug, development and release
-//   debug: controlled by DEBUG, uses all possible debug stuff, including debug_ensure
-//   dev: ensure + release_ensure
-//   release: controlled by RELEASE, uses release_ensure
+//	 debug: controlled by DEBUG, uses all possible debug stuff, including debug_ensure
+//	 dev: ensure + release_ensure
+//	 release: controlled by RELEASE, uses release_ensure
 
 /// @todo E.g. #define DEBUG -> #define BUILD_MODE BUILD_MODE_DEBUG
 
@@ -74,7 +74,7 @@ typedef uint32_t uint32;
 typedef int64_t int64;
 typedef uint64_t uint64;
 
-typedef char       char8;
+typedef char	   char8;
 
 typedef size_t SizeType;
 
@@ -151,7 +151,7 @@ typedef util::Vec2i RegionVec;
 } // clover
 
 #if defined(DEBUG) && defined(RELEASE)
-    #error DEBUG and RELEASE both defined
+	#error DEBUG and RELEASE both defined
 #endif
 
 #endif

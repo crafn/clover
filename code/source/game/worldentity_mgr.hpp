@@ -15,22 +15,22 @@ class WeHandle;
 /// game::WorldEntity manager
 class WeMgr : public global::EventReceiver {
 public:
-    WeMgr();
-    virtual ~WeMgr();
+	WeMgr();
+	virtual ~WeMgr();
 
-    void update();
-    void spawnNewEntities();
-    SizeType getEntityCount() const;
+	void update();
+	void spawnNewEntities();
+	SizeType getEntityCount() const;
 
 	util::DynArray<WorldEntity*> getGlobalEntities() const;
 
 	/// Destroyes flagged entities
-    void removeFlagged();
+	void removeFlagged();
 
 	/// Removes entities and chunks
-    void removeAll();
+	void removeAll();
 
-    void onEvent(global::Event& e);
+	void onEvent(global::Event& e);
 	
 	/// Create global entity
 	game::WeHandle createEntity(const util::Str8& type_name);

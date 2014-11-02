@@ -28,7 +28,7 @@ void WeInterfaceNodeInstance::create(){
 	// Create attribute slots
 	for (const auto& comp_slot : compositionNodeLogic->getTemplateGroupSlots()){
 		if (comp_slot->isInput()){
-			BaseInputSlot* slot= 	addInputSlot(	comp_slot->getName(),
+			BaseInputSlot* slot=	addInputSlot(	comp_slot->getName(),
 													comp_slot->getTemplateGroupName(),
 													comp_slot->getSignalType());
 			attributeInputs[hash(comp_slot->getName())]= slot;

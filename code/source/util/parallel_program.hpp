@@ -26,12 +26,12 @@ public:
 	};
 
 	/// Loads and compiles program
-    ParallelProgram(util::Str8 path);
+	ParallelProgram(util::Str8 path);
 	
 	ParallelProgram(const ParallelProgram&)= delete;
 	ParallelProgram(ParallelProgram&&);
 
-    ParallelProgram();
+	ParallelProgram();
 	virtual ~ParallelProgram();
 
 	ParallelProgram& operator=(ParallelProgram&&);
@@ -39,13 +39,13 @@ public:
 
 	void attachToQueue(util::ParallelQueue& q);
 
-    void compile(util::Str8 path);
+	void compile(util::Str8 path);
 
-    util::ParallelKernel& createKernel(util::Str8 kernelname);
+	util::ParallelKernel& createKernel(util::Str8 kernelname);
 
 private:
-    hardware::ClState::Program program;
-    util::LinkedList<util::ParallelKernel> kernels;
+	hardware::ClState::Program program;
+	util::LinkedList<util::ParallelKernel> kernels;
 	util::ParallelQueue* attachedQueue;
 };
 

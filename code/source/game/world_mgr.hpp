@@ -24,10 +24,10 @@ class WorldEntity;
 
 class WorldMgr {
 public:
-    WorldMgr();
+	WorldMgr();
 	virtual ~WorldMgr();
 
-    void update();
+	void update();
 
 	void setChunksLocked(bool b= true){ chunksLocked= b; }
 	bool isChunksLocked() const { return chunksLocked; }
@@ -54,12 +54,12 @@ public:
 private:
 	void updateWorldIO();
 
-    real32 time;
+	real32 time;
 	bool chunksLocked;
 
-    /// @todo Should be in script or somewhere else
+	/// @todo Should be in script or somewhere else
 	visual::ModelEntityDef bgDefs[3];
-    visual::Entity bg[3]; // Evening, Day, Night
+	visual::Entity bg[3]; // Evening, Day, Night
 	visual::ModelEntityDef sunReDef;
 	visual::Entity sunRE;
 

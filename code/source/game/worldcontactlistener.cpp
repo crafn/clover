@@ -94,7 +94,7 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 		/*
 		if (c.getSide(0).fixture->getMaterial() && c.getSide(1).fixture->getMaterial()){
 			// Some of the energy loss is heat, that doesn't make a sound
-			real64 heat_fraction= 	(c.getSide(0).fixture->getMaterial()->getRestitution()+0.2)*
+			real64 heat_fraction=	(c.getSide(0).fixture->getMaterial()->getRestitution()+0.2)*
 									(c.getSide(1).fixture->getMaterial()->getRestitution()+0.2)/1.4
 									/ (pow(m[0] + m[1], 1.5)) * 2.0;
 			heat_fraction= util::limited(heat_fraction, 0.0, 1.0);
@@ -108,7 +108,7 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 
 			// Collision sounds
 
-			const game::PhysicalMaterial	* 	m1= static_cast<const game::PhysicalMaterial*>(c.getSide(0).fixture->getMaterial()),
+			const game::PhysicalMaterial	*	m1= static_cast<const game::PhysicalMaterial*>(c.getSide(0).fixture->getMaterial()),
 									*	m2= static_cast<const game::PhysicalMaterial*>(c.getSide(1).fixture->getMaterial());
 
 
@@ -173,7 +173,7 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 bool WorldContactListener::canBePlayed(const audio::Sound& sound, real64 amplitude){
 	auto it= recentSounds.find(&sound);
 	if (it == recentSounds.end()) return true;
-	return 	it->second.time < util::gRealClock->getTime() - 0.1 ||
+	return	it->second.time < util::gRealClock->getTime() - 0.1 ||
 			it->second.amplitude < amplitude*0.5;
 }
 

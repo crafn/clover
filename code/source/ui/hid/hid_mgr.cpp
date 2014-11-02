@@ -101,11 +101,11 @@ void HidMgr::removeTagIndirection(){
 	for (auto& context : contexts){
 		print(debug::Ch::General, debug::Vb::Trivial, "Context");
 		for (auto& tag : context->getTags()){
-			print(debug::Ch::General, debug::Vb::Trivial, "    %s", tag.cStr());
+			print(debug::Ch::General, debug::Vb::Trivial, "	   %s", tag.cStr());
 		}
 		print(debug::Ch::General, debug::Vb::Trivial, "Enabletags");
 		for (auto& tag : context->getEnableTags()){
-			print(debug::Ch::General, debug::Vb::Trivial, "    %s", tag.cStr());
+			print(debug::Ch::General, debug::Vb::Trivial, "	   %s", tag.cStr());
 		}
 	}
 #endif

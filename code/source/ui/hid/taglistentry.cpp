@@ -106,7 +106,7 @@ void TagListEntry::appendToList(){
 #if 0
 	print(debug::Ch::General, debug::Vb::Critical, "Channel %s", channelName.cStr());
 	for (auto&& m : tagLists[channelName]){
-		print(debug::Ch::General, debug::Vb::Trivial, "  %s", m.cStr());
+		print(debug::Ch::General, debug::Vb::Trivial, "	 %s", m.cStr());
 	}
 #endif
 }

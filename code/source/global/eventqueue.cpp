@@ -6,32 +6,32 @@ namespace global {
 EventQueue gEventQueue;
 
 bool EventQueue::sendLast(){
-    if (events.size() == 0)
-        throw global::Exception("EventQueue::sendLast(): zero events in queue");
+	if (events.size() == 0)
+		throw global::Exception("EventQueue::sendLast(): zero events in queue");
 
-    if (events.back().getReceiverCount() == 0)return false; //Ei ketään kenelle lähettää
+	if (events.back().getReceiverCount() == 0)return false; //Ei ketään kenelle lähettää
 
-    events.back().send();
+	events.back().send();
 
-    events.popBack();
+	events.popBack();
 
-    return true;
+	return true;
 }
 
 global::Event& EventQueue::getLast(){
-    return events.back();
+	return events.back();
 }
 
 void EventQueue::popLast(){
-    events.popBack();
+	events.popBack();
 }
 
 void EventQueue::queue(global::Event e){
-    events.pushBack(e);
+	events.pushBack(e);
 }
 
 int32 EventQueue::size(){
-    return events.size();
+	return events.size();
 }
 
 } // global

@@ -445,9 +445,9 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 				if (mul <= 0.0)
 					return;	
 
-				pos= 	(pos - campos)*mul + campos;
+				pos=	(pos - campos)*mul + campos;
 
-				scale= 	scale*mul;
+				scale=	scale*mul;
 			}
 			
 			if (logic.getDef().isSnappingToPixels()){

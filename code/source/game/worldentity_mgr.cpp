@@ -15,7 +15,7 @@ WeMgr::WeMgr(){
 }
 
 WeMgr::~WeMgr(){
-    removeAll();
+	removeAll();
 }
 
 void WeMgr::update(){
@@ -112,7 +112,7 @@ void WeMgr::spawnNewEntities(){
 	util::DynArray<game::WorldEntity*>::Iter it;
 
 	for (it= gWETable.begin(); it!= gWETable.end(); it++){
-        if ((*it) && !(*it)->spawned && (*it)->spawningAllowed && !(*it)->remove){
+		if ((*it) && !(*it)->spawned && (*it)->spawningAllowed && !(*it)->remove){
 			something_to_spawn= true;
 			break;
 		}
@@ -136,33 +136,33 @@ void WeMgr::spawnNewEntities(){
 void WeMgr::removeFlagged(){
 	PROFILE_("worldEntity");
 
-    util::DynArray<game::WorldEntity*>::Iter it;
-    for(it= gWETable.begin(); it != gWETable.end(); it++){
+	util::DynArray<game::WorldEntity*>::Iter it;
+	for(it= gWETable.begin(); it != gWETable.end(); it++){
 		game::WorldEntity* entity= *it;
 		if (!entity) continue;
 
-        if (entity->remove){
+		if (entity->remove){
 			if (!entity->isGlobal()){
 				game::WorldChunk* chunk= (*it)->inChunk;
 				if (chunk)
 					chunk->removeEntity(*entity);
 			}
-            delete entity;
-        }
-    }
+			delete entity;
+		}
+	}
 }
 
 SizeType WeMgr::getEntityCount() const {
 	PROFILE_("worldEntity");
 
-    util::DynArray<game::WorldEntity*>::Iter it;
-    int32 count=0;
-    for(it=gWETable.begin(); it!=gWETable.end(); it++){
-        if ((*it) == 0)
+	util::DynArray<game::WorldEntity*>::Iter it;
+	int32 count=0;
+	for(it=gWETable.begin(); it!=gWETable.end(); it++){
+		if ((*it) == 0)
 			continue;
-        count ++;
-    }
-    return count;
+		count ++;
+	}
+	return count;
 }
 
 util::DynArray<WorldEntity*> WeMgr::getGlobalEntities() const {
@@ -174,7 +174,7 @@ util::DynArray<WorldEntity*> WeMgr::getGlobalEntities() const {
 		if (!we || !we->isGlobal())
 			continue;
 		globals.pushBack(we);
-    }
+	}
 	return globals;
 }
 
@@ -183,22 +183,22 @@ void WeMgr::removeAll(){
 
 	game::gWorldMgr->getChunkMgr().removeAll();
 
-    util::DynArray<game::WorldEntity*>::Iter it;
-    for(it=gWETable.begin(); it!=gWETable.end(); it++){
-        if ((*it) == 0)
+	util::DynArray<game::WorldEntity*>::Iter it;
+	for(it=gWETable.begin(); it!=gWETable.end(); it++){
+		if ((*it) == 0)
 			continue;
 	
-        // We removes itself from the table
-        delete (*it);
-    }
+		// We removes itself from the table
+		delete (*it);
+	}
 }
 
 void WeMgr::onEvent(global::Event& e){
 	PROFILE_("worldEntity");
 
-    switch(e.getType()){
-        default: break;
-    }
+	switch(e.getType()){
+		default: break;
+	}
 }
 
 game::WeHandle WeMgr::minimalCreateEntity(game::WorldEntityId id){

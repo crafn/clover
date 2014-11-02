@@ -26,7 +26,7 @@ struct ResourceTraits<visual::ModelEntityDef> {
 	typedef ResourceTraits<visual::EntityDef> BaseTraits;
 	
 	static util::DynArray<AttributeDef> getAttributeDefs(){
-		return 	std::move(
+		return	std::move(
 					BaseTraits::getAttributeDefs().pushBacked(util::DynArray<AttributeDef> {
 						AttributeDef::Resource("model"),
 						AttributeDef::Real("envLight"),

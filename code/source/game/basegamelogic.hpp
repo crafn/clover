@@ -18,7 +18,7 @@ public:
 	void update();
 	void onQuit();
 
-	InGameLogic* 	getInGameLogic(){ return inGameLogic; }
+	InGameLogic*	getInGameLogic(){ return inGameLogic; }
 	DevLogic*		getDevLogic(){ return devLogic; }
 
 private:

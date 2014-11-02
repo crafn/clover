@@ -47,13 +47,13 @@ Matrix<T, N> Matrix<T, N>::byRotationAxis(Vec axis, T rotation){
 
 template <typename T, SizeType N>
 Matrix<T, N>::Matrix(){
-    for(SizeType i= 0; i < N*N; ++i)
+	for(SizeType i= 0; i < N*N; ++i)
 		v[i]= 0;
 }
 
 template <typename T, SizeType N>
 Matrix<T, N> Matrix<T, N>::operator*(const Matrix<T, N>& mat) const {
-    Matrix<T, N> result;
+	Matrix<T, N> result;
 	
 	
 	for (SizeType x= 0; x < N; ++x){
@@ -67,12 +67,12 @@ Matrix<T, N> Matrix<T, N>::operator*(const Matrix<T, N>& mat) const {
 
 template <typename T, SizeType N>
 T& Matrix<T, N>::operator()(SizeType x, SizeType y){
-    return v[x*N + y];
+	return v[x*N + y];
 }
 
 template <typename T, SizeType N>
 T Matrix<T, N>::operator()(SizeType x, SizeType y) const {
-    return v[x*N + y];
+	return v[x*N + y];
 }
 
 template <typename T, SizeType N>
@@ -108,24 +108,24 @@ template <typename T, SizeType N>
 void Matrix<T, N>::setBvhEulerRotation(Vec rot){
 	ensure(N >= 3);
 	
-    T x, y, z;
-    x= rot.x;
-    y= rot.y;
-    z= rot.z;
+	T x, y, z;
+	x= rot.x;
+	y= rot.y;
+	z= rot.z;
 
-    Matrix<T, N> X, Y, Z;
-    X= Y= Z= Matrix<T, N>::identity();
+	Matrix<T, N> X, Y, Z;
+	X= Y= Z= Matrix<T, N>::identity();
 	
-    X(1,1)= cos(x); X(2,1)= -sin(x);
-    X(1,2)= sin(x); X(2,2)= cos(x);
+	X(1,1)= cos(x); X(2,1)= -sin(x);
+	X(1,2)= sin(x); X(2,2)= cos(x);
 
-    Y(0,0)= cos(y);  Y(2,0)= sin(y);
-    Y(0,2)= -sin(y); Y(2,2)= cos(y);
+	Y(0,0)= cos(y);	 Y(2,0)= sin(y);
+	Y(0,2)= -sin(y); Y(2,2)= cos(y);
 
-    Z(0,0)= cos(z); Z(1,0)= -sin(z);
-    Z(0,1)= sin(z); Z(1,1)= cos(z);
+	Z(0,0)= cos(z); Z(1,0)= -sin(z);
+	Z(0,1)= sin(z); Z(1,1)= cos(z);
 
-    *this = Y*Z*X;
+	*this = Y*Z*X;
 }
 
 template <typename T, SizeType N>
@@ -134,13 +134,13 @@ auto Matrix<T, N>::transformedVector(RealVector<T, N> vec) const -> Vec {
 	for (SizeType i= 0; i < N; ++i){
 		result[i]= row(i).dot(vec);
 	}
-    return result;
+	return result;
 }
 
 template <typename T, SizeType N>
 void Matrix<T, N>::print(){
 	util::Str8 str;
-    for (SizeType y= 0; y < N; y++){
+	for (SizeType y= 0; y < N; y++){
 		for (SizeType x= 0; x < N; x++){
 			str += util::Str8::format("%f ", (*this)(x, y));
 		}

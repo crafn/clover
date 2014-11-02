@@ -181,9 +181,9 @@ void LinearLayoutElement::updateNodes(){
 		percentage= 1-h0/(h0-h1); // Tämä pätee, jos spacing = 0
 		
 		/* Alla oleva johdetaan yhtälöistä: (p eli percentage on radiuksen parametri)
-		 * 		p*min_rad_sum + (1-p)*max_rad_sum = radius(p)
-		 * 		spacing_rad_addition + radius(p+a)= radius(p)
-		 * 		radius(p) = vakio
+		 *		p*min_rad_sum + (1-p)*max_rad_sum = radius(p)
+		 *		spacing_rad_addition + radius(p+a)= radius(p)
+		 *		radius(p) = vakio
 		 */
 
 		real64 a= spacing_rad_addition/(max_rad_sum-min_rad_sum);

@@ -150,7 +150,7 @@ protected:
 	void updateCachedValues(const CachedValues& values);
 
 	/// Updates inter- or extrapolated transform
-	/// @param relative_time 	Time relative to current physics simulation time scaled by 1/timeStep
+	/// @param relative_time	Time relative to current physics simulation time scaled by 1/timeStep
 	///							[-1, 0]: interpolation between previous and current state
 	///							]0, 1[: extrapolation
 	void updateEstimation(real64 relative_time);

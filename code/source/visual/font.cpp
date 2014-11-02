@@ -84,12 +84,12 @@ void Font::create(FT_Face& face){
 
 			//print(debug::Ch::General, debug::Vb::Trivial, "advance %i width %i offset %i", glyphInfo.advance, glyphInfo.size.x, glyphInfo.offset.y);
 
-			glyphInfo.uv1= util::Vec2f{ 	(real32)pen.x/mapsize.x,
+			glyphInfo.uv1= util::Vec2f{		(real32)pen.x/mapsize.x,
 									(real32)pen.y/mapsize.y};
-			glyphInfo.uv2= glyphInfo.uv1 + util::Vec2f{ 	(real32)glyphInfo.size.x / mapsize.x,
+			glyphInfo.uv2= glyphInfo.uv1 + util::Vec2f{		(real32)glyphInfo.size.x / mapsize.x,
 													(real32)glyphInfo.size.y / mapsize.y};
 
-			bitmap.blitBW(  slot->bitmap.buffer,
+			bitmap.blitBW(	slot->bitmap.buffer,
 							glyphInfo.size,
 							pen);
 

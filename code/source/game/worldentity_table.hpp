@@ -15,15 +15,15 @@ typedef uint64 WorldEntityId;
 /// @todo Remove. Ids should be managed by WeMgr
 class WETable : public util::PtrTable<game::WorldEntity> {
 public:
-    WETable();
+	WETable();
 
-    game::WorldEntityId assignUniqueId();
+	game::WorldEntityId assignUniqueId();
 	
-    game::WorldEntityId getNextUniqueId() const;
-    void setNextUniqueId(game::WorldEntityId);
+	game::WorldEntityId getNextUniqueId() const;
+	void setNextUniqueId(game::WorldEntityId);
 
 private:
-    game::WorldEntityId nextUniqueEntityId;
+	game::WorldEntityId nextUniqueEntityId;
 };
 
 extern WETable gWETable;

@@ -339,14 +339,14 @@ void FluidMgr::updateChunkInfoTex(){
 std::array<uint8, 8> FluidMgr::getAdjacentChunks(uint8 id) const {
 	// Order should match with shaders and simulation
 	std::array<util::Vec2i, 8> offsets= {
-		util::Vec2i{1,  0},
-		util::Vec2i{1,  1},
-		util::Vec2i{0,  1},
+		util::Vec2i{1,	0},
+		util::Vec2i{1,	1},
+		util::Vec2i{0,	1},
 		util::Vec2i{-1, 1},
 		util::Vec2i{-1, 0},
 		util::Vec2i{-1, -1},
-		util::Vec2i{0,  -1},
-		util::Vec2i{1,  -1}
+		util::Vec2i{0,	-1},
+		util::Vec2i{1,	-1}
 	};
 	
 	auto inactive_adjacents= [&offsets] (){

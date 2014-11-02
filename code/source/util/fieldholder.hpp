@@ -59,7 +59,7 @@ public:
 		void setChangeFunc(const boost::function<void (T val)> &t){
 			switch (type){
 #define TYPE(name_, type_)													\
-					case name_: name_ ## ChangeFunc= 						\
+					case name_: name_ ## ChangeFunc=						\
 						*(boost::function<void (type_ val)>*)(&t); break;
 
 				#include "fh_types.def"

@@ -49,7 +49,7 @@ void CheckBoxElement::updateOffsets(){
 	
 	util::Coord rad(type);
 	rad.setRelative();
-	util::Coord label_rad=  label.getRadius().converted(type);
+	util::Coord label_rad=	label.getRadius().converted(type);
 	label_rad.setRelative();
 	rad.x= label_rad.x + boxRadius.x;
 	rad.y= label_rad.y;

@@ -113,7 +113,7 @@ public:
 
 		GenericShaderType(): lightCount(0), normalMap(false), colorMap(false), envShadowMap(false), curve(false), sway(false){}
 		bool operator==(const GenericShaderType& t) const {
-			return 	lightCount == t.lightCount &&
+			return	lightCount == t.lightCount &&
 					normalMap == t.normalMap &&
 					colorMap == t.colorMap &&
 					envShadowMap == t.envShadowMap &&
@@ -165,7 +165,7 @@ private:
 	// Shaders
 
 	util::Map<GenericShaderType, visual::Shader> genericShaderMap;
-	util::Str8 	genericShaderFragSrc,
+	util::Str8	genericShaderFragSrc,
 					genericShaderVertSrc,
 					genericShaderGeomSrc;
 

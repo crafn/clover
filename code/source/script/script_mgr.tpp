@@ -504,7 +504,7 @@ void ScriptMgr::registerAssignmentOperator(){
 	util::Str8 name= namespacesRemoved(TypeString<T>()());
 	int32 ret=
 		engine->RegisterObjectMethod(name.cStr(),
-		util::Str8(name + "& opAssign(const " + name + " &in)").cStr(),  asMETHODPR(T, operator=, (const T&), T&), asCALL_THISCALL);
+		util::Str8(name + "& opAssign(const " + name + " &in)").cStr(),	 asMETHODPR(T, operator=, (const T&), T&), asCALL_THISCALL);
 	Utils::devErrorCheck("RegisterObjectBehaviour assignment", ret);
 }
 

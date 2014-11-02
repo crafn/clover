@@ -255,7 +255,7 @@ void CompositionNodeLogicGroup::sort() const {
 					is_start= false;
 
 					// Node is still start for a path if the input is connected to a output of the same node
-					auto attached=  input->getAttachedSlots();
+					auto attached=	input->getAttachedSlots();
 					for (const auto& m : attached){
 						if (&m->getOwner() == node.get()){
 							
@@ -338,7 +338,7 @@ void CompositionNodeLogicGroup::sort() const {
 	
 	for (auto path_it = paths.begin(); path_it != paths.end(); ++path_it){
 		for (auto& node : nodes){
-			for (auto 	node_it = path_it->begin();
+			for (auto	node_it = path_it->begin();
 						node_it != path_it->end();
 						++node_it){
 				if (node.get() == *node_it){
@@ -495,7 +495,7 @@ struct CompositionNodeLogicGroup::SerializationGraph {
 			}
 
 			void dump() const {
-				print(debug::Ch::Dev, debug::Vb::Trivial, "        fromSlot: %s, toSlot: %s", fromSlot.name.cStr(), toSlot.name.cStr());
+				print(debug::Ch::Dev, debug::Vb::Trivial, "		   fromSlot: %s, toSlot: %s", fromSlot.name.cStr(), toSlot.name.cStr());
 			}
 		};
 		
@@ -533,7 +533,7 @@ struct CompositionNodeLogicGroup::SerializationGraph {
 		}
 
 		void dump() const {
-			print(debug::Ch::Dev, debug::Vb::Trivial, "    typeName: %s", typeName.cStr());
+			print(debug::Ch::Dev, debug::Vb::Trivial, "	   typeName: %s", typeName.cStr());
 			for (auto& m : inputs)
 				m.dump();
 		}

@@ -32,31 +32,31 @@ std::chrono::nanoseconds asNanoseconds(double seconds){
 
 void Clock::updateAll(){
 
-    for (uint32 i=0; i<gClockTable.size(); i++){
+	for (uint32 i=0; i<gClockTable.size(); i++){
 
-        if (gClockTable[i] == 0) continue;
+		if (gClockTable[i] == 0) continue;
 
 
-        gClockTable[i]->update();
+		gClockTable[i]->update();
 
-    }
+	}
 }
 
 Clock::Clock():
-    timeFromStart(0),
-    frameCount(0),
-    deltaTime(0.0),
+	timeFromStart(0),
+	frameCount(0),
+	deltaTime(0.0),
 	fixedDeltaTime(0.0),
-    timeScale(1.0),
-    paused(false),
-    tableIndex(gClockTable.findFreeIndex()){
+	timeScale(1.0),
+	paused(false),
+	tableIndex(gClockTable.findFreeIndex()){
 
-    gClockTable[tableIndex]= this;
+	gClockTable[tableIndex]= this;
 
 }
 
 Clock::~Clock(){
-    gClockTable.remove(tableIndex);
+	gClockTable.remove(tableIndex);
 }
 
 void Clock::reset(){
@@ -64,48 +64,48 @@ void Clock::reset(){
 }
 
 void Clock::update(){
-    if (paused){
-        deltaTime=0;
-        return;
-    }
-    else {
+	if (paused){
+		deltaTime=0;
+		return;
+	}
+	else {
 
-        deltaTime= hardware::gDevice->getFrameTime()*timeScale;
-        timeFromStart += deltaTime*clockRes;
-        frameCount++;
-    }
+		deltaTime= hardware::gDevice->getFrameTime()*timeScale;
+		timeFromStart += deltaTime*clockRes;
+		frameCount++;
+	}
 }
 
 real32 Clock::getDeltaTime(){
 	if (fixedDeltaTime > 0.0)
 		return fixedDeltaTime;
 		
-    return deltaTime;
+	return deltaTime;
 }
 
 real64 Clock::getTime(){
 
-    return (real64)timeFromStart/clockRes;
+	return (real64)timeFromStart/clockRes;
 }
 
 void Clock::setTimeScale(real32 scale){
-    timeScale= scale;
+	timeScale= scale;
 }
 real32 Clock::getTimeScale(){
-    return timeScale;
+	return timeScale;
 }
 
 
 void Clock::setPaused(bool b){
-    paused= b;
+	paused= b;
 }
 
 void Clock::toggle(){
-    setPaused(!paused);
+	setPaused(!paused);
 }
 
 bool Clock::isPaused(){
-    return paused;
+	return paused;
 }
 
 
@@ -116,10 +116,10 @@ bool Clock::isPaused(){
 
 Timer::Timer(const util::Str8& n):
 	running(false),
-    frameCount(0),
-    totalTime(0),
-    name(n),
-    tableIndex(-1){
+	frameCount(0),
+	totalTime(0),
+	name(n),
+	tableIndex(-1){
 	
 	if (!n.empty()){
 		tableIndex= gTimerTable.findFreeIndex();
@@ -133,18 +133,18 @@ Timer::~Timer(){
 }
 
 util::Str8 Timer::getName(){
-    return name;
+	return name;
 }
 
 
 void Timer::run(){
-    start= std::chrono::high_resolution_clock::now();
+	start= std::chrono::high_resolution_clock::now();
 	running= true;
 }
 
 void Timer::pause(){
 	running= false;
-    totalTime += duration_cast<milliseconds>(high_resolution_clock::now() - start).count() / 1000.0;
+	totalTime += duration_cast<milliseconds>(high_resolution_clock::now() - start).count() / 1000.0;
 }
 void Timer::nextFrame(){
 	++frameCount;
@@ -158,16 +158,16 @@ void Timer::nextFrames(){
 }
 
 void Timer::reset(){
-    frameCount= 0;
-    totalTime= 0;
+	frameCount= 0;
+	totalTime= 0;
 }
 
 
 real32 Timer::getAverage(){
-    if (frameCount == 0)
-        return 0;//throw Exception("Timer::getAverage(): %s: zero runs", name.c_str());
+	if (frameCount == 0)
+		return 0;//throw Exception("Timer::getAverage(): %s: zero runs", name.c_str());
 
-    return totalTime/frameCount;
+	return totalTime/frameCount;
 }
 
 real32 Timer::getTime(){

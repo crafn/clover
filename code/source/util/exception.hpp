@@ -15,11 +15,11 @@ namespace util {
 class Exception : public virtual std::exception, public virtual boost::exception {
 public:
 
-    Exception(const char8* s, ...);
+	Exception(const char8* s, ...);
 	Exception(const char8* s, va_list arglist);
 
-    virtual ~Exception() throw();
-    virtual const char* what() const throw();
+	virtual ~Exception() throw();
+	virtual const char* what() const throw();
 
 protected:
 	Exception();

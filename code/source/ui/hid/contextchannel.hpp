@@ -15,7 +15,7 @@ class BaseActionListener;
 class Context;
 
 /// Receives actions from context and sends them to listeners
-/// @note 	There are instances of ContextChannels for every context, because ContextChannel
+/// @note	There are instances of ContextChannels for every context, because ContextChannel
 ///			handles context specific stuff (e.g. sequences). So when ActionListener listens
 ///			a specific channel, it actually listens several ContextChannels
 class ContextChannel {

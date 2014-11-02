@@ -47,26 +47,26 @@ public:
 	void saveFieldDeserialize(WEPack& p); // Load
 
 	// Kutsutaan saman framen lopussa, missä chunkki ja riippuvuudet on ladattu loppuun
-    void spawn();
+	void spawn();
 	bool isSpawned() const { return spawned; }
 
-    //Lisää listaan, jonka objektit poistetaan
-    void setRemoveFlag(bool rm=true);
+	//Lisää listaan, jonka objektit poistetaan
+	void setRemoveFlag(bool rm=true);
 	bool getRemoveFlag() const { return remove; }
 
-    bool hasSpawned();
+	bool hasSpawned();
 
 	void setActive(bool active);
 	/// When entity isn't active, nobody except the one who disabled should be
 	/// modifying its state. (e.g. deserialization can be threaded)
 	bool isActive() const { return active; }
 	
-    game::WorldChunk* getInChunk(){ return inChunk; }
+	game::WorldChunk* getInChunk(){ return inChunk; }
 	void setInChunk(game::WorldChunk* c){ inChunk= c; }
 
 	bool isGlobal() const { return global; }
 
-    static void updateAll(real32);
+	static void updateAll(real32);
 
 	void allowSpawning(bool s=true){
 		ensure(!spawned);
@@ -89,14 +89,14 @@ private:
 	bool global;
 
 	bool spawningAllowed;
-    bool spawned;
+	bool spawned;
 
-    /// If true, entity is destroyed at the end of frame
-    bool remove;
+	/// If true, entity is destroyed at the end of frame
+	bool remove;
 
-    /// Manager sets
+	/// Manager sets
 	/// Null for global entities
-    game::WorldChunk* inChunk;
+	game::WorldChunk* inChunk;
 	
 protected:
 	virtual void pureVirtual()= 0; // Make this class abstract
@@ -105,12 +105,12 @@ protected:
 	void setGlobal(bool b){ global= b; }
 
 private:
-    friend class WeHandle;
-    friend class game::WeMgr;
+	friend class WeHandle;
+	friend class game::WeMgr;
 
-    game::WorldEntityId uniqueId;
+	game::WorldEntityId uniqueId;
 
-    int32 tableIndex;
+	int32 tableIndex;
 
 	// Second structure for worldEntities, fast search by unique id
 	static util::Map<game::WorldEntityId, WorldEntity*> weMap;
@@ -138,7 +138,7 @@ public:
 	nodes::UpdateLine getUpdateLine() const;
 	bool isUpdateNeeded() const { return isActive() && instance && !instance->isUpdateNoop(); }
 	
-    void onEvent(global::Event& e);
+	void onEvent(global::Event& e);
 	void onEvent(const nodes::NodeEvent& e);
 	
 	void setPosition(util::Vec2d);

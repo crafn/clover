@@ -28,7 +28,7 @@ void ParallelKernel::enqueue(const Work& w){
 
 	work.kernel= kernel;
 
-    attachedQueue->enqueue(work);
+	attachedQueue->enqueue(work);
 }
 
 template <>

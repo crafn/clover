@@ -140,9 +140,9 @@ private:
 
 	util::DynArray<LightEntityLogic*> lights;
 
-	GenericST       genericST;
-	ShadowCasterST  shadowCasterST;
-	ShadowMapST     shadowMapST;
+	GenericST		genericST;
+	ShadowCasterST	shadowCasterST;
+	ShadowMapST		shadowMapST;
 	ParticleST		particleST;
 	FluidST			fluidST;
 

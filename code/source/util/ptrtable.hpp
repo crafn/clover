@@ -16,55 +16,55 @@ class PtrTable {
 public:
 	typedef typename util::DynArray<T*>::Iter Iter;
 
-    PtrTable(int32 size=1024){
-        table.resize(size);
-        for (int32 i=0; i<size; i++){
-            table[i]= 0;
-        }
-    }
+	PtrTable(int32 size=1024){
+		table.resize(size);
+		for (int32 i=0; i<size; i++){
+			table[i]= 0;
+		}
+	}
 
-    void resize(int32 size){
-        int32 oldsize= table.size();
+	void resize(int32 size){
+		int32 oldsize= table.size();
 		
-        table.resize(size);
+		table.resize(size);
 
-        for (int32 i=oldsize; i<size; i++)
-            table[i]= 0;
-    }
+		for (int32 i=oldsize; i<size; i++)
+			table[i]= 0;
+	}
 
-    int32 findFreeIndex(){
-        for (uint32 i=0; i<table.size(); i++){
-            if (table[i] == 0)return i;
-        }
+	int32 findFreeIndex(){
+		for (uint32 i=0; i<table.size(); i++){
+			if (table[i] == 0)return i;
+		}
 
-        print(debug::Ch::General, debug::Vb::Moderate,
+		print(debug::Ch::General, debug::Vb::Moderate,
 			"PtrTable::getFreeIndex(): table is full (size: %lu)", (unsigned long)table.size());
 
-        int32 s= table.size();
+		int32 s= table.size();
 		s *= 2;
 		if (s == 0)
 			s=4;
 
-        resize(s);
-        return findFreeIndex();
-    }
+		resize(s);
+		return findFreeIndex();
+	}
 
-    T*& findFree(){
-        for (int32 i=0; i<(int)table.size(); i++){
-            if (table[i] == 0)return table[i];
-        }
+	T*& findFree(){
+		for (int32 i=0; i<(int)table.size(); i++){
+			if (table[i] == 0)return table[i];
+		}
 
 		print(debug::Ch::General, debug::Vb::Moderate, "PtrTable::getFreeIndex(): table is full (size: %i)", int(table.size()));
 
-        int32 s= table.size();
+		int32 s= table.size();
 
 		s *= 2;
 		if (s == 0)s=4;
 
-        resize(s);
+		resize(s);
 
 		return findFree();
-    }
+	}
 
 	int32 findUsedIndex() const {
 		for (SizeType i=0; i<table.size(); ++i){
@@ -79,32 +79,32 @@ public:
 		return i;
 	}
 
-    void remove(uint32 index){
-        table[index]= 0;
-    }
+	void remove(uint32 index){
+		table[index]= 0;
+	}
 
-    Iter begin(){
-        return table.begin();
-    }
+	Iter begin(){
+		return table.begin();
+	}
 
-    Iter end(){
-        return table.end();
-    }
+	Iter end(){
+		return table.end();
+	}
 
 	T* const * data() const { return table.data(); }
 	T** data() { return table.data(); }
 	
-    uint32 size() const {
-        return table.size();
-    }
+	uint32 size() const {
+		return table.size();
+	}
 
-    T*& operator [](int index){
-        return table[index];
-    }
+	T*& operator [](int index){
+		return table[index];
+	}
 
-    T* operator [](int index) const {
-        return table[index];
-    }
+	T* operator [](int index) const {
+		return table[index];
+	}
 
 	/// @return Count of non-null pointers
 	uint32 getUsedCount() const {
@@ -116,7 +116,7 @@ public:
 	}
 
 private:
-    util::DynArray<T*> table;
+	util::DynArray<T*> table;
 };
 
 } // util

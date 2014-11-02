@@ -26,7 +26,7 @@ private:
 	audio::OutputStream stream;
 	audio::DeviceAudioFeed feed;
 
-	static int32 audioCallback(  	const void* input_buffer, void* output_buffer,
+	static int32 audioCallback(		const void* input_buffer, void* output_buffer,
 									unsigned long sample_count,
 									const PaStreamCallbackTimeInfo* time_info,
 									PaStreamCallbackFlags status_flags,

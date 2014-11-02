@@ -11,24 +11,24 @@ namespace game {
 /// @todo Replace with a bunch of functions for util::Set/util::DynArray
 class WESet {
 public:
-    WESet();
-    virtual ~WESet();
+	WESet();
+	virtual ~WESet();
 
-    typedef util::LinkedList<game::WeHandle>::Iter Iter;
-    typedef util::LinkedList<game::WeHandle>::cIter cIter;
+	typedef util::LinkedList<game::WeHandle>::Iter Iter;
+	typedef util::LinkedList<game::WeHandle>::cIter cIter;
 
-    Iter begin();
-    Iter end();
+	Iter begin();
+	Iter end();
 
-    cIter begin() const;
-    cIter end() const;
+	cIter begin() const;
+	cIter end() const;
 
-    int32 size();
-    void clear();
+	int32 size();
+	void clear();
 
-    void add(const game::WorldEntity&);
-    void add(const game::WeHandle&);
-    void add(const WESet&);
+	void add(const game::WorldEntity&);
+	void add(const game::WeHandle&);
+	void add(const WESet&);
 
 	void remove(const game::WeHandle&);
 
@@ -37,7 +37,7 @@ public:
 	WESet& operator+=(const WESet& w){ add(w); return *this; }
 
 private:
-    util::LinkedList<game::WeHandle> handles;
+	util::LinkedList<game::WeHandle> handles;
 };
 
 } // game

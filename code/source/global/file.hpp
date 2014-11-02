@@ -22,8 +22,8 @@ public:
 public:
 	/// Constructs a new File-object with given name.
 	/// @param name relative or absolute path to a file, or path to a file inside
-	///             a resource file. Relative paths go though resource lookup.
-	///             Use '/' as directory separator on all platforms.
+	///				a resource file. Relative paths go though resource lookup.
+	///				Use '/' as directory separator on all platforms.
 	/// This function doesn't throw Error
 	File(const util::Str8& name);
 	~File();
@@ -40,7 +40,7 @@ public:
 	const util::Str8& getAbsoluteName() const;
 
 	/// Returns a full path to the directory where the file exists, for example
-    /// "/home/me/clover/images" or "/home/me/clover/gameresource.zip/images"
+	/// "/home/me/clover/images" or "/home/me/clover/gameresource.zip/images"
 	util::Str8 getAbsoluteDirname() const;
 
 	/// File size in bytes

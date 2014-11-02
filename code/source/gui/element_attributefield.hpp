@@ -10,7 +10,7 @@ namespace clover {
 namespace gui {
 
 /// @todo Refactor to work with traits as SignalValueUi works, because
-/// 	- custom gui class for every AttributeType is a bit overscaled
+///		- custom gui class for every AttributeType is a bit overscaled
 ///		- redundant code is written when same kind of functionality is wanted somewhere else (like with signals)
 
 /// @todo Should be moved to ui

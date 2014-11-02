@@ -22,11 +22,11 @@ namespace physics {
 class Draw : public b2Draw {
 public:
 	enum class Flag {
-		BaseShape = 		b2Draw::e_shapeBit,
-		Joint = 			b2Draw::e_jointBit,
-		BoundingBox = 		b2Draw::e_aabbBit,
+		BaseShape =			b2Draw::e_shapeBit,
+		Joint =				b2Draw::e_jointBit,
+		BoundingBox =		b2Draw::e_aabbBit,
 		BroadPhasePair =	b2Draw::e_pairBit,
-		CenterOfMass = 		b2Draw::e_centerOfMassBit,
+		CenterOfMass =		b2Draw::e_centerOfMassBit,
 		FluidParticles,
 		Grid
 	};

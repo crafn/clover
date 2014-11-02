@@ -28,9 +28,9 @@ public:
 	void attachToQueue(util::ParallelQueue& q){ attachedQueue= &q; }
 
 	template <typename T>
-    void setArgument(uint32 arg_id, T &arg, uint32 count=1);
+	void setArgument(uint32 arg_id, T &arg, uint32 count=1);
 
-    void enqueue(const Work& w);
+	void enqueue(const Work& w);
 
 private:
 	friend class util::ParallelProgram;

@@ -214,7 +214,7 @@ void TriMesh::addTriangle(Vertex p[3]){
 
 			if (p[i].position[0] == vertices[v].position[0] &&
 				p[i].position[1] == vertices[v].position[1] &&
-				p[i].uv0[0] == vertices[v].uv0[0]           &&
+				p[i].uv0[0] == vertices[v].uv0[0]			&&
 				p[i].uv0[1] == vertices[v].uv0[1]){
 
 				///Duplikaatti, lisätään vain indeksi

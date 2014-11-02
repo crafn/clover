@@ -58,7 +58,7 @@ struct Component<IntegerVector<C, N>> {
 template <typename T>
 auto component(T&& t, SizeType i)
 -> decltype(Component<Plain<T>>::get(std::forward<T>(t), i))
-{    return Component<Plain<T>>::get(std::forward<T>(t), i); }
+{	 return Component<Plain<T>>::get(std::forward<T>(t), i); }
 
 template <typename T>
 constexpr SizeType componentCount()

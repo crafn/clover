@@ -137,7 +137,7 @@ void EditorComponentUi<T>::setRadius(const util::Coord& rad){
 }
 
 template<typename T>
-const util::Coord&  EditorComponentUi<T>::getRadius() const {
+const util::Coord&	EditorComponentUi<T>::getRadius() const {
 	return radius;
 }
 

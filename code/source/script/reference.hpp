@@ -8,7 +8,7 @@ namespace script {
 
 /// Manual reference counting required by angelscript for handle objects
 /// Deletes itsef when count reaches zero
-/// Usage: 	class A : public script::Reference {};
+/// Usage:	class A : public script::Reference {};
 ///			scriptMgr.registerObjectType<A>();
 /// @todo Must rethink. Don't use! Had some mysterious crashes.
 class Reference {

@@ -63,7 +63,7 @@ template <typename T>
 Quaternion<T>& Quaternion<T>::operator=(const Matrix<T, 3>& m){
 	real32 d= m(0,0) + m(1,1) + m(2,2) + 1;
 	
-	real32 	a= m(1,0) - m(0,1),
+	real32	a= m(1,0) - m(0,1),
 			b= m(0,2) - m(2,0),
 			c= m(2,1) - m(1,2);
 	

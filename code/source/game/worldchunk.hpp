@@ -25,12 +25,12 @@ public:
 
 	static constexpr uint32 width= game::WorldGrid::chunkWidthInBlocks;
 
-    enum Side {
-        Right,
-        Down,
-        Left,
-        Up
-    };
+	enum Side {
+		Right,
+		Down,
+		Left,
+		Up
+	};
 
 	enum class State {
 		None, // Default
@@ -40,25 +40,25 @@ public:
 		Destroying // Destroying after saved to file
 	};
 
-    WorldChunk(ChunkVec pos= util::Vec2i{0,0});
+	WorldChunk(ChunkVec pos= util::Vec2i{0,0});
 	virtual ~WorldChunk();
 
 	void setState(State s);
 	State getState() const { return state; }
 
 	void setPosition(ChunkVec p);
-    ChunkVec getPosition() const;
+	ChunkVec getPosition() const;
 
-    void setSide(WorldChunk& chunk);
+	void setSide(WorldChunk& chunk);
 	void setSide(Side s, WorldChunk* c){ sides[s]= c; }
 
-    WorldChunk* getSide(Side s);
+	WorldChunk* getSide(Side s);
 
 
-    util::PtrTable<game::WorldEntity>& getEntityTable(){ return entities; }
+	util::PtrTable<game::WorldEntity>& getEntityTable(){ return entities; }
 
-    void addEntity(game::WorldEntity& obj);
-    void removeEntity(game::WorldEntity& obj);
+	void addEntity(game::WorldEntity& obj);
+	void removeEntity(game::WorldEntity& obj);
 
 	SizeType getEntityCount() const;
 
@@ -97,15 +97,15 @@ protected:
 
 	State state;
 
-    util::PtrTable<game::WorldEntity> entities;
+	util::PtrTable<game::WorldEntity> entities;
 
 	// Dependencies are rebuilt only when chunk is saved
 	util::Map<util::Vec2i, WorldChunk*> dependencyMap;
 
-    WorldChunk *sides[4];
+	WorldChunk *sides[4];
 
-    // Position in chunk coordinates
-    util::Vec2i position;
+	// Position in chunk coordinates
+	util::Vec2i position;
 };
 
 } // game

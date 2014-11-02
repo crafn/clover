@@ -20,20 +20,20 @@ BaseWorldEntity<WorldEntity>::BaseWorldEntity():
 			active(true),
 			global(false),
 			spawningAllowed(false),
-            spawned(false),
-            remove(false),
-            inChunk(nullptr),
+			spawned(false),
+			remove(false),
+			inChunk(nullptr),
 			uniqueId(gWETable.assignUniqueId()), /// @todo This probably shouldn't be here (loaded entities will increment)
-            tableIndex(gWETable.findFreeIndex()){
+			tableIndex(gWETable.findFreeIndex()){
 
-    gWETable[tableIndex]= thisAsWe();
+	gWETable[tableIndex]= thisAsWe();
 
 	weMapIt= weMap.insert(std::make_pair(uniqueId, thisAsWe())).first;
 }
 
 template <typename WorldEntity>
 BaseWorldEntity<WorldEntity>::~BaseWorldEntity(){
-    gWETable[tableIndex]= 0;
+	gWETable[tableIndex]= 0;
 
 	weMap.erase(weMapIt);
 }
@@ -69,25 +69,25 @@ void BaseWorldEntity<WorldEntity>::setActive(bool active_){
 
 template <typename WorldEntity>
 void BaseWorldEntity<WorldEntity>::spawn(){
-    if (spawned)
-        throw global::Exception("BaseWorldEntity::spawn(): already spawned");
+	if (spawned)
+		throw global::Exception("BaseWorldEntity::spawn(): already spawned");
 
 	ensure(spawningAllowed);
 	ensure(active);
 
-    spawned= true;
+	spawned= true;
 
 	ensure(inChunk || isGlobal());
 }
 
 template <typename WorldEntity>
 void BaseWorldEntity<WorldEntity>::setRemoveFlag(bool rm){
-    remove= rm;
+	remove= rm;
 }
 
 template <typename WorldEntity>
 bool BaseWorldEntity<WorldEntity>::hasSpawned(){
-    return spawned;
+	return spawned;
 }
 
 template class BaseWorldEntity<WorldEntity>;
@@ -109,7 +109,7 @@ void WorldEntity::weInit(){
 	// Make sure that WeInterface is sorted to the beginning so that it's updated first
 	if (!type->getNodeGroup().getNodes().empty())
 		ensure_msg(type->getNodeGroup().getNodes().front()->getType().getName() == "WeInterface",
-			"First node in node group was %s, %i",  type->getNodeGroup().getNodes().front()->getType().getName().cStr(),
+			"First node in node group was %s, %i",	type->getNodeGroup().getNodes().front()->getType().getName().cStr(),
 													type->getNodeGroup().getNodes().front()->isUpdateRouteStart());
 	weInterface= static_cast<nodes::WeInterfaceNodeInstance*>(&instance->getNode("WeInterface"));
 	weInterface->setEntity(*this);

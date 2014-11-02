@@ -84,7 +84,7 @@ uint32 ModelEntityLogic::getContentHash() const {
 }
 
 uint32 ModelEntityLogic::getBatchCompatibilityHash() const {
-	return 	util::hash32(
+	return	util::hash32(
 				util::makeTuple(
 					getDef().getBatchCompatibilityHash(),
 					customDrawPriority,

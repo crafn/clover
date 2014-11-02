@@ -540,7 +540,7 @@ void RigidObject::weld(RigidObject& o){
 		// Handles
 		// this: master, o: master
 		// this: master, o: proxy
-		// this: proxy,  o: proxy
+		// this: proxy,	 o: proxy
 		// this: normal, o: master
 		// this: normal, o: proxy
 

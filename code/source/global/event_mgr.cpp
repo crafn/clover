@@ -67,11 +67,11 @@ util::DynArray<global::EventReceiver*> EventMgr::getRegisteredReceivers(global::
 
 void EventMgr::dispatch(){
 	PROFILE_("events");
-    while(global::gEventQueue.size()){
+	while(global::gEventQueue.size()){
 		global::Event& e= global::gEventQueue.getLast();
 		e.send();
 		global::gEventQueue.popLast();
-    }
+	}
 }
 
 } // global

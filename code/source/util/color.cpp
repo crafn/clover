@@ -100,11 +100,11 @@ void Color::setHsv(const util::Vec3f& hsv){
 
 	switch(i % 6){
 		case 0: r= hsv[2], g= t, b= p; break;
-        case 1: r= q, g= hsv[2], b= p; break;
-        case 2: r= p, g= hsv[2], b= t; break;
-        case 3: r= p, g= q, b= hsv[2]; break;
-        case 4: r= t, g= p, b= hsv[2]; break;
-        case 5: r= hsv[2], g= p, b= q; break;
+		case 1: r= q, g= hsv[2], b= p; break;
+		case 2: r= p, g= hsv[2], b= t; break;
+		case 3: r= p, g= q, b= hsv[2]; break;
+		case 4: r= t, g= p, b= hsv[2]; break;
+		case 5: r= hsv[2], g= p, b= q; break;
 	}
 	
 }

@@ -20,7 +20,7 @@ public:
 	
 private:
 	template <typename T>
-	friend  class CountedPointer;
+	friend	class CountedPointer;
 	void incrementReferenceCount() const;
 	void decrementReferenceCount() const;
 	

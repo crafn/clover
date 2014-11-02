@@ -160,7 +160,7 @@ public:
 		errorCheck("ClState::setKernelArgument(..): clSetKernelArg failed: ", err);
 	}
 
-    void errorCheck(util::Str8 str, int32 err);
+	void errorCheck(util::Str8 str, int32 err);
 	
 private:
 	const char* getErrorString(cl_int error);

@@ -335,7 +335,7 @@ struct ObjectNodeTraits<Quaternion<T>> {
 		return ret;
 	}
 	static Value deserialized(const ObjectNode& node){
-		return 	Value::byRotationAxis(
+		return	Value::byRotationAxis(
 						node.get("axis").getValue<typename Value::Vec>(),
 						node.get("rotation").getValue<T>()
 				);
@@ -354,7 +354,7 @@ struct ObjectNodeTraits<util::SrtTransform<S, Quaternion<R>, T>> {
 	}
 	static Value deserialized(const ObjectNode& node){
 		if (!node.empty())
-			return 	Value(	node.get("scale").getValue<typename Value::Scale>(),
+			return	Value(	node.get("scale").getValue<typename Value::Scale>(),
 							node.get("rotation").getValue<typename Value::Rotation>(),
 							node.get("translation").getValue<typename Value::Translation>()
 					);

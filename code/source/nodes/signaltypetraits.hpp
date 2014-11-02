@@ -316,7 +316,7 @@ struct SignalTypeTraits<SignalType::Vec2> {
 	static util::Str8 enumString(){ return "Vec2"; }
 
 	static util::DynArray<SubSignalType> subTypes(){
-		return { 	SubSignalType::X,
+		return {	SubSignalType::X,
 					SubSignalType::Y,
 					SubSignalType::Trigger};
 	}
@@ -346,7 +346,7 @@ struct SignalTypeTraits<SignalType::Vec3> {
 	static util::Str8 enumString(){ return "Vec3"; }
 
 	static util::DynArray<SubSignalType> subTypes(){
-		return { 	SubSignalType::X,
+		return {	SubSignalType::X,
 					SubSignalType::Y,
 					SubSignalType::Z,
 					SubSignalType::Trigger};
@@ -379,7 +379,7 @@ struct SignalTypeTraits<SignalType::Vec4> {
 	static util::Str8 enumString(){ return "Vec4"; }
 
 	static util::DynArray<SubSignalType> subTypes(){
-		return { 	SubSignalType::X,
+		return {	SubSignalType::X,
 					SubSignalType::Y,
 					SubSignalType::Z,
 					SubSignalType::W,
@@ -416,7 +416,7 @@ struct SignalTypeTraits<SignalType::RtTransform2> {
 	static util::Str8 enumString(){ return "RtTransform2"; }
 
 	static util::DynArray<SubSignalType> subTypes(){
-		return { 	SubSignalType::X,
+		return {	SubSignalType::X,
 					SubSignalType::Y,
 					SubSignalType::Translation2,
 					SubSignalType::RotationZ,
@@ -478,7 +478,7 @@ struct SignalTypeTraits<SignalType::SrtTransform2> {
 	static util::Str8 enumString(){ return "SrtTransform2"; }
 
 	static util::DynArray<SubSignalType> subTypes(){
-		return { 	SubSignalType::X,
+		return {	SubSignalType::X,
 					SubSignalType::Y,
 					SubSignalType::Translation2,
 					SubSignalType::RotationZ,
@@ -527,7 +527,7 @@ struct SignalTypeTraits<SignalType::SrtTransform3> {
 	static util::Str8 enumString(){ return "SrtTransform3"; }
 
 	static util::DynArray<SubSignalType> subTypes(){
-		return { 	SubSignalType::X,
+		return {	SubSignalType::X,
 					SubSignalType::Y,
 					SubSignalType::Z,
 					SubSignalType::Translation2,
@@ -685,29 +685,29 @@ struct SignalTypeTraits<SignalType::EventArray> {
 	static Value defaultInitValue(){ return Value(); }
 };
 
-#define DEFAULT_SIGNALTYPETRAITS(enum_name, type_name)                              \
-template <>                                                                         \
-struct SignalTypeTraits<SignalType::enum_name> {                                    \
-	typedef type_name Value;                                                        \
-	static util::Str8 enumString(){ return #enum_name; }                                  \
+#define DEFAULT_SIGNALTYPETRAITS(enum_name, type_name)								\
+template <>																			\
+struct SignalTypeTraits<SignalType::enum_name> {									\
+	typedef type_name Value;														\
+	static util::Str8 enumString(){ return #enum_name; }								  \
 																					\
-	static util::DynArray<SubSignalType> subTypes(){                                      \
-		return {};                                                                  \
-	}                                                                               \
+	static util::DynArray<SubSignalType> subTypes(){									  \
+		return {};																	\
+	}																				\
 																					\
-	static SignalValue extract(SubSignalType type, const Value& from){              \
-		switch(type){                                                               \
-			DEFAULT_EXTRACT(enum_name, type)                                        \
-		}                                                                           \
-	}                                                                               \
+	static SignalValue extract(SubSignalType type, const Value& from){				\
+		switch(type){																\
+			DEFAULT_EXTRACT(enum_name, type)										\
+		}																			\
+	}																				\
 																					\
-	static void combine(const SignalValue& from, SubSignalType type, Value& to){    \
-		switch(type){                                                               \
-			DEFAULT_COMBINE(enum_name, type)                                        \
-		}                                                                           \
-	}                                                                               \
+	static void combine(const SignalValue& from, SubSignalType type, Value& to){	\
+		switch(type){																\
+			DEFAULT_COMBINE(enum_name, type)										\
+		}																			\
+	}																				\
 																					\
-	static Value defaultInitValue(){ return Value(); }                              \
+	static Value defaultInitValue(){ return Value(); }								\
 																					\
 };
 

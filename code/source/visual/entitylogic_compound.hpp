@@ -13,7 +13,7 @@ namespace visual {
 
 class CompoundEntityDef;
 
-class CompoundEntityLogic :  public EntityLogic {
+class CompoundEntityLogic :	 public EntityLogic {
 public:
 	using Base= EntityLogic;
 

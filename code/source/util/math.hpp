@@ -40,16 +40,16 @@ T pointOnCatmull(real64 t, T p0, T p1, T p2, T p3);
 
 /// @todo Not very good idea..
 class Rand {
-    static boost::mt19937 mersenne;
+	static boost::mt19937 mersenne;
 public:
 
-    template<typename T>
-    static T continuous(T min, T max){
+	template<typename T>
+	static T continuous(T min, T max){
 
-        boost::uniform_real<T> var(min, max);
-        boost::variate_generator<boost::mt19937&, boost::uniform_real<T> > gen(mersenne, var);
-        return gen();
-    }
+		boost::uniform_real<T> var(min, max);
+		boost::variate_generator<boost::mt19937&, boost::uniform_real<T> > gen(mersenne, var);
+		return gen();
+	}
 
 	template<typename T>
 	static T discrete(T min, T max){
@@ -65,9 +65,9 @@ int32 limitUC(int32 i);
 
 template <typename T>
 T limited(T f, T ala, T yla){
-    if (f < ala) return ala;
-    if (f > yla) return yla;
-    return f;
+	if (f < ala) return ala;
+	if (f > yla) return yla;
+	return f;
 }
 
 real32 normalizedAngle(real32 angle);

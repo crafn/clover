@@ -45,7 +45,7 @@ void GridLayoutElement::preUpdate(){
 }
 
 void GridLayoutElement::updateNodes(){
-	// 		2*radius = (gridSize - util::Vec2i(1))*spacing + 2*relativeMargin*spacing
+	//		2*radius = (gridSize - util::Vec2i(1))*spacing + 2*relativeMargin*spacing
 	// ->	spacing = 2*radius/(gridSize - util::Vec2i(1) + 2*relativeMargin)
 
 	util::Vec2d scaling= util::Vec2d(gridSize.casted<util::Vec2d>() - util::Vec2d(1) + relativeMargin*2);

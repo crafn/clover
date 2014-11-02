@@ -170,11 +170,11 @@ void Draw::DrawTransform(const b2Transform& xf){
 	const real64 rad= 0.3;
 
 	b2Vec2 points[3]= {	xf.p,
-						xf.p + rad*b2Vec2(cos(xf.q.GetAngle()), 			sin(xf.q.GetAngle())),
-						xf.p + rad*b2Vec2(cos(xf.q.GetAngle() + util::tau/4), 	sin(xf.q.GetAngle() + util::tau/4))
+						xf.p + rad*b2Vec2(cos(xf.q.GetAngle()),				sin(xf.q.GetAngle())),
+						xf.p + rad*b2Vec2(cos(xf.q.GetAngle() + util::tau/4),	sin(xf.q.GetAngle() + util::tau/4))
 					  };
 
-	b2Vec2 verts[6]= { 	points[0], points[1], points[0],
+	b2Vec2 verts[6]= {	points[0], points[1], points[0],
 						points[0], points[2], points[0] };
 
 	b2Color color(0,1,0);

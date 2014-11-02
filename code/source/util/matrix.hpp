@@ -18,14 +18,14 @@ struct Matrix {
 	
 	static Matrix byRotationAxis(Vec axis, T rotation);
 	
-    /// Constructs a zero-matrix
-    Matrix();
+	/// Constructs a zero-matrix
+	Matrix();
 	
 	/// *this transformed by other
-    Matrix operator*(const Matrix& other) const;
+	Matrix operator*(const Matrix& other) const;
 
-    T& operator()(SizeType x, SizeType y);
-    T operator()(SizeType x, SizeType y) const;
+	T& operator()(SizeType x, SizeType y);
+	T operator()(SizeType x, SizeType y) const;
 	
 	Vec row(SizeType y) const;
 	Vec column(SizeType x) const;
@@ -35,16 +35,16 @@ struct Matrix {
 	T* data(){ return v.data(); }
 	const T* data() const { return v.data(); }
 
-    void setBvhEulerRotation(Vec euler_angles);
+	void setBvhEulerRotation(Vec euler_angles);
 
-    void print();
+	void print();
 	
 	/// Helper for operator* defined outside class
 	Vec transformedVector(Vec vec) const;
 	
 private:
 	// Column-major
-    std::array<T, N*N> v;
+	std::array<T, N*N> v;
 };
 
 /// 'vec' transformed by 'mat'

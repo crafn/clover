@@ -155,7 +155,7 @@ void parseBvhDefinition(std::stringstream& stream, BvhData& parsed){
 			current_joint= &current_joint->subJoints.back();
 			
 			
-			stream 	>> token >> token >> token // "Site { OFFSET"
+			stream	>> token >> token >> token // "Site { OFFSET"
 					>> current_joint->offset[0]
 					>> current_joint->offset[1]
 					>> current_joint->offset[2]
@@ -165,7 +165,7 @@ void parseBvhDefinition(std::stringstream& stream, BvhData& parsed){
 			stream >> parsed.frameCount;
 		}
 		else if (token == "Frame"){
-			stream 	>> token // "Time:"
+			stream	>> token // "Time:"
 					>> parsed.frameTime;
 			break;
 		}
@@ -300,7 +300,7 @@ util::DynArray<ArmaturePose::Pose> calcLocalPosesFromBvh(const BvhData& bvh_data
 		return f;
 	};
 	
-	auto joint_i= [&] () -> JointId  {
+	auto joint_i= [&] () -> JointId	 {
 		JointId id= joint_name_to_id.get(extractor.getJoint().name, JointIdNone);
 		
 		if (id == JointIdNone)

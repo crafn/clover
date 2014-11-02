@@ -14,9 +14,9 @@ public:
 	virtual ~WorldChunkTask(){}
 
 	enum class UpdateState {
-		Finished,   /// Task has done everything it is supposed to
+		Finished,	/// Task has done everything it is supposed to
 		Unfinished, /// More updates needed to finish
-		Blocking    /// Not finished, but waiting for some resource which is not available yet
+		Blocking	/// Not finished, but waiting for some resource which is not available yet
 	};
 
 	virtual UpdateState update()= 0;

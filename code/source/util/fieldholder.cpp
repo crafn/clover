@@ -27,8 +27,8 @@ FieldHolder::FieldHolder():weHandleStored(false){
 			return &fields.back();																\
 		}																						\
 																								\
-	FieldHolder::Field* FieldHolder::add(	util::DynArray<type_> & ref, 								\
-											const util::Str8 &name, 									\
+	FieldHolder::Field* FieldHolder::add(	util::DynArray<type_> & ref,								\
+											const util::Str8 &name,										\
 											uint32 max_count ){									\
 			fields.pushBack(Field(&ref, Field:: name_, name, max_count/*, subtype*/));			\
 			for (int32 i=0; i<(int32)fields.size()-1; ++i){										\

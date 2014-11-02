@@ -10,13 +10,13 @@ namespace debug {
 
 /// Performs logging to file
 class DebugLog {
-    std::ofstream file;
+	std::ofstream file;
 public:
-    DebugLog();
-    virtual ~DebugLog();
+	DebugLog();
+	virtual ~DebugLog();
 	
 	/// Appends row
-    void operator()(const char8 * msg);
+	void operator()(const char8 * msg);
 };
 
 extern DebugLog gDebugLog;

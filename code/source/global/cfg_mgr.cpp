@@ -23,7 +23,7 @@ void CfgMgr::load(){
 		return;
 	}
 	
-	std::string content( 	(std::istreambuf_iterator<char>(file)),
+	std::string content(	(std::istreambuf_iterator<char>(file)),
 							(std::istreambuf_iterator<char>()));
 	
 	try {

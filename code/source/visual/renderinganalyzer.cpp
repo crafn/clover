@@ -89,7 +89,7 @@ RenderingAnalyzer::MeshInfo::MeshInfo(const visual::ModelEntityLogic& logic){
 	batchCompatibilityHash= logic.getBatchCompatibilityHash();
 	
 	// Batching normalmapped things could be done using some uv tricks
-	unbatchable= 	logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_Normal) || 
+	unbatchable=	logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_Normal) || 
 					logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_EnvShadow); 
 }
 

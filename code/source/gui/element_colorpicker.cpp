@@ -24,8 +24,8 @@ ColorPickerElement::ColorPickerElement(const util::Coord& offset, const util::Co
 		real32 phase_rad= phase*util::tau;
 		real32 next_phase_rad= next_phase*util::tau;
 		
-		util::Vec2f a= {(real32)cos(phase_rad), 		(real32)sin(phase_rad)};
-		util::Vec2f b= {(real32)cos(next_phase_rad), 	(real32)sin(next_phase_rad)};
+		util::Vec2f a= {(real32)cos(phase_rad),			(real32)sin(phase_rad)};
+		util::Vec2f b= {(real32)cos(next_phase_rad),	(real32)sin(next_phase_rad)};
 		
 		util::Color color;
 		color.setHsl({phase, 1, 0.5});

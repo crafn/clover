@@ -65,7 +65,7 @@ void PerformanceEcUi::addToPerformanceGraph(const util::Str8& name, real64 value
 	auto it= performanceGraphLineIdMap.find(name);
 	gui::LineGraphElement::NodeId id;
 	if (it == performanceGraphLineIdMap.end()){
-		id=  performanceGraph.createLine(color(performanceGraphLineIdMap.size()), name);
+		id=	 performanceGraph.createLine(color(performanceGraphLineIdMap.size()), name);
 		performanceGraphLineIdMap[name]= id;
 	}
 	else {

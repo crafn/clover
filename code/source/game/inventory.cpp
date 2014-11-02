@@ -97,7 +97,7 @@ void Inventory::setEntitiesPosition(util::Vec2d pos){/*
 	for (auto &m : items){
 		ensure(m.getHandle());
 		//if (!m.getHandle()->isActive()) continue;
-		ensure_msg(m.getHandle()->isStored(), 	"Id: %lld, Name: %s",
+		ensure_msg(m.getHandle()->isStored(),	"Id: %lld, Name: %s",
 												m.getHandle()->getId(),
 												m.getHandle()->getDevName().cStr());
 		m.getHandle()->setPosition(pos);

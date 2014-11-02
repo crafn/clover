@@ -62,13 +62,13 @@ App::App(const util::Str8& executablePath){
 	global::gEventMgr= new global::EventMgr();
 	new script::ScriptMgr();
 
-    hardware::gDevice= new hardware::Device();
+	hardware::gDevice= new hardware::Device();
 	hardware::gDevice->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
 
-    util::gRealClock= new util::Clock();
-    util::gGameClock= new util::Clock();
+	util::gRealClock= new util::Clock();
+	util::gGameClock= new util::Clock();
 
-    resources::gCache= new resources::Cache();
+	resources::gCache= new resources::Cache();
 	resources::gCache->preLoad();
 	resources::gCache->update();
 
@@ -94,11 +94,11 @@ App::~App(){
 	delete physics::gPhysMgr; physics::gPhysMgr= nullptr;
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
 	delete visual::gVisualMgr;
-    delete audio::gAudioMgr;
+	delete audio::gAudioMgr;
 	delete resources::gCache; resources::gCache= nullptr;
-    delete util::gGameClock; util::gGameClock= nullptr;
-    delete util::gRealClock; util::gRealClock= nullptr;
-    delete hardware::gDevice; hardware::gDevice= nullptr;
+	delete util::gGameClock; util::gGameClock= nullptr;
+	delete util::gRealClock; util::gRealClock= nullptr;
+	delete hardware::gDevice; hardware::gDevice= nullptr;
 	delete script::gScriptMgr;
 	delete global::gEventMgr; global::gEventMgr= nullptr;
 	delete global::gFileMgr;
@@ -111,12 +111,12 @@ App::~App(){
 void App::run(){
 	PROFILE();
 
-    hardware::gDevice->updateFrameTime();
-    util::Clock::updateAll();
+	hardware::gDevice->updateFrameTime();
+	util::Clock::updateAll();
 	
-    util::Timer sleepTimer;
+	util::Timer sleepTimer;
 
-    while (1){
+	while (1){
 		game::SingleFrameStorage::value.clear();
 
 		physics::gPhysMgr->preFrameUpdate();
@@ -133,10 +133,10 @@ void App::run(){
 			sleepTimer.pause();
 		}
 
-        hardware::gDevice->updateEvents();
-        hardware::gDevice->updateFrameTime();
+		hardware::gDevice->updateEvents();
+		hardware::gDevice->updateFrameTime();
 		
-        util::Clock::updateAll();
+		util::Clock::updateAll();
 
 		visual::gVisualMgr->getCameraMgr().update();
 
@@ -144,22 +144,22 @@ void App::run(){
 		// Could be after game logic, but does some debug-drawing and updating debug draw in the same frame is nice
 		// (if this is put after debugDraw update things are drawn twice in subsequent frames)
 		// (that problem could be resolved by not drawing debug-things before they're updated once)
-        if (!ui::game::gBaseUi->update())
+		if (!ui::game::gBaseUi->update())
 			break;
 
-        if (!util::gGameClock->isPaused()){
-            physics::gPhysMgr->update();
+		if (!util::gGameClock->isPaused()){
+			physics::gPhysMgr->update();
 
-            global::gEventMgr->dispatch();
+			global::gEventMgr->dispatch();
 			nodes::gNodeEventMgr->dispatch();
 
-            // Update world logic
-            game::gBaseGameLogic->update();
-            audio::gAudioMgr->update();
+			// Update world logic
+			game::gBaseGameLogic->update();
+			audio::gAudioMgr->update();
 
 			/// @todo Call just after gpu has finished with fluid preupdate
 			physics::gPhysMgr->fluidUpdate();
-        }
+		}
 
 		resources::gCache->update();
 		
@@ -167,7 +167,7 @@ void App::run(){
 		
 		physics::gPhysMgr->postFrameUpdate();
 		visual::gVisualMgr->renderFrame();
-    }
+	}
 
 	game::gBaseGameLogic->onQuit();
 }

@@ -40,7 +40,7 @@ void ContextChannel::onAction(const Action& action){
 	for (const auto& tag : owner->getTags()){
 		
 		/// Trigger corresponding ActionListener callbacks
-		const auto& outside_listeners= 	BaseActionListener::getListeners(
+		const auto& outside_listeners=	BaseActionListener::getListeners(
 											BaseActionListener::ListenersKey(name, tag, action.getName())
 										);
 										

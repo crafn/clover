@@ -27,7 +27,7 @@ void RawPack::addData(const uint8* buf, uint32 s){
 	position= data.size();
 }
 
-#define PACK_OPERATOR(type_)  										\
+#define PACK_OPERATOR(type_)										\
 	RawPack& RawPack::operator<<(const type_ & value){				\
 		uint8 buf[sizeof(type_)];									\
 		size_t written= type_ ## ToBuf((void*)buf, value);			\
@@ -127,35 +127,35 @@ RawPack& RawPack::operator>>(util::Str8& value){
 
 
 size_t RawPack::uint8ToBuf(void *buf, const uint8 d){
-    return RawArchive::serializePod((uint8*)buf, &d);
+	return RawArchive::serializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::uint8FromBuf(const void* buf, uint8& d){
-    return RawArchive::deserializePod((uint8*)buf, &d);
+	return RawArchive::deserializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::uint16ToBuf(void *buf, const uint16 d){
-    return RawArchive::serializePod((uint8*)buf, &d);
+	return RawArchive::serializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::uint16FromBuf(const void *buf, uint16& d){
-    return RawArchive::deserializePod((uint8*)buf, &d);
+	return RawArchive::deserializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::uint32ToBuf(void *buf, const uint32 d){
-    return RawArchive::serializePod((uint8*)buf, &d);
+	return RawArchive::serializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::uint32FromBuf(const void *buf, uint32& d){
-    return RawArchive::deserializePod((uint8*)buf,&d);
+	return RawArchive::deserializePod((uint8*)buf,&d);
 }
 
 size_t RawPack::real32ToBuf(void *buf, const real32 d){
-    return RawArchive::serializePod((uint8*)buf, &d);
+	return RawArchive::serializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::real32FromBuf(const void *buf, real32& d){
-    return RawArchive::deserializePod((uint8*)buf, &d);
+	return RawArchive::deserializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::uint64ToBuf(void *buf, const uint64 d){
@@ -167,11 +167,11 @@ size_t RawPack::uint64FromBuf(const void *buf, uint64& d){
 }
 
 size_t RawPack::real64ToBuf(void *buf, real64 d){
-    return RawArchive::serializePod((uint8*)buf, &d);
+	return RawArchive::serializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::real64FromBuf(const void *buf, real64& d){
-    return RawArchive::deserializePod((uint8*)buf, &d);
+	return RawArchive::deserializePod((uint8*)buf, &d);
 }
 
 size_t RawPack::Vec2fToBuf(void *buf, const util::Vec2f& v){

@@ -174,7 +174,7 @@ private:
 
 /// std::vector<bool> workaround
 template <template <typename> class Ator>
-class DynArray<bool, Ator,  bool> : public DynArray<bool, Ator, BoolWrap> {
+class DynArray<bool, Ator,	bool> : public DynArray<bool, Ator, BoolWrap> {
 };
 
 template<typename T, template <typename> class Ator>

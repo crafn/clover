@@ -14,13 +14,13 @@ public:
 	using ChunkSet= util::Set<game::WorldChunk*>;
 	using ClusterSet= util::Set<ChunkSet>;
 	
-    ChunkSet getChunksInRadius(util::Vec2d p, real64 r);
+	ChunkSet getChunksInRadius(util::Vec2d p, real64 r);
 	ChunkSet getChunksOutRadius(util::Vec2d p, real64 r);
 
 	ChunkSet inhabitChunksInRadius(util::Vec2d p, real64 r);
 	util::Set<RegionVec> getInhabitedRegionPositions() const;
-    game::WorldChunk* getChunk(game::GridPoint p);
-    game::WorldChunk& createChunk(game::GridPoint p);
+	game::WorldChunk* getChunk(game::GridPoint p);
+	game::WorldChunk& createChunk(game::GridPoint p);
 
 	ChunkSet getChunks();
 	
@@ -41,12 +41,12 @@ public:
 	void destroyChunk(game::WorldChunk& c);
 	void destroyChunks(const ChunkSet& c);
 
-    int32 getChunkCount(){ return chunks.size(); }
+	int32 getChunkCount(){ return chunks.size(); }
 
 	void removeAll();
 
 protected:
-    util::Map<util::Vec2i, game::WorldChunk> chunks;
+	util::Map<util::Vec2i, game::WorldChunk> chunks;
 };
 
 } // game

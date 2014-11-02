@@ -70,13 +70,13 @@ void FileWatcherWindowsImpl::addWatch(){
 
 		++watchCount;
 
-		handle= CreateFile( TEXT(path.cStr()),      // filename
-							GENERIC_READ,    		// read
-							0,        				// do not share
-							NULL,                   // default security
-							OPEN_EXISTING,          // create new file only
+		handle= CreateFile( TEXT(path.cStr()),		// filename
+							GENERIC_READ,			// read
+							0,						// do not share
+							NULL,					// default security
+							OPEN_EXISTING,			// create new file only
 							FILE_ATTRIBUTE_NORMAL,
-							NULL);                  // no attr. template
+							NULL);					// no attr. template
 
 		{
 			boost::mutex::scoped_lock lock(implMapMutex);
@@ -99,7 +99,7 @@ void FileWatcherWindowsImpl::removeWatch(){
 		boost::mutex::scoped_lock lock(implMapMutex);
 
 		auto it= implMap.find(path);
-		ensure_msg(it != implMap.end(), "Watch not found: %s, watchCount: %i",  path.cStr(), watchCount);
+		ensure_msg(it != implMap.end(), "Watch not found: %s, watchCount: %i",	path.cStr(), watchCount);
 		if (it->second.size() == 1){
 			implMap.erase(it);
 
@@ -144,13 +144,13 @@ void FileWatcherWindowsImpl::directoryChangeDetectionLoop(const util::Str8& dir_
 	//_tsplitpath_s(lpDir, lpDrive, 4, NULL, 0, lpFile, _MAX_FNAME, lpExt, _MAX_EXT);
 
 	// Watch the directory for file creation and deletion.
-	dir_handle= CreateFileW( dir_wpath.get(),               // path to the directory
-							FILE_LIST_DIRECTORY,    // needed by ReadDirectoryChanges
-							FILE_SHARE_READ,        //
-							NULL,                   // default security
-							OPEN_EXISTING,          // create new file only
+	dir_handle= CreateFileW( dir_wpath.get(),				// path to the directory
+							FILE_LIST_DIRECTORY,	// needed by ReadDirectoryChanges
+							FILE_SHARE_READ,		//
+							NULL,					// default security
+							OPEN_EXISTING,			// create new file only
 							FILE_FLAG_BACKUP_SEMANTICS | FILE_ATTRIBUTE_NORMAL,
-							NULL);                  // no attr. template
+							NULL);					// no attr. template
 
 	if (dir_handle == INVALID_HANDLE_VALUE){
 		print(debug::Ch::General, debug::Vb::Critical, "ERROR: CreateFile function failed, %lu path: %s", GetLastError(), dir_path.cStr());

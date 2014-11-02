@@ -15,24 +15,24 @@
 #include "util/dyn_array.hpp"
 #include "util/callbacker.hpp"
 
-#define DECLARE_RESOURCE(type)                                                                                 \
-	virtual util::Str8 getResourceTypeName() const {                                                                 \
-		return resources::ResourceTraits<type>::typeName();                                                    \
-	}                                                                                                          \
-	virtual util::Str8 getIdentifierAsString() const {                                                               \
-		return resources::ResourceTraits<type>::stringFromIdentifier(                                          \
-					getResourceAttribute(resources::ResourceTraits<type>::identifierKey())                     \
-						.get<resources::ResourceTraits<type>::IdentifierAttributeType>()                       \
-				);                                                                                             \
-	}                                                                                                          \
-	virtual resources::BaseAttribute& getIdentifierAttribute(){                                                \
-		return getResourceAttribute(resources::ResourceTraits<type>::identifierKey());                         \
-	}                                                                                                          \
-	virtual const resources::BaseAttribute& getIdentifierAttribute() const {                                   \
-		return getResourceAttribute(resources::ResourceTraits<type>::identifierKey());                         \
-	}                                                                                                          \
-	const resources::ResourceTraits<type>::IdentifierValue& getIdentifier() const {                            \
-		return getIdentifierAttribute().get<resources::ResourceTraits<type>::IdentifierAttributeType>();       \
+#define DECLARE_RESOURCE(type)																				   \
+	virtual util::Str8 getResourceTypeName() const {																 \
+		return resources::ResourceTraits<type>::typeName();													   \
+	}																										   \
+	virtual util::Str8 getIdentifierAsString() const {																 \
+		return resources::ResourceTraits<type>::stringFromIdentifier(										   \
+					getResourceAttribute(resources::ResourceTraits<type>::identifierKey())					   \
+						.get<resources::ResourceTraits<type>::IdentifierAttributeType>()					   \
+				);																							   \
+	}																										   \
+	virtual resources::BaseAttribute& getIdentifierAttribute(){												   \
+		return getResourceAttribute(resources::ResourceTraits<type>::identifierKey());						   \
+	}																										   \
+	virtual const resources::BaseAttribute& getIdentifierAttribute() const {								   \
+		return getResourceAttribute(resources::ResourceTraits<type>::identifierKey());						   \
+	}																										   \
+	const resources::ResourceTraits<type>::IdentifierValue& getIdentifier() const {							   \
+		return getIdentifierAttribute().get<resources::ResourceTraits<type>::IdentifierAttributeType>();	   \
 	}
 
 namespace clover {
@@ -42,8 +42,8 @@ namespace resources {
 /// Every resouce should be usable even if there's something like invalid file path (create a small error-resource)
 ///
 /// Supports OnChangeCb callback listening; callback is called when
-/// 	- attribute changes
-/// 	- resource state changes
+///		- attribute changes
+///		- resource state changes
 ///		- manually calling util::OnChangeCb::trigger()
 ///		- when obsoletion status changes
 /// If attribute change triggers resource state change, onChange is called only once, and that is when resource state changes

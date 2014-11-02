@@ -141,7 +141,7 @@ void NodeSlotGui::detachLine(NodeSlotGui& other){
 	//	other.getOwner().getCompositionNodeSlot().getIdentifier().getString().cStr(), &other);
 	
 	for (auto it= lines.begin(); it != lines.end(); ++it){
-		//print(debug::Ch::General, debug::Vb::Trivial, "    start %p", &it->getStartSlot());
+		//print(debug::Ch::General, debug::Vb::Trivial, "	 start %p", &it->getStartSlot());
 		ensure(&it->getStartSlot());
 		if (&it->getStartSlot() == &other){
 			it->getStartSlot().removeArrivingLineSlot(*this);

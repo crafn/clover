@@ -26,7 +26,7 @@ public:
 	const Armature& getArmature() const;
 
 	/// Transform of every joint is in coordinate system of bind pose joint
-	/// @fixme 	If 'this' is bind pose, getLocalInBindPose() returns
+	/// @fixme	If 'this' is bind pose, getLocalInBindPose() returns
 	///				bind-pose in _local_coordinates_, not in-bind coordinates!
 	///				We should have another method: getLocalPose()
 	const Pose& getLocalInBindPose() const { return localInBindPose; }

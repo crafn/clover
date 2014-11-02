@@ -46,11 +46,11 @@ PaOutputStream::~PaOutputStream(){
 	PaError err = Pa_StopStream(paStream);
 
 	if(err != paNoError)
-		print(debug::Ch::Audio, debug::Vb::Critical, "PaOutputStream::~PaOutputStream(): PortAudio stream stop failed: %s",  Pa_GetErrorText(err));
+		print(debug::Ch::Audio, debug::Vb::Critical, "PaOutputStream::~PaOutputStream(): PortAudio stream stop failed: %s",	 Pa_GetErrorText(err));
 
 	err = Pa_CloseStream(paStream);
 	if(err != paNoError)
-		print(debug::Ch::Audio, debug::Vb::Critical, "AudioDevice::shutdown(): PortAudio stream close failed: %s",  Pa_GetErrorText(err));
+		print(debug::Ch::Audio, debug::Vb::Critical, "AudioDevice::shutdown(): PortAudio stream close failed: %s",	Pa_GetErrorText(err));
 }
 
 void output(audio::DeviceAudioFeed::Channel& channel, SizeType output_frame_count, real32* output_buf){
@@ -75,7 +75,7 @@ void output(audio::DeviceAudioFeed::Channel& channel, SizeType output_frame_coun
 
 			amplitude= samples[i].amplitude;
 
-			real32 pan_vol_mul[2]= { 	util::limited(-samples[i].pan + 1.0f, 0.0f, 1.0f),
+			real32 pan_vol_mul[2]= {	util::limited(-samples[i].pan + 1.0f, 0.0f, 1.0f),
 										util::limited(samples[i].pan + 1.0f, 0.0f, 1.0f) };
 
 			output_buf[2*i] += amplitude*pan_vol_mul[0];
@@ -87,7 +87,7 @@ void output(audio::DeviceAudioFeed::Channel& channel, SizeType output_frame_coun
 	}
 }
 
-int32 PaOutputStream::audioCallback(  	const void* input_buffer, void* output_buffer,
+int32 PaOutputStream::audioCallback(	const void* input_buffer, void* output_buffer,
 										unsigned long output_frame_count,
 										const PaStreamCallbackTimeInfo* time_info,
 										PaStreamCallbackFlags status_flags,
@@ -164,9 +164,9 @@ void PaAudioDevice::chooseWiselyAndCreateNicely(){
 
 			device_info = Pa_GetDeviceInfo(i);
 
-			print(debug::Ch::Audio, debug::Vb::Trivial, "    %s", device_info->name);
-			print(debug::Ch::Audio, debug::Vb::Trivial, "        Low latency: %f", device_info->defaultLowOutputLatency);
-			print(debug::Ch::Audio, debug::Vb::Trivial, "        High latency: %f", device_info->defaultHighOutputLatency);
+			print(debug::Ch::Audio, debug::Vb::Trivial, "	 %s", device_info->name);
+			print(debug::Ch::Audio, debug::Vb::Trivial, "		 Low latency: %f", device_info->defaultLowOutputLatency);
+			print(debug::Ch::Audio, debug::Vb::Trivial, "		 High latency: %f", device_info->defaultHighOutputLatency);
 
 		}
 
@@ -225,7 +225,7 @@ void PaAudioDevice::chooseWiselyAndCreateNicely(){
 
 		device_info= Pa_GetDeviceInfo(defaultDeviceDId);
 
-		print(debug::Ch::Audio, debug::Vb::Trivial, "-> %s\n    With suggested latency: %ims",
+		print(debug::Ch::Audio, debug::Vb::Trivial, "-> %s\n	With suggested latency: %ims",
 					device_info->name,
 					(int)(output_params.suggestedLatency*1000));
 	}
@@ -235,7 +235,7 @@ void PaAudioDevice::shutdown(){
 
 	PaError err = Pa_Terminate();
 	if(err != paNoError)
-		print(debug::Ch::Audio, debug::Vb::Critical, "AudioDevice::shutdown(): PortAudio terminate failed: %s",  Pa_GetErrorText( err ));
+		print(debug::Ch::Audio, debug::Vb::Critical, "AudioDevice::shutdown(): PortAudio terminate failed: %s",	 Pa_GetErrorText( err ));
 }
 
 SizeType PaAudioDevice::getDefaultBufferSize() const {

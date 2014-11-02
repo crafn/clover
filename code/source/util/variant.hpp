@@ -13,26 +13,26 @@ namespace util {
 /// @todo Uncrappify
 class Variant {
 public:
-    enum Type {
-        Type_Int32,
-        Type_Real32,
-        Type_Real64,
-        Type_String,
-        Type_Handle, // Handle to WE
-        Type_Vec2f,
-        Type_Vec2i,
+	enum Type {
+		Type_Int32,
+		Type_Real32,
+		Type_Real64,
+		Type_String,
+		Type_Handle, // Handle to WE
+		Type_Vec2f,
+		Type_Vec2i,
 		Type_Ptr
-    };
+	};
 
-    Variant();
+	Variant();
 
-    Variant& operator=(real32);
-    Variant& operator=(real64);
-    Variant& operator=(int);
-    Variant& operator=(const util::Str8&);
-    Variant& operator=(const game::WeHandle&);
-    Variant& operator=(const util::Vec2d&);
-    Variant& operator=(const util::Vec2i&);
+	Variant& operator=(real32);
+	Variant& operator=(real64);
+	Variant& operator=(int);
+	Variant& operator=(const util::Str8&);
+	Variant& operator=(const game::WeHandle&);
+	Variant& operator=(const util::Vec2d&);
+	Variant& operator=(const util::Vec2i&);
 	
 	template<typename T>
 	Variant& operator=(T* t){
@@ -41,13 +41,13 @@ public:
 		return *this;
 	}
 
-    real32      getF();
-    real64      getD();
-    int32		getI();
-    util::Str8 		getStr();
-    game::WeHandle    getHandle();
-    util::Vec2d       getVec2d();
-    util::Vec2i       getVec2i();
+	real32		getF();
+	real64		getD();
+	int32		getI();
+	util::Str8		getStr();
+	game::WeHandle	  getHandle();
+	util::Vec2d		  getVec2d();
+	util::Vec2i		  getVec2i();
 
 	template<typename T>
 	T* getPtr(){
@@ -59,21 +59,21 @@ public:
 	}
 
 private:
-    Type type;
+	Type type;
 
-    game::WeHandle handle;
-    util::Str8 str;
-    util::Vec2d vector2f;
-    util::Vec2i vector2i;
+	game::WeHandle handle;
+	util::Str8 str;
+	util::Vec2d vector2f;
+	util::Vec2i vector2i;
 
-    union Value {
-        real32 uFloat;
-        real64 uDouble;
-        int32 uInt;
+	union Value {
+		real32 uFloat;
+		real64 uDouble;
+		int32 uInt;
 		void* uPtr;
-    };
+	};
 
-    Value value;
+	Value value;
 };
 
 } // util

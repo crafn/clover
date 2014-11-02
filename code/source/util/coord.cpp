@@ -135,7 +135,7 @@ void Coord::convertTo(Type t){
 	if (t == type) return;
 	
 	util::Vec2d campos;
-    real32 camscale=1;
+	real32 camscale=1;
 	// Radius of viewport in world coordinates
 	util::Vec2d view_world_rad;
 	
