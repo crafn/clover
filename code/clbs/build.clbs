@@ -98,7 +98,7 @@ def buildInfo(env, target):
 	dep_libs.append(b2d)
 
 	# ClipperLib
-	clipper_dir= "../deps/common/clipper"
+	clipper_dir= "../deps/common/clipper-4.8.0"
 	clipper= Project()
 	clipper.name= "clipper_" + target
 	clipper.type= "obj"
@@ -114,7 +114,7 @@ def buildInfo(env, target):
 	dep_libs.append(clipper)
 
 	# GLEW
-	glew_dir= "../deps/common/glew"
+	glew_dir= "../deps/common/glew-1.7.0"
 	glew= Project()
 	glew.name= "glew_" + target
 	glew.type= "obj"
@@ -130,7 +130,7 @@ def buildInfo(env, target):
 	dep_libs.append(glew)
 
 	# GLFW
-	glfw_dir= "../deps/common/glfw"
+	glfw_dir= "../deps/common/glfw-3.0.3"
 	glfw= Project()
 	glfw.name= "glfw3_" + target
 	glfw.type= "obj"
@@ -147,7 +147,7 @@ def buildInfo(env, target):
 		"_GLFW_HAS_GLXGETPROCADDRESS",
 		"_GLFW_HAS_GLXGETPROCADDRESSARB",
 		"_GLFW_USE_OPENGL",
-		"_GLFW_VERSION_FULL=\\\"glfw-3.0.3\\\"" ]
+		"_GLFW_VERSION_FULL=\\\"glfw-fork\\\"" ]
 	glfw.compiler= c_compiler
 	glfw.linker= linker
 	dep_include_paths.append(glfw_dir + "/include")
@@ -171,7 +171,7 @@ def buildInfo(env, target):
 	dep_libs.append(json)
 
 	# UtfCpp
-	dep_include_paths.append("../deps/common/utfcpp/source")
+	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
 	dep_include_paths.append("/usr/include/freetype2")
 
@@ -238,7 +238,7 @@ def buildInfo(env, target):
 	clover= Project()
 	clover.name= "clover_" + target
 	clover.type= "exe"
-	clover.targetDir= "../../builds/linux" + env.arch[1:] + "_clbs"
+	clover.targetDir= "../../builds/linux" + env.arch[1:]
 	clover.includeDirs= [ clover_dir ] + dep_include_paths
 	clover.libDirs= [ lib_dir ]
 	clover.headers= [
