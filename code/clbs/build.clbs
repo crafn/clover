@@ -49,38 +49,6 @@ def buildInfo(env, target):
 	]
 	dep_libs.append(ascript)
 
-	# Assimp
-	assimp_dir= "../deps/common/assimp"
-	assimp= Project()
-	assimp.name= "assimp_" + target
-	assimp.type= "obj"
-	assimp.targetDir= lib_dir
-	assimp.includeDirs= [ assimp_dir + "/code" ]
-	assimp.headers= findFiles(assimp_dir, "*.h")
-	assimp.src= findNotMatching(
-		findFiles(assimp_dir, [ "*.cpp", "*.cc" ]),
-		"*clipper*")
-	assimp.flags= target_flags
-	assimp.defines= target_defines
-	assimp.compiler= cpp_compiler
-	assimp.linker= linker
-	dep_include_paths.append(assimp_dir + "/include")
-	dep_libs.append(assimp)
-
-	assimp_c_deps_dir= "../deps/common/assimp/contrib"
-	assimp_c_deps= Project()
-	assimp_c_deps.name= "assimp_c_deps_" + target
-	assimp_c_deps.type= "obj"
-	assimp_c_deps.targetDir= lib_dir
-	assimp_c_deps.src= findNotMatching(
-		findFiles(assimp_c_deps_dir, "*.c"),
-		"*clipper*")
-	assimp_c_deps.flags= target_flags
-	assimp_c_deps.defines= target_defines
-	assimp_c_deps.compiler= c_compiler
-	assimp_c_deps.linker= linker
-	dep_libs.append(assimp_c_deps)
-
 	# Box2D
 	b2d_dir= "../deps/common/box2d"
 	b2d= Project()

@@ -31,19 +31,6 @@ BvhJoint::Channel bvhChannelByName(const util::Str8& name){
 	throw global::Exception("Invalid BVH channel name: %s", name.cStr());
 }
 
-BvhJoint* findSuperBvhJoint(const BvhJoint& joint, BvhJoint& root){
-	if (&joint == &root)
-		return &root;
-	
-	for (BvhJoint& j : root.subJoints){
-		BvhJoint* found_joint= findSuperBvhJoint(joint, j);
-		if (found_joint)
-			return found_joint;
-		
-	}
-	return nullptr;
-}
-
 JointPose::Transform localTransformFromBvhValues(util::Vec3f pos, util::Vec3f rot){
 	using Quat= JointPose::Transform::Rotation;
 	
@@ -52,8 +39,10 @@ JointPose::Transform localTransformFromBvhValues(util::Vec3f pos, util::Vec3f ro
 	Quat roty= Quat::byRotationAxis({0.0, 1.0, 0.0}, rot.y*deg_to_rad);
 	Quat rotz= Quat::byRotationAxis({0.0, 0.0, 1.0}, rot.z*deg_to_rad);
 	
+	// This is odd: the BVH spec states that YXZ is the rotation matrix,
+	// but ZYX below produces correct results with blender bvh exporter
 	return JointPose::Transform(	1.0f,
-									roty*rotx*rotz, // Order Y*X*Z is defined by bvh spec
+									rotz*roty*rotx,
 									pos);
 }
 
@@ -91,6 +80,7 @@ void parseBvhDefinition(std::stringstream& stream, BvhData& parsed){
 
 	int32 indent= 0;
 	BvhJoint* current_joint= nullptr;
+	std::stack<BvhJoint*> joint_stack;
 	
 	// Parse up to sample data
 	while(stream.good()){
@@ -103,6 +93,7 @@ void parseBvhDefinition(std::stringstream& stream, BvhData& parsed){
 			stream >> token;
 			parsed.rootJoint.name= token;
 			current_joint= &parsed.rootJoint;
+			joint_stack.push(current_joint);
 		}
 		else if (token == "JOINT"){
 			if (current_joint == nullptr)
@@ -110,6 +101,7 @@ void parseBvhDefinition(std::stringstream& stream, BvhData& parsed){
 			
 			current_joint->subJoints.pushBack(BvhJoint());
 			current_joint= &current_joint->subJoints.back();
+			joint_stack.push(current_joint);
 			
 			stream >> token;
 			current_joint->name= token;
@@ -138,13 +130,16 @@ void parseBvhDefinition(std::stringstream& stream, BvhData& parsed){
 		else if (token == "}"){
 			if (current_joint == nullptr)
 				throw global::Exception("} before ROOT");
-				
+			
 			indent--;
-			
-			current_joint= findSuperBvhJoint(*current_joint, parsed.rootJoint);
-			
 			if (indent == -1)
 				throw global::Exception("Too many }");
+
+			joint_stack.pop();
+			if (!joint_stack.empty())
+				current_joint= joint_stack.top();
+			else
+				current_joint= nullptr;
 		}
 		else if (token == "End"){
 			if (current_joint == nullptr)
@@ -290,32 +285,51 @@ private:
 	util::DynArray<std::reference_wrapper<const BvhJoint>> joints;
 };
 
+util::DynArray<JointDef> jointDefsFromBvh(const BvhData& bvh_data){
+	util::DynArray<JointDef> defs;
+	std::function<void (const BvhJoint&, const BvhJoint*)> gather_defs;
+	gather_defs= [&] (const BvhJoint& joint, const BvhJoint* super){
+		JointDef def;
+		def.name= joint.name;
+		def.superJointName= super ? super->name : "";
+		util::Vec3f super_p;
+		if (super)
+			super_p= super->offset;
+		def.transform= JointPose::Transform(1.0,
+											util::Quatf(),
+											joint.offset);
+		defs.pushBack(std::move(def));
+		for (auto&& sub : joint.subJoints){
+			gather_defs(sub, &joint);
+		}
+	};
+	gather_defs(bvh_data.rootJoint, nullptr);
+	return defs;
+}
+
 util::DynArray<ArmaturePose::Pose> calcLocalPosesFromBvh(const BvhData& bvh_data, const util::HashMap<util::Str8, JointId>& joint_name_to_id){
 	BvhExtractor extractor(bvh_data);
 	util::DynArray<ArmaturePose::Pose> poses= initializedPoses(extractor.getJointCount(), bvh_data.frameCount);
-	
+
 	auto pose_i= [&] () -> SizeType {
 		SizeType f= extractor.getFrameIndex();
 		ensure(f < poses.size());
 		return f;
 	};
-	
+
 	auto joint_i= [&] () -> JointId	 {
 		JointId id= joint_name_to_id.get(extractor.getJoint().name, JointIdNone);
-		
 		if (id == JointIdNone)
 			throw global::Exception("Invalid joint name: %s", extractor.getJoint().name.cStr());
-		
 		ensure(id < extractor.getJointCount());
-		
 		return id;
 	};
-	
+
 	while (extractor.good()){
 		auto& pose= poses[pose_i()][joint_i()];
 		pose.transform= extractor.nextLocalTransform();
 	}
-	
+
 	return poses;
 }
 

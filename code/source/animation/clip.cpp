@@ -83,13 +83,11 @@ void Clip::load(){
 		setResourceState(State::Unloaded); // Reload
 	});
 
-	release_ensure(0 && "ADD BVH CLIP LOADING");
-	/*AssimpData ai_data= parseAssimp(fileAttribute.get().whole());
-	fps= ai_data.fps;
-	samples= inBindByLocalSamples(getArmature(), localPosesFromAssimp(
-				ai_data,
-				jointNameToIdMap(getArmature())));
-*/
+	util::Str8 path= fileAttribute.get().whole();
+	BvhData bvh_data= parseBvhAnimation(global::File::readText(path));
+	fps= 1.0/bvh_data.frameTime;
+	samples= calcLocalPosesFromBvh(bvh_data, jointNameToIdMap(getArmature()));
+
 	if (samples.empty()){
 		throw resources::ResourceException(
 			"animation::Clip %s has no data", getName().cStr());

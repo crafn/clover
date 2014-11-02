@@ -8,4 +8,4 @@ code/clbs/obj
 builds/linux64
 builds/win32
 *.fuse_hidden*
-
+resources

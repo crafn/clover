@@ -3,6 +3,7 @@
 
 #include "armaturepose.hpp"
 #include "build.hpp"
+#include "joint_def.hpp"
 #include "util/dyn_array.hpp"
 #include "util/hashmap.hpp"
 #include "util/math.hpp"
@@ -37,6 +38,8 @@ struct BvhData {
 };
 
 BvhData parseBvhAnimation(const util::Str8& data);
+
+util::DynArray<JointDef> jointDefsFromBvh(const BvhData& bvh_data);
 
 /// @return Local poses (not in-bind)
 util::DynArray<ArmaturePose::Pose> calcLocalPosesFromBvh(const BvhData& bvh_data, const util::HashMap<util::Str8, JointId>& joint_name_to_id);
