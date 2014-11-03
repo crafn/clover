@@ -49,6 +49,22 @@ def buildInfo(env, target):
 	]
 	dep_libs.append(ascript)
 
+	# Boost
+	boost_dir= "../deps/common/boost"
+	boost= Project()
+	boost.name= "boost_" + target
+	boost.type= "obj"
+	boost.targetDir= lib_dir
+	boost.includeDirs= [ boost_dir ]
+	boost.headers= findFiles(boost_dir, "*.hpp")
+	boost.src= findFiles(boost_dir, "*.cpp")
+	boost.flags= target_flags
+	boost.defines= target_defines
+	boost.compiler= cpp_compiler
+	boost.linker= linker
+	dep_include_paths += [ boost_dir ]
+	dep_libs.append(boost)
+
 	# Box2D
 	b2d_dir= "../deps/common/box2d"
 	b2d= Project()
@@ -225,9 +241,6 @@ def buildInfo(env, target):
 	clover.links += [ subsystem_names ] + [ all_deps_proj.name ] 
 	## @todo Distribute these to clover subsystems
 	clover.links += [ "png", "OpenCL", "freetype", "portaudio", "vorbis", "ogg" ]
-	clover.links += [
-		"GL", "GLU", "pthread", "Xrandr", "Xxf86vm", "Xi",
-		"X11", "boost_system", "boost_filesystem", "boost_thread",
-		"boost_serialization" ]
+	clover.links += [ "GL", "GLU", "pthread", "Xrandr", "Xxf86vm", "Xi", "X11" ]
 	
 	return clover

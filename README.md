@@ -5,11 +5,10 @@ This is what this does:
 [Tech Preview](https://www.youtube.com/watch?v=-tum9KOXC2o)
 
 ## Getting started
-Building is done by a simple tool which requires Python 2.7: [Clover Build System](http://github.com/crafn/clbs) 
+Building is done by a [simple tool](http://github.com/crafn/clbs). 
 
 ### Linux
 Required packages when using a raw installation of lubuntu with nvidia gpu:
-- libboost-all-dev (TODO: should use in-repo)
 - libx11-dev
 - mesa-common-dev (for gl.h)
 - libxxf86vm-dev (for glfw)
