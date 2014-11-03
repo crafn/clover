@@ -97,6 +97,22 @@ def buildInfo(env, target):
 	dep_include_paths.append(clipper_dir)
 	dep_libs.append(clipper)
 
+	# Freetype
+	ft_dir= "../deps/common/freetype-2.5.3"
+	ft= Project()
+	ft.name= "freetype_" + target
+	ft.type= "obj"
+	ft.targetDir= lib_dir
+	ft.includeDirs= [ ft_dir + "/include" ]
+	ft.headers= findFiles(ft_dir, "*.h")
+	ft.src= findFiles(ft_dir, "*.c")
+	ft.flags= target_flags
+	ft.defines= target_defines
+	ft.compiler= cpp_compiler
+	ft.linker= linker
+	dep_include_paths.append(ft_dir + "/include")
+	dep_libs.append(ft)
+
 	# GLEW
 	glew_dir= "../deps/common/glew-1.7.0"
 	glew= Project()
@@ -169,7 +185,7 @@ def buildInfo(env, target):
 	ogg.linker= linker
 	dep_include_paths.append(ogg_dir + "/include")
 	dep_libs.append(ogg)
-	
+
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
@@ -188,7 +204,7 @@ def buildInfo(env, target):
 	vorbis.linker= linker
 	dep_include_paths.append(vorbis_dir + "/include")
 	dep_libs.append(vorbis)
-	
+
 	dep_include_paths.append("/usr/include/freetype2")
 
 	### Combined deps ###
