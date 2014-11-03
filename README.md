@@ -5,7 +5,6 @@ This is what this does:
 [Tech Preview](https://www.youtube.com/watch?v=-tum9KOXC2o)
 
 ### TODO
-- normalize whitespace in code
 - proper readme
 - add build instructions
 - add build support for windows
