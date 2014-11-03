@@ -154,9 +154,41 @@ def buildInfo(env, target):
 	dep_include_paths.append(json_dir + "/include")
 	dep_libs.append(json)
 
+	# Ogg
+	ogg_dir= "../deps/common/libogg-1.3.2"
+	ogg= Project()
+	ogg.name= "ogg_" + target
+	ogg.type= "obj"
+	ogg.targetDir= lib_dir
+	ogg.includeDirs= [ ogg_dir + "/include" ]
+	ogg.headers= findFiles(ogg_dir, "*.h")
+	ogg.src= findFiles(ogg_dir, "*.c")
+	ogg.flags= target_flags
+	ogg.defines= target_defines
+	ogg.compiler= cpp_compiler
+	ogg.linker= linker
+	dep_include_paths.append(ogg_dir + "/include")
+	dep_libs.append(ogg)
+	
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
+	# Vorbis
+	vorbis_dir= "../deps/common/libvorbis-1.3.4"
+	vorbis= Project()
+	vorbis.name= "vorbis_" + target
+	vorbis.type= "obj"
+	vorbis.targetDir= lib_dir
+	vorbis.includeDirs= [ vorbis_dir + "/include" ]
+	vorbis.headers= findFiles(vorbis_dir, "*.h")
+	vorbis.src= findFiles(vorbis_dir, "*.c")
+	vorbis.flags= target_flags
+	vorbis.defines= target_defines
+	vorbis.compiler= cpp_compiler
+	vorbis.linker= linker
+	dep_include_paths.append(vorbis_dir + "/include")
+	dep_libs.append(vorbis)
+	
 	dep_include_paths.append("/usr/include/freetype2")
 
 	### Combined deps ###
