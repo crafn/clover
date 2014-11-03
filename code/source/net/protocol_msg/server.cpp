@@ -38,7 +38,7 @@ void Server::update(){
 		throw e; // Can't handle fatal exceptions
 	}
 	catch (const boost::exception& e){
-		print(debug::Ch::Net, debug::Vb::Critical, "%s: Network error: %s", info.name.cStr(), boost::diagnostic_information(e).c_str());
+		print(debug::Ch::Net, debug::Vb::Critical, "%s: Network error", info.name.cStr());
 		disconnect();
 		stopListening();
 	}

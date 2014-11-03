@@ -27,7 +27,6 @@
 #endif
 
 #include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
 #include <chrono>
 #include <stdexcept>
 #include <sstream>

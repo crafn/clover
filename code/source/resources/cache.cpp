@@ -13,7 +13,6 @@
 #undef RESOURCE_HEADERS
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <fstream>
 #include <json/json.h>
 #include <json/writer.h>
