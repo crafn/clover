@@ -296,4 +296,7 @@ def buildInfo(env, target):
 	clover.links += [ "png", "OpenCL", "freetype", "portaudio", "vorbis", "ogg" ]
 	clover.links += [ "GL", "GLU", "pthread", "Xrandr", "Xxf86vm", "Xi", "X11" ]
 	
+	if env.os == "windows":
+		clover.flags += [ "fno-strict-aliasing" ] # Boost.
+	
 	return clover
