@@ -9,7 +9,7 @@ Building is done by a simple tool which requires Python 2.7: [Clover Build Syste
 
 ### Linux
 Required packages when using a raw installation of lubuntu with nvidia gpu:
-- libboost-all-dev (TOOO: should use in-repo)
+- libboost-all-dev (TODO: should use in-repo)
 - libx11-dev
 - mesa-common-dev (for gl.h)
 - libxxf86vm-dev (for glfw)
