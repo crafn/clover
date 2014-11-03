@@ -6,6 +6,9 @@ This is what this does:
 
 ## Getting started
 Building is done by a [simple tool](http://github.com/crafn/clbs). 
+Download sources
+
+	git clone --recursive https://github.com/crafn/clover.git
 
 ### Linux
 Required packages when using a raw installation of lubuntu with nvidia gpu:

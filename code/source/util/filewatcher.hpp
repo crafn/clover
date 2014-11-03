@@ -3,9 +3,9 @@
 
 #include "build.hpp"
 #include "util/dyn_array.hpp"
+#include "util/mutex.hpp"
+#include "util/thread.hpp"
 
-/// @todo Replace with util::Thread
-#include <boost/thread.hpp>
 #include <functional>
 #include <memory>
 
@@ -62,7 +62,7 @@ private:
 	std::shared_ptr<FileWatcherImpl> impl;
 
 	static util::DynArray<Launchable> launchables;
-	static boost::mutex mutex;
+	static util::Mutex mutex;
 };
 
 } // util

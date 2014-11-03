@@ -11,7 +11,6 @@
 
 #include <Box2D/Box2D.h>
 #include <iostream>
-#include <boost/random.hpp>
 
 namespace clover {
 namespace util {
@@ -31,8 +30,7 @@ util::Vec3d barycentric(const T& p, const T& a, const T& b, const T& c);
 
 real32 polygonArea(const util::DynArray<util::Vec2d>& contour);
 
-/// p0 ja p3 ovat kontrollipisteet
-/// t on sijainti p1:stä p2:teen (0..1)
+/// p0 ja p3 are control points
 template <typename T> // util::Vec2f or util::Vec2d
 T pointOnCatmull(real64 t, T p0, T p1, T p2, T p3);
 
@@ -40,22 +38,25 @@ T pointOnCatmull(real64 t, T p0, T p1, T p2, T p3);
 
 /// @todo Not very good idea..
 class Rand {
-	static boost::mt19937 mersenne;
+	//static boost::mt19937 mersenne;
 public:
 
 	template<typename T>
 	static T continuous(T min, T max){
-
-		boost::uniform_real<T> var(min, max);
-		boost::variate_generator<boost::mt19937&, boost::uniform_real<T> > gen(mersenne, var);
-		return gen();
+		release_ensure(0 && "REPLACE WITH STD");
+		return T();
+		//boost::uniform_real<T> var(min, max);
+		//boost::variate_generator<boost::mt19937&, boost::uniform_real<T> > gen(mersenne, var);
+		//return gen();
 	}
 
 	template<typename T>
 	static T discrete(T min, T max){
-		boost::uniform_int<T> var(min, max);
-		boost::variate_generator<boost::mt19937&, boost::uniform_int<T> > gen(mersenne, var);
-		return gen();
+		release_ensure(0 && "REPLACE WITH STD");
+		return T();
+		//boost::uniform_int<T> var(min, max);
+		//boost::variate_generator<boost::mt19937&, boost::uniform_int<T> > gen(mersenne, var);
+		//return gen();
 	}
 
 };

@@ -3,7 +3,7 @@
 
 #include "build.hpp"
 
-#include <math.h>
+#include <cmath>
 #include <type_traits>
 
 namespace clover {

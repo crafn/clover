@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <stdarg.h>
-#include <boost/exception/all.hpp>
+#include <boost/exception/exception.hpp>
 
 namespace clover {
 namespace util {

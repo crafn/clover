@@ -18,7 +18,7 @@ namespace util {
 // FileWatcher
 //
 
-boost::mutex FileWatcher::mutex;
+util::Mutex FileWatcher::mutex;
 util::DynArray<FileWatcher::Launchable> FileWatcher::launchables;
 
 
@@ -36,14 +36,14 @@ FileWatcher::FileWatcher(){
 }
 
 FileWatcher::FileWatcher(FileWatcher&& other){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	
 	impl= other.impl;
 	other.impl.reset();
 }
 
 FileWatcher::~FileWatcher(){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 
 	if (impl){
 		impl->stopWatching();
@@ -54,7 +54,7 @@ FileWatcher::~FileWatcher(){
 
 FileWatcher& FileWatcher::operator=(FileWatcher&& other){
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		util::LockGuard<util::Mutex> lock(mutex);
 
 		impl= other.impl;
 		other.impl.reset();
@@ -63,18 +63,18 @@ FileWatcher& FileWatcher::operator=(FileWatcher&& other){
 }
 
 void FileWatcher::setPath(const util::Str8& path){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	impl->setPath(path);
 }
 
 util::Str8 FileWatcher::getPath() const {
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	return impl->getPath();
 }
 
 void FileWatcher::startWatching(){
 	//print(debug::Ch::General, debug::Vb::Trivial, "startWatching begin");
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	
 	//print(debug::Ch::General, debug::Vb::Trivial, "startWatching(%s)", impl->getPath().cStr());
 	impl->startWatching();
@@ -82,13 +82,13 @@ void FileWatcher::startWatching(){
 }
 
 void FileWatcher::stopWatching(){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	impl->stopWatching();
 }
 
 
 void FileWatcher::setOnChangeCallback(const OnChangeCallbackType& callback){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	impl->setOnChangeCallback(callback);
 }
 
