@@ -191,6 +191,22 @@ def buildInfo(env, target):
 	if "CUDA_PATH" in os.environ:
 		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
 
+	# PortAudio
+	pa_dir= "../deps/common/portaudio-19"
+	pa= Project()
+	pa.name= "portaudio_" + target
+	pa.type= "obj"
+	pa.targetDir= lib_dir
+	pa.includeDirs= [ pa_dir + "/include" ]
+	pa.headers= findFiles(pa_dir, "*.h")
+	pa.src= findFiles(pa_dir, "*.c")
+	pa.flags= target_flags
+	pa.defines= target_defines
+	pa.compiler= cpp_compiler
+	pa.linker= linker
+	dep_include_paths.append(pa_dir + "/include")
+	dep_libs.append(pa)
+	
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
