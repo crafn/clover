@@ -186,6 +186,11 @@ def buildInfo(env, target):
 	dep_include_paths.append(ogg_dir + "/include")
 	dep_libs.append(ogg)
 
+	# OpenCL
+	## @todo Intel stuff
+	if "CUDA_PATH" in os.environ:
+		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
+
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
