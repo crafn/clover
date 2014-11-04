@@ -7,16 +7,20 @@
 def buildInfo(env, target):
 	if target == "default":
 		target= "dev"
-
+	
 	c_compiler= "gcc"
 	cpp_compiler= "g++"
-	linker= "gold" # Required for -gsplit-dwarf
+	linker= "ld"
+	if env.os == "linux":
+		linker= "gold" # Required for -gsplit-dwarf
 	lib_dir= "./lib"
 	dep_include_paths= []
 	dep_libs= []
 	
 	target_defines= []
-	target_flags= [ "gsplit-dwarf" ] # Fast linking with separate debug info
+	target_flags= []
+	if linker == "gold":
+		target_flags += [ "gsplit-dwarf" ] # Fast linking with separate debug info
 	if target == "debug":
 		target_defines += [ "DEBUG" ]
 		target_flags += [ "g", "Og" ] 
