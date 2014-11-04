@@ -125,7 +125,7 @@ def buildInfo(env, target):
 	glew.headers= [ glew_dir + "/include/glew.h" ]
 	glew.src= [ glew_dir + "/src/glew.c" ]
 	glew.flags= target_flags
-	glew.defines= target_defines
+	glew.defines= target_defines + [ "GLEW_MX", "GLEW_STATIC" ]
 	glew.compiler= c_compiler
 	glew.linker= linker
 	dep_include_paths.append(glew_dir + "/include")
