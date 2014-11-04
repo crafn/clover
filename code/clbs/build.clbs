@@ -8,15 +8,13 @@ def buildInfo(env, target):
 	if target == "default":
 		target= "dev"
 
-	## @todo Windows build
-
 	c_compiler= "gcc"
 	cpp_compiler= "g++"
 	linker= "gold" # Required for -gsplit-dwarf
 	lib_dir= "./lib"
 	dep_include_paths= []
 	dep_libs= []
-
+	
 	target_defines= []
 	target_flags= [ "gsplit-dwarf" ] # Fast linking with separate debug info
 	if target == "debug":
@@ -27,6 +25,10 @@ def buildInfo(env, target):
 	elif target == "release":
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
+
+	system_links= [ "OpenCL", "pthread" ]
+	if env.os == "linux":
+		system_links += [ "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11" ]
 
 	### Dependencies ###
 
@@ -219,21 +221,29 @@ def buildInfo(env, target):
 	dep_libs.append(png)
 	
 	# PortAudio
-	pa_dir= "../deps/common/portaudio-19"
-	pa= Project()
-	pa.name= "portaudio_" + target
-	pa.type= "obj"
-	pa.targetDir= lib_dir
-	pa.includeDirs= [ pa_dir + "/include" ]
-	pa.headers= findFiles(pa_dir, "*.h")
-	pa.src= findFiles(pa_dir, "*.c")
-	pa.flags= target_flags
-	pa.defines= target_defines
-	pa.compiler= c_compiler
-	pa.linker= linker
-	dep_include_paths.append(pa_dir + "/include")
-	dep_libs.append(pa)
-	
+	if env.os == "windows":
+		pa_dir= "../deps/common/portaudio-19"
+		pa= Project()
+		pa.name= "portaudio_" + target
+		pa.type= "obj"
+		pa.targetDir= lib_dir
+		pa.includeDirs= [
+			pa_dir + "/include",
+			pa_dir + "/src/common",
+			pa_dir + "/src/os/win" ]
+		pa.headers= findFiles(pa_dir, "*.h")
+		pa.src= findFiles(pa_dir + "/src/common", "*.c") +\
+				findFiles(pa_dir + "/src/os/win", "*.c") +\
+				findFiles(pa_dir + "/src/hostapi/wmme", "*c") # Not sure
+		pa.flags= target_flags
+		pa.defines= target_defines
+		pa.compiler= c_compiler
+		pa.linker= linker
+		dep_include_paths.append(pa_dir + "/include")
+		dep_libs.append(pa)
+	elif env.os == "linux":
+		system_links += [ "portaudio" ]
+
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
@@ -336,8 +346,7 @@ def buildInfo(env, target):
 	## @todo Remove link group when circular refs are removed from subs
 	clover.links += [ subsystem_names ] + [ all_deps_proj.name ] 
 	## @todo Distribute these to clover subsystems
-	clover.links += [ "png", "OpenCL", "freetype", "portaudio", "vorbis", "ogg" ]
-	clover.links += [ "GL", "GLU", "pthread", "Xrandr", "Xxf86vm", "Xi", "X11" ]
+	clover.links += system_links
 	
 	if env.os == "windows":
 		clover.flags += [ "fno-strict-aliasing" ] # Boost.
