@@ -105,10 +105,12 @@ def buildInfo(env, target):
 	ft.targetDir= lib_dir
 	ft.includeDirs= [ ft_dir + "/include" ]
 	ft.headers= findFiles(ft_dir, "*.h")
-	ft.src= findFiles(ft_dir, "*.c")
+	ft.src= findNotMatching(
+		findFiles(ft_dir, "*.c"),
+		["*ftmac*"])
 	ft.flags= target_flags
-	ft.defines= target_defines
-	ft.compiler= cpp_compiler
+	ft.defines= target_defines + [ "FT2_BUILD_LIBRARY" ]
+	ft.compiler= c_compiler
 	ft.linker= linker
 	dep_include_paths.append(ft_dir + "/include")
 	dep_libs.append(ft)
