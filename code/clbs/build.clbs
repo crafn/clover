@@ -133,6 +133,21 @@ def buildInfo(env, target):
 
 	# GLFW
 	glfw_dir= "../deps/common/glfw-3.0.3"
+	glfw_exclude= [ "*cocoa*", "*egl*", "*nsgl*" ]
+	glfw_defines= [
+		"_GLFW_USE_OPENGL",
+		"_GLFW_VERSION_FULL=\\\"glfw-fork\\\"" ]
+	if env.os == "windows":
+		glfw_exclude += [ "*glx*", "*x11*" ]
+		glfw_defines += [ "_GLFW_WIN32", "_GLFW_WGL" ]
+	if env.os == "linux":
+		glfw_exclude += [ "*win32*" ]
+		glfw_defines += [
+			"_GLFW_X11",
+			"_GLFW_GLX",
+			"_GLFW_HAS_GLXGETPROCADDRESS",
+			"_GLFW_HAS_GLXGETPROCADDRESSARB" ]
+
 	glfw= Project()
 	glfw.name= "glfw3_" + target
 	glfw.type= "obj"
@@ -141,15 +156,9 @@ def buildInfo(env, target):
 	glfw.headers= findFiles(glfw_dir + "/src", "*.h")
 	glfw.src= findNotMatching(
 		findFiles(glfw_dir + "/src", "*.c"),
-		[ "*cocoa*", "*win32*", "*egl*", "*nsgl*", "*wgl*" ])
+		glfw_exclude)
 	glfw.flags= target_flags
-	glfw.defines= target_defines + [
-		"_GLFW_X11",
-		"_GLFW_GLX",
-		"_GLFW_HAS_GLXGETPROCADDRESS",
-		"_GLFW_HAS_GLXGETPROCADDRESSARB",
-		"_GLFW_USE_OPENGL",
-		"_GLFW_VERSION_FULL=\\\"glfw-fork\\\"" ]
+	glfw.defines= target_defines + glfw_defines
 	glfw.compiler= c_compiler
 	glfw.linker= linker
 	dep_include_paths.append(glfw_dir + "/include")
