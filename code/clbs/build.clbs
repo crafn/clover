@@ -181,16 +181,32 @@ def buildInfo(env, target):
 	ogg.src= findFiles(ogg_dir, "*.c")
 	ogg.flags= target_flags
 	ogg.defines= target_defines
-	ogg.compiler= cpp_compiler
+	ogg.compiler= c_compiler
 	ogg.linker= linker
 	dep_include_paths.append(ogg_dir + "/include")
 	dep_libs.append(ogg)
 
 	# OpenCL
-	## @todo Intel stuff
+	## @todo Intel and Amd stuff
 	if "CUDA_PATH" in os.environ:
 		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
 
+	# PNG
+	png_dir= "../deps/common/lpng1614"
+	png= Project()
+	png.name= "png_" + target
+	png.type= "obj"
+	png.targetDir= lib_dir
+	png.includeDirs= [ png_dir ]
+	png.headers= findFiles(png_dir, "*.h")
+	png.src= findFiles(png_dir, "*.c")
+	png.flags= target_flags
+	png.defines= target_defines
+	png.compiler= c_compiler
+	png.linker= linker
+	dep_include_paths.append(png_dir)
+	dep_libs.append(png)
+	
 	# PortAudio
 	pa_dir= "../deps/common/portaudio-19"
 	pa= Project()
@@ -202,7 +218,7 @@ def buildInfo(env, target):
 	pa.src= findFiles(pa_dir, "*.c")
 	pa.flags= target_flags
 	pa.defines= target_defines
-	pa.compiler= cpp_compiler
+	pa.compiler= c_compiler
 	pa.linker= linker
 	dep_include_paths.append(pa_dir + "/include")
 	dep_libs.append(pa)
