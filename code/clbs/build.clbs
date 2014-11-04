@@ -253,12 +253,15 @@ def buildInfo(env, target):
 	vorbis.name= "vorbis_" + target
 	vorbis.type= "obj"
 	vorbis.targetDir= lib_dir
-	vorbis.includeDirs= [ vorbis_dir + "/include" ]
+	vorbis.includeDirs= [
+		vorbis_dir + "/include",
+		vorbis_dir + "/lib",
+		ogg_dir + "/include" ]
 	vorbis.headers= findFiles(vorbis_dir, "*.h")
 	vorbis.src= findFiles(vorbis_dir, "*.c")
 	vorbis.flags= target_flags
 	vorbis.defines= target_defines
-	vorbis.compiler= cpp_compiler
+	vorbis.compiler= c_compiler
 	vorbis.linker= linker
 	dep_include_paths.append(vorbis_dir + "/include")
 	dep_libs.append(vorbis)
