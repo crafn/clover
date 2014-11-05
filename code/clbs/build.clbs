@@ -32,7 +32,7 @@ def buildInfo(env, target):
 
 	system_links= [ "pthread" ]
 	if env.os == "linux":
-		system_links += [ "OpenCL", "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11" ]
+		system_links += [ "OpenCL", "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11", "z", "dl" ]
 	elif env.os == "windows":
 		system_links += [ "opengl32" ]
 
@@ -133,7 +133,9 @@ def buildInfo(env, target):
 	glew.headers= [ glew_dir + "/include/glew.h" ]
 	glew.src= [ glew_dir + "/src/glew.c" ]
 	glew.flags= target_flags
-	glew.defines= target_defines + [ "GLEW_MX", "GLEW_STATIC" ]
+	glew.defines= target_defines + [
+		"GLEW_STATIC",
+		"GLEW_APPLE_GLX" ]
 	glew.compiler= c_compiler
 	glew.linker= linker
 	dep_include_paths.append(glew_dir + "/include")
