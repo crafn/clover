@@ -20,8 +20,8 @@
 #ifndef __AFLATIN_H__
 #define __AFLATIN_H__
 
-#include "afblue.h"
 #include "afhints.h"
+
 
 FT_BEGIN_HEADER
 

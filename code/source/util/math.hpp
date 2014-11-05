@@ -45,18 +45,12 @@ public:
 	static T continuous(T min, T max){
 		release_ensure(0 && "REPLACE WITH STD");
 		return T();
-		//boost::uniform_real<T> var(min, max);
-		//boost::variate_generator<boost::mt19937&, boost::uniform_real<T> > gen(mersenne, var);
-		//return gen();
 	}
 
 	template<typename T>
 	static T discrete(T min, T max){
 		release_ensure(0 && "REPLACE WITH STD");
 		return T();
-		//boost::uniform_int<T> var(min, max);
-		//boost::variate_generator<boost::mt19937&, boost::uniform_int<T> > gen(mersenne, var);
-		//return gen();
 	}
 
 };

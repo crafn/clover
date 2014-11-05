@@ -114,8 +114,31 @@ def buildInfo(env, target):
 	ft.includeDirs= [ ft_dir + "/include" ]
 	ft.headers= findFiles(ft_dir, "*.h")
 	ft.src= findNotMatching(
-		findFiles(ft_dir, "*.c"),
-		["*ftmac*"])
+				findFiles(ft_dir + "/src/base", "*.c"),
+				"*mac*") + [
+		ft_dir + "/src/autofit/autofit.c",
+		ft_dir + "/src/bdf/bdf.c",
+		ft_dir + "/src/bzip2/ftbzip2.c",
+		ft_dir + "/src/cache/ftcache.c",
+		ft_dir + "/src/cff/cff.c",
+		ft_dir + "/src/cid/type1cid.c",
+		ft_dir + "/src/gxvalid/gxvalid.c",
+		ft_dir + "/src/gzip/ftgzip.c",
+		ft_dir + "/src/lzw/ftlzw.c",
+		ft_dir + "/src/pcf/pcf.c",
+		ft_dir + "/src/pfr/pfr.c",
+		ft_dir + "/src/psaux/psaux.c",
+		ft_dir + "/src/pshinter/pshinter.c",
+		ft_dir + "/src/psnames/psnames.c",
+		ft_dir + "/src/raster/raster.c",
+		ft_dir + "/src/sfnt/sfnt.c",
+		ft_dir + "/src/smooth/smooth.c",
+		ft_dir + "/src/truetype/truetype.c",
+		ft_dir + "/src/type1/type1.c",
+		ft_dir + "/src/type42/type42.c",
+		ft_dir + "/src/winfonts/winfnt.c" ]
+
+
 	ft.flags= target_flags
 	ft.defines= target_defines + [ "FT2_BUILD_LIBRARY" ]
 	ft.compiler= c_compiler

@@ -202,8 +202,6 @@ T geom::pointOnCatmull(real64 t, T p0, T p1, T p2, T p3){
 template util::Vec2f geom::pointOnCatmull<util::Vec2f>(real64 t, util::Vec2f p0, util::Vec2f p1, util::Vec2f p2, util::Vec2f p3);
 template util::Vec2d geom::pointOnCatmull<util::Vec2d>(real64 t, util::Vec2d p0, util::Vec2d p1, util::Vec2d p2, util::Vec2d p3);
 
-//boost::mt19937 Rand::mersenne;
-
 int32 limitUC(int32 i){
 	if (i > 255)
 		return 255;
