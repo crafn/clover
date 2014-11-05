@@ -12,15 +12,13 @@ Download sources
 
 ### Linux
 Required packages when using a raw installation of lubuntu with nvidia gpu:
-- libx11-dev
+- libx11-dev (for glfw)
 - mesa-common-dev (for gl.h)
 - libxxf86vm-dev (for glfw)
 - libxrandr-dev (for glfw)
 - libxi-dev (for glfw)
 - libglu1-mesa-dev (for glew)
-- libvorbis-dev (for clover::audio)
 - nvidia-opencl-dev (for clover::util)
-- libfreetype6-dev (for clover::visual)
 - portaudio19-dev (for clover::audio)
 
 Building
