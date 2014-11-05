@@ -9,10 +9,12 @@ Note that the project hasn't been built or tested on multiple systems, so it's v
 
 ### On Windows
 1.  Install Mingw-w64-\<TODO check working version and add link\> compiler tool set
-2.  Download [this repository](https://github.com/crafn/clover/archive/master.zip) and extract it somewhere
-    - If you plan to contribute, use `git clone --recursive https://github.com/crafn/clover.git` instead
-3.  Install [clover build system](http://github.com/crafn/clbs)
-4.  Run `code/clbs/build_dev.bat` to build the engine
+3.  Use [git](http://git-scm.com/) to download this repository
+
+        git clone --recursive https://github.com/crafn/clover.git
+    Don't use the github zip package because it lacks submodules.
+4.  Install [clover build system](http://github.com/crafn/clbs)
+5.  Run `code/clbs/build_dev.bat` to build the engine
 
 After succesfull build an executable is located at `builds/win*`
 
