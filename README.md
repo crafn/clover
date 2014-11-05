@@ -17,7 +17,7 @@ Note that the project hasn't been built or tested on multiple systems, so it's v
 After succesfull build an executable is located at `builds/win*`
 
 ### On Linux
-1.  Install dependencies; required packages when using a clean installation of lubuntu with nvidia gpu are
+1.  Install dependencies; required packages are (on lubuntu with nvidia gpu):
     - mesa-common-dev (for gl.h)
     - libx11-dev (for glfw)
     - libxxf86vm-dev (for glfw)
