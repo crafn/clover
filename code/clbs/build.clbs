@@ -149,7 +149,7 @@ def buildInfo(env, target):
 		glfw_exclude += [ "*glx*", "*x11*" ]
 		glfw_defines += [ "_GLFW_WIN32", "_GLFW_WGL" ]
 	if env.os == "linux":
-		glfw_exclude += [ "*win32*" ]
+		glfw_exclude += [ "*wgl*", "*win32*" ]
 		glfw_defines += [
 			"_GLFW_X11",
 			"_GLFW_GLX",
