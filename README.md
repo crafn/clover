@@ -8,7 +8,7 @@ This is what this does:
 Note that the project hasn't been built or tested on multiple systems, so it's very likely that some problems will occur.
 
 ### On Windows
-1.  Install Mingw-w64-\<TODO check working version and add link\> compiler tool set
+1.  Install [Mingw-w64-4.8.2-posix-dwarf](http://mingw-w64.sourceforge.net/download.php#mingw-builds) compiler toolset
 3.  Use [git](http://git-scm.com/) to download this repository
 
         git clone --recursive https://github.com/crafn/clover.git
