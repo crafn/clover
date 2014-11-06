@@ -9,8 +9,10 @@
 #include "matrix.hpp"
 #include "quaternion.hpp"
 
+/// @todo Remove box2d from here
 #include <Box2D/Box2D.h>
 #include <iostream>
+#include <random>
 
 namespace clover {
 namespace util {
@@ -36,23 +38,23 @@ T pointOnCatmull(real64 t, T p0, T p1, T p2, T p3);
 
 } // geom
 
-/// @todo Not very good idea..
+/// @todo Shouldn't be a class
 class Rand {
-	//static boost::mt19937 mersenne;
 public:
-
 	template<typename T>
 	static T continuous(T min, T max){
-		release_ensure(0 && "REPLACE WITH STD");
-		return T();
+		std::uniform_real_distribution<T> dist(min, max);
+		return dist(generator);
 	}
 
 	template<typename T>
 	static T discrete(T min, T max){
-		release_ensure(0 && "REPLACE WITH STD");
-		return T();
+		std::uniform_int_distribution<T> dist(min, max);
+		return dist(generator);
 	}
 
+private:
+	static std::mt19937 generator;
 };
 
 int32 limitC(int32 i);
