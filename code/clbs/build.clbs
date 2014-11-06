@@ -31,6 +31,8 @@ def buildInfo(env, target):
 	elif target == "release":
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
+	else:
+		fail("Invalid target: " + target)
 
 	system_links= [ "OpenCL", "pthread" ]
 	if env.os == "linux":

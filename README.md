@@ -1,5 +1,4 @@
 # Clover game engine
-Migration in progress!
 
 This is what this does:
 [Tech Preview](https://www.youtube.com/watch?v=-tum9KOXC2o)
@@ -40,4 +39,5 @@ After succesfull build an executable is located at `builds/windows*`
 After succesfull build an executable is located at `builds/linux*`
 
 ### TODO
+- Windows build is suspiciously slow
 - provide data package somehow
