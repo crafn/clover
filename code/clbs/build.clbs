@@ -137,8 +137,6 @@ def buildInfo(env, target):
 		ft_dir + "/src/type1/type1.c",
 		ft_dir + "/src/type42/type42.c",
 		ft_dir + "/src/winfonts/winfnt.c" ]
-
-
 	ft.flags= target_flags
 	ft.defines= target_defines + [ "FT2_BUILD_LIBRARY" ]
 	ft.compiler= c_compiler
@@ -148,6 +146,9 @@ def buildInfo(env, target):
 
 	# GLEW
 	glew_dir= "../deps/common/glew-1.7.0"
+	glew_defines= [ "GLEW_STATIC" ]
+	if env.os == "linux":
+		glew_defines += [ "GLEW_APPLE_GLX" ]
 	glew= Project()
 	glew.name= "glew_" + target
 	glew.type= "obj"
@@ -156,9 +157,7 @@ def buildInfo(env, target):
 	glew.headers= [ glew_dir + "/include/glew.h" ]
 	glew.src= [ glew_dir + "/src/glew.c" ]
 	glew.flags= target_flags
-	glew.defines= target_defines + [
-		"GLEW_STATIC",
-		"GLEW_APPLE_GLX" ]
+	glew.defines= target_defines + glew_defines
 	glew.compiler= c_compiler
 	glew.linker= linker
 	dep_include_paths.append(glew_dir + "/include")
@@ -297,7 +296,21 @@ def buildInfo(env, target):
 	dep_include_paths.append(vorbis_dir + "/include")
 	dep_libs.append(vorbis)
 
-	dep_include_paths.append("/usr/include/freetype2")
+	# Zlib
+	if env.os == "windows":
+		z_dir= "../deps/common/zlib-1.2.8"
+		z= Project()
+		z.name= "zlib_" + target
+		z.type= "obj"
+		z.targetDir= lib_dir
+		z.includeDirs= [ z_dir ]
+		z.src= findFiles(z_dir, "*.c")
+		z.flags= target_flags
+		z.defines= target_defines
+		z.compiler= c_compiler
+		z.linker= linker
+		dep_include_paths.append(z_dir)
+		dep_libs.append(z)
 
 	### Combined deps ###
 
