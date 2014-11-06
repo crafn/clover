@@ -145,29 +145,27 @@ void PaAudioDevice::chooseWiselyAndCreateNicely(){
 	if(err != paNoError)
 		throw global::Exception("AudioDevice::chooseWiselyAndCreateNicely(): PortAudio init failed: %s",  Pa_GetErrorText( err ));
 
+	int32 host_api_count= Pa_GetHostApiCount();
+	if (host_api_count < 1)
+		throw global::Exception("PortAudio host api count: %i", host_api_count);
+
 	// Look for all audio devices
 	int32 num_devices;
-
 	num_devices = Pa_GetDeviceCount();
-	if( num_devices < 0 ) {
+	if(num_devices < 0) {
 		throw global::Exception("AudioDevice::chooseWiselyAndCreateNicely(): Pa_GetDeviceCount failed: %s", Pa_GetErrorText(num_devices));
-
 	} else if (num_devices == 0) {
-		print(debug::Ch::Audio, debug::Vb::Critical, "No audio devices");
-		return;
+		throw global::Exception("No audio devices");
 	} else {
-
 		print(debug::Ch::Audio, debug::Vb::Trivial, "Available audio devices:");
 		const PaDeviceInfo *device_info;
 
 		for(int32 i=0; i<num_devices; i++) {
-
 			device_info = Pa_GetDeviceInfo(i);
 
 			print(debug::Ch::Audio, debug::Vb::Trivial, "	 %s", device_info->name);
 			print(debug::Ch::Audio, debug::Vb::Trivial, "		 Low latency: %f", device_info->defaultLowOutputLatency);
 			print(debug::Ch::Audio, debug::Vb::Trivial, "		 High latency: %f", device_info->defaultHighOutputLatency);
-
 		}
 
 		util::DynArray<int32> device_ids;

@@ -15,7 +15,9 @@ def buildInfo(env, target):
 		linker= "gold" # Required for -gsplit-dwarf
 	lib_dir= "./lib"
 	dep_include_paths= []
+	dep_lib_paths= []
 	dep_libs= []
+	dep_defines= []
 	
 	target_defines= []
 	target_flags= []
@@ -30,11 +32,17 @@ def buildInfo(env, target):
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
 
-	system_links= [ "pthread" ]
+	system_links= [ "OpenCL", "pthread" ]
 	if env.os == "linux":
-		system_links += [ "OpenCL", "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11", "z", "dl" ]
+		system_links += [ "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11", "z", "dl" ]
 	elif env.os == "windows":
-		system_links += [ "opengl32" ]
+		system_links += [ "glu32", "opengl32", "gdi32", "wsock32", "ws2_32", "winmm", "ole32" ]
+
+	# OpenCL
+	## @todo Intel and Amd stuff
+	if "CUDA_PATH" in os.environ:
+		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
+		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/Win32")
 
 	### Dependencies ###
 
@@ -162,6 +170,7 @@ def buildInfo(env, target):
 	glew.linker= linker
 	dep_include_paths.append(glew_dir + "/include")
 	dep_libs.append(glew)
+	dep_defines.append("GLEW_STATIC")
 
 	# GLFW
 	glfw_dir= "../deps/common/glfw-3.0.3"
@@ -229,11 +238,6 @@ def buildInfo(env, target):
 	dep_include_paths.append(ogg_dir + "/include")
 	dep_libs.append(ogg)
 
-	# OpenCL
-	## @todo Intel and Amd stuff
-	if "CUDA_PATH" in os.environ:
-		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
-
 	# PNG
 	png_dir= "../deps/common/lpng1614"
 	png= Project()
@@ -264,9 +268,9 @@ def buildInfo(env, target):
 		pa.headers= findFiles(pa_dir, "*.h")
 		pa.src= findFiles(pa_dir + "/src/common", "*.c") +\
 				findFiles(pa_dir + "/src/os/win", "*.c") +\
-				findFiles(pa_dir + "/src/hostapi/wmme", "*c") # Not sure
+				findFiles(pa_dir + "/src/hostapi/dsound", "*.c") # Not sure
 		pa.flags= target_flags
-		pa.defines= target_defines
+		pa.defines= target_defines + [ "PA_USE_DS" ]
 		pa.compiler= c_compiler
 		pa.linker= linker
 		dep_include_paths.append(pa_dir + "/include")
@@ -323,6 +327,7 @@ def buildInfo(env, target):
 	for d in dep_libs:
 		all_deps_proj.deps.append(d)
 		all_deps_proj.links.append(d)
+	dep_lib_paths.append(lib_dir)
 
 	### Clover ###
 
@@ -366,7 +371,7 @@ def buildInfo(env, target):
 		p.headers= findFiles(dir, ["*.hpp", "*.tpp", "*.def"])
 		p.src= findFiles(dir, ["*.cpp"])
 		p.flags= clover_flags
-		p.defines= clover_defines
+		p.defines= clover_defines + dep_defines
 		p.compiler= cpp_compiler
 		p.linker= linker
 		subsystem_names.append(p.name)
@@ -375,9 +380,9 @@ def buildInfo(env, target):
 	clover= Project()
 	clover.name= "clover_" + target
 	clover.type= "exe"
-	clover.targetDir= "../../builds/linux" + env.arch[1:]
+	clover.targetDir= "../../builds/" + env.os + env.arch[1:]
 	clover.includeDirs= [ clover_dir ] + dep_include_paths
-	clover.libDirs= [ lib_dir ]
+	clover.libDirs= dep_lib_paths
 	clover.headers= [
 		clover_dir + "/build.hpp",
 		clover_dir + "/app.hpp" ]
@@ -386,7 +391,7 @@ def buildInfo(env, target):
 		clover_dir + "/main.cpp",
 		clover_dir + "/app.cpp" ]
 	clover.flags= clover_flags
-	clover.defines= clover_defines
+	clover.defines= clover_defines + dep_defines
 	clover.compiler= cpp_compiler
 	clover.linker= linker
 	clover.deps += subsystem_projs + [ all_deps_proj ]
