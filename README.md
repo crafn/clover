@@ -15,7 +15,7 @@ Note that the project hasn't been built or tested on multiple systems, so it's v
 4.  Install [clover build system](http://github.com/crafn/clbs)
 5.  Run `code/clbs/build_dev.bat` to build the engine
 
-After succesfull build an executable is located at `builds/windows*`
+After succesful build an executable is located at `builds/windows*`
 
 ### On Linux
 1.  Install dependencies; required packages are (on lubuntu with nvidia gpu):
@@ -36,7 +36,7 @@ After succesfull build an executable is located at `builds/windows*`
 		cd clover/code/clbs
 		clbs -j4
 
-After succesfull build an executable is located at `builds/linux*`
+After succesful build an executable is located at `builds/linux*`
 
 ### TODO
 - Windows build is suspiciously slow
