@@ -4,7 +4,7 @@ This is what this does:
 [Tech Preview](https://www.youtube.com/watch?v=-tum9KOXC2o)
 
 ## Getting started
-Note that the project hasn't been built or tested on multiple systems, so it's very likely that some problems will occur.
+Note that the project hasn't been built or tested on multiple systems, so it's very likely that some problems will occur. Also, the engine has many game specific features and is not production quality.
 
 ### On Windows
 1.  Install [Mingw-w64-4.8.2-posix-dwarf](http://mingw-w64.sourceforge.net/download.php#mingw-builds) compiler toolset
