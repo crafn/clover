@@ -7,7 +7,8 @@ This is what this does:
 Note that the project hasn't been built or tested on multiple systems, so it's very likely that some problems will occur. Also, the engine has many game specific features and is not production quality.
 
 ### On Windows
-1.  Install [Mingw-w64-4.8.2-posix-dwarf](http://mingw-w64.sourceforge.net/download.php#mingw-builds) compiler toolset
+1.  Install [MinGW-w64-4.8.2-posix-dwarf](http://mingw-w64.sourceforge.net/download.php#mingw-builds) compiler toolset. Be sure to add the `bin` directory inside your MinGW installation to your `PATH` environment variable so that `g++` can be called from the command line.
+2.  Install an OpenCL library and headers. For NVidia GPUs you have to install the [CUDA Toolkit](https://developer.nvidia.com/getcuda). <sub><sup>This sucks and shouldn't be necessary in the future.</sup></sub>
 3.  Use [git](http://git-scm.com/) to download this repository
 
         git clone --recursive https://github.com/crafn/clover.git
@@ -39,6 +40,6 @@ After succesful build an executable is located at `builds/windows*`
 After succesful build an executable is located at `builds/linux*`
 
 ### Running the engine with Clover game data
-Download the [resource archive](http://crafn.kapsi.fi/data/clover/resources.zip) and extract it to the repo root. `resource` directory should be next to `code` directory, and executable should be launched in the directory containing it. The game data is currently licensed under the strictest creative commons license (Attribution-NonCommercial-NoDerivatives), but that might change in the future.
+Download the [resource archive](http://crafn.kapsi.fi/data/clover/resources.zip) and extract it to the repo root. `resources` directory should be next to `code` directory, and executable should be launched in the directory containing it. The game data is currently licensed under the strictest creative commons license (Attribution-NonCommercial-NoDerivatives), but that might change in the future.
 
 Further info about the game project on [my personal website](http://crafn.kapsi.fi/?path=games/project_clover).
