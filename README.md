@@ -38,5 +38,7 @@ After succesful build an executable is located at `builds/windows*`
 
 After succesful build an executable is located at `builds/linux*`
 
-### TODO
-- provide data package somehow
+### Running the engine with Clover game data
+Download the [resource archive](http://crafn.kapsi.fi/data/clover/resources.zip) and extract it to the repo root. `resource` directory should be next to `code` directory, and executable should be launched in the directory containing it. The game data is currently licensed under the strictest creative commons license (Attribution-NonCommercial-NoDerivatives), but that might change in the future.
+
+Further info about the game project on [my personal website](http://crafn.kapsi.fi/?path=games/project_clover).
