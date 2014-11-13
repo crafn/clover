@@ -39,5 +39,4 @@ After succesful build an executable is located at `builds/windows*`
 After succesful build an executable is located at `builds/linux*`
 
 ### TODO
-- Windows build is suspiciously slow
 - provide data package somehow
