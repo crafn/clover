@@ -15,7 +15,7 @@ namespace audio {
 class DummyAudioDevice : public AudioDevice {
 public:
 	DummyAudioDevice();
-	virtual ~DummyAudioDevice(){}
+	virtual ~DummyAudioDevice();
 	
 	OutputStream& getOutputStream(){ return outputStream; }
 	

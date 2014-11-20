@@ -6,25 +6,33 @@ namespace clover {
 namespace audio {
 
 DummyAudioDevice::DummyAudioDevice()
-		: outputStream(32, global::gCfgMgr->get<SizeType>("audio::audioBufferSize", 2048))
-		, runSimulatorThread(true)
-		, outputSimulatorThread(
-			std::thread(std::bind(&DummyAudioDevice::outputSimulator, this))){
+	: outputStream(32, global::gCfgMgr->get<SizeType>("audio::audioBufferSize", 2048))
+	, runSimulatorThread(true)
+	, outputSimulatorThread(
+		std::thread(std::bind(&DummyAudioDevice::outputSimulator, this)))
+{
 }
 
-void DummyAudioDevice::outputSimulator(){
+DummyAudioDevice::~DummyAudioDevice()
+{
+	runSimulatorThread= false;
+	outputSimulatorThread.join();
+}
+
+void DummyAudioDevice::outputSimulator()
+{
 	DeviceAudioFeed feed= outputStream.getDeviceAudioFeed();
 	
-	while (runSimulatorThread){
+	while (runSimulatorThread) {
 		
 		// Read (and discard) data from channels
-		for (SizeType i=0; i<feed.getChannelCount(); ++i){
+		for (SizeType i=0; i<feed.getChannelCount(); ++i) {
 			DeviceAudioFeed::Channel channel= feed.getChannel(i);
 
 			if (!channel.isActive())
 				continue;
 			
-			if (channel.eos()){
+			if (channel.eos()) {
 				channel.close();
 				continue;
 			}
