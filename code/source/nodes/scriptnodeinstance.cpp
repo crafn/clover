@@ -45,7 +45,7 @@ bool BaseScriptNodeInstance::isUpdateNeeded() const {
 ScriptNodeInstance::ScriptNodeInstance(const NodeType& type, const script::ObjectType& obj_type, script::Context& context_)
 		: context(context_)
 		, impl(nullptr){
-	
+	PROFILE();
 	try {
 		object= std::move(context.instantiateObject(obj_type));
 		
@@ -66,15 +66,20 @@ ScriptNodeInstance::~ScriptNodeInstance(){
 }
 
 void ScriptNodeInstance::create(){
+	PROFILE();
 	auto add_template_slot= object.getType().getMethod<void (CompositionNodeSlot*)>("addTemplateSlot");
 	for (CompositionNodeSlot* slot : compositionNodeLogic->getTemplateGroupSlots()){
+		PROFILE();
 		context.execute(object, add_template_slot(slot));
 	}
 	
-	auto create= object.getType().getMethod<void ()>("create");
-	context.execute(object, create());
+	{ PROFILE();
+		auto create= object.getType().getMethod<void ()>("create");
+		context.execute(object, create());
+	}
 	
 	for (auto& m : getInputSlots()){
+		PROFILE();
 		auto on_receive= object.getType().getMethod<void (const BaseInputSlot*)>("onReceive");
 		m.slot->setOnReceiveCallback([=, &m] () {
 			context.execute(object, on_receive(m.slot.get()));

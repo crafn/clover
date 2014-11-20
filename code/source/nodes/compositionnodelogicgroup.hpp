@@ -5,6 +5,7 @@
 #include "compositionnodelogic.hpp"
 #include "resources/resource.hpp"
 #include "util/dyn_array.hpp"
+#include "util/unique_ptr.hpp"
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/vector.hpp>
@@ -50,7 +51,7 @@ public:
 	CompositionNodeLogic& add(const NodeType& type);
 	void remove(const CompositionNodeLogic& node);
 
-	NodeInstanceGroup* instantiate() const;
+	util::UniquePtr<NodeInstanceGroup> instantiate() const;
 
 	const CompositionNodeLogic& getNode(const util::Str8& name) const;
 	const util::DynArray<CompositionNodeLogicPtr>& getNodes() const { return nodes; }

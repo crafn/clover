@@ -246,6 +246,7 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 	collision::Shape shape= *NONULL(fix.getShape());
 	shape.transform(t);
 	bool is_static= fix.getObject().isStatic();
+	util::BoundingBox<Grid::CellVec> bb;
 
 	for (auto&& p : shape.asConvexPolygons(imprecision())) {
 		auto&& polycells= detail::rasterized(p, def.cellsInUnit);
@@ -271,8 +272,31 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 				cell.staticEdge=
 					polycells[i].edge && cell.staticPortion <= 0.9999;
 			}
+
+			bb.append(polycells[i].position);
 		}
 	}
+
+	// Recalculate normals in the area
+	for (int32 y= bb.getMin().y - 1; y < bb.getMax().y + 1; ++y) {
+		for (int32 x= bb.getMin().x - 1; x < bb.getMax().x + 1; ++x) {
+			util::Vec2i coord{x, y};
+			util::DynArray<util::Vec2i> dirs= {
+				util::Vec2i{1, 0},
+				util::Vec2i{0, 1},
+				util::Vec2i{-1, 0},
+				util::Vec2i{0, -1}
+			};
+			util::Vec2f normal;
+			for (auto& dir : dirs) {
+				auto& side= getCell(coord + dir);
+				normal += -dir.casted<util::Vec2f>()*side.staticPortion;
+			}
+			auto& cell= getCell(coord);
+			cell.staticNormal= normal.normalized();
+		}
+	}
+
 }
 
 void Grid::clear()
@@ -316,7 +340,7 @@ Grid::Cell& Grid::getCell(util::Vec2d world_pos)
 	auto&& chunk= chunks[chunk_vec];
 	if (chunk.cells.size() < cellsInChunkArea())
 		chunk.cells.resize(cellsInChunkArea());
-	
+
 	util::Vec2i cell_vec=
 		chunkVec(	world_pos - chunk_vec.casted<util::Vec2d>()*def.chunkWidth,
 					1.0/def.cellsInUnit);

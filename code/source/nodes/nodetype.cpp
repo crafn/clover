@@ -70,25 +70,22 @@ void NodeType::createErrorResource(){
 }
 
 CompositionNodeLogic* NodeType::createCompositionLogic(script::Context& context) const {
-	// Allow creating in error state
 	return new CompositionNodeLogic(*this, compositionLogicObjectType, context);
 }
 
 NodeInstance* NodeType::createInstanceLogic(const CompositionNodeLogic& comp, script::Context& context) const {
-	// Allow creating in error state
-	
+	PROFILE();
 	NodeInstance* ret= nullptr;
-
 	if (nativeInstanceClassAttribute.get().empty()){
+		PROFILE();
 		ret= new ScriptNodeInstance(*this, scriptInstanceObjectType, context);
 	}
 	else {
+		PROFILE();
 		ret= NodeFactory::createNodeInstanceNativeLogic(nativeInstanceClassAttribute.get());
 	}
-	
 	ret->setCompositionNodeLogic(comp);
 	ret->setType(*this);
-	
 	return ret;
 }
 

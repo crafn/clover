@@ -82,7 +82,6 @@ void WorldMgr::update(){
 	weMgr.update();
 
 	{ // Grid test
-		uint32 count= 0;
 		auto& grid= physics::gPhysMgr->getWorld().getGrid();
 		auto&& chunk_positions= grid.getChunkPositions();
 		for (auto& ch_pos : chunk_positions) {
@@ -90,6 +89,7 @@ void WorldMgr::update(){
 				grid.getChunkCells(ch_pos);
 			uint32 width= grid.getChunkWidth();
 			uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
+			real32 half_cell= 0.5f/grid.getCellsInUnit();
 			for (SizeType i= 0; i < cells.size(); ++i) {
 				if (//	cells[i].staticEdge &&
 						cells[i].lastStaticPortion != cells[i].staticPortion) {
@@ -97,16 +97,22 @@ void WorldMgr::update(){
 										static_cast<int32>(i/width_c)};
 					auto pos=	ch_pos.casted<util::Vec2d>()*width + 
 								cell_p.casted<util::Vec2d>()/width_c*width;
-					++count;
-					debug::gDebugDraw->addFilledCircle(
+
+					if (	cells[i].lastStaticPortion > cells[i].staticPortion &&
+							cells[i].staticPortion > 0.0) {
+						util::RtTransform2d t;
+						t.translation= pos + util::Vec2d(half_cell);
+						t.rotation= cells[i].staticNormal.rotationZ() - util::tau/4.0f;
+						game::WeHandle h= weMgr.createEntity("grassClump", t.translation);
+						h->setAttribute("transform", t);
+					}
+					/*debug::gDebugDraw->addFilledCircle(
 							util::Coord(pos),
 							util::Coord(0.2),
-							util::Color{1.0, 0.0, 0.0, 0.5});
+							util::Color{1.0, 0.0, 0.0, 0.5});*/
 				}
 			}
 		}
-		if (count > 0)
-			debug::print(debug::Ch::General, debug::Vb::Trivial, "count: %i", count);
 	}
 
 	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();

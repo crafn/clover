@@ -101,13 +101,10 @@ void CompositionNodeLogicGroup::remove(const CompositionNodeLogic& node){
 	
 }
 
-NodeInstanceGroup* CompositionNodeLogicGroup::instantiate() const {
+util::UniquePtr<NodeInstanceGroup> CompositionNodeLogicGroup::instantiate() const {
 	if (!sorted)
 		sort();
-	
-	NodeInstanceGroup* group= new NodeInstanceGroup(*this);
-	
-	return group;
+	return util::makeUniquePtr<NodeInstanceGroup>(*this);
 }
 
 const CompositionNodeLogic& CompositionNodeLogicGroup::getNode(const util::Str8& name) const {

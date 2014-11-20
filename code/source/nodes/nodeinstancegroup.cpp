@@ -18,14 +18,10 @@ NodeInstanceGroup::~NodeInstanceGroup(){
 }
 
 void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
+	PROFILE();
 	compositionGroup= &group;
 
 	while (!nodes.empty()){
-		/*print(debug::Ch::General, debug::Vb::Trivial, "Erasing from this: %p, %i", this, nodes.size());
-		print(debug::Ch::General, debug::Vb::Trivial, "1: %p", &nodes.front());
-		print(debug::Ch::General, debug::Vb::Trivial, "2: %p", nodes.front().get());
-		print(debug::Ch::General, debug::Vb::Trivial, "3: %p", &nodes.front().get()->getType());*/
-		//print(debug::Ch::General, debug::Vb::Trivial, "Erasing NodeInstance: %s", nodes.front()->getType().getName().cStr());
 		nodes.erase(nodes.begin());
 	}
 	
@@ -45,13 +41,13 @@ void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
 	// Create NodeInstances
 	for (auto& m : group.getNodes()){
 		NodeInstance* node= &add(*m.get());
-		
 		instance_map[m.get()]= node;
 		//print(debug::Ch::Nodes, debug::Vb::Moderate, "node instance created: %s", m.get()->getType().getName().cStr());
 	}
 	
 	// Attach slots
 	for (auto& comp_node : group.getNodes()){
+		PROFILE();
 		util::DynArray<CompositionNodeSlot*> comp_slots= comp_node->getSlots();
 		for (auto& comp_slot : comp_slots){
 			if (!comp_slot->isInput()) continue;
@@ -63,21 +59,15 @@ void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
 			input_slot->setExtValueReceived(&groupVars.signalsSent);
 			
 			for (auto& attached_info : comp_slot->getAttachedSlotInfos()){
-
 				const CompositionNodeLogic& attached_owner= attached_info.slot->getOwner();
 
 				ensure_msg(instance_map.find(&attached_owner) != instance_map.end(), "Instance not found: %s", attached_owner.getType().getName().cStr());
 				BaseOutputSlot* output_slot= instance_map[&attached_owner]->getOutputSlot(attached_info.slot->getIdentifier());
 				if (!output_slot){
 					print(debug::Ch::Dev, debug::Vb::Trivial, "Has slots: %lu", (unsigned long)instance_map[&attached_owner]->getOutputSlotCount());
-						
-					
 					throw resources::ResourceException(util::Str8("OutputSlot not found: " + attached_info.slot->getIdentifier().getString()).cStr());
-					
 				}
-				
 				output_slot->attach(attached_info.slotSub, attached_info.mySub, *input_slot);
-			
 			}
 		}
 	}
@@ -91,6 +81,7 @@ void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
 }
 
 NodeInstance& NodeInstanceGroup::add(const CompositionNodeLogic& comp){
+	PROFILE();
 	NodeInstance* logic= comp.getType().createInstanceLogic(comp, context);
 	ensure(logic);
 	logic->setGroupVars(&groupVars);

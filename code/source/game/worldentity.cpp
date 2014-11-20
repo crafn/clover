@@ -105,6 +105,7 @@ WorldEntity::WorldEntity()
 }
 
 void WorldEntity::weInit(){
+	PROFILE();
 	ensure(type);
 	// Make sure that WeInterface is sorted to the beginning so that it's updated first
 	if (!type->getNodeGroup().getNodes().empty())
@@ -176,6 +177,7 @@ void WorldEntity::saveFieldDeserialize(WEPack& p){
 }
 
 void WorldEntity::setType(const util::Str8& name){
+	PROFILE();
 	type= &resources::gCache->getResource<game::WeType>(name);
 	
 	// Reset type if it has changed
@@ -197,9 +199,9 @@ void WorldEntity::setType(const util::Str8& name){
 	}
 	else
 		errorState= false;
-	
-	instance= std::unique_ptr<nodes::NodeInstanceGroup>(type->getNodeGroup().instantiate());
-	
+
+	instance= type->getNodeGroup().instantiate();
+
 	instanceChangeListener.listen(*instance, [&] {
 		print(debug::Ch::General, debug::Vb::Trivial, "Instance change detected in We");
 		weInit();

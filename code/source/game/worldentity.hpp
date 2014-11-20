@@ -7,6 +7,7 @@
 #include "util/fh_save.hpp"
 #include "util/math.hpp"
 #include "util/map.hpp"
+#include "util/unique_ptr.hpp"
 #include "visual/model.hpp"
 #include "worldentity_pack.hpp"
 #include "worldentity_macros.hpp"
@@ -165,7 +166,7 @@ protected:
 	/// In case of node group recreation attributes must remain
 	nodes::WeInterfaceNodeInstance::AttributeInfos savedAttributes;
 	
-	std::unique_ptr<nodes::NodeInstanceGroup> instance;
+	util::UniquePtr<nodes::NodeInstanceGroup> instance;
 	
 	nodes::WeInterfaceNodeInstance* weInterface;
 	
