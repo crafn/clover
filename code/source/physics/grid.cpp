@@ -359,7 +359,7 @@ Grid::Cell& Grid::getCell(CellVec cell_pos)
 
 Grid::Cell& Grid::getCell(Chunk& ch, uint32 x, uint32 y)
 {
-	ensure(x + y*def.chunkWidth < ch.cells.size());
+	ensure((SizeType)(x + y*def.chunkWidth) < ch.cells.size());
 	return ch.cells[x + y*def.chunkWidth];
 }
 
