@@ -696,6 +696,7 @@ void EntityMgr::optimizeRenderFrameConfig(RenderFrameConfig& cfg){
 	util::DynArray<RenderEntity> entities;	
 	for (SizeType i= 0; i < cfg.entities.size(); ++i){
 		// Check if entity belongs to a batch
+		ensure(cfg.entities[i].logic);
 		auto batch_it= entityToBatch.find(cfg.entities[i].logic->getContentHash());
 		if (batch_it != entityToBatch.end()){
 			ensure(batch_it->second);
@@ -704,7 +705,8 @@ void EntityMgr::optimizeRenderFrameConfig(RenderFrameConfig& cfg){
 			entities.pushBack(batch.asRenderEntity());
 
 			// Jump over entities which belong to the same batch
-			while (cfg.entities[i].logic != batch.lastEntityLogic){
+			while (	i < cfg.entities.size() &&
+					cfg.entities[i].logic != batch.lastEntityLogic) {
 				++i;
 			}
 
@@ -715,7 +717,7 @@ void EntityMgr::optimizeRenderFrameConfig(RenderFrameConfig& cfg){
 		}
 	}
 
-	cfg.entities= entities;	
+	cfg.entities= entities;
 	cfg.finalize();
 }
 
