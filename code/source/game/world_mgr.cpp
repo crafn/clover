@@ -79,9 +79,10 @@ WorldMgr::~WorldMgr(){
 }
 
 void WorldMgr::update(){
-	weMgr.update();
 
 	{ // Grid test
+		weMgr.removeFlagged(); // Removes phys objects flagged by ui
+
 		auto& grid= physics::gPhysMgr->getWorld().getGrid();
 		auto&& chunk_positions= grid.getChunkPositions();
 		for (auto& ch_pos : chunk_positions) {
@@ -98,10 +99,13 @@ void WorldMgr::update(){
 					auto pos=	ch_pos.casted<util::Vec2d>()*width + 
 								cell_p.casted<util::Vec2d>()/width_c*width;
 
-					if (	cells[i].lastStaticPortion > cells[i].staticPortion &&
-							cells[i].staticPortion > 0.0) {
+					if (cells[i].lastStaticPortion > cells[i].staticPortion) {
+						util::Vec2d offset=
+							cells[i].staticNormal.casted<util::Vec2d>()*
+							(cells[i].staticPortion - 1.0)*
+							1.2*2.0*half_cell;
 						util::RtTransform2d t;
-						t.translation= pos + util::Vec2d(half_cell);
+						t.translation= pos + util::Vec2d(half_cell) + offset;
 						t.rotation= cells[i].staticNormal.rotationZ() - util::tau/4.0f;
 						game::WeHandle h= weMgr.createEntity("block_dirt_edge", t.translation);
 						h->setAttribute("transform", t);
@@ -113,8 +117,10 @@ void WorldMgr::update(){
 				}
 			}
 		}
+		weMgr.spawnNewEntities(); // Needed to have created entities updated this frame
 	}
 
+	weMgr.update();
 	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
 	
 	{
@@ -165,7 +171,7 @@ void WorldMgr::update(){
 
 	weMgr.spawnNewEntities();
 	weMgr.removeFlagged();
-	
+
 	time += util::gGameClock->getDeltaTime();
 }
 

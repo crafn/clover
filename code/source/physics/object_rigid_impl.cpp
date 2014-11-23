@@ -83,6 +83,7 @@ RigidObject::RigidObject(RigidObjectDef bdef):
 }
 
 RigidObject::~RigidObject(){
+	removeFromGrid();
 	detachJoints();
 
 	ensure(isNormal());
@@ -157,6 +158,8 @@ void RigidObject::setStatic(bool s){
 void RigidObject::clear(){
 	ensure_msg(getJoints().empty(), "todo clear with joints");
 
+	removeFromGrid();
+
 	fixtureDefs.clear();
 	fixtures.clear();
 
@@ -167,6 +170,8 @@ void RigidObject::clear(){
 }
 
 void RigidObject::clearFixtures(){
+	removeFromGrid();
+
 	fixtureDefs.clear();
 	fixtures.clear();
 }

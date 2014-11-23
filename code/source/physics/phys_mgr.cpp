@@ -98,7 +98,6 @@ PhysMgr::~PhysMgr(){
 
 void PhysMgr::preFrameUpdate(){
 	PROFILE_("physics");
-	physics::gPhysMgr->getWorld().getGrid().update();
 	if (fluidMgr)
 		fluidMgr->preUpdate();
 }
@@ -129,6 +128,7 @@ void PhysMgr::fluidUpdate(){
 
 void PhysMgr::postFrameUpdate(){
 	PROFILE_("physics");
+	getWorld().getGrid().update();
 	if (fluidMgr)
 		fluidMgr->postUpdate();
 }
