@@ -103,7 +103,7 @@ void WorldMgr::update(){
 						util::RtTransform2d t;
 						t.translation= pos + util::Vec2d(half_cell);
 						t.rotation= cells[i].staticNormal.rotationZ() - util::tau/4.0f;
-						game::WeHandle h= weMgr.createEntity("grassClump", t.translation);
+						game::WeHandle h= weMgr.createEntity("block_dirt_edge", t.translation);
 						h->setAttribute("transform", t);
 					}
 					/*debug::gDebugDraw->addFilledCircle(
