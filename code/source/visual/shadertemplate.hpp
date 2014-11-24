@@ -20,7 +20,7 @@ struct ResourceTraits<visual::ShaderTemplate> {
 							AttributeDef::Path("vertSrc"),
 							AttributeDef::Path("fragSrc"),
 							AttributeDef::Path("geomSrc"),
-							AttributeDef::String("vertexType"))
+							AttributeDef::String("vertexType"));
 
 	typedef SubCache<visual::ShaderTemplate> SubCacheType;
 
@@ -43,7 +43,7 @@ struct ShaderOptions {
 /// Representation of a shader program source code
 class ShaderTemplate : public resources::Resource {
 public:
-	DECLARE_RESOURCE(ShaderTemplate)
+	DECLARE_RESOURCE(ShaderTemplate);
 
 	ShaderTemplate();
 
@@ -59,10 +59,10 @@ public:
 	const util::Str8& getVertexType() const { return vertexType.get(); }
 
 private:
-	RESOURCE_ATTRIBUTE(String, name)
-	RESOURCE_ATTRIBUTE(Path, vertSrc)
-	RESOURCE_ATTRIBUTE(Path, fragSrc)
-	RESOURCE_ATTRIBUTE(Path, geomSrc)
+	RESOURCE_ATTRIBUTE(String, name);
+	RESOURCE_ATTRIBUTE(Path, vertSrc);
+	RESOURCE_ATTRIBUTE(Path, fragSrc);
+	RESOURCE_ATTRIBUTE(Path, geomSrc);
 	RESOURCE_ATTRIBUTE(String, vertexType)
 	util::Str8 vertCode, fragCode, geomCode;
 };

@@ -2,8 +2,10 @@
 #define CLOVER_VISUAL_SHADER_HPP
 
 #include "build.hpp"
+#include "util/class_preproc.hpp"
 #include "util/color.hpp"
 #include "util/string.hpp"
+#include "util/tidy.hpp"
 #include "vertexattribute.hpp"
 
 #include <GL/glew.h>
@@ -16,6 +18,8 @@ namespace visual {
 class Shader {
 public:
 	Shader();
+	DEFAULT_MOVE(Shader);
+	DELETE_COPY(Shader);
 	virtual ~Shader();
 
 	void setSources(util::Str8 vertex, util::Str8 geometry="", util::Str8 fragment= "");
@@ -47,7 +51,7 @@ public:
 	void setUniform(uint32 loc, const util::Vec4f&, int32 count=1);
 	void setUniform(uint32 loc, const util::Color&, int32 count=1);
 	void setUniform(uint32 loc, const util::Mat33f&, int32 count=1);
-	
+
 	/// Deprecated
 	void setTexture(uint32 loc, uint32 tex, int32 slot);
 
@@ -64,11 +68,11 @@ private:
 	void printInfoLog(uint32 shader) const;
 	void printLinkInfoLog() const;
 
-	uint32 vertShd;
-	uint32 fragShd;
-	uint32 geomShd;
+	Tidy<uint32> vertShd;
+	Tidy<uint32> fragShd;
+	Tidy<uint32> geomShd;
 	
-	uint32 program;
+	Tidy<uint32> program;
 
 	util::Str8 vertSource, fragSource, geomSource;
 	util::DynArray<util::Str8> outputVaryings;

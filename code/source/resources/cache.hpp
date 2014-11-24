@@ -164,11 +164,6 @@ private:
 
 	// Shaders
 
-	util::Map<GenericShaderType, visual::Shader> genericShaderMap;
-	util::Str8	genericShaderFragSrc,
-					genericShaderVertSrc,
-					genericShaderGeomSrc;
-
 	util::DynArray<visual::Shader> shadowCasterShaders;
 	util::DynArray<visual::Shader> shadowMapShaders;
 	util::DynArray<visual::Shader> particleShaders;

@@ -3,7 +3,7 @@
 #include "util/string.hpp"
 
 // Use this when wondering where error occurs
-#define USE_SUPER_OGL_DEBUG 0
+#define USE_SUPER_OGL_DEBUG 1
 
 #if USE_SUPER_OGL_DEBUG
 #define SUPER_OGL_DEBUG(str) \

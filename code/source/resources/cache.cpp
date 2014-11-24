@@ -24,6 +24,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+/// Temp test
+#include "visual/shader_mgr.hpp"
+#include "visual/shadertemplate.hpp"
+
 namespace fs = boost::filesystem;
 
 namespace clover {
@@ -198,17 +202,8 @@ void Cache::loadShaders(){
 	#define SHADER_LOAD_BEGIN() try {
 	#define SHADER_LOAD_END(name) \
 		} catch(ResourceException& e){ print(debug::Ch::Resources, debug::Vb::Critical, "Error loading " name " shader"); throw e; }
-	
 
 	util::Str8 frag_src, vert_src, geom_src;
-
-	frag_src= global::File::readText("shaders/generic.frag");
-	vert_src= global::File::readText("shaders/generic.vert");
-	geom_src= global::File::readText("shaders/generic.geom");
-
-	genericShaderFragSrc= frag_src;
-	genericShaderVertSrc= vert_src;
-	genericShaderGeomSrc= geom_src;
 
 	// ShadowCaster
 	SHADER_LOAD_BEGIN()
@@ -247,55 +242,6 @@ void Cache::loadShaders(){
 	particleShaders.back().setSources(vert_src, geom_src, frag_src);
 	particleShaders.back().compile<visual::ParticleVBOVertexData>();
 	SHADER_LOAD_END("Particle")
-}
-
-
-void Cache::createGenericShader(GenericShaderType t){
-	print(debug::Ch::Resources, debug::Vb::Trivial,		"createGenericShader(..): \n"
-											"	lightCount: %i\n"
-											"	colorMap: %i\n"
-											"	normalMap: %i\n"
-											"	envShadowMap: %i\n",
-											t.lightCount,
-											t.colorMap,
-											t.normalMap,
-											t.envShadowMap);
-
-	auto &shd= genericShaderMap[t];
-	ensure(!shd.isCompiled());
-
-	shd.setSources(		genericShaderVertSrc.cStr(),
-						genericShaderGeomSrc.cStr(),
-						genericShaderFragSrc.cStr());
-
-
-	if (t.colorMap)
-		shd.setDefine("COLORMAP");
-
-	if (t.envShadowMap)
-		shd.setDefine("ENVSHADOWMAP");
-
-	if (t.normalMap)
-		shd.setDefine("NORMALMAP");
-
-	if (t.lightCount){
-		shd.setDefine("DYNAMIC_LIGHTING");
-		shd.setDefine("LIGHT_COUNT", t.lightCount);
-	}
-
-	if (t.curve){
-		shd.setDefine("CURVE");
-	}
-
-	if (t.sway){
-		shd.setDefine("SWAY");
-	}
-	
-	SHADER_LOAD_BEGIN()
-
-	shd.compile<visual::Vertex>();
-	
-	SHADER_LOAD_END("Generic")
 }
 
 const util::DynArray<Resource*>& Cache::getResources() const {
@@ -347,18 +293,37 @@ util::DynArray<visual::Shader>& Cache::getShaders(ShaderId id){
 visual::Shader& Cache::getGenericShader(GenericShaderType t){
 	PROFILE_("resources");
 
-	auto it= genericShaderMap.find(t);
+	static visual::ShaderMgr shd_mgr;
+	visual::ShaderOptions opt;
 
-	if (it == genericShaderMap.end()){
-		createGenericShader(t);
-		return genericShaderMap[t];
+	if (t.colorMap)
+		opt.defines.insert("COLORMAP");
+
+	if (t.envShadowMap)
+		opt.defines.insert("ENVSHADOWMAP");
+
+	if (t.normalMap)
+		opt.defines.insert("NORMALMAP");
+
+	if (t.lightCount){
+		opt.defines.insert("DYNAMIC_LIGHTING");
+		opt.values["LIGHT_COUNT"]= t.lightCount;
 	}
 
-	return it->second;
+	if (t.curve){
+		opt.defines.insert("CURVE");
+	}
+
+	if (t.sway){
+		opt.defines.insert("SWAY");
+	}
+	
+	visual::Shader& shd= shd_mgr.getShader("generic", opt);
+	return shd;
 }
 
 uint32 Cache::getShaderCount(){
-	return shadowCasterShaders.size() + shadowMapShaders.size() + particleShaders.size() + genericShaderMap.size();
+	return 1337; /// @todo Remove
 }
 
 visual::Font& Cache::getFont(const util::Str8& s){

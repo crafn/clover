@@ -13,6 +13,7 @@
 	#include "game/physicalmaterial.hpp"
 	#include "game/physicalmaterialpair.hpp"
 	#include "game/worldentity.hpp"
+	#include "visual/shadertemplate.hpp"
 	#include "visual/texture.hpp"
 	#include "visual/material.hpp"
 	#include "visual/mesh.hpp"
@@ -38,6 +39,7 @@ EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::Texture>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::Material>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::TriMesh>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::Model>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::ShaderTemplate>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<nodes::NodeEventType>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<audio::Sound>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<collision::Shape>>)

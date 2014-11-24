@@ -20,7 +20,7 @@ Shader& ShaderMgr::getShader(const util::Str8& name, const ShaderOptions& option
 
 	auto& shd_tpl= resources::gCache->getResource<ShaderTemplate>(name);
 	Shader shd;
-	shd.setSources(shd_tpl.getVertSrc(), shd_tpl.getFragSrc(), shd_tpl.getGeomSrc());
+	shd.setSources(shd_tpl.getVertSrc(), shd_tpl.getGeomSrc(), shd_tpl.getFragSrc());
 	for (auto& str : options.defines)
 		shd.setDefine(str);
 	for (auto& pair : options.values)
