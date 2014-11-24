@@ -9,7 +9,7 @@ ShaderTemplate::ShaderTemplate()
 	, INIT_RESOURCE_ATTRIBUTE(vertSrc, "vertSrc", "")
 	, INIT_RESOURCE_ATTRIBUTE(fragSrc, "fragSrc", "")
 	, INIT_RESOURCE_ATTRIBUTE(geomSrc, "geomSrc", "")
-	, INIT_RESOURCE_ATTRIBUTE(options, "options", {})
+	, INIT_RESOURCE_ATTRIBUTE(vertexType, "vertexType", "visualMesh")
 {
 	auto on_change= [&] ()
 	{
@@ -47,6 +47,7 @@ void ShaderTemplate::resourceUpdate(bool load, bool force)
 
 void ShaderTemplate::createErrorResource()
 {
+	setResourceState(State::Error);
 }
 
 } // visual

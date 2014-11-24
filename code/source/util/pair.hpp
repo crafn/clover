@@ -2,6 +2,7 @@
 #define CLOVER_UTIL_PAIR_HPP
 
 #include "build.hpp"
+#include "hash.hpp"
 #include "key.hpp"
 
 #include <utility>
@@ -17,6 +18,12 @@ Pair<typename std::decay<A>::type, typename std::decay<B>::type>
 makePair(A&& a, B&& b){
 	return std::make_pair(std::forward<A>(a), std::forward<B>(b));
 }
+
+template <typename A, typename B>
+struct Hash32<Pair<A, B>> {
+	uint32 operator()(const Pair<A, B>& value) const
+	{ return hash32(value.first) + hash32(value.second)*65536; }
+};
 
 namespace detail {
 

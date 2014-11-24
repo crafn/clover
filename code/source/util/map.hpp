@@ -2,8 +2,8 @@
 #define CLOVER_UTIL_MAP_HPP
 
 #include "build.hpp"
+#include "hash.hpp"
 #include "key.hpp"
-
 #include <map>
 
 namespace clover {
@@ -25,6 +25,17 @@ MultiMap<V, K, C2> flippedMap(const Map<K, V, C1>& map){
 	}
 	return flipped;
 }
+
+template <typename K, typename V, typename C>
+struct Hash32<Map<K, V, C>> {
+	uint32 operator()(const Map<K, V, C>& value) const
+	{
+		uint32 h= 0;
+		for (auto&& p : value)
+			h += hash32(p);
+		return h;
+	}
+};
 
 namespace detail {
 
