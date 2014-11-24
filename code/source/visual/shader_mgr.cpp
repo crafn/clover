@@ -9,6 +9,9 @@
 namespace clover {
 namespace visual {
 
+Shader& ShaderMgr::getShader(const util::Str8& name)
+{ return getShader(name, ShaderOptions{}); }
+
 Shader& ShaderMgr::getShader(const util::Str8& name, const ShaderOptions& options)
 {
 	ShaderId id= util::hash32(util::makeTuple(name, options.defines, options.values));
@@ -28,9 +31,9 @@ Shader& ShaderMgr::getShader(const util::Str8& name, const ShaderOptions& option
 
 	util::DynArray<VertexAttribute> attribs;
 	util::Str8 vert_type= shd_tpl.getVertexType();
-	if (vert_type == "visualMesh") {
+	if (vert_type == "visual::Vertex") {
 		attribs= Vertex::getAttributes();
-	} else if (vert_type == "visualParticle") {
+	} else if (vert_type == "visual::Particle") {
 		attribs= ParticleVBOVertexData::getAttributes();
 	} else {
 		print(debug::Ch::Visual, debug::Vb::Critical,

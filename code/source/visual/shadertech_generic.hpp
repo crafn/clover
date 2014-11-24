@@ -13,9 +13,6 @@ class ModelEntityLogic;
 
 class GenericST : public WorldShaderTech {
 public:
-	GenericST();
-	virtual ~GenericST();
-
 	void setLightCount(int32 lights);
 	void setEntity(const visual::ModelEntityDef& re, const visual::ModelEntityLogic& logic_cfg);
 	void setLights(const util::DynArray<LightEntityLogic*>& lights);
@@ -23,31 +20,19 @@ public:
 	virtual void use();
 
 private:
-	util::DynArray<int32>	lightPosLoc,
-						lightIntensityLoc,
-						lightRangeLoc,
-						lightRotMatrixLoc,
-						lightSpreadLoc,
-						shadowsEnabledLoc,
-						shadowMapLoc,
-						lightAlphaAddLoc,
-						colorMulLoc,
-						swayPhaseLoc,
-						swayScaleLoc;
+	uint32 colorMap= 0;
+	uint32 normalMap= 0;
+	uint32 envShadowMap= 0;
+	bool sway= false;
+	bool disableEnv= false;
 
-	virtual void locateUniforms(uint32 shader_i);
-
-	bool disableEnv;
-	bool useCurve;
-
-	real32 lightAlphaAdd;
+	real32 lightAlphaAdd= 0.0;
 	util::Color colorMul;
-	real32 swayPhaseMul;
-	real32 swayScale;
+	real32 swayPhaseMul= 0.0;
+	real32 swayScale= 0.0;
 
-	const util::DynArray<LightEntityLogic*>* lights;
-
-	resources::Cache::GenericShaderType curType, lastType;
+	const util::DynArray<LightEntityLogic*>* lights= nullptr;
+	int32 lightCount= 0;
 };
 
 } // visual

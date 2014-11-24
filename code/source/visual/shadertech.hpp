@@ -11,24 +11,20 @@ namespace clover {
 namespace visual {
 
 class Shader;
+class ShaderMgr;
 
-/// @todo Refactor whole ShaderTech hierarchy to be component based
 /// Contains information and resources for running a Shader with
 /// proper inputs and storing results
+/// @todo Refactor whole ShaderTech hierarchy to be component based
 class ShaderTech {
 public:
-	ShaderTech();
-	virtual ~ShaderTech();
+	virtual ~ShaderTech() {};
 
-	virtual void use();
+	void setShaderMgr(ShaderMgr& mgr) { shaderMgr= &mgr; }
+	ShaderMgr& getShaderMgr() const { return *NONULL(shaderMgr); }
 
-protected:
-	util::DynArray<Shader*> shaders;
-
-	// use() will turn on this shader
-	int32 shaderIndex;
-
-	virtual void locateUniforms(uint32 shader_i)=0;
+private:
+	ShaderMgr* shaderMgr= nullptr;
 };
 
 class Camera;
@@ -36,9 +32,6 @@ class ModelEntityDef;
 
 class WorldShaderTech : public ShaderTech {
 public:
-	WorldShaderTech();
-	virtual ~WorldShaderTech();
-
 	void setEnvLight(util::Color col, util::Vec2f dir);
 
 	void setCamera(Camera& c);
@@ -51,12 +44,9 @@ public:
 	void setColorMap(uint32 tex);
 	void setNormalMap(uint32 tex);
 
-	virtual void use();
-
 protected:
-	virtual void locateUniforms(uint32 shader_i);
+	void use(Shader& shd);
 
-protected:
 	util::Vec3f envLight;
 	util::Vec2f envLightDir;
 	util::Vec3f camPos;
@@ -66,20 +56,7 @@ protected:
 	util::Vec3f scale;
 	util::Vec2d aspect;
 
-	uint32 textures[Material::TexType_Last];
-
-	util::DynArray<int32> envLightLoc,
-					envLightDirLoc,
-					camPosLoc,
-					camScaleLoc,
-					translationLoc,
-					rotationLoc,
-					scaleLoc,
-					aspectLoc,
-					colorMapLoc,
-					normalMapLoc,
-					envShadowMapLoc;
-
+	uint32 textures[Material::TexType_Last]= { 0 };
 };
 
 } // visual

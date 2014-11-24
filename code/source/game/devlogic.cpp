@@ -6,8 +6,9 @@
 #include "game/worldentity_mgr.hpp"
 #include "game/worldentity_handleconnection.hpp"
 #include "audio/audio_mgr.hpp"
-#include "visual/visual_mgr.hpp"
 #include "visual/entity_mgr.hpp"
+#include "visual/shader_mgr.hpp"
+#include "visual/visual_mgr.hpp"
 #include "physics/phys_mgr.hpp"
 #include "resources/cache.hpp"
 #include "basegamelogic.hpp"
@@ -83,8 +84,10 @@ void DevLogic::update(){
 			print(debug::Ch::General, debug::Vb::Moderate, "FPS: %f", fpsFrameCount/fpsTimer);
 			print(debug::Ch::General, debug::Vb::Moderate, "Chunk count:		%i", game::gWorldMgr->getChunkMgr().getChunkCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "WorldEntity count:	%i", (int)game::gWorldMgr->getWeMgr().getEntityCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "visual::ModelEntity count: %i,	  shader count: %i",	visual::gVisualMgr->getEntityMgr().getModelEntityCount(),
-																										resources::gCache->getShaderCount());
+			print(debug::Ch::General, debug::Vb::Moderate,
+					"visual::ModelEntity count: %i,	  shader count: %i",
+					(int)visual::gVisualMgr->getEntityMgr().getModelEntityCount(),
+					(int)visual::gVisualMgr->getShaderMgr().getShaderCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", physics::gPhysMgr->calcObjectCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)audio::gAudioMgr->getSoundInstanceCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)audio::gAudioMgr->getAudioSourceCount());

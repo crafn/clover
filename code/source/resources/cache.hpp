@@ -25,24 +25,9 @@ namespace clover {
 namespace visual {
 
 class Font;
-class Shader;
-class Model;
-class Texture;
-class TriMesh;
-class Material;
 
 } // visual
 namespace resources {
-
-/// Hard coded shaders
-enum ShaderId {
-	Shader_Generic,
-	Shader_Blur,
-	Shader_ShadowCaster,
-	Shader_ShadowMap,
-	Shader_Particle,
-	Shader_Last
-};
 
 /// Owner of resources
 class Cache : public script::NoCountReference {
@@ -96,42 +81,6 @@ public:
 
 	void parseResource(const SerializedResource& serialized);
 
-	//
-	// Shaders
-	//
-
-	/// @todo Remove
-	util::DynArray<visual::Shader>& getShaders(ShaderId id);
-
-	struct GenericShaderType {
-		uint32 lightCount;
-		bool normalMap;
-		bool colorMap;
-		bool envShadowMap;
-		bool curve;
-		bool sway;
-
-		GenericShaderType(): lightCount(0), normalMap(false), colorMap(false), envShadowMap(false), curve(false), sway(false){}
-		bool operator==(const GenericShaderType& t) const {
-			return	lightCount == t.lightCount &&
-					normalMap == t.normalMap &&
-					colorMap == t.colorMap &&
-					envShadowMap == t.envShadowMap &&
-					curve == t.curve &&
-					sway == t.sway;
-		}
-
-		uint32 getId() const { return lightCount*32 + (int)normalMap + (int)colorMap*2 + (int) envShadowMap*4 + (int)curve*8 + (int)sway*16; }
-
-		bool operator<(const GenericShaderType& t) const {
-			return getId() < t.getId();
-		}
-
-	};
-
-	visual::Shader& getGenericShader(GenericShaderType t);
-	uint32 getShaderCount();
-
 	visual::Font& getFont(const util::Str8& s);
 
 	util::Str8 getResourceRootPath() const { return resourcePath; }
@@ -162,16 +111,8 @@ private:
 	// Resource root
 	util::Str8 resourcePath;
 
-	// Shaders
-
-	util::DynArray<visual::Shader> shadowCasterShaders;
-	util::DynArray<visual::Shader> shadowMapShaders;
-	util::DynArray<visual::Shader> particleShaders;
-
 	/// @todo Replace with resource system
 	void loadFonts();
-	void loadShaders();
-	void createGenericShader(GenericShaderType t);
 };
 
 extern Cache* gCache;

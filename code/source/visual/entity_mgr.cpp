@@ -30,9 +30,16 @@ util::SrtTransform3d billboarded(util::SrtTransform3d t){
 	return t;
 }
 
-EntityMgr::EntityMgr()
-	: reCache(global::gCfgMgr->get("visual::gridCellSize", 16.0)){
+EntityMgr::EntityMgr(ShaderMgr& shader_mgr)
+	: reCache(global::gCfgMgr->get("visual::gridCellSize", 16.0))
+{
 	envLight= 0.0;
+
+	genericST.setShaderMgr(shader_mgr);
+	shadowCasterST.setShaderMgr(shader_mgr);
+	shadowMapST.setShaderMgr(shader_mgr);
+	particleST.setShaderMgr(shader_mgr);
+	fluidST.setShaderMgr(shader_mgr);
 }
 
 EntityMgr::~EntityMgr(){

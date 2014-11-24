@@ -52,11 +52,18 @@ struct Hash32<bool> {
 	}
 };
 
+template <typename T>
+struct Hash32<T*> {
+	uint32 operator()(T* value) const {
+		return static_cast<uint32>(reinterpret_cast<std::uintptr_t>(value)); \
+	}
+};
+
 #define TRIVIAL_HASH(x) \
 template<> \
 struct Hash32<x> { \
 	uint32 operator()(const x& value) const { \
-		return (uint32)value; \
+		return static_cast<uint32>(value); \
 	} \
 };
 

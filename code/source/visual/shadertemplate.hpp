@@ -36,8 +36,8 @@ namespace visual {
 
 /// A set of #defines for a shader template
 struct ShaderOptions {
-	util::Set<util::Str8> defines;
-	util::Map<util::Str8, int32> values;
+	util::Set<const char*> defines;
+	util::Map<const char*, int32> values;
 };
 
 /// Representation of a shader program source code

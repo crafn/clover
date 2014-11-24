@@ -23,9 +23,6 @@ public:
 
 private:
 	visual::Shader shader;
-	uint32 chunkSizeLoc;
-	uint32 chunkCountLoc;
-	uint32 chunkInfoSamplerLoc;
 	visual::Framebuffer fbo;
 	uint32 chunkCount;
 };

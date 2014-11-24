@@ -10,8 +10,7 @@
 #include "visual/particlemanifold.hpp"
 
 #include <utility>
-#include <sstream>
-#include <string.h>
+#include <cstring>
 
 namespace clover {
 namespace visual {
@@ -39,13 +38,14 @@ void Shader::setOutputVaryings(util::DynArray<util::Str8> varyings){
 	outputVaryings= std::move(varyings);
 }
 
-void Shader::setDefine(util::Str8 def, util::Str8 value){
-	//Lisätään define jokasen shaderin alkuun
+void Shader::setDefine(const char* def, util::Str8 value){
 	util::Str8 append= "#define ";
 	append += def;
 	append += " ";
 	append += value;
 	append += '\n';
+
+	print(debug::Ch::General, debug::Vb::Trivial, "DEFINE %s", append.cStr());
 
 	vertSource= append + vertSource;
 	if (!geomSource.empty())
@@ -56,16 +56,8 @@ void Shader::setDefine(util::Str8 def, util::Str8 value){
 	defines.pushBack(std::pair<util::Str8, util::Str8>(def, value));
 }
 
-void Shader::setDefine(util::Str8 def, int32 value){
-
-	std::string val;
-	std::stringstream ss;
-	ss << value;
-
-	ss >> val;
-
-	setDefine(def, val.c_str());
-
+void Shader::setDefine(const char* def, int32 value){
+	setDefine(def, util::Str8::format("%i", value).cStr());
 }
 
 void Shader::compile(const util::DynArray<VertexAttribute>& attribs){
@@ -123,47 +115,43 @@ void Shader::use(){
 	hardware::gGlState->useProgram(program);
 }
 
-GLint Shader::getUniformLocation(const char* str){
-	return glGetUniformLocation(program, str);
-}
-
-void Shader::setUniform(uint32 loc, const uint8& value, int32 count){
+void Shader::setUniform(const char* name, const uint8& value, int32 count){
 	ensure(count == 1);
-	glUniform1ui(loc, value);
+	glUniform1ui(uniformLoc(name), value);
 }
 
-void Shader::setUniform(uint32 loc, const uint16& value, int32 count){
+void Shader::setUniform(const char* name, const uint16& value, int32 count){
 	ensure(count == 1);
-	glUniform1ui(loc, value);
+	glUniform1ui(uniformLoc(name), value);
 }
 
-void Shader::setUniform(uint32 loc, const uint32& value, int32 count){
-	glUniform1uiv(loc, count, &value);
+void Shader::setUniform(const char* name, const uint32& value, int32 count){
+	glUniform1uiv(uniformLoc(name), count, &value);
 }
 
-void Shader::setUniform(uint32 loc, const int& value, int32 count){
-	glUniform1iv(loc, count, &value);
+void Shader::setUniform(const char* name, const int& value, int32 count){
+	glUniform1iv(uniformLoc(name), count, &value);
 }
 
-void Shader::setUniform(uint32 loc, const real32& value, int32 count, int32 dim){
+void Shader::setUniform(const char* name, const real32& value, int32 count, int32 dim){
 	if (dim == 1)
-		glUniform1fv(loc, count, &value);
+		glUniform1fv(uniformLoc(name), count, &value);
 	else if(dim == 2)
-		glUniform2fv(loc, count, &value);
+		glUniform2fv(uniformLoc(name), count, &value);
 	else if(dim == 3)
-		glUniform3fv(loc, count, &value);
+		glUniform3fv(uniformLoc(name), count, &value);
 	else if (dim == 4)
-		glUniform4fv(loc, count, &value);
+		glUniform4fv(uniformLoc(name), count, &value);
 	else throw global::Exception("Shader::setUniform(..): invalid dimensions: %i", dim);
 }
 
-void Shader::setUniform(uint32 loc, const real64& value, int32 count){
+void Shader::setUniform(const char* name, const real64& value, int32 count){
 	ensure(count == 1);
 	real32 v= value;
-	glUniform1fv(loc, count, &v);
+	glUniform1fv(uniformLoc(name), count, &v);
 }
 
-void Shader::setUniform(uint32 loc, const util::Vec2d& value, int32 count){
+void Shader::setUniform(const char* name, const util::Vec2d& value, int32 count){
 	real32 values[count*2];
 
 	for (int32 i=0; i<count; i++){
@@ -171,10 +159,10 @@ void Shader::setUniform(uint32 loc, const util::Vec2d& value, int32 count){
 		values[i*2+1]= value.y;
 	}
 
-	glUniform2fv(loc, count, values);
+	glUniform2fv(uniformLoc(name), count, values);
 }
 
-void Shader::setUniform(uint32 loc, const util::Vec2f& value, int32 count){
+void Shader::setUniform(const char* name, const util::Vec2f& value, int32 count){
 	real32 values[count*2];
 
 	for (int32 i=0; i<count; i++){
@@ -182,10 +170,10 @@ void Shader::setUniform(uint32 loc, const util::Vec2f& value, int32 count){
 		values[i*2+1]= value.y;
 	}
 
-	glUniform2fv(loc, count, values);
+	glUniform2fv(uniformLoc(name), count, values);
 }
 
-void Shader::setUniform(uint32 loc, const util::Vec3f& value, int32 count){
+void Shader::setUniform(const char* name, const util::Vec3f& value, int32 count){
 	real32 values[count*3];
 
 	for (int32 i=0; i<count; i++){
@@ -194,11 +182,11 @@ void Shader::setUniform(uint32 loc, const util::Vec3f& value, int32 count){
 		values[i*3+2]= value.z;
 	}
 	
-	glUniform3fv(loc, count, values);
+	glUniform3fv(uniformLoc(name), count, values);
 }
 
 
-void Shader::setUniform(uint32 loc, const util::Vec4f& value, int32 count){
+void Shader::setUniform(const char* name, const util::Vec4f& value, int32 count){
 	real32 values[count*4];
 
 	for (int32 i=0; i<count; i++){
@@ -208,10 +196,10 @@ void Shader::setUniform(uint32 loc, const util::Vec4f& value, int32 count){
 		values[i*4+3]= value.w;
 	}
 
-	glUniform4fv(loc, count, values);
+	glUniform4fv(uniformLoc(name), count, values);
 }
 
-void Shader::setUniform(uint32 loc, const util::Color& value, int32 count){
+void Shader::setUniform(const char* name, const util::Color& value, int32 count){
 	real32 values[count*util::Color::size()];
 
 	for (int32 i=0; i<count; i++){
@@ -221,24 +209,19 @@ void Shader::setUniform(uint32 loc, const util::Color& value, int32 count){
 		values[i*util::Color::size()+3]= value.a;
 	}
 
-	glUniform4fv(loc, count, values);
+	glUniform4fv(uniformLoc(name), count, values);
 }
 
-void Shader::setUniform(uint32 loc, const util::Mat33f& value, int32 count){
-	glUniformMatrix3fv(loc, count, GL_FALSE, value.data());
-}
-
-void Shader::setTexture(uint32 loc, uint32 tex, int32 slot){
-	hardware::gGlState->bindTex(hardware::GlState::TexTarget::Tex2d, tex, slot);
-	setUniform(loc, slot);
+void Shader::setUniform(const char* name, const util::Mat33f& value, int32 count){
+	glUniformMatrix3fv(uniformLoc(name), count, GL_FALSE, value.data());
 }
 
 void Shader::setTexture(hardware::GlState::TexTarget target,
-						uint32 loc,
+						const char* name,
 						uint32 tex,
 						int32 slot){
 	hardware::gGlState->bindTex(target, tex, slot);
-	setUniform(loc, slot);
+	setUniform(name, slot);
 }
 
 
@@ -307,6 +290,17 @@ void Shader::bindAttributes(const util::DynArray<VertexAttribute>& attribs){
 
 		id_count += m.arraySize;
 	}
+}
+
+uint32 Shader::uniformLoc(const char* name){
+	auto it= nameToUniform.find(name);
+	if (it != nameToUniform.end())
+		return it->second;
+
+	ensure(nameToUniform.size() < 1000 &&
+			"Don't pass dynamically allocated string to Shader::setUniform!");
+
+	return nameToUniform[name]= glGetUniformLocation(program, name);
 }
 
 void Shader::printInfoLog(uint32 shader) const {

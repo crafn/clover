@@ -178,7 +178,6 @@ DistanceField::DistanceField(uint32 chunk_reso, uint32 chunks)
 				"g_chunkId"
 		});
 		meshShader.compile<PolyVertex>();
-		mesh_chunkSizeLoc= meshShader.getUniformLocation("u_chunkSize");
 	}
 
 	{
@@ -188,9 +187,6 @@ DistanceField::DistanceField(uint32 chunk_reso, uint32 chunks)
 				global::File::readText(draw_shd_path + ".geom"),
 				global::File::readText(draw_shd_path + ".frag"));
 		drawShader.compile<DistFieldVertex>();
-		draw_chunkSizeLoc= drawShader.getUniformLocation("u_chunkSize");
-		draw_chunkCountLoc= drawShader.getUniformLocation("u_chunkCount");
-		draw_chunkInfoSamplerLoc= drawShader.getUniformLocation("u_chunkInfo");
 		
 		visual::Framebuffer::Cfg fbo_cfg;
 		fbo_cfg.resolution= util::Vec2i(chunk_reso);
@@ -224,7 +220,7 @@ void DistanceField::update(
 	{ PROFILE();
 
 		meshShader.use();
-		meshShader.setUniform(mesh_chunkSizeLoc, chunk_size);
+		meshShader.setUniform("u_chunkSize", chunk_size);
 		
 		/// @todo To hardware::GlState
 		glEnable(GL_RASTERIZER_DISCARD);
@@ -247,14 +243,17 @@ void DistanceField::update(
 
 		fbo.bind();
 		drawShader.use();
-		drawShader.setUniform(draw_chunkSizeLoc, chunk_size);
-		drawShader.setUniform(draw_chunkCountLoc, chunkCount);
-		drawShader.setTexture(draw_chunkInfoSamplerLoc, chunk_info_tex, 0);
+		drawShader.setUniform("u_chunkSize", chunk_size);
+		drawShader.setUniform("u_chunkCount", chunkCount);
+		drawShader.setTexture(	hardware::GlState::TexTarget::Tex2d,
+								"u_chunkInfo",
+								chunk_info_tex,
+								0);
 
 		// No blending - depth testing will take care of priorization
 		hardware::gGlState->setBlendFunc(hardware::GlState::BlendFunc{GL_ONE, GL_ZERO});
 		hardware::gGlState->setClearColor({0, 0, 0, 0});
-	
+
 		/// @todo To hardware::GlState
 		glEnable(GL_DEPTH_TEST);
 

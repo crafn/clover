@@ -1,20 +1,13 @@
-#include "shadertech_shadowcaster.hpp"
 #include "entitylogic_light.hpp"
 #include "entity_def_light.hpp"
-#include "resources/cache.hpp"
 #include "entity_def_model.hpp"
+#include "resources/cache.hpp"
 #include "shader.hpp"
+#include "shader_mgr.hpp"
+#include "shadertech_shadowcaster.hpp"
 
 namespace clover {
 namespace visual {
-
-ShadowCasterST::ShadowCasterST(){
-	shaders.pushBack(&resources::gCache->getShaders(resources::Shader_ShadowCaster).back());
-	locateUniforms(0);
-}
-
-ShadowCasterST::~ShadowCasterST(){
-}
 
 void ShadowCasterST::setLight(const LightEntityLogic& l){
 	setCameraPosition(l.getLightTransform().translation.xy());
@@ -29,17 +22,16 @@ void ShadowCasterST::setEntity(const visual::ModelEntityDef& re){
 	else
 		texture= 0;
 
-	if (!texture) texture= resources::gCache->getResource<visual::Texture>("Texture_Black").getDId();
-}
-
-void ShadowCasterST::locateUniforms(uint32 shader_i){
-	WorldShaderTech::locateUniforms(shader_i);
-	textureLoc= shaders[shader_i]->getUniformLocation("uTexture");
+	if (!texture)
+		texture= resources::gCache->getResource<visual::Texture>("Texture_Black").getDId();
 }
 
 void ShadowCasterST::use(){
-	WorldShaderTech::use();
-	shaders[0]->setTexture(textureLoc, texture, Material::TexType_Color);
+	Shader& shd= getShaderMgr().getShader("visual_shadowCaster");
+	WorldShaderTech::use(shd);
+	shd.setTexture(
+			hardware::GlState::TexTarget::Tex2d,
+			"uTexture", texture, Material::TexType_Color);
 }
 
 } // visual

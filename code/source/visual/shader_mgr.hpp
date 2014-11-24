@@ -17,7 +17,10 @@ public:
 
 	/// @note Can perform shader compilation
 	/// @warning Don't keep pointer to return value
+	Shader& getShader(const util::Str8& name);
 	Shader& getShader(const util::Str8& name, const ShaderOptions& options);
+
+	SizeType getShaderCount() const { return shaders.size(); }
 
 private:
 	util::HashMap<ShaderId, Shader> shaders;

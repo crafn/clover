@@ -10,18 +10,12 @@ namespace visual {
 class LightEntityLogic;
 class ShadowCasterST : public WorldShaderTech {
 public:
-	ShadowCasterST();
-	virtual ~ShadowCasterST();
-
 	void setLight(const LightEntityLogic& l);
 	void setEntity(const visual::ModelEntityDef& re);
 
-	virtual void use();
+	void use();
 private:
-	int32 textureLoc;
 	uint32 texture;
-	
-	void locateUniforms(uint32 shader_i);
 };
 
 } // visual

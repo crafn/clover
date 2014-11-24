@@ -20,12 +20,13 @@ namespace visual {
 
 class LightEntityLogic;
 class ModelEntityLogic;
+class ShaderMgr;
 
 /// @class EntityMgr Manages visual::Entities and renders them (rendering should be separated)
 /// @todo Split renderer to separate class
 class EntityMgr : public global::EventReceiver {
 public:
-	EntityMgr();
+	EntityMgr(ShaderMgr& shader_mgr);
 	virtual ~EntityMgr();
 
 	/// Draws a frame with current camera

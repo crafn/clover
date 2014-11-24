@@ -116,14 +116,10 @@ private:
 
 	// Produces triangle mesh from PolyVertices
 	visual::Shader meshShader;
-	uint32 mesh_chunkSizeLoc;
 	visual::VertexArrayObject<DistFieldVertex> mesh;
 
 	// Draws triangle mesh properly to 3d distance field
 	visual::Shader drawShader;
-	uint32 draw_chunkSizeLoc;
-	uint32 draw_chunkCountLoc;
-	uint32 draw_chunkInfoSamplerLoc;
 	visual::Framebuffer fbo;
 	uint32 chunkCount;
 

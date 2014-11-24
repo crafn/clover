@@ -22,10 +22,6 @@ FluidST::DebugDraw::DebugDraw(){
 		global::File::readText("fluids/render_particledebug.geom"),
 		global::File::readText("fluids/render_particledebug.frag"));
 	shader.compile<physics::FluidParticle>();
-
-	chunkSizeLoc= shader.getUniformLocation("u_chunkSize");
-	chunkCountLoc= shader.getUniformLocation("u_chunkCount");
-	chunkInfoSamplerLoc= shader.getUniformLocation("u_chunkInfo");
 }
 
 FluidST::ParticleDraw::ParticleDraw(){
@@ -34,12 +30,6 @@ FluidST::ParticleDraw::ParticleDraw(){
 		global::File::readText("fluids/render_particle.geom"),
 		global::File::readText("fluids/render_particle.frag"));
 	shader.compile<physics::FluidParticle>();
-
-	chunkSizeLoc= shader.getUniformLocation("u_chunkSize");
-	chunkCountLoc= shader.getUniformLocation("u_chunkCount");
-	chunkInfoSamplerLoc= shader.getUniformLocation("u_chunkInfo");
-	timeOffsetLoc= shader.getUniformLocation("u_timeOffset");
-	hueCycleLoc= shader.getUniformLocation("u_hueCycle");
 }
 
 FluidST::DistFieldDraw::DistFieldDraw(){
@@ -48,8 +38,6 @@ FluidST::DistFieldDraw::DistFieldDraw(){
 		global::File::readText(""),
 		global::File::readText("fluids/render_distancefield.frag"));
 	shader.compile<physics::VolumVertex>();
-
-	texLoc= shader.getUniformLocation("u_tex");
 }
 
 FluidST::PostProcess::PostProcess(){
@@ -58,8 +46,6 @@ FluidST::PostProcess::PostProcess(){
 		"",
 		global::File::readText("fluids/render_postprocess.frag"));
 	shader.compile<visual::Vertex>();
-
-	texLoc= shader.getUniformLocation("u_tex");
 }
 
 static constexpr SizeType debugDrawId= 0;
@@ -67,15 +53,6 @@ static constexpr SizeType particleDrawId= 1;
 static constexpr SizeType distFieldDrawId= 2;
 
 FluidST::FluidST(){
-	shaders.pushBack(&debugDraw.shader);
-	locateUniforms(debugDrawId);
-
-	shaders.pushBack(&particleDraw.shader);
-	locateUniforms(particleDrawId);
-
-	shaders.pushBack(&distFieldDraw.shader);
-	locateUniforms(distFieldDrawId);
-
 	quad= &resources::gCache->getResource<visual::TriMesh>("unitRect");
 }
 
@@ -93,15 +70,7 @@ void FluidST::render(Camera& cam){
 	bool debug_draw= useFluidDebugDraw();
 
 	{
-		// Draw particles to fbo with some ugly code
-		// (whole shadertech system should be refactored)
-
-		if (!debug_draw){
-			shaderIndex= particleDrawId;
-		}
-		else {
-			shaderIndex= debugDrawId;
-		}
+		Shader& shd= debug_draw ? debugDraw.shader : particleDraw.shader;
 
 		ModelEntityDef def;
 		Model model;
@@ -118,7 +87,7 @@ void FluidST::render(Camera& cam){
 		setEntity(def);
 		setTransformation(util::Vec2d(0.0), util::Quatd::identity());
 		setScale(util::Vec2d(1.0));
-		use();
+		use(shd);
 
 		hardware::gGlState->setBlendFunc(hardware::GlState::BlendFunc{
 			GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA});
@@ -128,13 +97,11 @@ void FluidST::render(Camera& cam){
 
 	if (!debug_draw){
 		// Draw distance field to fbo
-		shaderIndex= distFieldDrawId;
 		setCamera(cam);
-		use();
+		use(distFieldDraw.shader);
 
 		hardware::gGlState->setBlendFunc(hardware::GlState::BlendFunc{
 			GL_SRC_ALPHA, GL_ONE});
-
 		fluid_mgr->getDistanceField().getMappedMesh().draw();
 	}
 
@@ -147,59 +114,59 @@ void FluidST::render(Camera& cam){
 
 		postProcess.shader.use();
 		postProcess.shader.setTexture(
-				postProcess.texLoc,
-				fbo.getTextureDId(),
-				0);
+				hardware::GlState::TexTarget::Tex2d,
+				"u_tex", fbo.getTextureDId(), 0);
 
 		quad->draw();
 	}
 }
 
-void FluidST::use(){
+/// @todo Distribute to render(..) and remove
+void FluidST::use(Shader& shd){
 	physics::FluidMgr* fluid_mgr= physics::gPhysMgr->getFluidMgr();
 	if (!fluid_mgr)
 		return;
 
-	Base::use();
+	Base::use(shd);
 
-	if (shaderIndex == particleDrawId){
+	if (&shd == &particleDraw.shader){
 		particleDraw.shader.setUniform(
-				particleDraw.chunkSizeLoc, fluid_mgr->getChunkSize());
+				"u_chunkSize", fluid_mgr->getChunkSize());
 		particleDraw.shader.setUniform(
-				particleDraw.chunkCountLoc, fluid_mgr->getMaxChunkCount());
+				"u_chunkCount", fluid_mgr->getMaxChunkCount());
 
 		hardware::GlState::TexDId ch_info_tex= fluid_mgr->getChunkInfoTexDId();
 		particleDraw.shader.setTexture(
-				particleDraw.chunkInfoSamplerLoc, ch_info_tex, 1);
+				hardware::GlState::TexTarget::Tex2d,
+				"u_chunkInfo", ch_info_tex, 1);
 
 		particleDraw.shader.setUniform(
-				particleDraw.timeOffsetLoc,
+				"u_timeOffset",
 				physics::gPhysMgr->getFluidTimeOffset());
 
 		particleDraw.shader.setUniform(
-				particleDraw.hueCycleLoc,
+				"u_hueCycle",
 				util::gGameClock->getTime());
 
 	}
-	else if (shaderIndex == distFieldDrawId) {
+	else if (&shd == &distFieldDraw.shader) {
 		const visual::Framebuffer& fbo=
 			fluid_mgr->getDistanceField().getFbo();
 
 		distFieldDraw.shader.setTexture(
 				hardware::GlState::TexTarget::Tex3d,
-				distFieldDraw.texLoc,
-				fbo.getTextureDId(),
-				1);
+				"u_tex", fbo.getTextureDId(), 1);
 	}
-	else if (shaderIndex == debugDrawId){
+	else if (&shd == &debugDraw.shader){
 		debugDraw.shader.setUniform(
-				debugDraw.chunkSizeLoc, fluid_mgr->getChunkSize());
+				"u_chunkSize", fluid_mgr->getChunkSize());
 		debugDraw.shader.setUniform(
-				debugDraw.chunkCountLoc, fluid_mgr->getMaxChunkCount());
+				"u_chunkCount", fluid_mgr->getMaxChunkCount());
 
 		hardware::GlState::TexDId ch_info_tex= fluid_mgr->getChunkInfoTexDId();
 		debugDraw.shader.setTexture(
-				debugDraw.chunkInfoSamplerLoc, ch_info_tex, 1);
+				hardware::GlState::TexTarget::Tex2d,
+				"u_chunkInfo", ch_info_tex, 1);
 	}
 }
 

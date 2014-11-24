@@ -9,7 +9,7 @@ namespace visual {
 
 class ParticleST : public WorldShaderTech {
 public:
-	ParticleST();
+	void use();
 };
 
 } // visual

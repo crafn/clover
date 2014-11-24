@@ -13,9 +13,6 @@ PotentialField::PotentialField(uint32 chunk_reso, uint32 chunks)
 			global::File::readText(shd_path + ".geom"),
 			global::File::readText(shd_path + ".frag"));
 	shader.compile<FluidParticle>();
-	chunkSizeLoc= shader.getUniformLocation("u_chunkSize");
-	chunkCountLoc= shader.getUniformLocation("u_chunkCount");
-	chunkInfoSamplerLoc= shader.getUniformLocation("u_chunkInfo");
 
 	visual::Framebuffer::Cfg fbo_cfg;
 	fbo_cfg.resolution= util::Vec2i(chunk_reso);
@@ -44,9 +41,12 @@ void PotentialField::update(
 	hardware::gGlState->setClearColor({0.5, 0.5, 0, 0});
 	hardware::gGlState->clear(GL_COLOR_BUFFER_BIT);
 	shader.use();
-	shader.setUniform(chunkSizeLoc, chunk_size);
-	shader.setUniform(chunkCountLoc, chunkCount);
-	shader.setTexture(chunkInfoSamplerLoc, chunk_info_tex, 0);
+	shader.setUniform("u_chunkSize", chunk_size);
+	shader.setUniform("u_chunkCount", chunkCount);
+	shader.setTexture(	hardware::GlState::TexTarget::Tex2d,
+						"u_chunkInfo",
+						chunk_info_tex,
+						0);
 
 	particles.draw();
 }

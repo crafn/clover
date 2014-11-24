@@ -120,8 +120,6 @@ void Cache::preLoad(){
 	visual::gFontMgr= new visual::FontMgr();
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Loading fonts");
 	loadFonts();
-	print(debug::Ch::Resources, debug::Vb::Trivial, "Loading shaders");
-	loadShaders();
 }
 
 
@@ -198,52 +196,6 @@ void Cache::loadFonts(){
 	}
 }
 
-void Cache::loadShaders(){
-	#define SHADER_LOAD_BEGIN() try {
-	#define SHADER_LOAD_END(name) \
-		} catch(ResourceException& e){ print(debug::Ch::Resources, debug::Vb::Critical, "Error loading " name " shader"); throw e; }
-
-	util::Str8 frag_src, vert_src, geom_src;
-
-	// ShadowCaster
-	SHADER_LOAD_BEGIN()
-
-	frag_src= global::File::readText("shaders/shadowcast.frag");
-	vert_src= global::File::readText("shaders/shadowcast.vert");
-
-
-	shadowCasterShaders.pushBack(visual::Shader());
-	shadowCasterShaders.back().setSources(vert_src.cStr(), "", frag_src.cStr());
-	shadowCasterShaders.back().compile<visual::Vertex>();
-	SHADER_LOAD_END("ShadowCaster")
-
-	// ShadowMap
-	SHADER_LOAD_BEGIN()
-	frag_src= global::File::readText("shaders/shadowmap.frag");
-	vert_src= global::File::readText("shaders/shadowmap.vert");
-
-	shadowMapShaders.reserve(7);
-
-	for (int32 i=0; i<7; i++){
-		shadowMapShaders.pushBack(visual::Shader());
-		shadowMapShaders.back().setSources(vert_src.cStr(), "", frag_src.cStr());
-		shadowMapShaders.back().setDefine("STATE", i);
-		shadowMapShaders.back().compile<visual::Vertex>();
-	}
-	SHADER_LOAD_END("ShadowMap")
-
-	// Particle
-	SHADER_LOAD_BEGIN()
-	frag_src= global::File::readText("shaders/particle.frag");
-	vert_src= global::File::readText("shaders/particle.vert");
-	geom_src= global::File::readText("shaders/particle.geom");
-
-	particleShaders.pushBack(visual::Shader());
-	particleShaders.back().setSources(vert_src, geom_src, frag_src);
-	particleShaders.back().compile<visual::ParticleVBOVertexData>();
-	SHADER_LOAD_END("Particle")
-}
-
 const util::DynArray<Resource*>& Cache::getResources() const {
 	static util::DynArray<Resource*> all_resources;
 	all_resources.clear();
@@ -268,62 +220,6 @@ void Cache::parseResource(const SerializedResource& serialized){
 		}
 	}
 	throw ResourceException("Invalid resource type name: %s", serialized.getTypeName().cStr());
-}
-
-util::DynArray<visual::Shader>& Cache::getShaders(ShaderId id){
-	switch(id){
-		case Shader_Generic:
-			ensure(0);
-
-		case Shader_ShadowCaster:
-			return shadowCasterShaders;
-
-		case Shader_ShadowMap:
-			return shadowMapShaders;
-
-		case Shader_Particle:
-			return particleShaders;
-
-		default:;
-	}
-
-	throw global::Exception("ResourceMgr::getShaders(..): id not found: %i", id);
-}
-
-visual::Shader& Cache::getGenericShader(GenericShaderType t){
-	PROFILE_("resources");
-
-	static visual::ShaderMgr shd_mgr;
-	visual::ShaderOptions opt;
-
-	if (t.colorMap)
-		opt.defines.insert("COLORMAP");
-
-	if (t.envShadowMap)
-		opt.defines.insert("ENVSHADOWMAP");
-
-	if (t.normalMap)
-		opt.defines.insert("NORMALMAP");
-
-	if (t.lightCount){
-		opt.defines.insert("DYNAMIC_LIGHTING");
-		opt.values["LIGHT_COUNT"]= t.lightCount;
-	}
-
-	if (t.curve){
-		opt.defines.insert("CURVE");
-	}
-
-	if (t.sway){
-		opt.defines.insert("SWAY");
-	}
-	
-	visual::Shader& shd= shd_mgr.getShader("generic", opt);
-	return shd;
-}
-
-uint32 Cache::getShaderCount(){
-	return 1337; /// @todo Remove
 }
 
 visual::Font& Cache::getFont(const util::Str8& s){

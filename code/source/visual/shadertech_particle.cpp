@@ -1,17 +1,14 @@
-#include "shadertech_particle.hpp"
 #include "resources/cache.hpp"
 #include "shader.hpp"
+#include "shader_mgr.hpp"
+#include "shadertech_particle.hpp"
 
 namespace clover {
 namespace visual {
 
-ParticleST::ParticleST(){
-	util::DynArray<Shader>& shds= resources::gCache->getShaders(resources::Shader_Particle);
-
-	for (int32 i= 0; i < (int)shds.size(); ++i){
-		shaders.pushBack(&shds[i]);
-		locateUniforms(i);
-	}
+void ParticleST::use()
+{
+	WorldShaderTech::use(getShaderMgr().getShader("visual_particle"));
 }
 
 } // visual

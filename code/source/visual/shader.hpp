@@ -4,6 +4,7 @@
 #include "build.hpp"
 #include "util/class_preproc.hpp"
 #include "util/color.hpp"
+#include "util/hashmap.hpp"
 #include "util/string.hpp"
 #include "util/tidy.hpp"
 #include "vertexattribute.hpp"
@@ -27,8 +28,8 @@ public:
 	/// Transform feedback
 	void setOutputVaryings(util::DynArray<util::Str8> varyings);
 
-	void setDefine(util::Str8 def, util::Str8 value="");
-	void setDefine(util::Str8 def, int32 value);
+	void setDefine(const char* def, util::Str8 value="");
+	void setDefine(const char* def, int32 value);
 
 	template <typename T>
 	void compile(){ compile(T::getAttributes()); }
@@ -37,26 +38,22 @@ public:
 
 	void use();
 
-	GLint getUniformLocation(const char* str);
-
-	void setUniform(uint32 loc, const uint8&, int32 count=1);
-	void setUniform(uint32 loc, const uint16&, int32 count=1);
-	void setUniform(uint32 loc, const uint32&, int32 count=1);
-	void setUniform(uint32 loc, const int32&,	int32 count=1);
-	void setUniform(uint32 loc, const real32&, int32 count=1, int32 dim=1);
-	void setUniform(uint32 loc, const real64&, int32 count= 1);
-	void setUniform(uint32 loc, const util::Vec2d&, int32 count=1);
-	void setUniform(uint32 loc, const util::Vec2f&, int32 count=1);
-	void setUniform(uint32 loc, const util::Vec3f&, int32 count=1);
-	void setUniform(uint32 loc, const util::Vec4f&, int32 count=1);
-	void setUniform(uint32 loc, const util::Color&, int32 count=1);
-	void setUniform(uint32 loc, const util::Mat33f&, int32 count=1);
-
-	/// Deprecated
-	void setTexture(uint32 loc, uint32 tex, int32 slot);
+	/// No dynamically allocated `name`s please
+	void setUniform(const char* name, const uint8&, int32 count=1);
+	void setUniform(const char* name, const uint16&, int32 count=1);
+	void setUniform(const char* name, const uint32&, int32 count=1);
+	void setUniform(const char* name, const int32&,	int32 count=1);
+	void setUniform(const char* name, const real32&, int32 count=1, int32 dim=1);
+	void setUniform(const char* name, const real64&, int32 count= 1);
+	void setUniform(const char* name, const util::Vec2d&, int32 count=1);
+	void setUniform(const char* name, const util::Vec2f&, int32 count=1);
+	void setUniform(const char* name, const util::Vec3f&, int32 count=1);
+	void setUniform(const char* name, const util::Vec4f&, int32 count=1);
+	void setUniform(const char* name, const util::Color&, int32 count=1);
+	void setUniform(const char* name, const util::Mat33f&, int32 count=1);
 
 	void setTexture(hardware::GlState::TexTarget target,
-					uint32 loc,
+					const char* name,
 					uint32 tex,
 					int32 slot);
 
@@ -65,20 +62,19 @@ public:
 private:
 	uint32 createShader(util::Str8 &source, uint32 type);
 	void bindAttributes(const util::DynArray<VertexAttribute>& attribs);
+	uint32 uniformLoc(const char* name);
 	void printInfoLog(uint32 shader) const;
 	void printLinkInfoLog() const;
 
 	Tidy<uint32> vertShd;
 	Tidy<uint32> fragShd;
 	Tidy<uint32> geomShd;
-	
 	Tidy<uint32> program;
 
+	util::HashMap<const char*, uint32> nameToUniform;
 	util::Str8 vertSource, fragSource, geomSource;
 	util::DynArray<util::Str8> outputVaryings;
-
 	util::DynArray<std::pair<util::Str8, util::Str8>> defines;
-
 	util::Str8 versionStr;
 	bool compiled;
 };

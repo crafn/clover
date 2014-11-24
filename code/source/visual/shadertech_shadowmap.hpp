@@ -12,24 +12,17 @@ namespace visual {
 class ShadowMapST : public ShaderTech {
 public:
 	ShadowMapST();
-	virtual ~ShadowMapST();
-
 	void generate(hardware::GlState::TexDId castermap, Framebuffer& result);
 
 protected:
-
-	enum Phase {
-		Phase_Distort=0,
-		Phase_Reduction8,
-		Phase_Reduction2,
-		Phase_DrawShadows,
-		Phase_HorBlur,
-		Phase_VerBlur
+	enum class Phase {
+		distort= 0,
+		reduction8,
+		reduction2,
+		drawShadows,
+		horBlur,
+		verBlur
 	};
-	void locateUniforms(uint32 shader_i);
-
-	util::DynArray<uint32> texLoc;
-	util::DynArray<uint32> reductionLoc;
 
 	Framebuffer temp;
 	util::DynArray<Framebuffer> reduced;
