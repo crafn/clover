@@ -48,7 +48,8 @@ private:
 		const visual::ModelEntityDef* def;
 		const visual::ModelEntityLogic* logic;
 		
-		util::Vec2d translation; //Esim. pikseleihin snappaaminen tekee tästä erisuuren kuin re:n positionista
+
+		util::Vec2d translation;
 		util::Quatd rotation;
 		util::Vec2d scale;
 		

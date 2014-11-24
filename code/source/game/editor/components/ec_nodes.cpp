@@ -5,7 +5,7 @@
 namespace clover {
 namespace game { namespace editor {
 
-nodes::NodeInstanceGroup* NodesEc::instantiateNodeGroup(){
+util::UniquePtr<nodes::NodeInstanceGroup> NodesEc::instantiateNodeGroup(){
 	ensure(getSelectedResource());
 	return getSelectedResource()->instantiate();
 }

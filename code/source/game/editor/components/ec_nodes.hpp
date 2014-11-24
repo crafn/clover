@@ -22,7 +22,7 @@ public:
 	
 	virtual ~NodesEc(){}
 	
-	nodes::NodeInstanceGroup* instantiateNodeGroup();
+	util::UniquePtr<nodes::NodeInstanceGroup> instantiateNodeGroup();
 	
 	util::DynArray<util::Str8> getNodeTypes();
 	

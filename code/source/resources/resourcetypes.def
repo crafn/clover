@@ -13,6 +13,7 @@
 #include "game/worldentity.hpp"
 #include "physics/entity_def.hpp"
 #include "physics/material.hpp"
+#include "visual/shadertemplate.hpp"
 #include "visual/material.hpp"
 #include "visual/mesh.hpp"
 #include "visual/model.hpp"
@@ -29,6 +30,7 @@
 
 RESOURCE(animation::Armature)
 RESOURCE(animation::Clip)
+RESOURCE(visual::ShaderTemplate)
 RESOURCE(visual::Texture)
 RESOURCE(visual::Material)
 RESOURCE(visual::TriMesh)
