@@ -51,7 +51,7 @@ void WorldShaderTech::setCamera(Camera& c)
 
 void WorldShaderTech::setCameraPosition(util::Vec2d pos)
 {
-	camPos= util::Vec3f{(real32)pos.x, (real32)pos.y, 0.0};
+	camPos= pos.casted<util::Vec2f>();
 }
 
 void WorldShaderTech::setCameraScale(real32 scale)

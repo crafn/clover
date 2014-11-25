@@ -11,7 +11,9 @@
 namespace clover {
 namespace visual {
 
-/// @class ParticleVBOVertexData A 64-byte vertex representing a particle for gpu
+/// Vertex representing a particle for gpu
+/// @todo Replace raw arrays with proper datatypes
+/// @todo Rename to ParticleVertex
 struct ParticleVBOVertexData {
 	ParticleVBOVertexData();
 
@@ -20,7 +22,7 @@ struct ParticleVBOVertexData {
 	real32 size[2];
 	real32 rotation;
 	real32 angularVelocity;
-	real32 params[8];
+	real32 color[4];
 
 	static util::DynArray<VertexAttribute> getAttributes();
 

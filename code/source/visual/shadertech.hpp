@@ -48,7 +48,7 @@ protected:
 
 	util::Vec3f envLight;
 	util::Vec2f envLightDir;
-	util::Vec3f camPos;
+	util::Vec2f camPos;
 	real32 camScale;
 	real32 perspectiveMul;
 	util::Mat44f transform;

@@ -51,7 +51,7 @@ void ShadowMapST::generate(hardware::GlState::TexDId castermap, Framebuffer& res
 		shd.use();
 		shd.setTexture(
 				hardware::GlState::TexTarget::Tex2d,
-				"uSampler", castermap, 0);
+				"u_tex", castermap, 0);
 		mapQuad.draw();
 	}
 
@@ -65,10 +65,10 @@ void ShadowMapST::generate(hardware::GlState::TexDId castermap, Framebuffer& res
 			reduced[i].bind();
 
 			real32 factor= 1.0/((real32)(reduced[i].getWidth()*2.0));
-			shd.setUniform("uReductionSize", factor);
+			shd.setUniform("u_reductionSize", factor);
 			shd.setTexture(
 					hardware::GlState::TexTarget::Tex2d,
-					"uSampler", prev_tex, 0);
+					"u_tex", prev_tex, 0);
 			mapQuad.draw();
 
 			prev_tex= reduced[i].getTextureDId();
@@ -84,7 +84,7 @@ void ShadowMapST::generate(hardware::GlState::TexDId castermap, Framebuffer& res
 		shd.use();
 		shd.setTexture(
 				hardware::GlState::TexTarget::Tex2d,
-				"uSampler", reduced.back().getTextureDId(), 0);
+				"u_tex", reduced.back().getTextureDId(), 0);
 		mapQuad.draw();
 	}
 
@@ -97,10 +97,10 @@ void ShadowMapST::generate(hardware::GlState::TexDId castermap, Framebuffer& res
 			opt.values[state]= static_cast<int32>(Phase::horBlur);
 			Shader& shd= getShaderMgr().getShader("visual_shadowMap", opt);
 			shd.use();
-			shd.setUniform("uReductionSize", val);
+			shd.setUniform("u_reductionSize", val);
 			shd.setTexture(
 					hardware::GlState::TexTarget::Tex2d,
-					"uSampler", result.getTextureDId(), 0);
+					"u_tex", result.getTextureDId(), 0);
 			mapQuad.draw();
 		}
 
@@ -110,10 +110,10 @@ void ShadowMapST::generate(hardware::GlState::TexDId castermap, Framebuffer& res
 			opt.values[state]= static_cast<int32>(Phase::verBlur);
 			Shader& shd= getShaderMgr().getShader("visual_shadowMap", opt);
 			shd.use();
-			shd.setUniform("uReductionSize", val);
+			shd.setUniform("u_reductionSize", val);
 			shd.setTexture(
 					hardware::GlState::TexTarget::Tex2d,
-					"uSampler", temp.getTextureDId(), 0);
+					"u_tex", temp.getTextureDId(), 0);
 			mapQuad.draw();
 		}
 	}

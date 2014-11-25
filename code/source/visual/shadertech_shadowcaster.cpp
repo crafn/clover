@@ -31,7 +31,7 @@ void ShadowCasterST::use(){
 	WorldShaderTech::use(shd);
 	shd.setTexture(
 			hardware::GlState::TexTarget::Tex2d,
-			"uTexture", texture, Material::TexType_Color);
+			"u_tex", texture, Material::TexType_Color);
 }
 
 } // visual

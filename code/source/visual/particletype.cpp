@@ -1,73 +1,67 @@
 #include "particletype.hpp"
+#include <cstddef>
 
 namespace clover {
 namespace visual {
 
 ParticleVBOVertexData::ParticleVBOVertexData(){
-	for (int32 i=0; i<2; i++){
-		position[i]=
-		velocity[i]=0;
-		size[i]=0;
+	for (int32 i= 0; i < 2; ++i) {
+		position[i]= 0;
+		velocity[i]= 0;
+		size[i]= 0;
 	}
 
-	rotation=0;
-	angularVelocity=0;
+	rotation= 0;
+	angularVelocity= 0;
 
-	for (int32 i=0; i<8; i++)
-		params[i]=0;
+	for (int32 i= 0; i < 4; ++i)
+		color[i]= 0;
 }
 
 util::DynArray<VertexAttribute> ParticleVBOVertexData::getAttributes(){
 	util::DynArray<VertexAttribute> ret;
 
-	// Position
+	// position
 	VertexAttribute a;
 	a.elemType= hardware::GlState::Type::Real32;
 	a.elemCount= 2;
-	a.offset= 0;
-	a.name= "inPosition";
+	a.offset= offsetof(ParticleVBOVertexData, position);
+	a.name= "a_position";
 	ret.pushBack(a);
 
-	// Velocity
+	// velocity
 	a.elemType= hardware::GlState::Type::Real32;
 	a.elemCount= 2;
-	a.offset= 2*4;
-	a.name= "inVelocity";
+	a.offset= offsetof(ParticleVBOVertexData, velocity);
+	a.name= "a_velocity";
 	ret.pushBack(a);
 
-	// Size
+	// size
 	a.elemType= hardware::GlState::Type::Real32;
 	a.elemCount= 2;
-	a.offset= 4*4;
-	a.name= "inSize";
+	a.offset= offsetof(ParticleVBOVertexData, size);
+	a.name= "a_size";
 	ret.pushBack(a);
 
-	// Rotation
+	// rotation
 	a.elemType= hardware::GlState::Type::Real32;
 	a.elemCount= 2;
-	a.offset= 6*4;
-	a.name= "inRotation";
+	a.offset= offsetof(ParticleVBOVertexData, rotation);
+	a.name= "a_rotation";
 	ret.pushBack(a);
 
-	// AngularVelocity
+	// angularVelocity
 	a.elemType= hardware::GlState::Type::Real32;
 	a.elemCount= 2;
-	a.offset= 7*4;
-	a.name= "inAngularVelocity";
+	a.offset= offsetof(ParticleVBOVertexData, angularVelocity);
+	a.name= "a_angularVelocity";
 	ret.pushBack(a);
 
-	// Params
+	// color
 	a.elemType= hardware::GlState::Type::Real32;
 	a.elemCount= 4;
-	a.offset= 8*4;
-	a.name= "inParams";
-	ret.pushBack(a);
-
-	// Params2
-	a.elemType= hardware::GlState::Type::Real32;
-	a.elemCount= 4;
-	a.offset= 12*4;
-	a.name= "inParams2";
+	a.offset= offsetof(ParticleVBOVertexData, color);
+	a.name= "a_color";
 	ret.pushBack(a);
 
 	return ret;
