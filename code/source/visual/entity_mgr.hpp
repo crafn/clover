@@ -49,10 +49,7 @@ private:
 		const visual::ModelEntityDef* def;
 		const visual::ModelEntityLogic* logic;
 		
-
-		util::Vec2d translation;
-		util::Quatd rotation;
-		util::Vec2d scale;
+		util::SrtTransform3d transform;
 		
 		/// If not visible, shouldn't be drawn
 		bool visible;
@@ -111,7 +108,7 @@ private:
 				util::Coord::Type next_space,
 				util::Coord::Type next_scale_space);
 		
-		util::DynArray<RenderEntity> query(	Camera& cam,
+		util::DynArray<RenderEntity> query(	const Camera& cam,
 										util::Vec2d occlusion_rad_addition);
 		
 		SizeType getModelEntityCount() const { return modelEntityCount; }

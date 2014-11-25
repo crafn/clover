@@ -54,12 +54,12 @@ void GenericST::use()
 
 	WorldShaderTech::use(shader);
 
-	shader.setUniform("uColorMul", colorMul);
+	shader.setUniform("u_colorMul", colorMul);
 
 	if (sway){
 		real32 phase= util::gGameClock->getTime()*swayPhaseMul;
-		shader.setUniform("uSwayPhase", phase);
-		shader.setUniform("uSwayScale", swayScale);
+		shader.setUniform("u_swayPhase", phase);
+		shader.setUniform("u_swayScale", swayScale);
 	}
 
 	// Lights
@@ -77,7 +77,6 @@ void GenericST::use()
 		real32 range[count];
 
 		real32 rotation_matrix[4*count]; // 2x2 matriisi
-		real32 spread[count];
 
 		int32 shadows_enabled[count];
 
@@ -90,7 +89,6 @@ void GenericST::use()
 
 			intensity[i] = light->getDef().getIntensity();
 			range[i] = light->getDef().getHalfValueRadius();
-			spread[i] = 1.0;
 
 			shadows_enabled[i]= light->getDef().hasShadows();
 
@@ -100,13 +98,12 @@ void GenericST::use()
 			rotation_matrix[4*i+3]= cos(light->getRotation().rotationZ());
 		}
 
-		shader.setUniform("uLightPosition", *pos, count, 2);
-		shader.setUniform("uLightIntensity", *intensity, count);
-		shader.setUniform("uLightRange", *range, count);
-		shader.setUniform("uLightRotMatrix", *rotation_matrix, count, 4);
-		shader.setUniform("uLightSpread", *spread, count);
-		shader.setUniform("uShadowsEnabled", *shadows_enabled, count);
-		shader.setUniform("uLightAlphaAdd", lightAlphaAdd);
+		shader.setUniform("u_lightPosition", *pos, count, 2);
+		shader.setUniform("u_lightIntensity", *intensity, count);
+		shader.setUniform("u_lightRange", *range, count);
+		shader.setUniform("u_lightRotation", *rotation_matrix, count, 4);
+		shader.setUniform("u_lightShadowsEnabled", *shadows_enabled, count);
+		shader.setUniform("u_lightAlphaAdd", lightAlphaAdd);
 
 		//shader.uniform1iv(shadowsEnabledLoc, count, false);
 		int32 maxShadowLights=count;
@@ -132,7 +129,7 @@ void GenericST::use()
 			shadow_maps[i]=0;
 		}
 
-		shader.setUniform("uShadowMap", *shadow_maps, maxShadowLights);
+		shader.setUniform("u_shadowMap", *shadow_maps, maxShadowLights);
 	}
 }
 

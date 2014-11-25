@@ -24,10 +24,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-/// Temp test
-#include "visual/shader_mgr.hpp"
-#include "visual/shadertemplate.hpp"
-
 namespace fs = boost::filesystem;
 
 namespace clover {

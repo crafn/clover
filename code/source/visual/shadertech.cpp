@@ -13,28 +13,27 @@ void WorldShaderTech::use(Shader& shd)
 	shd.use();
 	util::Vec2d aspect= hardware::gDevice->getAspectVector();
 
-	shd.setUniform("uAspectRatio", aspect);
-	shd.setUniform("uEnvIntensity", envLight);
-	shd.setUniform("uEnvLightDir", envLightDir);
-	shd.setUniform("uGlobalTransformation", camPos);
-	shd.setUniform("uGlobalScale", camScale);
+	shd.setUniform("u_aspectRatio", aspect);
+	shd.setUniform("u_envIntensity", envLight);
+	shd.setUniform("u_envDir", envLightDir);
+	shd.setUniform("u_camPos", camPos);
+	shd.setUniform("u_camScale", camScale);
+	shd.setUniform("u_perspectiveMul", perspectiveMul);
 
 	if (textures[0])
 		shd.setTexture(
 				hardware::GlState::TexTarget::Tex2d,
-				"uColorMap", textures[0], Material::TexType_Color);
+				"u_colorMap", textures[0], Material::TexType_Color);
 	if (textures[1])
 		shd.setTexture(
 				hardware::GlState::TexTarget::Tex2d,
-				"uNormalMap", textures[1], Material::TexType_Normal);
+				"u_normalMap", textures[1], Material::TexType_Normal);
 	if (textures[2])
 		shd.setTexture(
 				hardware::GlState::TexTarget::Tex2d,
-				"uEnvShadowMap", textures[2], Material::TexType_EnvShadow);
+				"u_envShadowMap", textures[2], Material::TexType_EnvShadow);
 
-	shd.setUniform("uTransformation", translation);
-	shd.setUniform("uRotation", rotation);
-	shd.setUniform("uScale", scale);
+	shd.setUniform("u_transform", transform);
 }
 
 void WorldShaderTech::setEnvLight(util::Color col, util::Vec2f dir)
@@ -47,6 +46,7 @@ void WorldShaderTech::setCamera(Camera& c)
 {
 	setCameraPosition(c.getPosition());
 	camScale= c.getScale();
+	perspectiveMul= c.getPerspectiveMul();
 }
 
 void WorldShaderTech::setCameraPosition(util::Vec2d pos)
@@ -85,17 +85,16 @@ void WorldShaderTech::setEntity(const visual::ModelEntityDef& re)
 	hardware::gGlState->setBlendFunc(re.getBlendFunc());
 }
 
-void WorldShaderTech::setTransformation(util::Vec2d t, util::Quatd rot)
+void WorldShaderTech::setTransform(const util::SrtTransform3d& t)
 {
-	ensure(std::isfinite(translation.x) && std::isfinite(translation.y));
+	ensure(	std::isfinite(t.translation.x) &&
+			std::isfinite(t.translation.y));
 
-	translation= util::Vec3f{(real32)t.x, (real32)t.y, 0.0};
-	rotation= rot.casted<util::Quatf>().asMatrix();
-}
-
-void WorldShaderTech::setScale(util::Vec2d s)
-{
-	scale= util::Vec3f{(real32)s.x, (real32)s.y, 0.0};
+	auto&& rot= t.rotation.casted<util::Quatf>().asMatrix();
+	transform=
+		util::Mat44f::byScale(t.scale.casted<util::Vec3f>())*
+		util::Mat44f::identity().applied(rot)*
+		util::Mat44f::byTranslation(t.translation.casted<util::Vec3f>());
 }
 
 void WorldShaderTech::setColorMap(uint32 tex)

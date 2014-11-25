@@ -11,21 +11,12 @@
 
 namespace clover {
 namespace visual {
-	
-/// Data of one vertex for TriMesh and to be uploaded to the gpu
-struct Vertex {
-	Vertex();
 
+struct Vertex {
 	util::Vec2f position;
-	util::Vec2f padding;
 	util::Vec2f uv;
 	util::Color color;
 	util::Vec2f tangent;
-
-	// inParams[0]: 1-kerroin ambient-valaistukseen
-	// inParams[1]: curven leveys
-	// inParams[2]: curven uv-leveys
-	real32 params[4];
 
 	static util::DynArray<VertexAttribute> getAttributes();
 } __attribute__((aligned(64)));
@@ -54,7 +45,7 @@ struct ObjectNodeTraits<visual::Vertex> {
 		ob["uv"].setValue(value.uv);
 		return (ob);
 	}
-	
+
 	static Value deserialized(const util::ObjectNode& ob){
 		Value v;
 		v.position= ob.get("position").getValue<util::Vec2f>();

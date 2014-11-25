@@ -39,8 +39,7 @@ public:
 	void setCameraScale(real32 scale);
 
 	void setEntity(const visual::ModelEntityDef& re);
-	void setTransformation(util::Vec2d, util::Quatd rot);
-	void setScale(util::Vec2d scale);
+	void setTransform(const util::SrtTransform3d& t);
 	void setColorMap(uint32 tex);
 	void setNormalMap(uint32 tex);
 
@@ -51,9 +50,8 @@ protected:
 	util::Vec2f envLightDir;
 	util::Vec3f camPos;
 	real32 camScale;
-	util::Vec3f translation;
-	util::Mat33f rotation;
-	util::Vec3f scale;
+	real32 perspectiveMul;
+	util::Mat44f transform;
 	util::Vec2d aspect;
 
 	uint32 textures[Material::TexType_Last]= { 0 };

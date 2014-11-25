@@ -51,6 +51,7 @@ public:
 	void setUniform(const char* name, const util::Vec4f&, int32 count=1);
 	void setUniform(const char* name, const util::Color&, int32 count=1);
 	void setUniform(const char* name, const util::Mat33f&, int32 count=1);
+	void setUniform(const char* name, const util::Mat44f&, int32 count=1);
 
 	void setTexture(hardware::GlState::TexTarget target,
 					const char* name,

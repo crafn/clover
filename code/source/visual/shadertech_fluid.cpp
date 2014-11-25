@@ -85,8 +85,10 @@ void FluidST::render(Camera& cam){
 
 		setCamera(cam);
 		setEntity(def);
-		setTransformation(util::Vec2d(0.0), util::Quatd::identity());
-		setScale(util::Vec2d(1.0));
+		setTransform(
+			util::SrtTransform3d{	util::Vec3d(1),
+									util::Quatd::identity(),
+									util::Vec3d(0)});
 		use(shd);
 
 		hardware::gGlState->setBlendFunc(hardware::GlState::BlendFunc{

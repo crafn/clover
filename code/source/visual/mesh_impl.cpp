@@ -318,14 +318,6 @@ void TriMesh::addRectByCorners(const util::Vec2f& lower_left, const util::Vec2f&
 	BaseClass::addTriangle(start_index, start_index+2, start_index+3);
 }
 
-void TriMesh::setParamByHeight(int32 param, real32 zero_pos, real32 one_pos){
-	for (int32 i=0; i<(int)vertices.size(); i++){
-		real32 p= (vertices[i].position[1]-zero_pos)/(one_pos-zero_pos);
-
-		vertices[i].params[param]= 1-util::limited(p, 0.0f, 1.0f);
-	}
-}
-
 void TriMesh::applyUniformUv(const util::UniformUv& uv_){
 	uniformUvSet= true;
 	uv= uv_;

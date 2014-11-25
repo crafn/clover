@@ -13,6 +13,7 @@ Camera::Camera():
 			maxAcceleration(100),
 			scale(0.15),
 			targetScale(scale),
+			perspectiveMul(1.0),
 			active(true){
 
 	global::Event e(global::Event::OnCameraCreate);

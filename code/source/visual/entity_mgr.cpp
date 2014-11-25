@@ -99,16 +99,15 @@ void EntityMgr::draw(){
 				set_lights(re);
 				genericST.setEnvLight(env_light, env_light_dir);
 				genericST.setEntity(re, logic);
-				genericST.setTransformation(cfg.entities[i].translation, cfg.entities[i].rotation);
-				genericST.setScale(cfg.entities[i].scale);
+				genericST.setTransform(cfg.entities[i].transform);
 				genericST.use();
 				re.draw();
 			}
 			else if (re.getShadingType() == visual::ModelEntityDef::Shading_Particle){
 				PROFILE();
 				particleST.setEntity(re);
-				particleST.setTransformation(cfg.entities[i].translation, cfg.entities[i].rotation);
-				particleST.setScale(cfg.entities[i].scale);
+				genericST.setTransform(cfg.entities[i].transform);
+				genericST.use();
 				particleST.use();
 				re.draw();
 			}
@@ -242,7 +241,6 @@ EntityMgr::RenderEntity EntityMgr::RenderBatch::asRenderEntity() const {
 	re.def= &def;
 	re.logic= &logic;
 	re.visible= true;
-	re.scale= util::Vec2d(1.0);
 	re.finalize();
 	return re;
 }
@@ -260,6 +258,7 @@ EntityMgr::RenderFrameConfig EntityMgr::createSimpleRenderFrameConfig(){
 	
 	Camera* camera= gVisualMgr->getCameraMgr().getActiveCameras()[0];
 	ensure(camera);
+	camera->setPerspectiveMul(global::gCfgMgr->get("visual::perspectiveMul", 1.0f));
 	
 	cfg.camera= camera;
 
@@ -371,20 +370,14 @@ void EntityMgr::RenderEntityCache::onCoordSpaceChange(
 }
 
 util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
-		Camera& camera,
+		const Camera& camera,
 		util::Vec2d occlusion_rad_addition){
 	PROFILE();
 		
 	bool show_gui= global::gCfgMgr->get("visual::showGui", true);
-	real32 perspective_mul= global::gCfgMgr->get("visual::perspectiveMul", 1.0f);
 
 	util::Vec2d campos= camera.getPosition();
 	real32 camscale= camera.getScale();
-
-	// For parallax, can be modified to look good (how camera scale converts to scale and zoom in good ratio)
-	/// @todo Should be moved to Camera if any realtime change for that ratio is needed
-	real32 cam_z= 1.0f/camscale;
-
 
 	// Radius of viewport in world coordinates
 	util::Vec2d rad= util::Vec2d(1.0)/camera.getScale();
@@ -425,8 +418,6 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 		}
 		
 		util::SrtTransform3d offset, transform;
-		util::Vec2d pos, scale;
-		real32 depth;
 
 		{ PROFILE();
 			offset= logic.getDef().getOffset();
@@ -435,44 +426,40 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 			if (logic.getDef().isBillboard())
 				transform= billboarded(transform);
 
-			depth= transform.translation.z;
-			pos= util::Coord(transform.translation.xy(), logic.getCoordinateSpace()).
+			auto pos2d= util::Coord(transform.translation.xy(), logic.getCoordinateSpace()).
 				converted(util::Coord::World).getValue();
-			scale= util::Coord(transform.scale.xy(), logic.getScaleCoordinateSpace(), true).
+			auto scale2d= util::Coord(transform.scale.xy(), logic.getScaleCoordinateSpace(), true).
 				converted(util::Coord::World).getValue();
+
+			transform.translation.x= pos2d.x;
+			transform.translation.y= pos2d.y;
+			transform.scale.x= scale2d.x;
+			transform.scale.y= scale2d.y;
 		}
-		
-		{ PROFILE();
-			if (depth != 0.0f){
-				// Do some scaling and repositioning for parallax effect
-				// z == 0, pos isn't affected
-				// Could be moved to shader
 
-				real32 mul= 1.0/(1.0 - depth/cam_z*perspective_mul);
-				if (mul <= 0.0)
-					return;	
-
-				pos=	(pos - campos)*mul + campos;
-
-				scale=	scale*mul;
-			}
-			
+		{ PROFILE();	
 			if (logic.getDef().isSnappingToPixels()){
 				util::Vec2d pixpos;
 
 				// Scale to pixel-coordinates
-				pixpos= util::Coord(pos, util::Coord::World).converted(util::Coord::View_Pixels).getValue() + viewport;
+				pixpos= util::Coord(
+							transform.translation.xy(),
+							util::Coord::World).
+						converted(util::Coord::View_Pixels).getValue() + viewport;
 
 				// Rounding to pixels
 				pixpos= util::Vec2d(pixpos + util::Vec2d(0.5)).floored();
-				pos= util::Coord(pixpos-viewport, util::Coord::View_Pixels).converted(util::Coord::World).getValue();
+				auto pos2d= util::Coord(pixpos-viewport, util::Coord::View_Pixels).
+						converted(util::Coord::World).getValue();
+
+				transform.translation.x= pos2d.x;
+				transform.translation.y= pos2d.y;
 			}
 			
-			ensure(std::isfinite(pos.x) && std::isfinite(pos.y));
+			ensure(	std::isfinite(transform.translation.x) &&
+					std::isfinite(transform.translation.y));
 			
-			re.translation= pos;
-			re.rotation= transform.rotation;
-			re.scale= scale;
+			re.transform= transform;
 			re.visible= true;
 			re.finalize();
 		}
@@ -485,7 +472,7 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 	util::DynArray<const ModelEntityLogic*> logics= spatialGrid.coneQuery(
 			origin,
 			size,
-			-perspective_mul);
+			-camera.getPerspectiveMul());
 
 	logics.append(viewSpace);
 
@@ -541,9 +528,7 @@ void EntityMgr::calcLighting(const RenderFrameConfig& cfg){
 			{ PROFILE();
 				genericST.setEntity(*cfg.entities[i].def, *cfg.entities[i].logic);
 				genericST.use();
-
-				genericST.setTransformation(cfg.entities[i].translation, cfg.entities[i].rotation);
-				genericST.setScale(cfg.entities[i].scale);
+				genericST.setTransform(cfg.entities[i].transform);
 
 				cfg.entities[i].def->draw();
 			}
@@ -569,8 +554,7 @@ void EntityMgr::calcLighting(const RenderFrameConfig& cfg){
 					continue;
 
 				shadowCasterST.setEntity(*cfg.entities[i].def);
-				shadowCasterST.setTransformation(cfg.entities[i].translation, cfg.entities[i].rotation);
-				shadowCasterST.setScale(cfg.entities[i].scale);
+				shadowCasterST.setTransform(cfg.entities[i].transform);
 				shadowCasterST.use();
 
 				cfg.entities[i].def->draw();
@@ -651,9 +635,9 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 			ensure(re);
 			
 			TriMesh tempmesh= *a_batch.meshes[i];
-			tempmesh.scale(re->scale.casted<util::Vec2f>());
-			tempmesh.rotate(re->rotation.rotationZ());
-			tempmesh.translate(re->translation.casted<util::Vec2f>());
+			tempmesh.scale(re->transform.scale.casted<util::Vec2f>());
+			tempmesh.rotate(re->transform.rotation.rotationZ());
+			tempmesh.translate(re->transform.translation.casted<util::Vec2f>());
 			
 			batch.mesh.add(tempmesh);
 		}

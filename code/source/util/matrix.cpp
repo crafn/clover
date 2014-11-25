@@ -6,7 +6,8 @@ namespace clover {
 namespace util {
 
 template <typename T, SizeType N>
-Matrix<T, N> Matrix<T, N>::identity(){
+Matrix<T, N> Matrix<T, N>::identity()
+{
 	Matrix<T, N> m;
 	for (SizeType i= 0; i < N; ++i){
 		m(i, i)= 1;
@@ -15,7 +16,17 @@ Matrix<T, N> Matrix<T, N>::identity(){
 }
 
 template <typename T, SizeType N>
-Matrix<T, N> Matrix<T, N>::byRotationAxis(Vec axis, T rotation){
+Matrix<T, N> Matrix<T, N>::byScale(RealVector<T, N-1> s)
+{
+	auto result= Matrix<T, N>::identity();
+	for (SizeType i= 0; i < N-1; ++i)
+		result(i, i)= s[i];
+	return result;
+}
+
+template <typename T, SizeType N>
+Matrix<T, N> Matrix<T, N>::byRotationAxis(Vec axis, T rotation)
+{
 	ensure(N >= 3);
 	
 	// From wikipedia
@@ -46,13 +57,24 @@ Matrix<T, N> Matrix<T, N>::byRotationAxis(Vec axis, T rotation){
 }
 
 template <typename T, SizeType N>
+Matrix<T, N> Matrix<T, N>::byTranslation(RealVector<T, N-1> t)
+{
+	auto result= Matrix::identity();
+	for (SizeType i= 0; i < N-1; ++i) {
+		result(i, N-1)= t[i];
+	}
+	return std::move(result);
+}
+
+template <typename T, SizeType N>
 Matrix<T, N>::Matrix(){
 	for(SizeType i= 0; i < N*N; ++i)
 		v[i]= 0;
 }
 
 template <typename T, SizeType N>
-Matrix<T, N> Matrix<T, N>::operator*(const Matrix<T, N>& mat) const {
+Matrix<T, N> Matrix<T, N>::operator*(const Matrix<T, N>& mat) const
+{
 	Matrix<T, N> result;
 	
 	
@@ -66,17 +88,20 @@ Matrix<T, N> Matrix<T, N>::operator*(const Matrix<T, N>& mat) const {
 }
 
 template <typename T, SizeType N>
-T& Matrix<T, N>::operator()(SizeType x, SizeType y){
+T& Matrix<T, N>::operator()(SizeType x, SizeType y)
+{
 	return v[x*N + y];
 }
 
 template <typename T, SizeType N>
-T Matrix<T, N>::operator()(SizeType x, SizeType y) const {
+T Matrix<T, N>::operator()(SizeType x, SizeType y) const
+{
 	return v[x*N + y];
 }
 
 template <typename T, SizeType N>
-auto Matrix<T, N>::row(SizeType y) const -> Vec {
+auto Matrix<T, N>::row(SizeType y) const -> Vec
+{
 	RealVector<T, N> result;
 	for (SizeType x= 0; x < N; ++x){
 		result[x]= (*this)(x, y);
@@ -85,7 +110,8 @@ auto Matrix<T, N>::row(SizeType y) const -> Vec {
 }
 
 template <typename T, SizeType N>
-auto Matrix<T, N>::column(SizeType x) const -> Vec {
+auto Matrix<T, N>::column(SizeType x) const -> Vec
+{
 	RealVector<T, N> result;
 	for (SizeType y= 0; y < N; ++y){
 		result[y]= (*this)(x, y);
@@ -94,7 +120,8 @@ auto Matrix<T, N>::column(SizeType x) const -> Vec {
 }
 
 template <typename T, SizeType N>
-Matrix<T, N> Matrix<T, N>::transpose() const {
+Matrix<T, N> Matrix<T, N>::transpose() const
+{
 	Matrix result= *this;
 	for (SizeType x= 0; x < N; ++x){
 		for (SizeType y= 0; y < N; ++y){
@@ -105,7 +132,8 @@ Matrix<T, N> Matrix<T, N>::transpose() const {
 }
 
 template <typename T, SizeType N>
-void Matrix<T, N>::setBvhEulerRotation(Vec rot){
+void Matrix<T, N>::setBvhEulerRotation(Vec rot)
+{
 	ensure(N >= 3);
 	
 	T x, y, z;
@@ -129,7 +157,8 @@ void Matrix<T, N>::setBvhEulerRotation(Vec rot){
 }
 
 template <typename T, SizeType N>
-auto Matrix<T, N>::transformedVector(RealVector<T, N> vec) const -> Vec {
+auto Matrix<T, N>::transformedVector(RealVector<T, N> vec) const -> Vec
+{
 	Vec result;
 	for (SizeType i= 0; i < N; ++i){
 		result[i]= row(i).dot(vec);
@@ -138,7 +167,8 @@ auto Matrix<T, N>::transformedVector(RealVector<T, N> vec) const -> Vec {
 }
 
 template <typename T, SizeType N>
-void Matrix<T, N>::print(){
+void Matrix<T, N>::print()
+{
 	util::Str8 str;
 	for (SizeType y= 0; y < N; y++){
 		for (SizeType x= 0; x < N; x++){

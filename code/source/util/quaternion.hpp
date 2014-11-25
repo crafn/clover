@@ -55,7 +55,7 @@ public:
 	Matrix<T, 3> asMatrix() const;
 	
 	template <typename R>
-	R casted(){ return R(x, y, z, w); }
+	R casted() const { return R(x, y, z, w); }
 	
 	template <typename Archive>
 	void serialize(Archive& ar, const uint32 ver){

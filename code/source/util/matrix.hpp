@@ -16,7 +16,9 @@ struct Matrix {
 	
 	static Matrix identity();
 	
+	static Matrix byScale(RealVector<T, N-1> s);
 	static Matrix byRotationAxis(Vec axis, T rotation);
+	static Matrix byTranslation(RealVector<T, N-1> t);
 	
 	/// Constructs a zero-matrix
 	Matrix();
@@ -41,7 +43,10 @@ struct Matrix {
 	
 	/// Helper for operator* defined outside class
 	Vec transformedVector(Vec vec) const;
-	
+
+	template <SizeType M>
+	Matrix applied(const Matrix<T, M>& other) const;
+
 private:
 	// Column-major
 	std::array<T, N*N> v;
@@ -49,8 +54,20 @@ private:
 
 /// 'vec' transformed by 'mat'
 template <typename T, SizeType N>
-RealVector<T, N> operator*(RealVector<T, N> vec, const Matrix<T, N>& mat){
-	return mat.transformedVector(vec);
+RealVector<T, N> operator*(RealVector<T, N> vec, const Matrix<T, N>& mat)
+{ return mat.transformedVector(vec); }
+
+template <typename T, SizeType N>
+template <SizeType M>
+Matrix<T, N> Matrix<T, N>::applied(const Matrix<T, M>& other) const
+{
+	auto result= *this;
+	for (SizeType y= 0; y < M && y < N; ++y) {
+		for (SizeType x= 0; x < M && x < N; ++x) {
+			result(x, y)= other(x, y);
+		}
+	}
+	return result;
 }
 
 } // util

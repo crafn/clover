@@ -36,6 +36,9 @@ public:
 	void setTargetVelocity(util::Vec2d vel){ targetVelocity= vel; }
 	void setMaxAcceleration(real32 a){ maxAcceleration= a; }
 
+	void setPerspectiveMul(real32 mul) { perspectiveMul= mul; }
+	real32 getPerspectiveMul() const { return perspectiveMul; }
+
 	bool isActive() const;
 	
 	/// Sets active
@@ -61,6 +64,7 @@ private:
 	real32 maxAcceleration;
 	real32 scale;
 	real32 targetScale;
+	real32 perspectiveMul;
 
 	util::Vec2i resolution;
 

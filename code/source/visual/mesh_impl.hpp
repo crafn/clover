@@ -188,8 +188,6 @@ public:
 	void addRectByCenter(const util::Vec2f& pos, const util::Vec2f& size, const util::Vec2f& uvpos=util::Vec2f{0.5, 0.5}, const util::Vec2f& uvsize=util::Vec2f{0.5, 0.5});
 	void addRectByCorners(const util::Vec2f& lower_left, const util::Vec2f& upper_right, const util::Vec2f& uv_lower_left=util::Vec2f{0,0}, const util::Vec2f& uv_upper_right=util::Vec2f{1,1});
 
-	void setParamByHeight(int32 param, real32 zero_pos, real32 one_pos);
-
 	bool hasUniformUv() const { return uniformUvSet; }
 	util::UniformUv getUniformUv() const { return uv; }
 	void applyUniformUv(const util::UniformUv& uv);

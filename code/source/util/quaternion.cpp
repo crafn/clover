@@ -37,7 +37,7 @@ Quaternion<T> Quaternion<T>::byRotationFromTo(const Vec& v1_, const Vec& v2_){
 	real32 mul= sqrt(2 + dot*2);
 	
 	Vec v= v1.cross(v2)/mul;
-	return Quaternion(v.x, v.y, v.z, 0.5*mul).normalized(); // Normalisaatio ei välttis pakollinen
+	return Quaternion(v.x, v.y, v.z, 0.5*mul).normalized();
 }
 
 template <typename T>
