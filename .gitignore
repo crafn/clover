@@ -9,3 +9,4 @@ builds
 *.fuse_hidden*
 resources
 backup
+resources.zip

@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+import fnmatch
+import os
+import sys
+import zipfile
+
+exclude= [
+	".*",
+	"*~",
+	"*~*",
+	"*.swp",
+	"*.swo"
+]
+
+res_dir= "resources"
+tempname= "resources.zip"
+to_repo_root= "/../../"
+host= "crafn@kapsi.fi"
+remotefile= "~/sites/crafn.kapsi.fi/www/data/clover/resources.zip"
+
+if __name__ == "__main__":
+	script_dir= os.path.dirname(os.path.realpath(__file__))
+	os.chdir(script_dir + to_repo_root)
+	res_dir= res_dir
+
+	# Find files
+	file_paths= []
+	for root, dirs, files in os.walk(res_dir):
+		for file in files:
+			match= False
+			for pattern in exclude:
+				if fnmatch.fnmatch(file, pattern):
+					match= True
+					break
+			if not match:
+				file_paths.append(os.path.join(root, file))
+
+	# Zip files
+	zipf= zipfile.ZipFile(tempname, "w")
+	for path in file_paths:
+		print("Zipping " + path)
+		zipf.write(path)
+	zipf.close()
+
+	# Upload
+	print("Uploading to " + host + ":" + remotefile)
+	os.system("scp \"" + tempname + "\" \"" + host + ":" + remotefile + "\"")
