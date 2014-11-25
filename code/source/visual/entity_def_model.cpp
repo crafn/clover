@@ -9,7 +9,6 @@ namespace visual {
 
 ModelEntityDef::ModelEntityDef()
 			: shadingType(Shading_Generic)
-			, smoothType(Smooth_None)
 			, filled(true)
 			, snapToPixels(false)
 			, colorMul({1,1,1,1})
@@ -49,14 +48,6 @@ void ModelEntityDef::setShadingType(ShadingType shdtype){
 
 ModelEntityDef::ShadingType ModelEntityDef::getShadingType() const {
 	return shadingType;
-}
-
-void ModelEntityDef::setSmoothType(SmoothType smoothtype){
-	smoothType= smoothtype;
-}
-
-ModelEntityDef::SmoothType ModelEntityDef::getSmoothType() const {
-	return smoothType;
 }
 
 void ModelEntityDef::setEnvLight(real32 intensity){

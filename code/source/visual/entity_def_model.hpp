@@ -66,14 +66,6 @@ public:
 		ShadingType_Last
 	};
 
-	/// @todo Remove	
-	enum SmoothType {
-		Smooth_None,
-		Smooth_TriCurve,
-		Smooth_ControlCurve,
-		Smooth_Last
-	};
-
 	ModelEntityDef();
 	ModelEntityDef(const ModelEntityDef&)= default;
 	ModelEntityDef(ModelEntityDef&&)= default;
@@ -94,9 +86,6 @@ public:
 
 	void setShadingType(ShadingType shdtype);
 	ShadingType getShadingType() const;
-
-	void setSmoothType(SmoothType smoothtype);
-	SmoothType getSmoothType() const;
 
 	void setEnvLight(real32 intensity);
 	bool usesCustomEnvLight() const;
@@ -150,23 +139,14 @@ private:
 	friend class ShaderTech;
 
 	ShadingType shadingType;
-
-	SmoothType smoothType;
-
 	bool filled;
-
 	// if position is rounded to pixel-grid
 	bool snapToPixels;
-
 	util::Color colorMul;
-
 	real32 lightAlphaAdd;
-
 	const Model* model;
-	
 	// Determines drawing order if z difference <= util::epsilon
 	DrawPriority drawPriority;
-
 	bool sway;
 	real32 swayPhaseMul;
 	real32 swayScale;
