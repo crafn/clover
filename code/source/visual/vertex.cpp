@@ -4,13 +4,14 @@
 namespace clover {
 namespace visual {
 
-util::DynArray<VertexAttribute> Vertex::getAttributes(){
+util::DynArray<VertexAttribute> Vertex::getAttributes()
+{
 	util::DynArray<VertexAttribute> ret;
 
 	// Position
 	VertexAttribute a;
 	a.elemType= hardware::GlState::Type::Real32;
-	a.elemCount= 2;
+	a.elemCount= 3;
 	a.offset= offsetof(Vertex, position);
 	a.name= "a_position";
 	ret.pushBack(a);
@@ -31,7 +32,7 @@ util::DynArray<VertexAttribute> Vertex::getAttributes(){
 
 	// Tangent
 	a.elemType= hardware::GlState::Type::Real32;
-	a.elemCount= 2;
+	a.elemCount= 3;
 	a.offset= offsetof(Vertex, tangent);
 	a.name= "a_tangent";
 	ret.pushBack(a);

@@ -108,7 +108,7 @@ public:
 	
 	template <typename U>
 	U casted() const { return U(min.casted<typename U::Point>(), max.casted<typename U::Point>()); }
-	
+
 private:
 	T min;
 	T max;

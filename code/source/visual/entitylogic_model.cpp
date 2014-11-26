@@ -40,35 +40,39 @@ void ModelEntityLogic::apply(const EntityLogic& other){
 	}
 }
 
-util::BoundingBox<util::Vec2d> ModelEntityLogic::getBoundingBox() const {
+util::BoundingBox<util::Vec3d> ModelEntityLogic::getBoundingBox() const {
 	PROFILE();
 	
 	if (!getDef().getModel())
-		return BBox::zero();
+		return BoundingBox::zero();
 
 	ensure(getDef().getModel());
 
 	auto model_bb= getDef().getModel()->getBoundingBox();
 	if (!model_bb.isSet())
-		return BBox::zero();
+		return BoundingBox::zero();
 	
 	/// @todo More precise solution
 	
-	std::array<util::Vec2f, 4> bb_v= {
+	std::array<util::Vec3f, 4> bb_v= {
 		model_bb.getMin(),
 		model_bb.getMax(),
-		util::Vec2f{ model_bb.getMin().x, model_bb.getMax().y },
-		util::Vec2f{ model_bb.getMax().x, model_bb.getMin().y }
+		util::Vec3f{	model_bb.getMin().x,
+						model_bb.getMax().y,
+						model_bb.getMin().z },
+		util::Vec3f{	model_bb.getMax().x,
+						model_bb.getMin().y,
+						model_bb.getMax().z }
 	};
-	
-	util::Vec2d rad= util::Vec2d(1.0)*sqrt(	std::max({	bb_v[0].lengthSqr(),
+
+	util::Vec3d rad= util::Vec3d(1.0)*sqrt(	std::max({	bb_v[0].lengthSqr(),
 											bb_v[1].lengthSqr(),
 											bb_v[2].lengthSqr(),
 											bb_v[3].lengthSqr()})*
 								getDef().getOffset().scale.lengthSqr()*
 								getTransform().scale.lengthSqr());
 	
-	return util::BoundingBox<util::Vec2d>(-rad, rad);
+	return util::BoundingBox<util::Vec3d>(-rad, rad);
 }
 
 uint32 ModelEntityLogic::getContentHash() const {

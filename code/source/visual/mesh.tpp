@@ -202,13 +202,13 @@ void GpuMesh<V,I>::draw() const {
 }
 
 template <typename V, typename I>
-util::BoundingBox<util::Vec2f> GpuMesh<V,I>::getBoundingBox() const {
-	return GenMeshBaseClass::getBoundingBox();
+void GpuMesh<V,I>::createVao() const {
+	createVaoImpl(hardware::GlState::Primitive::Triangle);
 }
 
 template <typename V, typename I>
-void GpuMesh<V,I>::createVao() const {
-	createVaoImpl(hardware::GlState::Primitive::Triangle);
+auto GpuMesh<V,I>::getBoundingBox() const -> BoundingBox {
+	return GenMeshBaseClass::getBoundingBox().template casted<BoundingBox>();
 }
 
 template <typename V, typename I>

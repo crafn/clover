@@ -12,39 +12,39 @@ namespace visual {
 class ModelEntityLogic : public EntityLogic {
 public:
 	using Base= EntityLogic;
-	using BBox= util::BoundingBox<util::Vec2d>;
+	using BoundingBox= util::BoundingBox<util::Vec3d>;
 
 	ModelEntityLogic(const ModelEntityDef& def);
 	ModelEntityLogic(const ModelEntityLogic&)= default;
 	ModelEntityLogic(ModelEntityLogic&&)= default;
 	virtual ~ModelEntityLogic();
-	
+
 	ModelEntityLogic& operator=(const ModelEntityLogic&)= default;
 	ModelEntityLogic& operator=(ModelEntityLogic&&)= default;
-	
+
 	const ModelEntityDef& getDef() const { return *static_cast<const ModelEntityDef*>(&EntityLogic::getDef()); }
 
 	virtual void setDrawPriority(DrawPriority p) override;
 	DrawPriority getDrawPriority() const;
-	
+
 	virtual void apply(const EntityLogic& other) override;
-	
+
 	/// @return Bounding box (not translated to position)
-	///			BBox guaranteed to be set
-	BBox getBoundingBox() const;
-	
+	///			Guaranteed to be set
+	BoundingBox getBoundingBox() const;
+
 	void setColorMul(const util::Color& c){ colorMul= c; }
 	const util::Color& getColorMul() const { return colorMul; }
-	
+
 	uint32 getContentHash() const;
-	
+
 	/// Same for entities which could belong to the same rendering batch
 	uint32 getBatchCompatibilityHash() const;
-	
+
 private:
 	bool useCustomDrawPriority;
 	visual::ModelEntityDef::DrawPriority customDrawPriority;
-	
+
 	util::Color colorMul;
 };
 

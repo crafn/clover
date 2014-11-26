@@ -327,7 +327,7 @@ void EntityMgr::RenderEntityCache::onSpatialChange(
 	if (!inWorldSpace(logic))
 		return;
 
-	ModelEntityLogic::BBox bb= logic.getBoundingBox();
+	ModelEntityLogic::BoundingBox bb= logic.getBoundingBox();
 
 	Grid::Vec prev_grid_pos= gridPos(prev_t.translation);
 	util::Vec3d cur_pos= logic.getTransform().translation;
@@ -336,8 +336,8 @@ void EntityMgr::RenderEntityCache::onSpatialChange(
 	Grid::Vec cur_grid_size= cur_grid_end - cur_grid_origin;
 
 	// Relying on the fact that position of an entity is inside its bounding box
-	ensure(	bb.getMin().componentsLessOrEqualThan(util::Vec2d(0)) &&
-			bb.getMax().componentsGreaterOrEqualThan(util::Vec2d(0)));
+	ensure(	bb.getMin().componentsLessOrEqualThan(util::Vec3d(0)) &&
+			bb.getMax().componentsGreaterOrEqualThan(util::Vec3d(0)));
 
 	const Grid::Element& prev_grid_element= spatialGrid.get(&logic, prev_grid_pos);
 
@@ -492,7 +492,7 @@ auto EntityMgr::RenderEntityCache::gridPos(util::Vec3d p) const -> Grid::Vec {
 }
 
 void EntityMgr::RenderEntityCache::addToGrid(const ModelEntityLogic& logic){
-	ModelEntityLogic::BBox bb= logic.getBoundingBox();
+	ModelEntityLogic::BoundingBox bb= logic.getBoundingBox();
 	Grid::Vec origin= gridPos(logic.getPosition() + bb.getMin().xyz());
 	Grid::Vec end= gridPos(logic.getPosition() + bb.getMax().xyz()) + Grid::Vec(1);
 	Grid::Vec size= end - origin;

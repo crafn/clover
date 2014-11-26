@@ -41,11 +41,11 @@ void Model::setMesh(const util::Str8& name){
 	mesh= &resources::gCache->getResource<visual::TriMesh>(name);
 }
 
-util::BoundingBox<util::Vec2f> Model::getBoundingBox() const {
-	if(!mesh) return util::BoundingBox<util::Vec2f>();
+util::BoundingBox<util::Vec3f> Model::getBoundingBox() const {
+	if(!mesh)
+		return util::BoundingBox<util::Vec3f>();
 	return mesh->getBoundingBox();
 }
-
 
 void Model::resourceUpdate(bool load, bool force){
 	materialChangeListener.clear();

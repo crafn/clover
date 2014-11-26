@@ -56,7 +56,7 @@ public:
 	void setMaterial(const Material& m){ material= &m; }
 	void setMaterial(const util::Str8& name);
 
-	/// @brief Sets mesh of the model. Remember to flush the mesh
+	/// Sets mesh of the model. Remember to flush the mesh
 	void setMesh(const BaseMesh& m);
 	void setMesh(const util::Str8& name);
 
@@ -65,8 +65,8 @@ public:
 
 	Material::BlendFunc getBlendFunc() const { return material ? material->getBlendFunc() : Material::defaultBlendFunc; }
 
-	/// @brief Returns bounding box of the mesh
-	util::BoundingBox<util::Vec2f> getBoundingBox() const;
+	/// Returns bounding box of the mesh
+	util::BoundingBox<util::Vec3f> getBoundingBox() const;
 
 	virtual void resourceUpdate(bool load, bool force=true) override;
 	virtual void createErrorResource() override;

@@ -330,31 +330,6 @@ void TriMesh::applyUniformUv(const util::UniformUv& uv_){
 	setDirty();
 }
 
-void TriMesh::applyUv(const TriMesh& other){
-	for (auto& v : vertices){
-		
-		// Find the triangle in which a vertex is
-		for (SizeType i= 0; i+2 < other.indices.size(); i += 3){
-			std::array<Vertex, 3> other_v= {
-				other.vertices[other.indices[i]],
-				other.vertices[other.indices[i+1]],
-				other.vertices[other.indices[i+2]]
-			};
-			
-			if (util::geom::isPointInsideTriangle(v.position, other_v[0].position, other_v[1].position, other_v[2].position)){
-				// Calculate uv
-				util::Vec3d bary= util::geom::barycentric(v.position, other_v[0].position, other_v[1].position, other_v[2].position);
-				v.uv= (other_v[0].uv*bary.x + other_v[1].uv*bary.y + other_v[2].uv*bary.z).casted<util::Vec2f>();
-				
-				break;
-			}
-		}
-		
-	}
-
-	setDirty();
-}
-
 void TriMesh::translate(util::Vec2f t){
 	for (int32 i=0; i<(int32)vertices.size(); i++){
 		vertices[i].position[0] += t.x;
@@ -454,47 +429,39 @@ void TriMesh::initAttributeCallbacks(){
 
 void TriMesh::calculateTangentTriangle(Vertex* tri[3]){
 		util::Vec2d uv[3]= { {tri[0]->uv[0], tri[0]->uv[1]}, {tri[1]->uv[0], tri[1]->uv[1]}, {tri[2]->uv[0], tri[2]->uv[1]} };
-
-		util::Vec2d tangent, bitangent;
-
 		util::Vec2d edge1= {tri[1]->position[0] - tri[0]->position[0], tri[1]->position[1] - tri[0]->position[1]};
 		util::Vec2d edge2= {tri[2]->position[0] - tri[0]->position[0], tri[2]->position[1] - tri[0]->position[1]};
+		util::Vec2d edge1uv= uv[1] - uv[0];
+		util::Vec2d edge2uv= uv[2] - uv[0];
 
-		util::Vec2d edge1uv = uv[1] - uv[0];
-		util::Vec2d edge2uv = uv[2] - uv[0];
-
-		const real32 cp = edge1uv.y * edge2uv.x - edge1uv.x * edge2uv.y;
-
+		const real32 cp= edge1uv.y * edge2uv.x - edge1uv.x * edge2uv.y;
 		if (cp != 0.0) {
-			const real32 mul = 1.0 / cp;
+			const real32 mul= 1.0/cp;
 
+			util::Vec2d tangent, bitangent;
 			tangent= (edge1 * -edge2uv.y + edge2 * edge1uv.y) * mul;
 			bitangent= (edge1 * -edge2uv.x + edge2 * edge1uv.x) * mul;
 			tangent= tangent.normalized();
 			bitangent= bitangent.normalized();
 
-
-			tri[0]->tangent[0] = tangent.x; tri[0]->tangent[1] = tangent.y;
-
-			tri[1]->tangent[0] = tangent.x; tri[1]->tangent[1] = tangent.y;
-			tri[2]->tangent[0] = tangent.x; tri[2]->tangent[1] = tangent.y;
-
+			/// @todo 3d
+			tri[0]->tangent[0]= tangent.x; tri[0]->tangent[1] = tangent.y;
+			tri[1]->tangent[0]= tangent.x; tri[1]->tangent[1] = tangent.y;
+			tri[2]->tangent[0]= tangent.x; tri[2]->tangent[1] = tangent.y;
 		}
 }
 
 util::DynArray<Vertex> TriMesh::defaultVertices(){
 	util::DynArray<Vertex> v(4);
-	v[0].position= util::Vec2f{1.0f, 1.0f};
-	v[1].position= util::Vec2f{-1.0f, 1.0f};
-	v[2].position= util::Vec2f{-1.0f, -1.0f};
-	v[3].position= util::Vec2f{1.0f, -1.0f};
-	
+	v[0].position= util::Vec3f{1.0f, 1.0f, 0.0f};
+	v[1].position= util::Vec3f{-1.0f, 1.0f, 0.0f};
+	v[2].position= util::Vec3f{-1.0f, -1.0f, 0.0f};
+	v[3].position= util::Vec3f{1.0f, -1.0f, 0.0f};
 	v[0].uv= util::Vec2f{1.0f, 1.0f};
 	v[1].uv= util::Vec2f{0.0f, 1.0f};
 	v[2].uv= util::Vec2f{0.0f, 0.0f};
 	v[3].uv= util::Vec2f{1.0f, 0.0f};
-	
-	return (v);
+	return v;	
 }
 
 auto TriMesh::defaultIndices() -> util::DynArray<IndexType> {

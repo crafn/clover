@@ -43,6 +43,8 @@ namespace visual {
 */
 class BaseMesh {
 public:
+	using BoundingBox= util::BoundingBox<util::Vec3f>;
+
 	BaseMesh(const uint32& ch): contentHash(&ch){}
 	
 	BaseMesh(const BaseMesh&)= delete;
@@ -53,7 +55,7 @@ public:
 	virtual ~BaseMesh(){}
 
 	virtual void draw() const = 0;
-	virtual util::BoundingBox<util::Vec2f> getBoundingBox() const = 0;
+	virtual BoundingBox getBoundingBox() const = 0;
 	
 	const uint32& getContentHash() const { return *contentHash; }
 	
@@ -67,10 +69,10 @@ private:
 template <typename V, typename I = IndexTypeNone>
 class GpuMesh : public BaseMesh, public util::GenericMesh<V, I> {
 public:
-
 	typedef util::GenericMesh<V, I> GenMeshBaseClass;
 	typedef VertexArrayObject<V, I> VaoType;
 	typedef I IndexType;
+	using BoundingBox= BaseMesh::BoundingBox;
 	using This= GpuMesh;
 
 	GpuMesh();
@@ -98,18 +100,17 @@ public:
 
 	/// @brief Clears only data, not VAO or submeshiness (there could be reset() for that)
 	virtual void clear();
-	
+
 	/// Uploads data to the GPU
 	virtual void flush() const;
 
 	virtual void draw() const;
 
-	virtual util::BoundingBox<util::Vec2f> getBoundingBox() const;
-	
+	virtual BoundingBox getBoundingBox() const override;
+
 	/// @todo Remove, reveals mutable state
 	const VaoType* getVao() const { return vao; }
-	
-	
+
 protected:
 	using GenMeshBaseClass::vertices;
 	using GenMeshBaseClass::indices;
@@ -191,8 +192,6 @@ public:
 	bool hasUniformUv() const { return uniformUvSet; }
 	util::UniformUv getUniformUv() const { return uv; }
 	void applyUniformUv(const util::UniformUv& uv);
-	
-	void applyUv(const TriMesh& other);
 
 	/// @todo Move to GenericMesh
 	void translate(util::Vec2f t);

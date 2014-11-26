@@ -278,7 +278,7 @@ struct ObjectNodeTraits<
 	
 	static Value deserialized(const ObjectNode& ob_node){
 		Value ret;
-		for (SizeType i= 0; i<ob_node.size(); ++i){
+		for (SizeType i= 0; i < ob_node.size(); ++i){
 			ret.insert(std::move(ob_node.get(i).getValue<T>()));
 		}
 		return ret;
@@ -291,13 +291,13 @@ struct ObjectNodeTraits<x<T,N>> { \
 	typedef x<T,N> Value; \
 	static ObjectNode serialized(const Value& value){ \
 		ObjectNode ret; \
-		for (SizeType i=0; i<N; ++i) \
+		for (SizeType i= 0; i < N; ++i) \
 			ret.append<T>(value[i]); \
 		return (ret); \
 	} \
 	static Value deserialized(const ObjectNode& node){ \
 		Value ret; \
-		for (SizeType i=0; i<N; ++i) \
+		for (SizeType i= 0; i < N && i < node.size(); ++i) \
 			ret[i]= node.get(i).getValue<T>(); \
 		return (ret); \
 	} \
@@ -313,13 +313,13 @@ struct ObjectNodeTraits<util::Color> {
 	typedef util::Color Value;
 	static ObjectNode serialized(const Value& value){
 		ObjectNode ret;
-		for (SizeType i=0; i<Value::size(); ++i)
+		for (SizeType i= 0; i < Value::size(); ++i)
 			ret.append<real32>(value[i]);
 		return ret;
 	}
 	static Value deserialized(const ObjectNode& node){
 		Value ret;
-		for (SizeType i=0; i<Value::size(); ++i)
+		for (SizeType i= 0; i < Value::size(); ++i)
 			ret[i]= node.get(i).getValue<real32>();
 		return ret;
 	}
