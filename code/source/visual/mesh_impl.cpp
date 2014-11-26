@@ -321,7 +321,7 @@ void TriMesh::addRectByCorners(const util::Vec2f& lower_left, const util::Vec2f&
 void TriMesh::applyUniformUv(const util::UniformUv& uv_){
 	uniformUvSet= true;
 	uv= uv_;
-	for (auto &m : vertices){
+	for (auto& m : vertices){
 		util::Vec2f coord= uv.getUv(util::Vec2f{m.position[0], m.position[1]});
 		m.uv[0]= coord.x;
 		m.uv[1]= coord.y;
@@ -330,29 +330,28 @@ void TriMesh::applyUniformUv(const util::UniformUv& uv_){
 	setDirty();
 }
 
-void TriMesh::translate(util::Vec2f t){
-	for (int32 i=0; i<(int32)vertices.size(); i++){
-		vertices[i].position[0] += t.x;
-		vertices[i].position[1] += t.y;
+void TriMesh::translate(util::Vec3f t){
+	using PosType= decltype(vertices[0].position);
+	for (SizeType i= 0; i < vertices.size(); ++i){
+		vertices[i].position += t.casted<PosType>();
+	}
+
+	setDirty();
+}
+
+void TriMesh::rotate(util::Quatf r){
+	using PosType= decltype(vertices[0].position);
+	for (SizeType i= 0; i < vertices.size(); ++i){
+		vertices[i].position= (vertices[i].position.xyz()*r).casted<PosType>();
 	}
 	
 	setDirty();
 }
 
-void TriMesh::rotate(real32 rot){
-	for (int32 i=0; i<(int32)vertices.size(); i++){
-		real32 help= cos(rot)*vertices[i].position[0] - sin(rot)*vertices[i].position[1];
-		vertices[i].position[1] = sin(rot)*vertices[i].position[0] + cos(rot)*vertices[i].position[1];
-		vertices[i].position[0]= help;
-	}
-	
-	setDirty();
-}
-
-void TriMesh::scale(util::Vec2f s){
-	for (int32 i=0; i<(int)vertices.size(); i++){
-		vertices[i].position[0] *= s.x;
-		vertices[i].position[1] *= s.y;
+void TriMesh::scale(util::Vec3f s){
+	using PosType= decltype(vertices[0].position);
+	for (SizeType i= 0; i < vertices.size(); i++){
+		vertices[i].position *= s.casted<PosType>();
 	}
 	
 	setDirty();

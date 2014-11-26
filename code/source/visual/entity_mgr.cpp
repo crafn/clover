@@ -633,22 +633,22 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 			ensure(i < a_batch.modelLogics.size());
 			const RenderEntity* re= cfg.logicToRenderEntity.find(a_batch.modelLogics[i])->second;
 			ensure(re);
-			
+
 			TriMesh tempmesh= *a_batch.meshes[i];
-			tempmesh.scale(re->transform.scale.casted<util::Vec2f>());
-			tempmesh.rotate(re->transform.rotation.rotationZ());
-			tempmesh.translate(re->transform.translation.casted<util::Vec2f>());
-			
+			tempmesh.scale(re->transform.scale.casted<util::Vec3f>());
+			tempmesh.rotate(re->transform.rotation.casted<util::Quatf>());
+			tempmesh.translate(re->transform.translation.casted<util::Vec3f>());
+
 			batch.mesh.add(tempmesh);
 		}
 
 		ensure(a_batch.material);
 		batch.model.setMaterial(*a_batch.material);
 		batch.model.setMesh(batch.mesh);
-		
+
 		batch.def= a_batch.modelLogics.front()->getDef(); // Copy def
 		batch.def.setModel(batch.model);
-		
+
 		batch.logic= *a_batch.modelLogics.front(); // Copy logic
 		batch.logic.setDef(batch.def);
 		batch.logic.setTransform(EntityLogic::Transform()); // Reset transform

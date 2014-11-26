@@ -38,7 +38,6 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
 		return a;
 	
 	for (SizeType i= 0; i < mesh_infos.size(); ++i){
-		
 		int32 group_size= i - group_begin_i;
 		
 		// If this mesh_infos[i] is last of a group
@@ -77,7 +76,6 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
 	}
 	
 	real64 ratio= (real64)drawable_count/mesh_infos.size();
-	
 	//print(debug::Ch::General, debug::Vb::Trivial, "Batch count: %zu", a.batches.size());
 	//print(debug::Ch::General, debug::Vb::Trivial, "Optimized drawcount ratio: %f", ratio);
 	return a;
@@ -87,7 +85,7 @@ RenderingAnalyzer::MeshInfo::MeshInfo(const visual::ModelEntityLogic& logic){
 	entityLogic= &logic;
 	contentHash= logic.getContentHash();
 	batchCompatibilityHash= logic.getBatchCompatibilityHash();
-	
+
 	// Batching normalmapped things could be done using some uv tricks
 	unbatchable=	logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_Normal) || 
 					logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_EnvShadow); 

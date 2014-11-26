@@ -194,9 +194,9 @@ public:
 	void applyUniformUv(const util::UniformUv& uv);
 
 	/// @todo Move to GenericMesh
-	void translate(util::Vec2f t);
-	void rotate(real32 rot);
-	void scale(util::Vec2f s);
+	void translate(util::Vec3f t);
+	void rotate(util::Quatf r);
+	void scale(util::Vec3f s);
 
 	void setColor(const util::Color& c, int32 index=-1);
 

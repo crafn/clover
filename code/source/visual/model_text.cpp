@@ -66,9 +66,9 @@ util::Vec2d TextModel::getTranslation(){
 }
 
 void TextModel::setAlignment(util::Vec2d relative_origo){
-	textMesh.translate(-getTranslation().casted<util::Vec2f>());
+	textMesh.translate(-getTranslation().casted<util::Vec3f>());
 	relativeOrigo= relative_origo;
-	textMesh.translate(getTranslation().casted<util::Vec2f>());
+	textMesh.translate(getTranslation().casted<util::Vec3f>());
 	textMesh.flush();
 }
 
@@ -108,7 +108,7 @@ void TextModel::setText(const util::Str8& text){
 		dimensions= util::Vec2d(0);
 
 
-	textMesh.translate(getTranslation().casted<util::Vec2f>());
+	textMesh.translate(getTranslation().casted<util::Vec3f>());
 	textMesh.flush();
 }
 

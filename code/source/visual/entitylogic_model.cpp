@@ -94,7 +94,6 @@ uint32 ModelEntityLogic::getBatchCompatibilityHash() const {
 					customDrawPriority,
 					useCustomDrawPriority,
 					colorMul,
-					getTransform().translation.z - getDef().getOffset().translation.z,
 					static_cast<int32>(getLayer())
 				)
 			);
