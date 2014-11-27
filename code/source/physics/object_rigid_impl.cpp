@@ -664,7 +664,9 @@ void RigidObject::preStepUpdate(){
 }
 
 void RigidObject::postStepUpdate(){	
-	removeFromGrid();
+	bool was_awake= isAwake();
+	if (was_awake)
+		removeFromGrid();
 
 	if (!isProxy())
 		updateCachedValues(getB2CachedValues());
@@ -676,7 +678,8 @@ void RigidObject::postStepUpdate(){
 		}
 	}
 
-	addToGrid();
+	if (was_awake)
+		addToGrid();
 }
 
 void RigidObject::preStepUpdateForAll(){
