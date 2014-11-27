@@ -5,6 +5,7 @@
 #include "resources/resource.hpp"
 #include "util/coord.hpp"
 #include "util/math.hpp"
+#include "util/pooled_crtp.hpp"
 #include "visual/material.hpp"
 #include "visual/model.hpp"
 #include "visual/entity_def.hpp"
@@ -55,7 +56,8 @@ class TextModel;
 
 /// @class ModelEntity Model instance
 /// @todo Move stuff to Material
-class ModelEntityDef : public EntityDef {
+class ModelEntityDef	: public EntityDef
+						, public util::PooledCrtp<ModelEntityDef> {
 public:
 	DECLARE_RESOURCE(ModelEntityDef)
 	

@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "util/class_preproc.hpp"
+#include "util/mem_chunk.hpp"
 
 namespace clover {
 namespace visual {
@@ -32,6 +33,9 @@ private:
 	EntityMgr* entityMgr;
 	CameraMgr* cameraMgr;
 	ParticleMgr* particleMgr;
+
+	util::MemChunk modelDefMem;
+	util::MemChunk modelLogicMem;
 };
 
 extern VisualMgr* gVisualMgr;

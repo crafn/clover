@@ -3,6 +3,7 @@
 
 #include "../nodeinstance.hpp"
 #include "build.hpp"
+#include "util/dynamic.hpp"
 #include "visual/entity.hpp"
 #include "visual/entity_def_model.hpp"
 
@@ -26,8 +27,9 @@ private:
 	InputSlot<SignalType::ArmaturePose>* poseInput;
 	InputSlot<SignalType::Vec4>* colorMulInput;
 	InputSlot<SignalType::EventArray>* eventsInput;
-	
-	visual::Entity entity;
+
+	/// @note util::Dynamic allows pooling
+	util::Dynamic<visual::Entity> entity;
 	float highlightLerp= 0.0f;
 };
 

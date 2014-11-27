@@ -123,7 +123,7 @@ private:
 		Grid spatialGrid;
 		SizeType modelEntityCount= 0;
 	};
-	
+
 	struct ReSortByDepth {
 		bool operator()(const RenderEntity& a, const RenderEntity& b);
 	};
@@ -138,26 +138,21 @@ private:
 	static RenderEntity minimalRenderEntity(const ModelEntityLogic& logic);
 
 	util::DynArray<LightEntityLogic*> lights;
-
 	GenericST		genericST;
 	ShadowCasterST	shadowCasterST;
 	ShadowMapST		shadowMapST;
 	ParticleST		particleST;
 	FluidST			fluidST;
-
 	util::Color envLight;
 	util::Vec2f envLightDir;
 	
 	RenderingAnalyzer analyzer;
-	
 	/// <Batch contentHash, batch>
 	util::Map<uint32, RenderBatch> batchMap;
 	/// <Entity contentHash, batch*>
 	util::Map<uint32, RenderBatch*> entityToBatch;
-	
 	RenderEntityCache reCache;
 };
-
 } // visual
 } // clover
 

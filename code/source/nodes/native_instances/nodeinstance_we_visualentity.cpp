@@ -17,33 +17,33 @@ void WeVisualEntityNodeInstance::create(){
 	eventsInput= addInputSlot<SignalType::EventArray>("events");
 	
 	activeInput->setOnReceiveCallback([&] (){
-		entity.setActive(activeInput->get());
+		entity->setActive(activeInput->get());
 	});
 	
 	// Always receive signal before first update
 	entityInput->setValueReceived();
 	entityInput->setOnReceiveCallback([&] (){
-		entity.changeDef(entityInput->get());
+		entity->changeDef(entityInput->get());
 	});
 	
 	transformInput->setOnReceiveCallback([&] (){
-		entity.setTransform(transformInput->get());
+		entity->setTransform(transformInput->get());
 	});
 	
 	colorMulInput->setOnReceiveCallback([&] (){
-		if (	entity.getDef() && entity.getLogic() &&
-				entity.getDef()->getType() == visual::EntityDef::Type::Model){
+		if (	entity->getDef() && entity->getLogic() &&
+				entity->getDef()->getType() == visual::EntityDef::Type::Model){
 			
 			util::Vec4f c= colorMulInput->get().casted<util::Vec4f>();
 			
-			static_cast<visual::ModelEntityLogic*>(entity.getLogic())
+			static_cast<visual::ModelEntityLogic*>(entity->getLogic())
 				->setColorMul(util::Color{c.x, c.y, c.z, c.w});
 		}
 	});
 	
 	poseInput->setOnReceiveCallback([&] (){
-		const visual::EntityDef* def= entity.getDef();
-		visual::EntityLogic* logic= entity.getLogic();
+		const visual::EntityDef* def= entity->getDef();
+		visual::EntityLogic* logic= entity->getLogic();
 		
 		if (def && logic && def->getType() == visual::EntityDef::Type::Compound){
 			auto compound_logic= static_cast<visual::CompoundEntityLogic*>(logic);

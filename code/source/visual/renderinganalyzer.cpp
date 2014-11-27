@@ -1,6 +1,7 @@
-#include "renderinganalyzer.hpp"
 #include "entitylogic_model.hpp"
 #include "global/cfg_mgr.hpp"
+#include "renderinganalyzer.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace visual {
@@ -12,6 +13,7 @@ void RenderingAnalyzer::onFrameStart(/*util::Vec2d worldview_center, util::Vec2d
 }
 
 void RenderingAnalyzer::onDraw(const ModelEntityLogic& logic){
+	PROFILE();
 	// Only trimesh entities should be added (discard particles)
 	if (logic.getDef().getShadingType() != visual::ModelEntityDef::Shading_Generic ||
 		logic.getDef().getModel() == nullptr ||
@@ -24,6 +26,7 @@ void RenderingAnalyzer::onDraw(const ModelEntityLogic& logic){
 }
 
 RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
+	PROFILE();
 	Analysis a;
 	
 	// Batch analysis

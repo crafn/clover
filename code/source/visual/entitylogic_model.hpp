@@ -4,12 +4,14 @@
 #include "build.hpp"
 #include "entitylogic.hpp"
 #include "entity_def_model.hpp"
+#include "util/pooled_crtp.hpp"
 
 namespace clover {
 namespace visual {
 
 /// Renderable instance of a model
-class ModelEntityLogic : public EntityLogic {
+class ModelEntityLogic	: public EntityLogic
+						, public util::PooledCrtp<ModelEntityLogic> {
 public:
 	using Base= EntityLogic;
 	using BoundingBox= util::BoundingBox<util::Vec3d>;

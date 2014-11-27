@@ -42,7 +42,7 @@ public:
 	DEFAULT_MOVE(Dynamic);
 
 	const T& get() const { return *value; }
-	T& get(){ return *value; }
+	T& get() { return *value; }
 
 	/// Pointer semantics (without the ability of being nullptr)
 	const T* operator->() const { return value.get(); }
@@ -50,6 +50,9 @@ public:
 
 	const T& operator*() const { return get(); }
 	T& operator*(){ return get(); }
+
+	operator const T& () const { return get(); }
+	operator T& () { return get(); }
 
 private:
 	UniquePtr<T> value;

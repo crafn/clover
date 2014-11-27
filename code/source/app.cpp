@@ -68,21 +68,16 @@ App::App(const util::Str8& executablePath){
 	util::gRealClock= new util::Clock();
 	util::gGameClock= new util::Clock();
 
-	resources::gCache= new resources::Cache();
-	resources::gCache->preLoad();
+	new resources::Cache();
 	resources::gCache->update();
-
 
 	new audio::AudioMgr();
 	new visual::VisualMgr();
 	debug::gDebugDraw= new debug::DebugDraw();
-	
 	physics::gPhysMgr= new physics::PhysMgr();
-
 	gui::gGuiMgr= new gui::GuiMgr();
 	ui::game::gBaseUi= new ui::game::BaseUi();
-
-	game::gBaseGameLogic= new game::BaseGameLogic();
+	game::gBaseGameLogic= new game::BaseGameLogic();	
 
 	global::gCfgMgr->registerVarsToScript();
 }
@@ -93,9 +88,9 @@ App::~App(){
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
 	delete physics::gPhysMgr; physics::gPhysMgr= nullptr;
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
+	delete resources::gCache; resources::gCache= nullptr;
 	delete visual::gVisualMgr;
 	delete audio::gAudioMgr;
-	delete resources::gCache; resources::gCache= nullptr;
 	delete util::gGameClock; util::gGameClock= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;

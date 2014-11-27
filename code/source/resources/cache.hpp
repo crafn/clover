@@ -42,9 +42,6 @@ public:
 	Cache& operator=(const Cache&)= delete;
 	Cache& operator=(Cache&&)= delete;
 
-	/// Parses resources and loads essential stuff
-	void preLoad();
-
 	/// Call once per frame
 	void update();
 
@@ -96,17 +93,24 @@ public:
 		return sub_cache;
 	}
 
+	/// Create all resources of type `T` defined in resource files
+	template <typename T>
+	void preLoad();
+
 private:
 	template <typename T>
 	void createSubCache();
+	void parseResourceFile(
+			const ResourceFilePath& path,
+			const util::Str8& only_this= "");
+	void processResData(
+			util::ObjectNode& root,
+			const ResourceFilePath& path_to_resource_file,
+			const util::Str8& only_this= "");
 
 	util::HashMap<util::Str8, std::unique_ptr<BaseSubCache>> subCaches;
-
 	util::DynArray<ResourceFilePath> resourceFilePaths;
 	util::LinkedList<std::shared_ptr<util::FileWatcher>> resourceFileWatchers;
-	void parseResourceFile(const ResourceFilePath& path);
-
-	void processJson(util::ObjectNode& root, const ResourceFilePath& path_to_resource_file);
 
 	// Resource root
 	util::Str8 resourcePath;

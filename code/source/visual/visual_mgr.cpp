@@ -2,19 +2,52 @@
 #include "camera_mgr.hpp"
 #include "debug/debugdraw.hpp"
 #include "entity_mgr.hpp"
+#include "global/cfg_mgr.hpp"
 #include "hardware/device.hpp"
 #include "particle_mgr.hpp"
+#include "resources/cache.hpp"
 #include "shader_mgr.hpp"
 #include "util/profiling.hpp"
+
+// Resources
+#include "shadertemplate.hpp"
+#include "texture.hpp"
+#include "material.hpp"
+#include "mesh.hpp"
+#include "model.hpp"
+#include "entity_def.hpp"
+#include "entity_def_model.hpp"
+#include "entity_def_light.hpp"
+#include "entity_def_compound.hpp"
 
 namespace clover {
 namespace visual {
 
 VisualMgr* gVisualMgr= nullptr;
 
-VisualMgr::VisualMgr(){
+VisualMgr::VisualMgr()
+	: modelDefMem(sizeof(ModelEntityDef)*
+			global::gCfgMgr->get<SizeType>(
+				"visual::maxModelDefCount"))
+	, modelLogicMem(sizeof(ModelEntityLogic)*
+			global::gCfgMgr->get<SizeType>(
+				"visual::maxModelEntityCount"))
+{
 	if (!gVisualMgr)
 		gVisualMgr= this;
+
+	ModelEntityDef::setPoolMem(&modelDefMem);
+	ModelEntityLogic::setPoolMem(&modelLogicMem);
+
+	resources::gCache->preLoad<ShaderTemplate>();
+	resources::gCache->preLoad<Texture>();
+	resources::gCache->preLoad<Material>();
+	resources::gCache->preLoad<TriMesh>();
+	resources::gCache->preLoad<Model>();
+	resources::gCache->preLoad<EntityDef>();
+	resources::gCache->preLoad<ModelEntityDef>();
+	resources::gCache->preLoad<LightEntityDef>();
+	resources::gCache->preLoad<CompoundEntityDef>();
 
 	shaderMgr= new ShaderMgr;
 	entityMgr= new EntityMgr(*shaderMgr);

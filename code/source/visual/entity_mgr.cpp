@@ -43,17 +43,17 @@ EntityMgr::EntityMgr(ShaderMgr& shader_mgr)
 }
 
 EntityMgr::~EntityMgr(){
+	ModelEntityLogic::setPoolMem(nullptr);
+	ModelEntityDef::setPoolMem(nullptr);
 }
 
 void EntityMgr::draw(){
 	RenderFrameConfig cfg;
 	{ PROFILE();
-
 		cfg= createSimpleRenderFrameConfig();
-
 		// Analyze frame before rendering
 		analyzer.onFrameStart();
-		for (uint32 i=0; i<cfg.entities.size(); i++){
+		for (uint32 i= 0; i < cfg.entities.size(); i++){
 			ensure(cfg.entities[i].logic);
 			analyzer.onDraw(*cfg.entities[i].logic);
 		}
@@ -630,6 +630,7 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 		batch.lastEntityLogic= a_batch.modelLogics.back();
 
 		for (SizeType i= 0; i < a_batch.meshes.size(); ++i) {
+			PROFILE();
 			ensure(i < a_batch.modelLogics.size());
 			const RenderEntity* re= cfg.logicToRenderEntity.find(a_batch.modelLogics[i])->second;
 			ensure(re);

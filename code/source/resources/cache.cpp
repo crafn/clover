@@ -3,11 +3,6 @@
 #include "hardware/device.hpp"
 #include "visual/font_mgr.hpp"
 #include "global/file.hpp"
-// For shaders
-#include "visual/particletype.hpp"
-#include "visual/shader.hpp"
-#include "physics/fluidparticle.hpp"
-
 #define RESOURCE_HEADERS
 #include "resourcetypes.def"
 #undef RESOURCE_HEADERS
@@ -16,11 +11,9 @@
 #include <fstream>
 #include <json/json.h>
 #include <json/writer.h>
-
 #if OS == OS_WINDOWS
 #include <io.h>
-#endif
-
+#endif // OS == OS_WINDOWS
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -29,49 +22,36 @@ namespace fs = boost::filesystem;
 namespace clover {
 namespace resources {
 
-Cache* gCache;
+Cache* gCache= nullptr;
 
 Cache::Cache()
-	: resourcePath(DEFAULT_RES_PATH){
+	: resourcePath(DEFAULT_RES_PATH)
+{
 	PROFILE_("resources");
+	if (!gCache)
+		gCache= this;
 
-	/// @todo Encapsulate
+	/// @todo Use config
 	bool exists= false;
-
 	if ( access( DEFAULT_RES_PATH2, 0 ) == 0 ){
 		struct stat status;
 		stat( DEFAULT_RES_PATH2, &status );
 
 		/// @todo Fix directory checking, didn't work on windows
 		exists= true;
-
 	}
 	if (exists) resourcePath= DEFAULT_RES_PATH2;
 
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Resource path: %s", resourcePath.cStr());
 
-}
-
-Cache::~Cache(){
-	print(debug::Ch::Resources, debug::Vb::Trivial, "Freeing resources");
-
-	delete visual::gFontMgr;
-	visual::gFontMgr=0;
-}
-
-void Cache::preLoad(){
-	PROFILE_("resources");
-
-#define RESOURCE(type_name) createSubCache<type_name>();
+#define RESOURCE(type_name, auto_preload) \
+	createSubCache<type_name>();
 #include "resourcetypes.def"
 #undef RESOURCE
 
-
 	// Search all directories for .res files
-
 	try {
 		for (fs::recursive_directory_iterator end, dir(resourcePath.cStr()); dir != end; ++dir){
-
 
 			util::Str8 path= dir->path().parent_path().string();
 			if (path.length() <= resourcePath.length()){
@@ -85,12 +65,10 @@ void Cache::preLoad(){
 			util::Str8 ext= dir->path().filename().extension().string();
 
 			//print(debug::Ch::Resources, debug::Vb::Trivial, "File found: %s, %s, extension: %s", path.cStr(), filename.cStr(), ext.cStr());
-
 			if (ext == ".res"){
-					
 				// New resource file
 				resourceFilePaths.pushBack(ResourceFilePath(path, filename));
-				
+
 				// Watch the file
 				resourceFileWatchers.pushBack(std::shared_ptr<util::FileWatcher>(new util::FileWatcher));
 				ResourceFilePath p= resourceFilePaths.back();
@@ -99,9 +77,6 @@ void Cache::preLoad(){
 				});
 				resourceFileWatchers.back()->setPath(resourceFilePaths.back().whole());
 				resourceFileWatchers.back()->startWatching();
-				
-				
-				parseResourceFile(resourceFilePaths.back());
 			}
 		}
 	}
@@ -109,30 +84,44 @@ void Cache::preLoad(){
 		print(debug::Ch::Resources, debug::Vb::Critical, "Filesystem error: %s", e.what());
 	}
 
-	#define RESOURCE(T) subCaches[ResourceTraits<T>::typeName()]->preLoad();
-	#include "resourcetypes.def"
-	#undef RSOURCE
+#define RESOURCE(type_name, auto_preload) \
+	if (auto_preload) preLoad<type_name>();
+#include "resourcetypes.def"
+#undef RESOURCE
 
 	visual::gFontMgr= new visual::FontMgr();
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Loading fonts");
 	loadFonts();
+
 }
 
+Cache::~Cache()
+{
+	print(debug::Ch::Resources, debug::Vb::Trivial, "Freeing resources");
 
-void Cache::update(){
+	delete visual::gFontMgr;
+	visual::gFontMgr= nullptr;
+
+	if (gCache == this)
+		gCache= nullptr;
+}
+
+void Cache::update()
+{
 	PROFILE_("resources");
 	for (auto& m : subCaches){
 		m.second->update();
 	}
 }
 
-const Resource& Cache::getResource(const ResourceId& res_id){
+const Resource& Cache::getResource(const ResourceId& res_id)
+{
 	ensure(subCaches.find(res_id.getTypeName()) != subCaches.end());
-	
 	return subCaches[res_id.getTypeName()]->getResource(res_id.getIdentifier());
 }
 
-void Cache::writeAllResources(){
+void Cache::writeAllResources()
+{
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Stopping resource FileWatchers");
 	for (auto& m : resourceFileWatchers)
 		m->stopWatching();
@@ -169,11 +158,10 @@ void Cache::writeAllResources(){
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Resource FileWatchers restored");
 }
 
-void Cache::loadFonts(){
+void Cache::loadFonts()
+{
 	util::Str8 fontconf= global::File::readText("fonts.json");
-
 	util::ObjectNode root;
-	
 	try {
 		root.parseText(fontconf);
 	}
@@ -192,7 +180,8 @@ void Cache::loadFonts(){
 	}
 }
 
-const util::DynArray<Resource*>& Cache::getResources() const {
+const util::DynArray<Resource*>& Cache::getResources() const
+{
 	static util::DynArray<Resource*> all_resources;
 	all_resources.clear();
 
@@ -207,7 +196,8 @@ const util::DynArray<Resource*>& Cache::getResources() const {
 	return all_resources;
 }
 
-void Cache::parseResource(const SerializedResource& serialized){
+void Cache::parseResource(const SerializedResource& serialized)
+{
 	for (auto& m : subCaches){
 		auto& sub_cache= m.second;
 		if (serialized.getTypeName() == sub_cache->getResourceTypeName()){
@@ -218,46 +208,70 @@ void Cache::parseResource(const SerializedResource& serialized){
 	throw ResourceException("Invalid resource type name: %s", serialized.getTypeName().cStr());
 }
 
-visual::Font& Cache::getFont(const util::Str8& s){
+visual::Font& Cache::getFont(const util::Str8& s)
+{ return visual::gFontMgr->getFont(s); }
 
-	return visual::gFontMgr->getFont(s);
+template <typename T>
+void Cache::preLoad()
+{
+	for (auto&& path : resourceFilePaths) {
+		parseResourceFile(path, ResourceTraits<T>::typeName());
+	}
+	getSubCache<T>().preLoad();
 }
 
 template <typename T>
-void Cache::createSubCache(){
+void Cache::createSubCache()
+{
 	util::Str8 section= ResourceTraits<T>::typeName();
 	BaseSubCache* cache= new typename ResourceTraits<T>::SubCacheType();
 	subCaches[section]= std::move(std::unique_ptr<BaseSubCache>(cache));
 }
 
-void Cache::parseResourceFile(const ResourceFilePath& path){
+/// @todo Add every function template
+#define RESOURCE(type_name, auto_preload) \
+template void Cache::preLoad<type_name>(); \
+template void Cache::createSubCache<type_name>();
+#include "resourcetypes.def"
+#undef RESOURCE
+
+void Cache::parseResourceFile(
+		const ResourceFilePath& path,
+		const util::Str8& only_this)
+{
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Parsing resource file: %s", path.fromRoot().cStr());
-	
+
 	try {
-	
 		util::ObjectNode root;
 		root.parseText(global::File::readText(path.fromRoot()));
-
-		processJson(root, path);
-
+		processResData(root, path, only_this);
 	}
 	catch(const ResourceException& e){
-		print(debug::Ch::Resources, debug::Vb::Critical, "Cache::parseResourceFile(..): Error during resource parsing %s: %s",
-			path.fromRoot().cStr(), e.what());
+		print(debug::Ch::Resources, debug::Vb::Critical,
+				"Cache::parseResourceFile(..): Error during resource parsing %s: %s",
+				path.fromRoot().cStr(), e.what());
 	}
 	catch(const global::File::Error& e){
-		print(debug::Ch::Resources, debug::Vb::Critical, "Cache::parseResourceFile(..): Error reading file %s: %s",
-			path.fromRoot().cStr(), e.what());
+		print(debug::Ch::Resources, debug::Vb::Critical,
+				"Cache::parseResourceFile(..): Error reading file %s: %s",
+				path.fromRoot().cStr(), e.what());
 	}
 }
 
-void Cache::processJson(util::ObjectNode& root, const ResourceFilePath& path_to_resource_file){
+void Cache::processResData(
+		util::ObjectNode& root,
+		const ResourceFilePath& path_to_resource_file,
+		const util::Str8& only_this)
+{
 	if (!root.isObject())
 		throw ResourceException("Json root is not an object");
 
 	util::ObjectNode::MemberNames section_names=  root.getMemberNames();
 
-	for (uint32 i=0; i<section_names.size(); ++i){
+	for (uint32 i= 0; i < section_names.size(); ++i){
+		if (!only_this.empty() && section_names[i] != only_this)
+			continue;
+
 		util::ObjectNode res_section= root.get(section_names[i]);
 
 		if (!res_section.isArray())
