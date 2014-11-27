@@ -26,16 +26,23 @@ namespace visual {
 VisualMgr* gVisualMgr= nullptr;
 
 VisualMgr::VisualMgr()
-	: modelDefMem(sizeof(ModelEntityDef)*
+	: modelMem(sizeof(Model)*
 			global::gCfgMgr->get<SizeType>(
-				"visual::maxModelDefCount"))
+				"visual::maxModelCount"),
+			"visual::modelMem")
+	, modelDefMem(sizeof(ModelEntityDef)*
+			global::gCfgMgr->get<SizeType>(
+				"visual::maxModelDefCount"),
+			"visual::modelDefMem")
 	, modelLogicMem(sizeof(ModelEntityLogic)*
 			global::gCfgMgr->get<SizeType>(
-				"visual::maxModelEntityCount"))
+				"visual::maxModelEntityCount"),
+			"visual::modelEntityMem")
 {
 	if (!gVisualMgr)
 		gVisualMgr= this;
 
+	Model::setPoolMem(&modelMem);
 	ModelEntityDef::setPoolMem(&modelDefMem);
 	ModelEntityLogic::setPoolMem(&modelLogicMem);
 
@@ -63,6 +70,10 @@ VisualMgr::~VisualMgr(){
 
 	if (gVisualMgr == this)
 		gVisualMgr= nullptr;
+
+	ModelEntityLogic::setPoolMem(nullptr);
+	ModelEntityDef::setPoolMem(nullptr);
+	Model::setPoolMem(nullptr);
 }
 
 void VisualMgr::renderFrame(){

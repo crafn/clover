@@ -19,8 +19,8 @@ void* LinearMemPool::allocate(SizeType size, SizeType alignment){
 
 	if (head + adjusted_size > memory().end()){
 		print(debug::Ch::General, debug::Vb::Critical,
-				"util::LinearMemPool out of memory (%i)",
-				(int32)memory().size());
+				"util::LinearMemPool out of memory (%i): %s",
+				(int32)memory().size(), memory().getTag());
 		throw std::bad_alloc{};
 	}
 

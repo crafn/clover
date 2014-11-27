@@ -105,7 +105,9 @@ bool ModelEntityDef::isFilled() const {
 }
 
 void ModelEntityDef::draw() const {
+	PROFILE();
 	if (model && model->getMesh()){
+		PROFILE();
 		model->getMesh()->draw();
 	}
 }

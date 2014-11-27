@@ -6,6 +6,7 @@
 #include "resources/resource.hpp"
 #include "util/cb_listener.hpp"
 #include "util/boundingbox.hpp"
+#include "util/pooled_crtp.hpp"
 #include "util/string.hpp"
 
 namespace clover {
@@ -18,7 +19,6 @@ namespace resources {
 
 template <>
 struct ResourceTraits<visual::Model> {
-	
 	DECLARE_RESOURCE_TRAITS(visual::Model, String)
 	
 	RESOURCE_ATTRIBUTE_DEFS(AttributeDef::String("name"),
@@ -41,7 +41,8 @@ class BaseMesh;
 class Material;
 
 /// Drawable model. Contains material and mesh
-class Model : public resources::Resource {
+class Model :	public resources::Resource
+			,	public util::PooledCrtp<Model> {
 public:
 	DECLARE_RESOURCE(Model)
 	

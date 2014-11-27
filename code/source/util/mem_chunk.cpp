@@ -4,25 +4,28 @@
 namespace clover {
 namespace util {
 
-MemChunk::MemChunk(SizeType size)
+MemChunk::MemChunk(SizeType size, const char* tag)
 		: memory(new uint8[size])
 		, sizeBytes(size)
-		, acquired(false){
-}
+		, acquired(false)
+		, tag(tag)
+{ }
 
-MemChunk::~MemChunk(){
+MemChunk::~MemChunk()
+{
 	ensure(!acquired);
-
 	delete [] memory.get();
 }
 
-void MemChunk::acquire(){
+void MemChunk::acquire()
+{
 	ensure(!acquired);
 	ensure(memory);
 	acquired= true;
 }
 
-void MemChunk::release(){
+void MemChunk::release()
+{
 	ensure(acquired);
 	acquired= false;
 }

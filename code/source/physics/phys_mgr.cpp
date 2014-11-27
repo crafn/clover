@@ -43,7 +43,8 @@ PhysMgr::PhysMgr()
 		: rigidObjectPoolMem(
 				sizeof(RigidObject)*
 				global::gCfgMgr->get<SizeType>(
-					"physics::maxRigidObjectCount"))
+					"physics::maxRigidObjectCount"),
+				"rigidObjectMem")
 		, accumWorldTime(0.0)
 		, accumFluidTime(0.0)
 		, fluidSteps(0)

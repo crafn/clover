@@ -34,6 +34,7 @@ private:
 	CameraMgr* cameraMgr;
 	ParticleMgr* particleMgr;
 
+	util::MemChunk modelMem;
 	util::MemChunk modelDefMem;
 	util::MemChunk modelLogicMem;
 };

@@ -13,16 +13,20 @@ void RenderingAnalyzer::onFrameStart(/*util::Vec2d worldview_center, util::Vec2d
 }
 
 void RenderingAnalyzer::onDraw(const ModelEntityLogic& logic){
-	PROFILE();
 	// Only trimesh entities should be added (discard particles)
-	if (logic.getDef().getShadingType() != visual::ModelEntityDef::Shading_Generic ||
-		logic.getDef().getModel() == nullptr ||
-		logic.getDef().getModel()->getMesh() == nullptr ||
-		logic.getDef().getModel()->getMaterial() == nullptr ||
-		logic.getCoordinateSpace() != util::Coord::World) // Only world entities supported
-		return;
-	
-	frameInfo.meshInfos.emplaceBack(logic);
+	{ PROFILE();
+		auto& def= logic.getDef();
+		if (def.getShadingType() != visual::ModelEntityDef::Shading_Generic ||
+			def.getModel() == nullptr ||
+			def.getModel()->getMesh() == nullptr ||
+			def.getModel()->getMaterial() == nullptr ||
+			logic.getCoordinateSpace() != util::Coord::World) // Only world entities supported
+			return;
+	}
+
+	{ PROFILE();
+		frameInfo.meshInfos.emplaceBack(logic);
+	}
 }
 
 RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
@@ -85,7 +89,9 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
 }
 
 RenderingAnalyzer::MeshInfo::MeshInfo(const visual::ModelEntityLogic& logic){
+	PROFILE();
 	entityLogic= &logic;
+
 	contentHash= logic.getContentHash();
 	batchCompatibilityHash= logic.getBatchCompatibilityHash();
 

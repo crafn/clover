@@ -32,7 +32,7 @@ public:
 	/// Draws a frame with current camera
 	void draw();
 
-	int32 getModelEntityCount();
+	SizeType getModelEntityCount();
 
 	void setEnvLight(util::Color f, util::Vec2f dir);
 	void onEvent(global::Event& e);

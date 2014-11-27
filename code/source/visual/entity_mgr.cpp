@@ -43,8 +43,6 @@ EntityMgr::EntityMgr(ShaderMgr& shader_mgr)
 }
 
 EntityMgr::~EntityMgr(){
-	ModelEntityLogic::setPoolMem(nullptr);
-	ModelEntityDef::setPoolMem(nullptr);
 }
 
 void EntityMgr::draw(){
@@ -96,12 +94,12 @@ void EntityMgr::draw(){
 
 			if (re.getShadingType() == visual::ModelEntityDef::Shading_Generic){
 				PROFILE();
-				set_lights(re);
-				genericST.setEnvLight(env_light, env_light_dir);
-				genericST.setEntity(re, logic);
-				genericST.setTransform(cfg.entities[i].transform);
-				genericST.use();
-				re.draw();
+				{ PROFILE(); set_lights(re); }
+				{ PROFILE(); genericST.setEnvLight(env_light, env_light_dir); }
+				{ PROFILE(); genericST.setEntity(re, logic); }
+				{ PROFILE(); genericST.setTransform(cfg.entities[i].transform); }
+				{ PROFILE(); genericST.use(); }
+				{ PROFILE(); re.draw(); }
 			}
 			else if (re.getShadingType() == visual::ModelEntityDef::Shading_Particle){
 				PROFILE();
@@ -120,7 +118,7 @@ void EntityMgr::draw(){
 	}
 }
 
-int32 EntityMgr::getModelEntityCount(){
+SizeType EntityMgr::getModelEntityCount(){
 	return reCache.getModelEntityCount();
 }
 
@@ -318,6 +316,8 @@ void EntityMgr::RenderEntityCache::remove(const ModelEntityLogic& logic){
 	else
 		viewSpace.remove(&logic);
 
+	/// @todo Fix modelEntityCount
+	//ensure(modelEntityCount > 0);
 	--modelEntityCount;
 }
 
@@ -611,17 +611,19 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 	SizeType preserved_count= 0;
 	
 	for (const auto& a_batch : a.batches) {
-		// Check if batch was same in the previous frame
-		auto preserved_batch_it= batchMap.find(a_batch.contentHash);
-		if (preserved_batch_it != batchMap.end()) {
-			preservedBatches.insert(a_batch.contentHash);
-			
-			for (const auto& logic : a_batch.modelLogics) {
-				entityToBatch[logic->getContentHash()]= &preserved_batch_it->second;
-			}
+		{ PROFILE();
+			// Check if batch was same in the previous frame
+			auto preserved_batch_it= batchMap.find(a_batch.contentHash);
+			if (preserved_batch_it != batchMap.end()) {
+				preservedBatches.insert(a_batch.contentHash);
+				
+				for (const auto& logic : a_batch.modelLogics) {
+					entityToBatch[logic->getContentHash()]= &preserved_batch_it->second;
+				}
 
-			++preserved_count;
-			continue;
+				++preserved_count;
+				continue;
+			}
 		}
 
 		// Create RenderBatch
@@ -651,44 +653,53 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 			batch.mesh.add(tempmesh);
 		}
 
-		ensure(a_batch.material);
-		batch.model.setMaterial(*a_batch.material);
-		batch.model.setMesh(batch.mesh);
+		{ PROFILE();
+			batch.mesh.flush();
 
-		batch.def= a_batch.modelLogics.front()->getDef(); // Copy def
-		batch.def.setColorMul(util::Color{}); // Mesh is colored
-		batch.def.setModel(batch.model);
+			ensure(a_batch.material);
+			batch.model.setMaterial(*a_batch.material);
+			batch.model.setMesh(batch.mesh);
 
-		batch.logic= *a_batch.modelLogics.front(); // Copy logic
-		batch.logic.setColorMul(util::Color{}); // Mesh is colored
-		batch.logic.setDef(batch.def);
-		batch.logic.setTransform(EntityLogic::Transform()); // Reset transform
-	
-		if (preservedBatches.find(a_batch.contentHash) != preservedBatches.end())
-			print(debug::Ch::Visual, debug::Vb::Moderate, "Batch hash collision: %u", a_batch.contentHash);
+			batch.def= a_batch.modelLogics.front()->getDef(); // Copy def
+			batch.def.setColorMul(util::Color{}); // Mesh is colored
+			batch.def.setModel(batch.model);
 
-		// Add renderbatch to structures
-
-		preservedBatches.insert(a_batch.contentHash);
+			batch.logic= *a_batch.modelLogics.front(); // Copy logic
+			batch.logic.setColorMul(util::Color{}); // Mesh is colored
+			batch.logic.setDef(batch.def);
+			batch.logic.setTransform(EntityLogic::Transform()); // Reset transform
 		
-		auto it= batchMap.insert(std::pair<uint32, RenderBatch>(a_batch.contentHash, std::move(batch))).first;
-		RenderBatch* batch_ptr= &it->second;
-		
-		for (const auto& logic : a_batch.modelLogics){
-			entityToBatch[logic->getContentHash()]= batch_ptr;
+			if (preservedBatches.find(a_batch.contentHash) != preservedBatches.end())
+				print(debug::Ch::Visual, debug::Vb::Moderate, "Batch hash collision: %u", a_batch.contentHash);
+		}
+
+		{ PROFILE();
+			// Add renderbatch to structures
+			preservedBatches.insert(a_batch.contentHash);
+
+			auto it= batchMap.insert(std::pair<uint32, RenderBatch>(
+						a_batch.contentHash,
+						std::move(batch))).first;
+			RenderBatch* batch_ptr= &it->second;
+
+			for (const auto& logic : a_batch.modelLogics){
+				entityToBatch[logic->getContentHash()]= batch_ptr;
+			}
 		}
 	}
 	
 	//print(debug::Ch::Visual, debug::Vb::Trivial, "Preserved batch count: %zu", preserved_count);
 	//print(debug::Ch::Visual, debug::Vb::Trivial, "New batch count: %zu", batchMap.size() - preserved_count);
 	
-	// Delete batches that weren't preserved
-	for (auto it= batchMap.begin(); it != batchMap.end();){
-		if (!preservedBatches.count(it->first)){
-			it= batchMap.erase(it);
-		}
-		else {
-			++it;
+	{ PROFILE();
+		// Delete batches that weren't preserved
+		for (auto it= batchMap.begin(); it != batchMap.end();){
+			if (!preservedBatches.count(it->first)){
+				it= batchMap.erase(it);
+			}
+			else {
+				++it;
+			}
 		}
 	}
 }

@@ -1,16 +1,19 @@
 #include "hash.hpp"
+#include "profiling.hpp"
 
 namespace clover {
 namespace util {
 
 uint32 byteHash32(const uint8* buf, SizeType size){
 	// Modified FNV-1a
-	// Rotation seems to prevent some collisions with arrays in which
-	// single bits are swapped between array elements
 	uint32 hash= 2166136261;
 	for (SizeType i= 0; i < size; ++i){
 		hash= ( (hash ^ hash32(buf[i])) + 987654321 )*16777619;
-		hash= bitRotated<uint32>(hash, hash % 31);
+		// Rotation seems to prevent some collisions with arrays in which
+		// single bits are swapped between array elements.
+		//hash= bitRotatedLeft<uint32>(hash, hash % 31);
+		// Simpler rotation - rendering time improved by 20%
+		hash= (hash << 9) | (hash >> 21);
 	}
 	return hash;
 }

@@ -14,7 +14,7 @@ ChunkMemPool::ChunkMemPool(SizeType chunk_size)
 void* ChunkMemPool::allocate(SizeType size, SizeType alignment){
 	if (freeChunks.empty()){
 		print(debug::Ch::General, debug::Vb::Critical,
-				"util::ChunkMemPool out of memory");
+				"util::ChunkMemPool out of memory: %s", memory().getTag());
 		throw std::bad_alloc{};
 	}
 
