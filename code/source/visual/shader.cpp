@@ -6,6 +6,7 @@
 #include "global/exception.hpp"
 #include "global/file.hpp"
 #include "util/math.hpp"
+#include "util/profiling.hpp"
 #include "visual/mesh.hpp"
 #include "visual/particlemanifold.hpp"
 
@@ -304,6 +305,7 @@ void Shader::bindAttributes(const util::DynArray<VertexAttribute>& attribs)
 
 uint32 Shader::uniformLoc(const char* name)
 {
+	PROFILE();
 	auto it= nameToUniform.find(name);
 	if (it != nameToUniform.end())
 		return it->second;

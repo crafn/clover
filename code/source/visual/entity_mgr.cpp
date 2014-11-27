@@ -115,7 +115,7 @@ void EntityMgr::draw(){
 				fluidST.render(*cfg.camera);
 			}
 		}
-		
+
 		//print(debug::Ch::Visual, debug::Vb::Trivial, "draw_count: %zu", draw_count);
 	}
 }
@@ -601,7 +601,7 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::sortedByDepth(util::DynArray<
 	return entities;
 }
 
-void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const RenderFrameConfig& cfg){
+void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const RenderFrameConfig& cfg) {
 	PROFILE();
 	
 	entityToBatch.clear();
@@ -610,13 +610,13 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 	util::Set<uint32> preservedBatches;
 	SizeType preserved_count= 0;
 	
-	for (const auto& a_batch : a.batches){
+	for (const auto& a_batch : a.batches) {
 		// Check if batch was same in the previous frame
 		auto preserved_batch_it= batchMap.find(a_batch.contentHash);
-		if (preserved_batch_it != batchMap.end()){
+		if (preserved_batch_it != batchMap.end()) {
 			preservedBatches.insert(a_batch.contentHash);
 			
-			for (const auto& logic : a_batch.modelLogics){
+			for (const auto& logic : a_batch.modelLogics) {
 				entityToBatch[logic->getContentHash()]= &preserved_batch_it->second;
 			}
 
@@ -629,7 +629,7 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 		RenderBatch batch;
 		batch.lastEntityLogic= a_batch.modelLogics.back();
 
-		for (SizeType i= 0; i < a_batch.meshes.size(); ++i){
+		for (SizeType i= 0; i < a_batch.meshes.size(); ++i) {
 			ensure(i < a_batch.modelLogics.size());
 			const RenderEntity* re= cfg.logicToRenderEntity.find(a_batch.modelLogics[i])->second;
 			ensure(re);
@@ -638,6 +638,14 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 			tempmesh.scale(re->transform.scale.casted<util::Vec3f>());
 			tempmesh.rotate(re->transform.rotation.casted<util::Quatf>());
 			tempmesh.translate(re->transform.translation.casted<util::Vec3f>());
+			
+			for (SizeType i= 0; i < tempmesh.getVertexCount(); ++i) {
+				auto vtex= tempmesh.getVertex(i);
+				/// @todo Do transforms here for fastness
+				vtex.color *=
+					re->def->getColorMul()*re->logic->getColorMul();
+				tempmesh.setVertex(i, vtex);
+			}
 
 			batch.mesh.add(tempmesh);
 		}
@@ -647,9 +655,11 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 		batch.model.setMesh(batch.mesh);
 
 		batch.def= a_batch.modelLogics.front()->getDef(); // Copy def
+		batch.def.setColorMul(util::Color{}); // Mesh is colored
 		batch.def.setModel(batch.model);
 
 		batch.logic= *a_batch.modelLogics.front(); // Copy logic
+		batch.logic.setColorMul(util::Color{}); // Mesh is colored
 		batch.logic.setDef(batch.def);
 		batch.logic.setTransform(EntityLogic::Transform()); // Reset transform
 	

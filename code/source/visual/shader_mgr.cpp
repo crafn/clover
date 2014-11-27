@@ -14,6 +14,7 @@ Shader& ShaderMgr::getShader(const util::Str8& name)
 
 Shader& ShaderMgr::getShader(const util::Str8& name, const ShaderOptions& options)
 {
+	PROFILE();
 	ShaderId id= util::hash32(util::makeTuple(name, options.defines, options.values));
 	auto it= shaders.find(id);
 	if (it != shaders.end())

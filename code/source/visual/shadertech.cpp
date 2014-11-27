@@ -1,9 +1,10 @@
-#include "shadertech.hpp"
 #include "camera.hpp"
-#include "hardware/device.hpp"
-#include "shader.hpp"
 #include "entity_def_model.hpp"
+#include "hardware/device.hpp"
 #include "hardware/glstate.hpp"
+#include "shader.hpp"
+#include "shadertech.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace visual {
@@ -61,6 +62,7 @@ void WorldShaderTech::setCameraScale(real32 scale)
 
 void WorldShaderTech::setEntity(const visual::ModelEntityDef& re)
 {
+	PROFILE();
 	const Model* model= re.getModel();
 	const Texture* texs[Material::TexType_Last]= {
 		nullptr, nullptr, nullptr

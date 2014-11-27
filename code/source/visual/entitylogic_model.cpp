@@ -93,7 +93,6 @@ uint32 ModelEntityLogic::getBatchCompatibilityHash() const {
 					getDef().getBatchCompatibilityHash(),
 					customDrawPriority,
 					useCustomDrawPriority,
-					colorMul,
 					static_cast<int32>(getLayer())
 				)
 			);

@@ -137,7 +137,7 @@ uint32 ModelEntityDef::getContentHash() const {
 	if (!model)
 		return 0;
 	else
-		return model->getContentHash() + getBatchCompatibilityHash();
+		return model->getContentHash() + getBatchCompatibilityHash() + util::hash32(colorMul);
 }
 
 uint32 ModelEntityDef::getBatchCompatibilityHash() const {
@@ -148,7 +148,6 @@ uint32 ModelEntityDef::getBatchCompatibilityHash() const {
 				+ util::hash32(envLightAttribute.get())
 				+ util::hash32(onlyEnvAttribute.get())*2 +
 				+ util::hash32(castsShadowAttribute.get())*4
-				+ util::hash32(colorMul)
 				+ util::hash32(sway)*8
 				+ util::hash32(filled)*16;
 }

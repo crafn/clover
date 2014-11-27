@@ -38,17 +38,19 @@ void GenericST::use()
 	PROFILE();
 
 	visual::ShaderOptions opt;
-	if (colorMap)
-		opt.defines.insert("COLORMAP");
-	if (envShadowMap)
-		opt.defines.insert("ENVSHADOWMAP");
-	if (normalMap)
-		opt.defines.insert("NORMALMAP");
-	if (sway)
-		opt.defines.insert("SWAY");
-	if (lightCount > 0){
-		opt.defines.insert("DYNAMIC_LIGHTING");
-		opt.values["LIGHT_COUNT"]= lightCount;
+	{ PROFILE();
+		if (colorMap)
+			opt.defines.insert("COLORMAP");
+		if (envShadowMap)
+			opt.defines.insert("ENVSHADOWMAP");
+		if (normalMap)
+			opt.defines.insert("NORMALMAP");
+		if (sway)
+			opt.defines.insert("SWAY");
+		if (lightCount > 0){
+			opt.defines.insert("DYNAMIC_LIGHTING");
+			opt.values["LIGHT_COUNT"]= lightCount;
+		}
 	}
 	Shader& shader= getShaderMgr().getShader("visual_generic", opt);
 

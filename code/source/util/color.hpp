@@ -29,8 +29,9 @@ public:
 	Color operator*(const Color& c) const { return Color{r*c.r, g*c.g, b*c.b, a*c.a}; }
 	Color operator+(const Color& c) const { return Color{r+c.r, g+c.g, b+c.b, a+c.a}; }
 	
-	Color& operator*=(real32 f){ return *this = *this * f; }
-	Color& operator+=(const Color& c){ return *this = *this + c; }
+	Color& operator*=(real32 f){ return *this= *this * f; }
+	Color& operator*=(const Color& c){ return *this= *this * c; }
+	Color& operator+=(const Color& c){ return *this= *this + c; }
 	
 	bool operator==(const Color& c) const { return r == c.r && g == c.g && b == c.b && a == c.a; }
 	

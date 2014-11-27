@@ -39,7 +39,7 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
 	
 	for (SizeType i= 0; i < mesh_infos.size(); ++i){
 		int32 group_size= i - group_begin_i;
-		
+
 		// If this mesh_infos[i] is last of a group
 		if (i + 1 == frameInfo.meshInfos.size() ||
 			!batchCompatible(mesh_infos[i], mesh_infos[i + 1]) ||
