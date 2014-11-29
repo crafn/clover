@@ -331,6 +331,7 @@ void Grid::removeChunk(util::Vec2i pos)
 bool Grid::isolated(const Shape& shp, util::RtTransform2d t)
 {
 	/// @todo Implementation
+	ensure(0 && "@todo");
 	return false;
 }
 

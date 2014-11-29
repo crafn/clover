@@ -20,7 +20,6 @@ void PolygonBaseShape::setVertices(util::DynArray<util::Vec2d> v){
 	if (poly.isClockwise())
 		poly.reverse();
 
-	/// @todo Use better triangulation, like delaunay
 	util::DynArray<util::Polygon>
 		convex_polys= poly.splittedToConvex(maxInternalVertexCount);
 	shapes.clear();
@@ -103,14 +102,8 @@ util::Polygon PolygonBaseShape::asPolygon(real64 imprecision) const {
 
 util::DynArray<util::Polygon>
 PolygonBaseShape::asConvexPolygons(real64 imprecision) const {
-	util::DynArray<util::Polygon> polys;
-	for (auto&& shp : shapes){
-		util::Polygon poly;
-		for (int32 i= 0; i < shp.m_count; ++i)
-			poly.append(shp.m_vertices[i]);
-		polys.pushBack(std::move(poly));
-	}
-	return polys;
+	/// @todo Precision adjusting
+	return poly.splittedToConvex();
 }
 
 PolygonBaseShape* PolygonBaseShape::clone() const {

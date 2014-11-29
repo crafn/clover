@@ -352,6 +352,7 @@ util::DynArray<Polygon> Polygon::splittedToConvex(SizeType max_vert_count) const
 	{
 		if (p.getVertexCount() > max_vert_count) {
 			util::DynArray<Polygon> ret;
+			/// @todo Use better tactic - causes thin polygons
 			ret.pushBack(partition(p.splitConvex(p.getVertexCount()/2)));
 			ret.pushBack(partition(p));
 			return ret;
@@ -394,7 +395,6 @@ util::DynArray<Polygon> Polygon::splittedToConvex(SizeType max_vert_count) const
 }
 
 Polygon Polygon::splitConvex(SizeType max_vert_count){
-
 	auto erase_poly_from_this= [this](SizeType begin_i, SizeType size){
 		ensure(size <= getVertexCount());
 
