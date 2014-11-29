@@ -27,8 +27,9 @@ void* ChunkMemPool::allocate(SizeType size, SizeType alignment){
 	SizeType adjusted_size= size + adjustment;
 	if (adjusted_size > chunkSize || alignment > chunkSize){
 		print(debug::Ch::General, debug::Vb::Critical,
-				"util::ChunkMemPool: requested allocation incompatible "
+				"util::ChunkMemPool %s: requested allocation incompatible "
 				"with chunk size: %i, %i, %i, %i",
+				memory().getTag(),
 				(int32)size, (int32)adjustment,
 				(int32)chunkSize, (int32)alignment);
 		throw std::bad_alloc{};

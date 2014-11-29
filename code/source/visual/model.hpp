@@ -6,7 +6,6 @@
 #include "resources/resource.hpp"
 #include "util/cb_listener.hpp"
 #include "util/boundingbox.hpp"
-#include "util/pooled_crtp.hpp"
 #include "util/string.hpp"
 
 namespace clover {
@@ -41,11 +40,10 @@ class BaseMesh;
 class Material;
 
 /// Drawable model. Contains material and mesh
-class Model :	public resources::Resource
-			,	public util::PooledCrtp<Model> {
+class Model : public resources::Resource {
 public:
 	DECLARE_RESOURCE(Model)
-	
+
 	Model();
 	Model(const Model&)= default;
 	Model(Model&&)= default;

@@ -58,6 +58,7 @@ public:
 
 	util::ArrayView<const Cell> getChunkCells(ChunkVec v) const
 	{ return util::asArrayView(chunks.at(v).cells); }
+	Cell& getCell(util::Vec2d world_pos);
 
 	util::DynArray<ChunkVec> getChunkPositions() const
 	{ return util::keys(chunks); }
@@ -72,7 +73,6 @@ private:
 	enum class Action { add, remove };
 
 	void modify(Action a, const physics::Fixture& fix, util::RtTransform2d t);
-	Cell& getCell(util::Vec2d world_pos);
 	Cell& getCell(CellVec cell_pos);
 	Cell& getCell(Chunk& ch, uint32 x, uint32 y);
 
