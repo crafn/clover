@@ -1,6 +1,7 @@
 #include "polygon.hpp"
 #include "debug/debugprint.hpp"
 #include "util/profiling.hpp"
+#include <polypartition.h>
 
 namespace clover {
 namespace util {
@@ -345,13 +346,48 @@ util::GenericMesh<util::Vec2d, uint32> Polygon::triangulated() const {
 }
 
 util::DynArray<Polygon> Polygon::splittedToConvex(SizeType max_vert_count) const {
+	std::function<util::DynArray<Polygon> (util::Polygon)> partition;
+	partition=
+		[&] (util::Polygon p) -> util::DynArray<Polygon>
+	{
+		if (p.getVertexCount() > max_vert_count) {
+			util::DynArray<Polygon> ret;
+			ret.pushBack(partition(p.splitConvex(p.getVertexCount()/2)));
+			ret.pushBack(partition(p));
+			return ret;
+		} else {
+			return {p};
+		}
+	};
+
 	Polygon p= *this;
 	p= p.simplified(0.0);
 
-	util::DynArray<Polygon> convex_polys;
+	TPPLPoly input;
+	input.Init(p.poly.outer.size());
+	for (SizeType i= 0; i < p.poly.outer.size(); ++i) {
+		auto v= p.toFloating(p.poly.outer[i]);	
+		input[i].x= v.x;
+		input[i].y= v.y;
+	}
 
-	while (!p.empty()){
-		convex_polys.pushBack(p.splitConvex(max_vert_count));
+	// Partition to convex polys using Hertel-Mehlhorn
+	std::list<TPPLPoly> outputs;
+	TPPLPartition pp;
+	pp.ConvexPartition_HM(&input, &outputs);
+
+	util::DynArray<Polygon> convex_polys;
+	for (auto&& output_poly : outputs) {
+		Polygon poly;
+		for (long i= 0; i < output_poly.GetNumPoints(); ++i) {
+			poly.append(util::Vec2d{output_poly[i].x, output_poly[i].y});
+		}
+
+		if (poly.getVertexCount() > max_vert_count) {
+			convex_polys.pushBack(partition(poly));
+		} else {
+			convex_polys.pushBack(poly);
+		}
 	}
 
 	return convex_polys;

@@ -280,6 +280,22 @@ def buildInfo(env, target):
 	elif env.os == "linux":
 		system_links += [ "portaudio" ]
 
+	# polypartition
+	pp_dir= "../deps/common/polypartition"
+	pp= Project()
+	pp.name= "polypartition_" + target
+	pp.type= "obj"
+	pp.targetDir= lib_dir
+	pp.includeDirs= pp_dir
+	pp.headers= [ pp_dir + "/polypartition.h" ]
+	pp.src= [ pp_dir + "/polypartition.cpp" ]
+	pp.flags= target_flags
+	pp.defines= target_defines
+	pp.compiler= cpp_compiler
+	pp.linker= linker
+	dep_include_paths.append(pp_dir)
+	dep_libs.append(pp)
+
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
