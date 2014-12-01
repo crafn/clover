@@ -630,7 +630,9 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 
 		RenderBatch batch;
 		batch.lastEntityLogic= a_batch.modelLogics.back();
-
+	
+		ensure(a_batch.material);
+		util::Color batch_mat_color= a_batch.material->getColor();
 		for (SizeType i= 0; i < a_batch.meshes.size(); ++i) {
 			PROFILE();
 			ensure(i < a_batch.modelLogics.size());
@@ -643,11 +645,11 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 			tempmesh.translate(re->transform.translation.casted<util::Vec3f>());
 			
 			for (SizeType i= 0; i < tempmesh.getVertexCount(); ++i) {
-				auto vtex= tempmesh.getVertex(i);
+				auto vert= tempmesh.getVertex(i);
 				/// @todo Do transforms here for fastness
-				vtex.color *=
-					re->def->getColorMul()*re->logic->getColorMul();
-				tempmesh.setVertex(i, vtex);
+				vert.color *=
+					re->def->getColorMul()*re->logic->getColorMul()/batch_mat_color;
+				tempmesh.setVertex(i, vert);
 			}
 
 			batch.mesh.add(tempmesh);
@@ -656,7 +658,6 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 		{ PROFILE();
 			batch.mesh.flush();
 
-			ensure(a_batch.material);
 			batch.model.setMaterial(*a_batch.material);
 			batch.model.setMesh(batch.mesh);
 
