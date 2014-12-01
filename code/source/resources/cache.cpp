@@ -102,6 +102,19 @@ Cache::~Cache()
 	delete visual::gFontMgr;
 	visual::gFontMgr= nullptr;
 
+	// Reverse unload
+	util::DynArray<std::function<void ()>> unloads;
+#define RESOURCE(type_name, auto_preload) \
+	if (auto_preload) unloads.pushBack([this]() { unload<type_name>(); });
+#include "resourcetypes.def"
+#undef RESOURCE
+	for (SizeType i= unloads.size(); i > 0; --i)
+		unloads[i - 1]();
+
+	resourceFileWatchers.clear();
+	resourceFilePaths.clear();
+	subCaches.clear();
+
 	if (gCache == this)
 		gCache= nullptr;
 }
@@ -221,6 +234,14 @@ void Cache::preLoad()
 }
 
 template <typename T>
+void Cache::unload()
+{
+	auto it= subCaches.find(ResourceTraits<T>::typeName());
+	ensure(it != subCaches.end());
+	subCaches.erase(it);
+}
+
+template <typename T>
 void Cache::createSubCache()
 {
 	util::Str8 section= ResourceTraits<T>::typeName();
@@ -231,6 +252,7 @@ void Cache::createSubCache()
 /// @todo Add every function template
 #define RESOURCE(type_name, auto_preload) \
 template void Cache::preLoad<type_name>(); \
+template void Cache::unload<type_name>(); \
 template void Cache::createSubCache<type_name>();
 #include "resourcetypes.def"
 #undef RESOURCE

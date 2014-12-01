@@ -18,74 +18,62 @@ public:
 	typedef typename std::unordered_map<K, V, Hash32<K>>::iterator Iter;
 	typedef typename std::unordered_map<K, V, Hash32<K>>::const_iterator cIter;
 
+	V& operator[](const K& k)
+	{ return c[k]; }
 
-	V& operator[](const K& k){
-		return c[k];
-	}
+	V& at(const K& k)
+	{ return c.at(k); }
 
-	V& at(const K& k){
-		return c.at(k);
-	}
+	Iter find(const K& k)
+	{ return c.find(k); }
 
-	Iter find(const K& k) {
-		return c.find(k);
-	}
+	cIter find(const K& k) const
+	{ return c.find(k); }
 
-	cIter find(const K& k) const {
-		return c.find(k);
-	}
-	
-	V get(const K& k, const V& error_v) const {
+	V get(const K& k, const V& error_v) const
+	{
 		auto it= find(k);
 		if (it == c.end())
 			return error_v;
 		return it->second;
 	}
-	
-	uint32 count(const K& k) const {
-		return c.count(k);
-	}
-	
-	uint32 size() const {
-		return c.size();
-	}
-	
-	bool empty() const {
-		return c.empty();
-	}
 
+	SizeType count(const K& k) const
+	{ return c.count(k); }
 
+	SizeType size() const
+	{ return c.size(); }
 
-	std::pair<Iter, bool> insert(const std::pair<const K, V>& p ){
-		return c.insert(p);
-	}
+	bool empty() const
+	{ return c.empty(); }
 
-	std::pair<Iter, bool> insert(std::pair<K, V>&& p){
-		return c.insert(std::move(p));
-	}
-	
+	std::pair<Iter, bool> insert(const std::pair<const K, V>& p)
+	{ return c.insert(p); }
+
+	std::pair<Iter, bool> insert(std::pair<K, V>&& p)
+	{ return c.insert(std::move(p)); }
+
 	template <typename It>
-	void insert(It first, It last){
-		c.insert(first, last);
-	}
+	void insert(It first, It last)
+	{ c.insert(first, last); }
 
-	void erase(Iter it){
-		c.erase(it);
-	}
+	void erase(Iter it)
+	{ c.erase(it); }
 
-	Iter end(){ return c.end(); }
+	void clear()
+	{ c.clear(); }
+
+	Iter end() { return c.end(); }
 	cIter end() const { return c.end(); }
-	
-	Iter begin(){ return c.begin(); }
+
+	Iter begin() { return c.begin(); }
 	cIter begin() const { return c.begin(); }
 
-	This duplicates(const This& other) const {
-		return (util::duplicates(*this, other));
-	}
-	
-	This removed(const This& other) const {
-		return (util::removed(*this, other));
-	}
+	This duplicates(const This& other) const
+	{ return util::duplicates(*this, other); }
+
+	This removed(const This& other) const
+	{ return util::removed(*this, other); }
 
 private:
 	std::unordered_map<K, V, Hash32<K>> c;

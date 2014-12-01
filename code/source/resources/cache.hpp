@@ -97,6 +97,10 @@ public:
 	template <typename T>
 	void preLoad();
 
+	/// Unload all resources of type `T`, and destroy related subcache
+	template <typename T>
+	void unload();
+
 private:
 	template <typename T>
 	void createSubCache();

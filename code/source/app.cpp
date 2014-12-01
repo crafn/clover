@@ -88,9 +88,9 @@ App::~App(){
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
 	delete physics::gPhysMgr; physics::gPhysMgr= nullptr;
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
-	delete resources::gCache; resources::gCache= nullptr;
 	delete visual::gVisualMgr;
 	delete audio::gAudioMgr;
+	delete resources::gCache; resources::gCache= nullptr;
 	delete util::gGameClock; util::gGameClock= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;

@@ -63,11 +63,21 @@ VisualMgr::~VisualMgr(){
 	delete entityMgr; entityMgr= nullptr;
 	delete shaderMgr; shaderMgr= nullptr;
 
-	if (gVisualMgr == this)
-		gVisualMgr= nullptr;
+	resources::gCache->unload<CompoundEntityDef>();
+	resources::gCache->unload<LightEntityDef>();
+	resources::gCache->unload<ModelEntityDef>();
+	resources::gCache->unload<EntityDef>();
+	resources::gCache->unload<Model>();
+	resources::gCache->unload<TriMesh>();
+	resources::gCache->unload<Material>();
+	resources::gCache->unload<Texture>();
+	resources::gCache->unload<ShaderTemplate>();
 
 	ModelEntityLogic::setPoolMem(nullptr);
 	ModelEntityDef::setPoolMem(nullptr);
+
+	if (gVisualMgr == this)
+		gVisualMgr= nullptr;
 }
 
 void VisualMgr::renderFrame(){
