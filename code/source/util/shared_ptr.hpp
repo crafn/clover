@@ -41,7 +41,8 @@ private:
 
 
 template <typename T, typename... Args>
-SharedPtr<T> makeSharedPtr(Args&&... args){ return SharedPtr<T>(new T(std::forward(args)...)); }
+SharedPtr<T> makeSharedPtr(Args&&... args)
+{ return SharedPtr<T>(new T(std::forward<Args>(args)...)); }
 
 template <typename T>
 template <typename Script>

@@ -21,6 +21,8 @@ public:
 	static ArmaturePose byLocalPose(const Armature& a, Pose local_pose);
 
 	ArmaturePose(); // Invalid value. Default constructor required by script
+	bool isInvalid() const { return armature == nullptr; }
+
 	ArmaturePose(const Armature& armature_, Pose local_in_bind_pose_);
 
 	const Armature& getArmature() const;

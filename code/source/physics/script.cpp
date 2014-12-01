@@ -59,6 +59,10 @@ util::DynArray<Fixture*> fixturePotentialRectQuery(util::Vec2d pos, util::Vec2d 
 	return queried;
 }
 
+/// @todo Remove when scripts support variadic args in `emplace`
+util::SharedPtr<RigidObject> createObject(util::Vec2d pos)
+{ return util::makeSharedPtr<RigidObject>(RigidObjectDef{pos}); }
+
 template <typename T>
 void registerObjectMethods(){
 	auto& s= *script::gScriptMgr;
@@ -182,6 +186,8 @@ void registerToScript(){
 	s.registerMethod(&RigidObject::setFixedRotation, "setFixedRotation");
 	s.registerMethod(&RigidObject::hasFixedRotation, "hasFixedRotation");
 	s.registerMethod(&RigidObject::setGravityScale, "setGravityScale");
+
+	s.registerGlobalFunction(createObject, "physics::createObject");
 
 	// Contact stuff
 	s.registerObjectType<ContactSide>();

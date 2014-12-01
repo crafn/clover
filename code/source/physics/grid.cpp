@@ -4,6 +4,9 @@
 #include "grid.hpp"
 #include "util/boundingbox.hpp"
 #include "util/profiling.hpp"
+// Debug
+#include "game/physics.hpp"
+#include "game/worldentity.hpp"
 
 namespace clover {
 namespace physics {
@@ -386,8 +389,16 @@ void add(Grid::Cell& cell, Object& obj)
 		}
 	}
 	if (!added) {
+		util::Str8 we_name= "-";
+		auto pos= obj.getPosition();
+		game::WorldEntity* we= game::getOwnerWe(obj);
+		if (we)
+			we_name= we->getTypeName();
 		print(	debug::Ch::Phys, debug::Vb::Critical,
-				"Too many objects in a physics::Grid::Cell");
+				"Too many objects in a physics::Grid::Cell! WeType: %s, pos: %f, %f",
+				we_name.cStr(),
+				pos.x,
+				pos.y);
 	}
 }
 

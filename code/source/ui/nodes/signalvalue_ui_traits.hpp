@@ -502,6 +502,21 @@ struct SignalValueUiTraits<SignalType::Trigger> {
 	static void clearView(ViewElement& e){ e.setText(""); }
 };
 
+template <>
+struct SignalValueUiTraits<SignalType::ArmaturePose> {
+	typedef gui::TextLabelElement ViewElement;
+	typedef gui::TextFieldElement EditElement;
+	typedef SignalTypeTraits<SignalType::ArmaturePose>::Value Value;
+
+	static ViewElement createViewElement();
+	static EditElement createEditElement();
+	static void valueToView(const Value& v, ViewElement& e);
+	static void valueToEdit(const Value& v, EditElement& e);
+	static Value valueFromEdit(const EditElement& e);
+	static void onEditActivationChange(EditElement& e);
+	static void clearView(ViewElement& e);
+};
+
 /// Default ui traits for a SignalType with ResourceRef<Res> value
 template <typename Res>
 struct SignalValueUiTraitsResourceRefMixIn {

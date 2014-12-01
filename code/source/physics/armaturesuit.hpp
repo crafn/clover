@@ -34,7 +34,9 @@ protected:
 	void preStepUpdate(real64 dt);
 
 private:
-	void createObjects(const animation::ArmaturePose& pose);
+	void createObjects(
+			const util::SrtTransform3d& t,
+			const animation::ArmaturePose& pose);
 	void updateEstimations();
 
 	struct Sample {

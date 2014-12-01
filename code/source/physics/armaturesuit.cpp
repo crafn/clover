@@ -7,8 +7,9 @@ namespace physics {
 
 void ArmatureSuit::update(	const util::SrtTransform3d& transform,
 							const animation::ArmaturePose& pose){
+	ensure(!pose.isInvalid());
 	if (armature == nullptr || armature != &pose.getArmature())
-		createObjects(pose);
+		createObjects(transform, pose);
 
 	sample.transform= transform;
 	sample.globalPose= pose.getGlobalPose();
@@ -63,7 +64,7 @@ void ArmatureSuit::preStepUpdate(real64 dt){
 	}
 }
 
-void ArmatureSuit::createObjects(const animation::ArmaturePose& pose){
+void ArmatureSuit::createObjects(const util::SrtTransform3d& t, const animation::ArmaturePose& pose){
 	clear();
 	armature= &pose.getArmature();
 	auto globalpose= pose.getGlobalPose();
@@ -76,7 +77,7 @@ void ArmatureSuit::createObjects(const animation::ArmaturePose& pose){
 				globalpose[joint.getId()].transform); 
 		def.setTransform(t);
 		objects.insert(makePair(joint.getName(),
-								util::makeUniquePtr<RigidObject>(def)
+								util::makeUniquePtr<RigidObject>(RigidObjectDef{t.translation})
 		));
 	}
 }

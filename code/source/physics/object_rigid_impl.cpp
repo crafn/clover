@@ -79,7 +79,9 @@ RigidObject::RigidObject(RigidObjectDef bdef):
 	bodyData.owner= this;
 	bodyDef.def.userData= &bodyData;
 
-	createB2Body();
+	createB2Body(false);
+	overrideCachedValuesByB2();
+
 	addToGrid();
 }
 
@@ -708,16 +710,17 @@ void RigidObject::updateEstimationsForAll(real64 relative_time){
 	}
 }
 
-void RigidObject::createB2Body(){
+void RigidObject::createB2Body(bool use_cached_values){
 	PROFILE_("physics");
 	ensure(!isProxy());
 	ensure(!body);
 
-	// Use cached values
-	bodyDef.def.position= getPosition().b2();
-	bodyDef.def.angle= getRotation();
-	bodyDef.def.angularVelocity= getAngularVelocity();
-	bodyDef.def.linearVelocity= getVelocity().b2();
+	if (use_cached_values) {
+		bodyDef.def.position= getPosition().b2();
+		bodyDef.def.angle= getRotation();
+		bodyDef.def.angularVelocity= getAngularVelocity();
+		bodyDef.def.linearVelocity= getVelocity().b2();
+	}
 
 	body= gWorld->getB2World().CreateBody(&bodyDef.def);
 

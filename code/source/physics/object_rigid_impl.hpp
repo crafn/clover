@@ -82,7 +82,8 @@ public:
 
 	typedef Object::Transform Transform;
 
-	RigidObject(RigidObjectDef def= RigidObjectDef{});
+	RigidObject() { release_ensure(0 && "RigidObject needs ctor arg"); }
+	RigidObject(RigidObjectDef def);
 	DELETE_COPY(RigidObject);
 	DELETE_MOVE(RigidObject);
 	virtual ~RigidObject();
@@ -184,7 +185,7 @@ protected:
 	bool isNormal() const { return !isProxy() && !isProxyMaster(); }
 
 private:
-	void createB2Body();
+	void createB2Body(bool use_cached_values= true);
 	void destroyB2Body();
 
 	util::Vec2d getB2Position() const;
