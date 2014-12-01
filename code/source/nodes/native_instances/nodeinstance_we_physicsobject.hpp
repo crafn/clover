@@ -10,7 +10,6 @@ namespace nodes {
 
 class WePhysicsObjectNodeInstance : public NodeInstance {
 public:
-
 	virtual ~WePhysicsObjectNodeInstance(){}
 	
 	virtual void create();
@@ -19,7 +18,7 @@ public:
 private:
 	void recreateObject();
 	void sendShape();
-	
+
 	InputSlot<SignalType::Boolean>* activeInput;
 	InputSlot<SignalType::RtTransform2>* forceInput;
 	InputSlot<SignalType::SrtTransform3>* transformInput;
@@ -30,7 +29,7 @@ private:
 	InputSlot<SignalType::Event>* eventInput;
 	InputSlot<SignalType::Boolean>* partialBreakingInput;
 	InputSlot<SignalType::WeHandle>* weInput;
-	
+
 	OutputSlot<SignalType::SrtTransform3>* transformOutput;
 	OutputSlot<SignalType::SrtTransform3>* estimatedTransformOutput;
 	OutputSlot<SignalType::RtTransform2>* velocityOutput;
@@ -38,9 +37,9 @@ private:
 	OutputSlot<SignalType::RtTransform2>* accelerationOutput;
 	OutputSlot<SignalType::Shape>* onShapeChangeOutput;
 	OutputSlot<SignalType::Trigger>* onBreakOutput;
-	
+
 	util::CbListener<physics::OnBreakCb> breakListener;
-	
+
 	util::RtTransform2d lastVelocity; // Used only when impulseOutput or accelerationOutput is connected
 	// Must instantiate dynamically for pooling to take place
 	util::UniquePtr<physics::RigidObject> object;

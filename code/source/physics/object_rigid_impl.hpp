@@ -82,7 +82,7 @@ public:
 
 	typedef Object::Transform Transform;
 
-	RigidObject(RigidObjectDef def= RigidObjectDef());
+	RigidObject(RigidObjectDef def= RigidObjectDef{});
 	DELETE_COPY(RigidObject);
 	DELETE_MOVE(RigidObject);
 	virtual ~RigidObject();
@@ -223,6 +223,8 @@ private:
 		real64 mass;
 		real64 inertia;
 	};
+
+	bool inGrid= false;
 
 	static util::LinkedList<RigidObject*> nonStaticRigidObjects;
 	util::LinkedList<RigidObject*>::Iter nsSelfIter;

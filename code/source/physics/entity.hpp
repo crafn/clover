@@ -36,8 +36,8 @@ public:
 
 	void setActive(bool b= true);
 
-	template <typename T>
-	T& emplaceObject();
+	template <typename T, typename Arg>
+	T& emplaceObject(Arg&& def);
 	
 	Object& getObject(SizeType i) const { return *objects.at(i); }
 
@@ -108,9 +108,9 @@ private:
 	util::Properties properties;
 };
 
-template <typename T>
-T& Entity::emplaceObject(){
-	objects.pushBack(util::UniquePtr<Object>(new T()));
+template <typename T, typename Arg>
+T& Entity::emplaceObject(Arg&& def){
+	objects.pushBack(util::UniquePtr<Object>(new T(std::forward<Arg>(def))));
 	objects.back()->setEntity(this);
 	return *static_cast<T*>(objects.back().get());
 }

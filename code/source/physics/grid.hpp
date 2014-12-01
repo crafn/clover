@@ -14,6 +14,7 @@ namespace clover {
 namespace physics {
 
 class Fixture;
+class Object;
 class Shape;
 
 struct GridDef {
@@ -31,17 +32,21 @@ public:
 	using CellVec= util::Vec2i;
 
 	struct Cell {
+		static constexpr SizeType maxObjects= 16;
+
 		real64 staticPortion= 0.0;
 		real64 lastStaticPortion= 0.0;
 		real64 dynamicPortion= 0.0;
 		util::Vec2f staticNormal;
 		bool staticEdge= false;
+		Object* objects[maxObjects]= {};
 	};
 
 	Grid(GridDef def);
 
-	void add(const physics::Fixture& fix, util::RtTransform2d t);
-	void remove(const physics::Fixture& fix, util::RtTransform2d t);
+	void add(const Fixture& fix, util::RtTransform2d t);
+	void remove(const Fixture& fix, util::RtTransform2d t);
+
 	void clear();
 
 	void update();
@@ -87,6 +92,10 @@ private:
 	GridDef def;
 	util::Map<ChunkVec, Chunk> chunks;
 };
+
+/// Doesn't examine `obj` in any way
+void add(Grid::Cell& cell, Object& obj);
+void remove(Grid::Cell& cell, Object& obj);
 
 } // physics
 } // clover

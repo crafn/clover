@@ -9,6 +9,7 @@
 #include "nodeinstance_guiinput.hpp"
 #include "nodeinstance_logicor.hpp"
 #include "nodeinstance_lerp_pose.hpp"
+#include "nodeinstance_we_attachedphysicsobject.hpp"
 #include "nodeinstance_we_interface.hpp"
 #include "nodeinstance_we_physicsentity.hpp"
 #include "nodeinstance_we_physicsobject.hpp"
@@ -28,6 +29,7 @@ NODEINSTANCE(EventFactoryNodeInstance)
 NODEINSTANCE(EventHandlerNodeInstance)
 NODEINSTANCE(LogicOrNodeInstance)
 NODEINSTANCE(PoseLerpNodeInstance)
+NODEINSTANCE(WeAttachedPhysicsObjectNodeInstance)
 NODEINSTANCE(WeInterfaceNodeInstance)
 NODEINSTANCE(WePhysicsEntityNodeInstance)
 NODEINSTANCE(WePhysicsObjectNodeInstance)

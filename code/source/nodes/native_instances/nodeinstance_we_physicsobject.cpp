@@ -20,7 +20,7 @@ void WePhysicsObjectNodeInstance::create(){
 	eventInput= addInputSlot<SignalType::Event>("event");
 	partialBreakingInput= addInputSlot<SignalType::Boolean>("partialBreaking");
 	weInput= addInputSlot<SignalType::WeHandle>("we");
-	
+
 	transformOutput= addOutputSlot<SignalType::SrtTransform3>("transform");
 	estimatedTransformOutput= addOutputSlot<SignalType::SrtTransform3>("estimatedTransform");
 	velocityOutput= addOutputSlot<SignalType::RtTransform2>("velocity");
@@ -28,28 +28,30 @@ void WePhysicsObjectNodeInstance::create(){
 	accelerationOutput= addOutputSlot<SignalType::RtTransform2>("acceleration");
 	onShapeChangeOutput= addOutputSlot<SignalType::Shape>("onShapeChange");
 	onBreakOutput= addOutputSlot<SignalType::Trigger>("onBreak");
-	
+
 	setUpdateNeeded();
-	
-	object.emplace();
+
+	physics::RigidObjectDef def;
+	def.setActive(false);
+	object.emplace(def);
 
 	shapeInput->setValueReceived();
 	shapeInput->setOnReceiveCallback([&] (){
 		recreateObject();
 		sendShape();
 	});
-	
+
 	materialInput->setValueReceived();
 	materialInput->setOnReceiveCallback([&] (){
 		recreateObject();
 	});
-	
+
 	activeInput->setOnReceiveCallback([&] (){
 		object->setActive(activeInput->get());
 		if (activeInput->get())
 			setUpdateNeeded();
 	});
-	
+
 	transformInput->setOnReceiveCallback([&] (){
 		object->set3dTransform(transformInput->get());
 		// Forward transform if inactive
@@ -58,16 +60,16 @@ void WePhysicsObjectNodeInstance::create(){
 			estimatedTransformOutput->send(transformInput->get());
 		}
 	});
-	
+
 	impulseInput->setOnReceiveCallback([&] (){
 		object->applyImpulse(impulseInput->get().translation, object->getPosition());
 		object->applyAngularImpulse(impulseInput->get().rotation);
 	});
-	
+
 	staticInput->setOnReceiveCallback([&] (){
 		object->setStatic(staticInput->get());
 	});
-	
+
 	partialBreakingInput->setOnReceiveCallback([&] (){
 		object->setPartiallyBreakable(partialBreakingInput->get());
 	});
@@ -75,7 +77,7 @@ void WePhysicsObjectNodeInstance::create(){
 	weInput->setOnReceiveCallback([&] (){
 		game::setOwnerWe(object.ref(), weInput->get().get());
 	});
-	
+
 	breakListener.listen(*object, [this] (){
 		if (object->isFullyBroken())
 			onBreakOutput->send();
@@ -88,6 +90,9 @@ void WePhysicsObjectNodeInstance::create(){
 void WePhysicsObjectNodeInstance::update(){
 	if (!activeInput->get())
 		return;
+
+	if (!object->isActive()) // At first update
+		object->setActive(true);
 	
 	if (forceInput->get().translation.lengthSqr() > util::epsilon)
 		object->applyForce(forceInput->get().translation);

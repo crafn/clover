@@ -80,6 +80,7 @@ RigidObject::RigidObject(RigidObjectDef bdef):
 	bodyDef.def.userData= &bodyData;
 
 	createB2Body();
+	addToGrid();
 }
 
 RigidObject::~RigidObject(){
@@ -95,14 +96,16 @@ RigidObject::~RigidObject(){
 }
 
 RigidFixture& RigidObject::add(const RigidFixtureDef& fix){
+	removeFromGrid();
 	fixtureDefs.pushBack(util::makeUniquePtr<RigidFixtureDef>(fix));
-
 	createFixture(fix);
+	addToGrid();
 	return *fixtures.back();
 }
 
 void RigidObject::set(const RigidObjectDef& def){
 	release_ensure_msg(!isProxy() && !isProxyMaster(), "@todo proxy impl");
+	removeFromGrid();
 
 	bodyDef= def;
 	bodyDef.def.userData= &bodyData;
@@ -110,22 +113,21 @@ void RigidObject::set(const RigidObjectDef& def){
 	if (bodyDef.def.active){
 		if (body)
 			destroyB2Body();
-
 		createB2Body();
 	}
+	addToGrid();
 }
 
 void RigidObject::setActive(bool a){
 	if (a == bodyDef.def.active)
 		return;
 
+	removeFromGrid();
 	bodyDef.def.active= a;
 
 	if (isNormal()){
 		getB2Body()->SetActive(a);
-		return;
-	}
-	else {
+	} else {
 		bool body_active= false;
 
 		// Check if someone in weld group is active
@@ -135,9 +137,9 @@ void RigidObject::setActive(bool a){
 				break;
 			}
 		}
-
 		getB2Body()->SetActive(body_active);
 	}
+	addToGrid();
 }
 
 void RigidObject::setStatic(bool s){
@@ -157,7 +159,6 @@ void RigidObject::setStatic(bool s){
 
 void RigidObject::clear(){
 	ensure_msg(getJoints().empty(), "todo clear with joints");
-
 	removeFromGrid();
 
 	fixtureDefs.clear();
@@ -311,6 +312,7 @@ void RigidObject::setTransform(const Transform& t){
 }
 
 void RigidObject::setPosition(util::Vec2d p){
+	removeFromGrid();
 	if (isProxy()){
 		auto offset_t= proxyData->master->getTransform()*
 			getTransform().inversed();
@@ -321,9 +323,11 @@ void RigidObject::setPosition(util::Vec2d p){
 		body->SetAwake(true);
 		overrideCachedValuesByB2();
 	}
+	addToGrid();
 }
 
 void RigidObject::setRotation(real32 r){
+	removeFromGrid();
 	if (isProxy()){
 		auto offset_t= proxyData->master->getTransform()*
 			getTransform().inversed();
@@ -335,6 +339,7 @@ void RigidObject::setRotation(real32 r){
 		body->SetAwake(true);
 		overrideCachedValuesByB2();
 	}
+	addToGrid();
 }
 
 void RigidObject::setFixedRotation(bool b){
@@ -792,7 +797,6 @@ void RigidObject::recreateBody(){
 
 	createB2Body();
 
-	// Luodaan fixturet uusiks
 	for (int32 i=0; i<(int)fixtureDefs.size(); i++){
 		createFixture(*fixtureDefs[i]);
 	}
@@ -846,15 +850,31 @@ util::DynArray<RigidObject*> RigidObject::getWeldGroupObjects() const {
 }
 
 void RigidObject::removeFromGrid(){
-	for (auto&& fix : fixtures) {
-		gWorld->getGrid().remove(fix.ref(), getTransform());
+	if (!inGrid)
+		return;
+
+	if (fixtures.empty()) {
+		physics::remove(gWorld->getGrid().getCell(getPosition()), *this);
+	} else {
+		for (auto&& fix : fixtures) {
+			gWorld->getGrid().remove(fix.ref(), getTransform());
+		}
 	}
+	inGrid= false;
 }
 
 void RigidObject::addToGrid(){
-	for (auto&& fix : fixtures) {
-		gWorld->getGrid().add(fix.ref(), getTransform());
+	if (inGrid || !isActive())
+		return;
+
+	if (fixtures.empty()) {
+		physics::add(gWorld->getGrid().getCell(getPosition()), *this);
+	} else {
+		for (auto&& fix : fixtures) {
+			gWorld->getGrid().add(fix.ref(), getTransform());
+		}
 	}
+	inGrid= true;
 }
 
 } // physics

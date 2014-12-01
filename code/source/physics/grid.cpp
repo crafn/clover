@@ -243,6 +243,7 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 	PROFILE();
 	if (!fix.getShape())
 		return;
+	Object& obj= fix.getObject();
 	collision::Shape shape= *NONULL(fix.getShape());
 	shape.transform(t);
 	bool is_static= fix.getObject().isStatic();
@@ -271,6 +272,12 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 			if (is_static) {
 				cell.staticEdge=
 					polycells[i].edge && cell.staticPortion <= 0.9999;
+			}
+
+			if (a == Action::add) {
+				physics::add(cell, obj);
+			} else if (a == Action::remove) {
+				physics::remove(cell, obj);
 			}
 
 			bb.append(polycells[i].position);
@@ -365,6 +372,35 @@ Grid::Cell& Grid::getCell(Chunk& ch, uint32 x, uint32 y)
 }
 
 real64 Grid::imprecision() const { return 1.0/def.cellsInUnit/2.0; }
+
+void add(Grid::Cell& cell, Object& obj)
+{
+	bool added= false;
+	for (SizeType i= 0; i < Grid::Cell::maxObjects; ++i) {
+		// Really permissive due to `Grid::modify`
+		if (	cell.objects[i] == nullptr ||
+				cell.objects[i] == &obj) {
+			cell.objects[i]= &obj;
+			added= true;
+			break;
+		}
+	}
+	if (!added) {
+		print(	debug::Ch::Phys, debug::Vb::Critical,
+				"Too many objects in a physics::Grid::Cell");
+	}
+}
+
+void remove(Grid::Cell& cell, Object& obj)
+{
+	for (SizeType i= 0; i < Grid::Cell::maxObjects; ++i) {
+		// Really permissive due to `Grid::modify`
+		if (cell.objects[i] == &obj) {
+			cell.objects[i]= nullptr;
+			break;
+		}
+	}
+}
 
 } // physics
 } // clover

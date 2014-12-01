@@ -25,7 +25,9 @@ void Entity::set(const util::SrtTransform3d& transform, const EntityDef& def){
 			t= commonReplaced(t, pose[joint_id].transform)*transform;
 		}
 
-		RigidObject& obj= emplaceObject<RigidObject>();
+		RigidObjectDef rigid_def;
+		rigid_def.setPosition(transform.translation.xy());
+		RigidObject& obj= emplaceObject<RigidObject>(rigid_def);
 		nameToObject[obj_def.name]= &obj;
 		obj.set3dTransform(t);
 
@@ -180,8 +182,9 @@ void Entity::setAsRagdoll(
 			
 			start= end= (t*transform).translation;
 			
-			object= &emplaceObject<RigidObject>();
-			object->setPosition(start);
+			RigidObjectDef obj_def;
+			obj_def.setPosition(start);
+			object= &emplaceObject<RigidObject>(obj_def);
 		}
 		else {
 			ensure(i < pose.size());
@@ -221,20 +224,21 @@ void Entity::setAsRagdoll(
 			fix_def.setShape(shape);
 			fix_def.setMaterial(mat);
 
-			object= &emplaceObject<RigidObject>();
-			object->setPosition((start + end)*0.5);
-			object->setRotation(rotation);
+			RigidObjectDef obj_def;
+			obj_def.setPosition((start + end)*0.5);
+			obj_def.setRotation(rotation);
+			object= &emplaceObject<RigidObject>(obj_def);
 			object->add(fix_def);
-			
+
 			for (const auto& pair : object_infos)
 				object->addIgnoreObject(*pair.second.object); // Disable self collision
 		}
-		
+
 		ensure(object);
 		object_infos[i]= ObjectInfo({start, end, rotation, length, object, super_i});
 		jointIdToObjectMap[i]= i;
 	}
-	
+
 	// Create joints
 	for (auto& object_info_pair : object_infos){
 		auto& object_info= object_info_pair.second;
