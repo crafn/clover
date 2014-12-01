@@ -67,6 +67,14 @@ T limited(T f, T ala, T yla){
 	return f;
 }
 
+template <typename T>
+void clamp(T& v, T min, T max) {
+	if (v < min)
+		v= min;
+	else if (v > max)
+		v= max;
+}
+
 real32 normalizedAngle(real32 angle);
 
 real32 angleBetweenCW(real32 angle1, real32 angle2);

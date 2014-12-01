@@ -93,8 +93,22 @@ void WorldMgr::update(){
 			uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
 			real32 half_cell= 0.5f/grid.getCellsInUnit();
 			for (SizeType i= 0; i < cells.size(); ++i) {
-				if (//	cells[i].staticEdge &&
-						cells[i].lastStaticPortion != cells[i].staticPortion) {
+				// Inform grid changes
+				if (	cells[i].lastStaticPortion != cells[i].staticPortion ||
+						cells[i].lastDynamicPortion != cells[i].dynamicPortion) {
+					for (physics::Object* obj : cells[i].objects) {
+						if (!obj)
+							continue;
+						WorldEntity* we= game::getOwnerWe(*obj);
+						if (!we || !we->hasAttribute("gridChange"))
+							continue;
+
+						we->setAttribute("gridChange", nodes::TriggerValue{});
+					}
+				}
+
+				// Spawning new objects
+				if (cells[i].lastStaticPortion != cells[i].staticPortion) {
 					util::Vec2i cell_p{	static_cast<int32>(i%width_c),
 										static_cast<int32>(i/width_c)};
 					auto pos=	ch_pos.casted<util::Vec2d>()*width + 
@@ -127,16 +141,13 @@ void WorldMgr::update(){
 								++edge_count;
 						}
 
-						if (cells[i].staticNormal.y < 0.1) {
-							if (edge_count <= 1) {
-								game::WeHandle edge= weMgr.createEntity("block_dirt_edge", t.translation);
-								edge->setAttribute("transform", t);
-							}
-						} else {
-							if (grass_count <= 1) {
-								game::WeHandle grass= weMgr.createEntity("grassClump", t.translation);
-								grass->setAttribute("transform", t);
-							}
+						if (edge_count <= 1) {
+							game::WeHandle edge= weMgr.createEntity("block_dirt_edge", t.translation);
+							edge->setAttribute("transform", t);
+						}
+						if (cells[i].staticNormal.y > 0.1 && grass_count <= 1) {
+							game::WeHandle grass= weMgr.createEntity("grassClump", t.translation);
+							grass->setAttribute("transform", t);
 						}
 
 						debug::gDebugDraw->addFilledCircle(
@@ -147,6 +158,7 @@ void WorldMgr::update(){
 							0.1);
 					}
 				}
+
 			}
 		}
 		weMgr.spawnNewEntities(); // Needed to have created entities updated this frame

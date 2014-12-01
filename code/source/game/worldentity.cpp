@@ -273,6 +273,13 @@ void WorldEntity::setPosition(util::Vec2d pos){
 	position= pos;
 }
 
+bool WorldEntity::hasAttribute(const util::Str8& name) const {
+	if (weInterface){
+		return weInterface->hasAttribute(name);
+	}
+	return false;
+}
+
 void WorldEntity::setAttribute(const util::Str8& name, const boost::any& value){
 	if (weInterface){
 		weInterface->setAttribute(name, value);

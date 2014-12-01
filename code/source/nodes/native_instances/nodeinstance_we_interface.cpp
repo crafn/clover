@@ -31,7 +31,7 @@ void WeInterfaceNodeInstance::create(){
 			BaseInputSlot* slot=	addInputSlot(	comp_slot->getName(),
 													comp_slot->getTemplateGroupName(),
 													comp_slot->getSignalType());
-			attributeInputs[hash(comp_slot->getName())]= slot;
+			attributeInputs[hash32(comp_slot->getName())]= slot;
 			
 			if (comp_slot->getName() == "transform")
 				transformInput= slot;
@@ -40,7 +40,7 @@ void WeInterfaceNodeInstance::create(){
 			BaseOutputSlot* slot= addOutputSlot(	comp_slot->getName(),
 													comp_slot->getTemplateGroupName(),
 													comp_slot->getSignalType());
-			attributeOutputs[hash(comp_slot->getName())]= slot;
+			attributeOutputs[hash32(comp_slot->getName())]= slot;
 			
 			if (comp_slot->getName() == "transform")
 				transformOutput= slot;
@@ -105,8 +105,12 @@ void WeInterfaceNodeInstance::receiveEvent(const NodeEvent& e){
 	setUpdateNeeded();
 }
 
+bool WeInterfaceNodeInstance::hasAttribute(const util::Str8& name) const {
+	return attributeInputs.find(hash32(name)) != attributeInputs.end();
+}
+
 void WeInterfaceNodeInstance::setAttribute(const util::Str8& name, const boost::any& value){
-	setAttribute(hash(name), value, name);
+	setAttribute(hash32(name), value, name);
 }
 
 void WeInterfaceNodeInstance::setAttributes(const AttributeInfos& attribs){
@@ -138,6 +142,12 @@ void WeInterfaceNodeInstance::setAttribute(uint32 name_hash, const boost::any& v
 	catch (const global::Exception& e){
 		print(debug::Ch::WE, debug::Vb::Moderate, "WeInterfaceNodeInstance::setAttribute(..): setting value failed for: %s, %u", disp_name.cStr(), name_hash);
 		/// @todo Check types and try to convert value, e.g. util::RtTransform is easy to convert util::SrtTransform
+	}
+
+	if (!firstUpdate){
+		auto o_it= attributeOutputs.find(name_hash);
+		ensure(o_it != attributeOutputs.end());
+		o_it->second->send(value);
 	}
 }
 

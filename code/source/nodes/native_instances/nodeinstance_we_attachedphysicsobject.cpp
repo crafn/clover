@@ -8,11 +8,14 @@ namespace nodes {
 void WeAttachedPhysicsObjectNodeInstance::create()
 {
 	activeIn= addInputSlot<SignalType::Boolean>("active");
+	objOffsetIn= addInputSlot<SignalType::SrtTransform3>("objOffset");
 	transformIn= addInputSlot<SignalType::SrtTransform3>("transform");
 	weInput= addInputSlot<SignalType::WeHandle>("we");
 
+	objTransformOut= addOutputSlot<SignalType::SrtTransform3>("objTransform");
+	objEstimatedOut= addOutputSlot<SignalType::SrtTransform3>("objEstimatedTransform");
 	transformOut= addOutputSlot<SignalType::SrtTransform3>("transform");
-	estimatedOut= addOutputSlot<SignalType::SrtTransform3>("estimatedTransform");
+
 	detachedOut= addOutputSlot<SignalType::Trigger>("detached");
 
 	setUpdateNeeded(true);
@@ -43,8 +46,10 @@ void WeAttachedPhysicsObjectNodeInstance::update()
 		return;
 	}
 
-	transformOut->send(object->get3dTransform());
-	estimatedOut->send(object->getEstimated3dTransform());
+	objTransformOut->send(object->get3dTransform());
+	objEstimatedOut->send(object->getEstimated3dTransform());
+
+	transformOut->send(objOffsetIn->get().inversed()*object->get3dTransform());
 
 	if (!objectCanMove())
 		setUpdateNeeded(false);
@@ -54,10 +59,11 @@ void WeAttachedPhysicsObjectNodeInstance::attach()
 {
 	util::Vec2d p= transformIn->get().translation.xy();
 
+	auto obj_t= objOffsetIn->get()*transformIn->get();
 	physics::RigidObjectDef def;
-	def.setPosition(p);
+	def.setPosition(obj_t.translation.xy());
 	object= util::makeUniquePtr<physics::RigidObject>(def);
-	object->set3dTransform(transformIn->get());
+	object->set3dTransform(obj_t);
 	game::setOwnerWe(object.ref(), weInput->get().get());
 
 	util::DynArray<physics::Fixture*> fixtures;
@@ -69,7 +75,7 @@ void WeAttachedPhysicsObjectNodeInstance::attach()
 	bool attached= false;
 	for (SizeType i= 0; i < fixtures.size(); ++i) {
 		/// @todo Input slot controlling attaching
-		if (!fixtures[0]->getObject().isStatic())
+		if (!fixtures[i]->getObject().isStatic())
 			continue;
 		detachListener.clear();
 		joint.get().attach(

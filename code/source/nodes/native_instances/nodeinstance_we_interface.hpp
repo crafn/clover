@@ -33,6 +33,8 @@ public:
 	
 	bool isRemoved() const { return removed; }
 	
+	bool hasAttribute(const util::Str8& name) const;
+
 	/// Sets initial values of WeInterface node attributes
 	/// Doesn't throw Exceptions, prints on error
 	void setAttribute(const util::Str8& name, const boost::any& value);
@@ -61,7 +63,6 @@ public:
 	
 private:
 	void setAttribute(uint32 name_hash, const boost::any& value, const util::Str8& disp_name= "");
-	uint32 hash(const util::Str8& str){ return util::Hash32<util::Str8>()(str); }
 	/// Forward values from attributeInputs to attributeOutputs
 	void sendAttributes();
 	

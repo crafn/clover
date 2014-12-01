@@ -37,6 +37,7 @@ public:
 		real64 staticPortion= 0.0;
 		real64 lastStaticPortion= 0.0;
 		real64 dynamicPortion= 0.0;
+		real64 lastDynamicPortion= 0.0;
 		util::Vec2f staticNormal;
 		bool staticEdge= false;
 		Object* objects[maxObjects]= {};

@@ -321,6 +321,7 @@ void Grid::update()
 		for (SizeType i= 0; i < ch.cells.size(); ++i) {
 			auto& cell= ch.cells[i];
 			cell.lastStaticPortion= cell.staticPortion;
+			cell.lastDynamicPortion= cell.dynamicPortion;
 		}
 	}
 }

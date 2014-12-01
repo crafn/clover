@@ -146,6 +146,7 @@ public:
 	
 	util::Vec2d getPosition() const { return position; }
 
+	bool hasAttribute(const util::Str8& name) const;
 	void setAttribute(const util::Str8& name, const boost::any& value);
 	template <typename T>
 	void setAttribute(const util::Str8& name, const T& value){ setAttribute(name, boost::any(value)); }
