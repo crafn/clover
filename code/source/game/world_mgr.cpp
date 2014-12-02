@@ -122,7 +122,8 @@ void WorldMgr::update(){
 						1.2*2.0*half_cell;
 					util::RtTransform2d t;
 					t.translation= pos + util::Vec2d(half_cell) + offset;
-					t.rotation= cells[i].staticNormal.rotationZ() - util::tau/4.0f;
+					t.rotation=
+						cells[i].staticNormal.rotationZ() - util::tau/4.0f;
 
 					auto& touch_cell= grid.getCell(t.translation);
 					if (	touch_cell.staticPortion < 0.0001 ||

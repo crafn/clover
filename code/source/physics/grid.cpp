@@ -308,7 +308,7 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 
 			auto& cell= getCell(coord);
 			cell.staticNormal= normal.normalized();
-			if (static_fill >= 0.9999*4)
+			if (static_fill >= 0.95*4)
 				cell.staticEdge= false;
 		}
 	}

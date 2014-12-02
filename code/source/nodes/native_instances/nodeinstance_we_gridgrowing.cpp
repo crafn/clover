@@ -25,7 +25,7 @@ void WeGridGrowingNodeInstance::create()
 		util::Vec2d check_pos= transformIn->get().translation;
 		auto& grid= physics::gPhysMgr->getWorld().getGrid();
 		physics::Grid::Cell& cell= grid.getCell(check_pos);
-		grow= cell.staticPortion + cell.dynamicPortion < 0.7;
+		grow= cell.staticPortion + cell.dynamicPortion < 0.5;
 
 		setUpdateNeeded(true);
 	});

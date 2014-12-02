@@ -77,7 +77,7 @@ void ArmatureSuit::createObjects(const util::SrtTransform3d& t, const animation:
 				globalpose[joint.getId()].transform); 
 		def.setTransform(t);
 		objects.insert(makePair(joint.getName(),
-								util::makeUniquePtr<RigidObject>(RigidObjectDef{t.translation})
+								util::makeUniquePtr<RigidObject>(def)
 		));
 	}
 }

@@ -110,7 +110,6 @@ void Object::set3dTransform(const Transform3& t_3d){
 
 void Object::set3dOffset(const Transform3& t){
 	offset3d= t;
-	offset3d.scale= util::Vec3d(1); // Scaling not allowed, makes stuff look funny
 	util::Vec2d in_pos= getPosition();
 
 	// This causes e.g. entity in hand to follow the empty object
