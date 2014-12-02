@@ -27,6 +27,12 @@ void WeAttachedPhysicsObjectNodeInstance::create()
 		setUpdateNeeded(true);
 	});
 
+	objOffsetIn->setOnReceiveCallback([&] ()
+	{
+		attach();
+		setUpdateNeeded(true);
+	});
+
 	transformIn->setOnReceiveCallback([&] ()
 	{
 		attach();
@@ -57,6 +63,7 @@ void WeAttachedPhysicsObjectNodeInstance::update()
 
 void WeAttachedPhysicsObjectNodeInstance::attach()
 {
+	detachListener.clear();
 	util::Vec2d p= transformIn->get().translation.xy();
 
 	auto obj_t= objOffsetIn->get()*transformIn->get();

@@ -19,6 +19,7 @@ private:
 	InputSlot<SignalType::Trigger>* checkIn;
 
 	OutputSlot<SignalType::Real>* stateOut;
+
 	real64 state= 0.0;
 	real64 stateDeriv= 0.0;
 	bool grow= false;

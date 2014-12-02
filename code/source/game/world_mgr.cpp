@@ -120,12 +120,9 @@ void WorldMgr::update(){
 						cells[i].staticNormal.casted<util::Vec2d>()*
 						(cells[i].staticPortion - 1.0)*
 						1.2*2.0*half_cell;
-					util::RtTransform2d t;
-					t.translation= pos + util::Vec2d(half_cell) + offset;
-					t.rotation=
-						cells[i].staticNormal.rotationZ() - util::tau/4.0f;
+					util::Vec2d obj_pos= pos + util::Vec2d(half_cell) + offset;
 
-					auto& touch_cell= grid.getCell(t.translation);
+					auto& touch_cell= grid.getCell(obj_pos);
 					if (	touch_cell.staticPortion < 0.0001 ||
 							(!touch_cell.staticEdge && !cells[i].staticEdge))
 						continue;
@@ -144,13 +141,18 @@ void WorldMgr::update(){
 							++edge_count;
 					}
 
+					util::RtTransform2d obj_t;
+					obj_t.translation= obj_pos;
+					obj_t.rotation=
+						cells[i].staticNormal.rotationZ() - util::tau/4.0f;
+
 					if (edge_count <= 1) {
-						game::WeHandle edge= weMgr.createEntity("block_dirt_edge", t.translation);
-						edge->setAttribute("transform", t);
+						game::WeHandle edge= weMgr.createEntity("block_dirt_edge", obj_pos);
+						edge->setAttribute("transform", obj_t);
 					}
 					if (cells[i].staticNormal.y > 0.1 && grass_count <= 1) {
-						game::WeHandle grass= weMgr.createEntity("grassClump", t.translation);
-						grass->setAttribute("transform", t);
+						game::WeHandle grass= weMgr.createEntity("grassClump", obj_pos);
+						grass->setAttribute("transform", obj_t);
 					}
 
 					debug::gDebugDraw->addFilledCircle(

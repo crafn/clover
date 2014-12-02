@@ -19,7 +19,7 @@ void WeGridGrowingNodeInstance::create()
 	checkIn= addInputSlot<SignalType::Trigger>("check");
 
 	stateOut= addOutputSlot<SignalType::Real>("state");
-
+	
 	checkIn->setOnReceiveCallback([&] ()
 	{
 		util::Vec2d check_pos= transformIn->get().translation;
