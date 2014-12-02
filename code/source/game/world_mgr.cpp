@@ -92,6 +92,9 @@ void WorldMgr::update(){
 			uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
 			real32 half_cell= 0.5f/grid.getCellsInUnit();
 			for (SizeType i= 0; i < cells.size(); ++i) {
+				if (cells[i].worldEdge)
+					continue;
+
 				// Inform grid changes
 				if (	cells[i].lastStaticPortion != cells[i].staticPortion ||
 						cells[i].lastDynamicPortion != cells[i].dynamicPortion) {
@@ -164,9 +167,20 @@ void WorldMgr::update(){
 
 	updateWorldIO();
 	weMgr.spawnNewEntities();
+
 	weMgr.update();
-	weMgr.removeFlagged();
 	weMgr.spawnNewEntities();
+	weMgr.removeFlagged();
+
+	// Modify grid for loaded chunks so that no changes are seen
+	// This prevents e.g. creating double edges for ground on world load
+	/// @todo Fix - this doesn't prevent seeing changes in weMgr.update.
+	///       Possible solution could be that spawnNewEntities runs node init,
+	///       and this extra chunk update would be done before weMgr.update
+	for (auto p : loadedChunks)
+		physics::gPhysMgr->getWorld().getGrid().updateChunk(p);
+	loadedChunks.clear();
+
 
 	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
 	
@@ -226,7 +240,11 @@ real64 WorldMgr::getDayPhase() const {
 	return modf(time/getDayDuration(), &intpart);
 }
 
-void WorldMgr::onChunkStateChange(const game::WorldChunk& ch){
+void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev){
+	if (prev == WorldChunk::State::Loading) {
+		loadedChunks.pushBack(ch.getPosition());
+	}
+
 	if (ch.getState() == game::WorldChunk::State::Active){
 		physics::gWorld->addChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
 	}
@@ -261,24 +279,22 @@ void WorldMgr::updateWorldIO(){
 			
 			// Activate chunks
 			for (auto& chunk : cluster){
-				chunk->setState(game::WorldChunk::State::Active);
+				chunk->setState(WorldChunk::State::Active);
 			}
 		});
 		
-		// Remove chunks which are going to be loaded from 'new_chunks'
 		util::extractIf(new_chunks, [](game::WorldChunk* ch){
-			return ch->getState() == game::WorldChunk::State::Creating;
+			return ch->getState() == WorldChunk::State::Loading;
 		});
 		
 		if (!new_chunks.empty())
 			worldGen.addToGeneration(new_chunks, priority_pos);
-	}
+	}	
 	
-	// World streaming
+	// Streaming
 
 	worldGen.generate(global::gCfgMgr->get<double>("game::maxWorldGeneratingTime"));
 	saveMgr.update(global::gCfgMgr->get<double>("game::maxWorldIoTime"));
-	
 
 	// Saving
 

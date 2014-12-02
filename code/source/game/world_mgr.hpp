@@ -49,10 +49,11 @@ public:
 	real64 getDayPhase() const;
 
 	/// game::WorldChunk calls
-	void onChunkStateChange(const game::WorldChunk& ch);
+	void onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev);
 
 private:
 	void updateWorldIO();
+	util::DynArray<util::Vec2i> loadedChunks;
 
 	real32 time;
 	bool chunksLocked;

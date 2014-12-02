@@ -54,7 +54,6 @@ WorldChunk::WorldChunk(ChunkVec pos)
 	entities.resize(1024);
 
 	setPosition(pos);
-	
 }
 
 WorldChunk::~WorldChunk(){
@@ -77,6 +76,8 @@ void WorldChunk::setState(State s){
 	if (s == state)
 		return;
 
+	auto prev= state;
+
 	// State::Serializing can be changed only to Destroying
 	ensure(	state != State::Serializing ||
 			(state == State::Serializing && s == State::Destroying));
@@ -94,7 +95,7 @@ void WorldChunk::setState(State s){
 		entities[i]->setActive(state == State::Active);
 	}
 
-	game::gWorldMgr->onChunkStateChange(*this);
+	game::gWorldMgr->onChunkStateChange(*this, prev);
 }
 
 void WorldChunk::setPosition(ChunkVec pos){

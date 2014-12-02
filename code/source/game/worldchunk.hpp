@@ -35,7 +35,8 @@ public:
 	enum class State {
 		None, // Default
 		Active,
-		Creating, // Loading or generating
+		Loading,
+		Generating,
 		Serializing, // Serialization is performed (possibly in other thread)
 		Destroying // Destroying after saved to file
 	};

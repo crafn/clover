@@ -247,6 +247,8 @@ void Draw::drawChunk(	util::Vec2i pos,
 				util::Color c= util::lerp(dyn_c, static_c, color_mul);
 				if (cells[i].staticEdge)
 					c.r= 1.0;
+				if (cells[i].worldEdge)
+					c.r= c.g= c.b= 0.0;
 				c.a= portion*alpha;
 
 				util::Vec2f ll{	static_cast<real32>(x)/cells_in_unit,

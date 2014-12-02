@@ -290,7 +290,7 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 	for (int32 y= bb.getMin().y - 1; y < bb.getMax().y + 1; ++y) {
 		for (int32 x= bb.getMin().x - 1; x < bb.getMax().x + 1; ++x) {
 			util::Vec2i coord{x, y};
-			util::DynArray<util::Vec2i> dirs= {
+			const std::array<util::Vec2i, 4> dirs= {
 				util::Vec2i{1, 0},
 				util::Vec2i{0, 1},
 				util::Vec2i{-1, 0},
@@ -323,26 +323,35 @@ void Grid::clear()
 void Grid::update()
 {
 	for (auto&& pair : chunks) {
-		Chunk& ch= pair.second;
-		for (SizeType i= 0; i < ch.cells.size(); ++i) {
-			auto& cell= ch.cells[i];
-			cell.lastStaticPortion= cell.staticPortion;
-			cell.lastDynamicPortion= cell.dynamicPortion;
-		}
+		updateChunk(pair.first);
 	}
 }
 
-void Grid::addChunk(util::Vec2i pos)
+void Grid::updateChunk(ChunkVec pos)
+{
+	auto& ch= chunks[pos];
+	for (SizeType i= 0; i < ch.cells.size(); ++i) {
+		auto& cell= ch.cells[i];
+		cell.lastStaticPortion= cell.staticPortion;
+		cell.lastDynamicPortion= cell.dynamicPortion;
+	}
+}
+
+void Grid::addChunk(ChunkVec pos)
 {
 	chunks[pos].valid= true;
 	chunks[pos].cells.resize(cellsInChunkArea());
+
+	updateWorldEdges(pos);
 }
 
-void Grid::removeChunk(util::Vec2i pos)
+void Grid::removeChunk(ChunkVec pos)
 {
 	auto it= chunks.find(pos);
 	ensure(it != chunks.end());
 	chunks.erase(it);
+
+	updateWorldEdges(pos);
 }
 
 bool Grid::isolated(const Shape& shp, util::RtTransform2d t)
@@ -352,14 +361,102 @@ bool Grid::isolated(const Shape& shp, util::RtTransform2d t)
 	return false;
 }
 
+auto Grid::getChunkPositions() const
+-> util::DynArray<ChunkVec>
+{
+	util::DynArray<ChunkVec> ret;
+	for (auto& p : chunks) {
+		if (p.second.valid)
+			ret.pushBack(p.first);
+	}
+	return ret;
+}
+
+void Grid::updateWorldEdges(ChunkVec pos)
+{
+	PROFILE();
+	const std::array<util::Vec2i, 4> dirs= {
+		util::Vec2i{1, 0},
+		util::Vec2i{0, 1},
+		util::Vec2i{-1, 0},
+		util::Vec2i{0, -1}
+	};
+	const SizeType right= 0;
+	const SizeType up= 1;
+	const SizeType left= 2;
+	const SizeType down= 3;
+
+	util::DynArray<Chunk*> upd_chunks;
+
+	Chunk* chunk= nullptr;
+	if (chunks.find(pos) != chunks.end()) {
+		chunk= &chunks[pos];
+		upd_chunks.pushBack(chunk);
+	}
+
+	// Update chunk statuses
+	for (SizeType i= 0; i < dirs.size(); ++i) {
+		const auto& dir= dirs[i];
+
+		Chunk* side= nullptr;
+		if (chunks.find(pos + dir) != chunks.end())
+			side= &chunks[pos + dir];
+		if (side && !side->valid)
+			side= nullptr;
+
+		bool edge= (chunk == nullptr) != (side == nullptr);
+
+		if (chunk)
+			chunk->worldEdge[i]= edge;
+		if (side) {
+			side->worldEdge[(i + 2)%4]= edge;
+			upd_chunks.pushBack(side);
+		}
+	}
+
+	// Update cells at chunk edges
+	SizeType width= cellsInChunkWidth();
+	for (auto& ch_ptr : upd_chunks) {
+		auto& ch= *NONULL(ch_ptr);
+
+		// Corners
+		getCell(ch, 0, 0).worldEdge=
+			ch.worldEdge[left] || ch.worldEdge[down];
+		getCell(ch, 0, width - 1).worldEdge= 
+			ch.worldEdge[left] || ch.worldEdge[up];
+		getCell(ch, width - 1, width - 1).worldEdge= 
+			ch.worldEdge[right] || ch.worldEdge[up];
+		getCell(ch, width - 1, 0).worldEdge= 
+				ch.worldEdge[right] || ch.worldEdge[down];
+
+		// Bottom
+		for (SizeType x= 1; x < width - 1; ++x) {
+			getCell(ch, x, 0).worldEdge= ch.worldEdge[down];
+		}
+		// Top
+		for (SizeType x= 1; x < width - 1; ++x) {
+			getCell(ch, x, width - 1).worldEdge= ch.worldEdge[up];
+		}
+		// Left
+		for (SizeType y= 1; y < width - 1; ++y) {
+			getCell(ch, 0, y).worldEdge= ch.worldEdge[left];
+		}
+		// Right
+		for (SizeType y= 1; y < width - 1; ++y) {
+			getCell(ch, width - 1, y).worldEdge= ch.worldEdge[right];
+		}
+	}
+}
+
+
 Grid::Cell& Grid::getCell(util::Vec2d world_pos)
 {
-	util::Vec2i chunk_vec= chunkVec(world_pos, def.chunkWidth);
+	ChunkVec chunk_vec= chunkVec(world_pos, def.chunkWidth);
 	auto&& chunk= chunks[chunk_vec];
 	if (chunk.cells.size() < cellsInChunkArea())
 		chunk.cells.resize(cellsInChunkArea());
 
-	util::Vec2i cell_vec=
+	ChunkVec cell_vec=
 		chunkVec(	world_pos - chunk_vec.casted<util::Vec2d>()*def.chunkWidth,
 					1.0/def.cellsInUnit);
 
@@ -377,8 +474,8 @@ Grid::Cell& Grid::getCell(CellVec cell_pos)
 
 Grid::Cell& Grid::getCell(Chunk& ch, uint32 x, uint32 y)
 {
-	ensure((SizeType)(x + y*def.chunkWidth) < ch.cells.size());
-	return ch.cells[x + y*def.chunkWidth];
+	ensure((SizeType)(x + y*cellsInChunkWidth()) < ch.cells.size());
+	return ch.cells[x + y*cellsInChunkWidth()];
 }
 
 real64 Grid::imprecision() const { return 1.0/def.cellsInUnit/2.0; }

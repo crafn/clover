@@ -82,7 +82,7 @@ public:
 			ensure(chunk);
 			ensure(chunk->getState() == game::WorldChunk::State::None);
 			//print(debug::Ch::Save, debug::Vb::Trivial, "LoadTask(..): (%i, %i)", chunk->getPosition().x, chunk->getPosition().y);
-			chunk->setState(game::WorldChunk::State::Creating);
+			chunk->setState(game::WorldChunk::State::Loading);
 		}
 	}
 

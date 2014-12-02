@@ -42,7 +42,7 @@ void WorldGen::addToGeneration(ChunkSet chunks, WorldVec priority_pos){
 		ensure(chunk);
 		ensure(chunk->getState() == game::WorldChunk::State::None);
 		
-		chunk->setState(game::WorldChunk::State::Creating);
+		chunk->setState(game::WorldChunk::State::Generating);
 		chunkGens.emplaceBack(*this, *chunk);
 		transferWaitingWorkers(chunkGens.back());
 	}

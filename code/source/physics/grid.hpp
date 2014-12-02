@@ -40,6 +40,7 @@ public:
 		real64 lastDynamicPortion= 0.0;
 		util::Vec2f staticNormal;
 		bool staticEdge= false;
+		uint8 worldEdge= false;
 		Object* objects[maxObjects]= {};
 	};
 
@@ -51,6 +52,7 @@ public:
 	void clear();
 
 	void update();
+	void updateChunk(ChunkVec pos);
 
 	void addChunk(ChunkVec pos);
 	void removeChunk(ChunkVec pos);
@@ -66,18 +68,19 @@ public:
 	{ return util::asArrayView(chunks.at(v).cells); }
 	Cell& getCell(util::Vec2d world_pos);
 
-	util::DynArray<ChunkVec> getChunkPositions() const
-	{ return util::keys(chunks); }
+	util::DynArray<ChunkVec> getChunkPositions() const;
 	
 private:
 	struct Chunk {
 		util::DynArray<Cell> cells;
 		/// False if chunk is not yet registered by `addChunk`
 		bool valid= false;
+		std::array<bool, 4> worldEdge= {};
 	};
 	using FilterCb= std::function<void (Grid&)>;
 	enum class Action { add, remove };
 
+	void updateWorldEdges(ChunkVec pos);
 	void modify(Action a, const physics::Fixture& fix, util::RtTransform2d t);
 	Cell& getCell(CellVec cell_pos);
 	Cell& getCell(Chunk& ch, uint32 x, uint32 y);
