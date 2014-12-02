@@ -77,9 +77,9 @@ void WorldChunk::setState(State s){
 	if (s == state)
 		return;
 
-	// State:.Serializing can be changed only to Destroying
+	// State::Serializing can be changed only to Destroying
 	ensure(	state != State::Serializing ||
-				(state == State::Serializing && s == State::Destroying));
+			(state == State::Serializing && s == State::Destroying));
 
 	state= s;
 

@@ -80,7 +80,6 @@ WorldMgr::~WorldMgr(){
 }
 
 void WorldMgr::update(){
-
 	{ // Grid test
 		weMgr.removeFlagged(); // Removes phys objects flagged by ui
 
@@ -107,64 +106,68 @@ void WorldMgr::update(){
 					}
 				}
 
-				// Spawning new objects
+				// Create edge entities
 				if (cells[i].lastStaticPortion != cells[i].staticPortion) {
 					util::Vec2i cell_p{	static_cast<int32>(i%width_c),
 										static_cast<int32>(i/width_c)};
 					auto pos=	ch_pos.casted<util::Vec2d>()*width + 
 								cell_p.casted<util::Vec2d>()/width_c*width;
 
-					if (cells[i].lastStaticPortion > cells[i].staticPortion) {
-						util::Vec2d offset=
-							cells[i].staticNormal.casted<util::Vec2d>()*
-							(cells[i].staticPortion - 1.0)*
-							1.2*2.0*half_cell;
-						util::RtTransform2d t;
-						t.translation= pos + util::Vec2d(half_cell) + offset;
-						t.rotation= cells[i].staticNormal.rotationZ() - util::tau/4.0f;
+					util::Vec2d offset=
+						cells[i].staticNormal.casted<util::Vec2d>()*
+						(cells[i].staticPortion - 1.0)*
+						1.2*2.0*half_cell;
+					util::RtTransform2d t;
+					t.translation= pos + util::Vec2d(half_cell) + offset;
+					t.rotation= cells[i].staticNormal.rotationZ() - util::tau/4.0f;
 
-						auto& touch_cell= grid.getCell(t.translation);
-						if (touch_cell.staticPortion < 0.0001)
+					auto& touch_cell= grid.getCell(t.translation);
+					if (	touch_cell.staticPortion < 0.0001 ||
+							(!touch_cell.staticEdge && !cells[i].staticEdge))
+						continue;
+
+					SizeType grass_count= 0;
+					SizeType edge_count= 0;
+					for (physics::Object* obj : touch_cell.objects) {
+						if (!obj)
 							continue;
-
-						SizeType grass_count= 0;
-						SizeType edge_count= 0;
-						for (physics::Object* obj : touch_cell.objects) {
-							if (!obj)
-								continue;
-							WorldEntity* we= game::getOwnerWe(*obj);
-							if (!we)
-								continue;
-							if (we->getTypeName() == "grassClump")
-								++grass_count;
-							if (we->getTypeName() == "block_dirt_edge")
-								++edge_count;
-						}
-
-						if (edge_count <= 1) {
-							game::WeHandle edge= weMgr.createEntity("block_dirt_edge", t.translation);
-							edge->setAttribute("transform", t);
-						}
-						if (cells[i].staticNormal.y > 0.1 && grass_count <= 1) {
-							game::WeHandle grass= weMgr.createEntity("grassClump", t.translation);
-							grass->setAttribute("transform", t);
-						}
-
-						debug::gDebugDraw->addFilledCircle(
-							util::Coord(pos),
-							util::Coord(0.2),
-							util::Color{1.0, 0.0, 0.0, 0.5},
-							0.0,
-							0.1);
+						WorldEntity* we= game::getOwnerWe(*obj);
+						if (!we)
+							continue;
+						if (we->getTypeName() == "grassClump")
+							++grass_count;
+						if (we->getTypeName() == "block_dirt_edge")
+							++edge_count;
 					}
-				}
 
+					if (edge_count <= 1) {
+						game::WeHandle edge= weMgr.createEntity("block_dirt_edge", t.translation);
+						edge->setAttribute("transform", t);
+					}
+					if (cells[i].staticNormal.y > 0.1 && grass_count <= 1) {
+						game::WeHandle grass= weMgr.createEntity("grassClump", t.translation);
+						grass->setAttribute("transform", t);
+					}
+
+					debug::gDebugDraw->addFilledCircle(
+						util::Coord(pos),
+						util::Coord(0.2),
+						util::Color{1.0, 0.0, 0.0, 0.5},
+						0.0,
+						0.1);
+				}
 			}
 		}
-		weMgr.spawnNewEntities(); // Needed to have created entities updated this frame
+		weMgr.spawnNewEntities(); // Created entities need to be updated this frame
 	}
+	physics::gPhysMgr->getWorld().getGrid().update();
 
+	updateWorldIO();
+	weMgr.spawnNewEntities();
 	weMgr.update();
+	weMgr.removeFlagged();
+	weMgr.spawnNewEntities();
+
 	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
 	
 	{
@@ -210,12 +213,7 @@ void WorldMgr::update(){
 
 		visual::gVisualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
 	}
-
-	updateWorldIO();
-
-	weMgr.spawnNewEntities();
-	weMgr.removeFlagged();
-
+	
 	time += util::gGameClock->getDeltaTime();
 }
 

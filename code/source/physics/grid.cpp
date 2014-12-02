@@ -270,12 +270,9 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 				if (cell_v < 0.0)
 					cell_v= 0.0;
 			}
-
-			/// @todo Proper edge detection
-			if (is_static) {
-				cell.staticEdge=
-					polycells[i].edge && cell.staticPortion <= 0.9999;
-			}
+	
+			// Marks too many - extras are removed at pp
+			cell.staticEdge= true;
 
 			if (a == Action::add) {
 				physics::add(cell, obj);
@@ -287,7 +284,9 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 		}
 	}
 
-	// Recalculate normals in the area
+	// Post-process:
+	//   - recalculate normals
+	//   - falsify cells.staticEdge which really aren't edges
 	for (int32 y= bb.getMin().y - 1; y < bb.getMax().y + 1; ++y) {
 		for (int32 x= bb.getMin().x - 1; x < bb.getMax().x + 1; ++x) {
 			util::Vec2i coord{x, y};
@@ -297,13 +296,20 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 				util::Vec2i{-1, 0},
 				util::Vec2i{0, -1}
 			};
+			real64 static_fill= 0.0;
 			util::Vec2f normal;
 			for (auto& dir : dirs) {
 				auto& side= getCell(coord + dir);
-				normal += -dir.casted<util::Vec2f>()*side.staticPortion;
+				real64 portion=
+					side.staticPortion > 1.0 ? 1.0 : side.staticPortion;
+				normal += -dir.casted<util::Vec2f>()*portion;
+				static_fill += portion;
 			}
+
 			auto& cell= getCell(coord);
 			cell.staticNormal= normal.normalized();
+			if (static_fill >= 0.9999*4)
+				cell.staticEdge= false;
 		}
 	}
 

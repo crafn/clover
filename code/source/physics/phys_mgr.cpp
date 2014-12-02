@@ -129,7 +129,6 @@ void PhysMgr::fluidUpdate(){
 
 void PhysMgr::postFrameUpdate(){
 	PROFILE_("physics");
-	getWorld().getGrid().update();
 	if (fluidMgr)
 		fluidMgr->postUpdate();
 }
