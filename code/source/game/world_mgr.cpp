@@ -32,14 +32,15 @@ WorldMgr* gWorldMgr;
 WorldMgr::WorldMgr()
 	: lastUpdTime(-std::numeric_limits<real64>::infinity())
 	, chunksLocked(false)
-	, worldGen(*this, resources::gCache->getSubCache<world_gen::WorkerType>().getResources())
 	, propertyGrid(physics::gPhysMgr->getWorld().getGrid())
+	, worldGen(*this, resources::gCache->getSubCache<world_gen::WorkerType>().getResources())
 	, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
 		dayTime += util::gGameClock->getDeltaTime()*300;
 	})
 	, worldTimeRewindListener("host", "dev", "worldTimeRewind", [this] (){
 		dayTime -= util::gGameClock->getDeltaTime()*300;
-	}){
+	})
+{
 
 	dayTime= getDayDuration()*0.45; // Start from day
 
@@ -76,11 +77,11 @@ WorldMgr::WorldMgr()
 	gtData.addRectByCenter(util::Vec2f(0),util::Vec2f(2));
 }
 
-WorldMgr::~WorldMgr(){
-	weMgr.removeAll();
-}
+WorldMgr::~WorldMgr()
+{ }
 
-void WorldMgr::update(){
+void WorldMgr::update()
+{
 	{ // Inform grid changes to WorldEntities
 		weMgr.removeFlagged(); // Removes phys objects flagged by ui
 

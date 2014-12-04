@@ -15,18 +15,8 @@ WorldGen::WorldGen(game::WorldMgr& w, util::DynArray<WorkerType*> worker_types)
 		, generationTask(std::bind(&WorldGen::generateChunks, this, std::placeholders::_1))
 { }
 
-WorldGen::~WorldGen(){
-	quit= true;
-	generationTask.runFor(eternity);
-
-	for (auto& gen : chunkGens) {
-		gen.generate(0.0, util::SlicedTask::nullYield());
-		ensure(gen.isPlayable());
-	}
-	chunkGens.clear();
-
-	ensure_msg(generationTask.isFinished(), "Generation isn't finished");
-}
+WorldGen::~WorldGen()
+{ }
 
 void WorldGen::generate(real64 max_real_dt){
 	PROFILE_("worldGen");
@@ -70,6 +60,12 @@ void WorldGen::addToGeneration(ChunkSet chunks, WorldVec priority_pos){
 		generationTask.relaunch();
 }
 
+void WorldGen::stopGeneration()
+{
+	quit= true;
+	generationTask.runFor(eternity);
+}
+
 game::WeHandle WorldGen::createEntity(const util::Str8& name){
 	ensure(worldMgr);
 	return worldMgr->getWeMgr().createEntity(name);
@@ -109,6 +105,8 @@ void WorldGen::generateChunks(const util::SlicedTask::Yield& yield){
 			if (it->isPlayable())
 				continue; // Playable chunks are generated elswehere
 			it->generate(worldMgr->getTime(), yield);
+			if (quit)
+				break;
 		}
 		yield();
 	}

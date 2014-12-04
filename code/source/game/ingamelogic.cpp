@@ -3,15 +3,17 @@
 namespace clover {
 namespace game {
 
-InGameLogic::InGameLogic(){
+InGameLogic::InGameLogic()
+{
 	game::gWorldMgr= &worldLogic;
 	temp= 0;
 }
 
-InGameLogic::~InGameLogic(){
-}
+InGameLogic::~InGameLogic()
+{ }
 
-void InGameLogic::update(){
+void InGameLogic::update()
+{
 	temp++;
 	/// @todo Fix audio bug: if audio is triggered too early it will not play :(
 	if (temp == 3) worldLogic.getAudioEnv().setAmbientTrack("ambientTrack");
@@ -22,12 +24,12 @@ void InGameLogic::update(){
 
 }
 
-void InGameLogic::onQuit(){
-	game::gWorldMgr->getWorldGen().generate(world_gen::WorldGen::eternity);
+void InGameLogic::onQuit()
+{
+	// Ignore chunks not fully generated
+	game::gWorldMgr->getWorldGen().stopGeneration();
 
-	// Tallennetaan kaikki ladatut chunkit kun peli sammuu
 	util::Set<game::WorldChunk*> chunks= game::gWorldMgr->getChunkMgr().getChunks();
-
 	util::Set<game::WorldChunk*> living_chunks;
 	for (auto m : chunks){
 		if (m->getState() == game::WorldChunk::State::Active)
@@ -35,7 +37,6 @@ void InGameLogic::onQuit(){
 	}
 
 	game::gWorldMgr->getSaveMgr().safeStartSavingChunks(living_chunks);
-
 	game::gWorldMgr->getSaveMgr().finishSave(
 			util::asArrayView(game::gWorldMgr->getWeMgr().getGlobalEntities()));
 	game::gWorldMgr->getChunkMgr().removeAll();

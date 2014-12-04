@@ -34,6 +34,7 @@ public:
 	/// Generates world approx max_real_dt seconds
 	void generate(real64 max_real_dt);
 	void addToGeneration(ChunkSet chunks, WorldVec priority_pos);
+	void stopGeneration();
 
 	const util::DynArray<WorkerType*>& getWorkerTypes() const { return workerTypes; }
 	

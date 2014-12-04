@@ -68,7 +68,6 @@ private:
 	visual::ModelEntityDef lightBackgroundDef;
 	visual::Entity lightBackground;
 
-	world_gen::WorldGen worldGen;
 
 	WorldChunkMgr chunkMgr;
 	WeMgr weMgr;
@@ -76,8 +75,8 @@ private:
 	PropertyGrid propertyGrid;
 	SaveMgr	saveMgr;
 	WorldAudioEnv audioEnv;
-
 	WorldContactListener contactListener;
+	world_gen::WorldGen worldGen;
 
 	ui::hid::ActionListener<> worldTimeForwardListener;
 	ui::hid::ActionListener<> worldTimeRewindListener;
