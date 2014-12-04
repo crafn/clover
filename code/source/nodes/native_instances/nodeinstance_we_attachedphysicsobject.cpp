@@ -8,13 +8,12 @@ namespace nodes {
 void WeAttachedPhysicsObjectNodeInstance::create()
 {
 	activeIn= addInputSlot<SignalType::Boolean>("active");
-	objOffsetIn= addInputSlot<SignalType::SrtTransform3>("objOffset");
 	transformIn= addInputSlot<SignalType::SrtTransform3>("transform");
+	anchorIn= addInputSlot<SignalType::Vec2>("anchor");
 	weInput= addInputSlot<SignalType::WeHandle>("we");
 
-	objTransformOut= addOutputSlot<SignalType::SrtTransform3>("objTransform");
-	objEstimatedOut= addOutputSlot<SignalType::SrtTransform3>("objEstimatedTransform");
 	transformOut= addOutputSlot<SignalType::SrtTransform3>("transform");
+	estimatedOut= addOutputSlot<SignalType::SrtTransform3>("estimatedTransform");
 
 	detachedOut= addOutputSlot<SignalType::Trigger>("detached");
 
@@ -27,13 +26,13 @@ void WeAttachedPhysicsObjectNodeInstance::create()
 		setUpdateNeeded(true);
 	});
 
-	objOffsetIn->setOnReceiveCallback([&] ()
+	transformIn->setOnReceiveCallback([&] ()
 	{
 		attach();
 		setUpdateNeeded(true);
 	});
 
-	transformIn->setOnReceiveCallback([&] ()
+	anchorIn->setOnReceiveCallback([&] ()
 	{
 		attach();
 		setUpdateNeeded(true);
@@ -52,10 +51,8 @@ void WeAttachedPhysicsObjectNodeInstance::update()
 		return;
 	}
 
-	objTransformOut->send(object->get3dTransform());
-	objEstimatedOut->send(object->getEstimated3dTransform());
-
-	transformOut->send(objOffsetIn->get().inversed()*object->get3dTransform());
+	transformOut->send(object->get3dTransform());
+	estimatedOut->send(object->getEstimated3dTransform());
 
 	if (!objectCanMove())
 		setUpdateNeeded(false);
@@ -64,9 +61,9 @@ void WeAttachedPhysicsObjectNodeInstance::update()
 void WeAttachedPhysicsObjectNodeInstance::attach()
 {
 	detachListener.clear();
-	util::Vec2d p= transformIn->get().translation.xy();
+	util::Vec2d p= anchorIn->get();
 
-	auto obj_t= objOffsetIn->get()*transformIn->get();
+	auto obj_t= transformIn->get();
 	physics::RigidObjectDef def;
 	def.setPosition(obj_t.translation.xy());
 	object= util::makeUniquePtr<physics::RigidObject>(def);

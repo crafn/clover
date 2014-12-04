@@ -22,13 +22,12 @@ private:
 	bool objectCanMove() const;
 
 	InputSlot<SignalType::Boolean>* activeIn;
-	InputSlot<SignalType::SrtTransform3>* objOffsetIn;
 	InputSlot<SignalType::SrtTransform3>* transformIn;
+	InputSlot<SignalType::Vec2>* anchorIn;
 	InputSlot<SignalType::WeHandle>* weInput;
 
-	OutputSlot<SignalType::SrtTransform3>* objTransformOut;
-	OutputSlot<SignalType::SrtTransform3>* objEstimatedOut;
 	OutputSlot<SignalType::SrtTransform3>* transformOut;
+	OutputSlot<SignalType::SrtTransform3>* estimatedOut;
 	OutputSlot<SignalType::Trigger>* detachedOut;
 	
 	util::UniquePtr<physics::RigidObject> object;
