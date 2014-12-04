@@ -52,7 +52,7 @@ public:
 
 	void clear();
 
-	void touchCells(ChunkVec pos);
+	void touchCells(ChunkVec pos, real64 time);
 
 	void addChunk(ChunkVec pos);
 	void removeChunk(ChunkVec pos);

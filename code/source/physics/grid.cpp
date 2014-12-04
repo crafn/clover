@@ -332,13 +332,13 @@ void Grid::clear()
 	chunks.clear();
 }
 
-void Grid::touchCells(ChunkVec pos)
+void Grid::touchCells(ChunkVec pos, real64 time)
 {
 	auto& ch= chunks[pos];
 	for (SizeType i= 0; i < ch.cells.size(); ++i) {
 		auto& cell= ch.cells[i];
-		cell.lastStaticEdit= detail::timestamp();
-		cell.lastDynamicEdit= detail::timestamp();
+		cell.lastStaticEdit= time;
+		cell.lastDynamicEdit= time;
 	}
 }
 

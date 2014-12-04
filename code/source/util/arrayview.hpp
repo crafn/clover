@@ -36,6 +36,7 @@ public:
 		return beginPtr[i];
 	}
 
+	bool empty() const { return beginPtr == endPtr; }
 	SizeType size() const { return endPtr - beginPtr; }
 
 	operator ArrayView<const T>() const {

@@ -18,6 +18,11 @@
 #include "worldentity_handle.hpp"
 
 namespace clover {
+namespace nodes {
+
+struct WeEdgeSpawnerNodeInstance;
+
+} // nodes
 namespace game {
 
 class WorldEntity;
@@ -51,7 +56,10 @@ public:
 	/// game::WorldChunk calls
 	void onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev);
 
+	/// nodes::WeEdgeSpawnerNodeInstance calls
+	void onEdgeSpawnTrigger(const nodes::WeEdgeSpawnerNodeInstance& spawn);
 private:
+
 	void updateWorldIO();
 	util::DynArray<util::Vec2i> loadedChunks;
 
@@ -64,10 +72,10 @@ private:
 	visual::Entity bg[3]; // Evening, Day, Night
 	visual::ModelEntityDef sunReDef;
 	visual::Entity sunRE;
-
 	visual::ModelEntityDef lightBackgroundDef;
 	visual::Entity lightBackground;
 
+	util::DynArray<const nodes::WeEdgeSpawnerNodeInstance*> edgeSpawns;
 
 	WorldChunkMgr chunkMgr;
 	WeMgr weMgr;

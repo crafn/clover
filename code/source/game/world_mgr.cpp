@@ -3,6 +3,7 @@
 #include "global/cfg_mgr.hpp"
 #include "debug/debugdraw.hpp"
 #include "hardware/device.hpp"
+#include "nodes/native_instances/nodeinstance_we_edgespawner.hpp"
 #include "physics.hpp"
 #include "physics/phys_mgr.hpp"
 #include "physics/world.hpp"
@@ -26,6 +27,99 @@
 
 namespace clover {
 namespace game {
+namespace detail {
+
+// Perform all edge spawns at once
+void spawnEdges(
+		util::ArrayView<const nodes::WeEdgeSpawnerNodeInstance*> spawners,
+		real64 last_spawn_time)
+{
+	PROFILE();
+	if (spawners.empty())
+		return;
+
+	util::DynArray<uint32> edge_counts;
+	edge_counts.resize(spawners.size());
+	util::DynArray<bool> spawner_present;
+	spawner_present.resize(spawners.size());
+
+	// Scan through the whole grid
+	auto& grid= physics::gPhysMgr->getWorld().getGrid();
+	auto&& chunk_positions= grid.getChunkPositions();
+	uint32 width= grid.getChunkWidth();
+	uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
+	real32 half_cell= 0.5f/grid.getCellsInUnit();
+	for (auto& ch_pos : chunk_positions) {
+		util::ArrayView<const physics::Grid::Cell> cells=
+			grid.getChunkCells(ch_pos);
+		for (SizeType i= 0; i < cells.size(); ++i) {
+			if (cells[i].worldEdge)
+				continue;
+
+			if (	last_spawn_time > cells[i].lastStaticEdit &&
+					last_spawn_time > cells[i].lastDynamicEdit)
+				continue;
+
+			// Find anchor point sufficiently deep
+			auto cell_p= util::Vec2i{	static_cast<int32>(i%width_c),
+										static_cast<int32>(i/width_c) };
+			auto pos=	ch_pos.casted<util::Vec2d>()*width + 
+						cell_p.casted<util::Vec2d>()/width_c*width;
+			auto offset=
+				cells[i].staticNormal.casted<util::Vec2d>()*
+				(cells[i].staticPortion - 1.0)*
+				1.2*2.0*half_cell;
+			auto anchor_p= pos + util::Vec2d(half_cell) + offset;
+			physics::Grid::Cell& anchor_cell= grid.getCell(anchor_p);
+			if (	anchor_cell.staticPortion < 0.0001 ||
+					(!anchor_cell.staticEdge && !cells[i].staticEdge))
+				continue;
+
+			// Scan cell for edge-spawning objects
+			for (auto& c : edge_counts)
+				c= 0;
+			for (auto& p : spawner_present)
+				p= false;
+			for (physics::Object* obj : anchor_cell.objects) {
+				if (!obj)
+					continue;
+				game::WorldEntity* we= game::getOwnerWe(*obj);
+				if (!we)
+					continue;
+				for (SizeType s_i= 0; s_i < spawners.size(); ++s_i) {
+					if (spawners[s_i]->getSpawnerType() == &we->getType())
+						spawner_present[s_i]= true;
+					else if (spawners[s_i]->getEdgeType() == &we->getType())
+						++edge_counts[s_i];
+				}
+			}
+
+			// Spawn edge entities
+			util::Set<const WeType*> used_spawners;
+			for (SizeType s_i= 0; s_i < spawners.size(); ++s_i) {
+				if (	!spawner_present[s_i] ||
+						edge_counts[s_i] > 0 ||
+						util::contains(used_spawners, spawners[s_i]->getSpawnerType()))
+					continue;
+
+				util::RtTransform2d edge_t;
+				edge_t.translation= anchor_p;
+				edge_t.rotation=
+					cells[i].staticNormal.rotationZ() - util::tau/4.0;
+
+				game::WeHandle edge=
+					game::gWorldMgr->getWeMgr().createEntity(
+							NONULL(spawners[s_i]->getEdgeType())->getName(),
+							edge_t.translation);
+				edge.ref().setAttribute("transform", edge_t);
+
+				used_spawners.insert(spawners[s_i]->getSpawnerType());
+			}
+		}
+	}
+}
+
+} // detail
 
 WorldMgr* gWorldMgr;
 
@@ -87,12 +181,12 @@ void WorldMgr::update()
 
 		auto& grid= physics::gPhysMgr->getWorld().getGrid();
 		auto&& chunk_positions= grid.getChunkPositions();
+		uint32 width= grid.getChunkWidth();
+		uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
+		real32 half_cell= 0.5f/grid.getCellsInUnit();
 		for (auto& ch_pos : chunk_positions) {
 			util::ArrayView<const physics::Grid::Cell> cells=
 				grid.getChunkCells(ch_pos);
-			uint32 width= grid.getChunkWidth();
-			uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
-			real32 half_cell= 0.5f/grid.getCellsInUnit();
 			for (SizeType i= 0; i < cells.size(); ++i) {
 				if (cells[i].worldEdge)
 					continue;
@@ -113,12 +207,12 @@ void WorldMgr::update()
 			}
 		}
 	}
+	ensure(edgeSpawns.empty()); // Should contain stuff only from current frame
+
 	updateWorldIO();
 	weMgr.spawnNewEntities(); // Created entities need to be updated this frame
 
 	weMgr.update();
-	weMgr.spawnNewEntities();
-	weMgr.removeFlagged();
 
 	// Modify grid for loaded chunks so that no changes are seen
 	// This prevents e.g. creating double edges for ground on world load
@@ -126,13 +220,17 @@ void WorldMgr::update()
 	///       Possible solution could be that spawnNewEntities runs node init,
 	///       and this extra chunk update would be done before weMgr.update
 	for (auto p : loadedChunks)
-		physics::gPhysMgr->getWorld().getGrid().touchCells(p);
+		physics::gPhysMgr->getWorld().getGrid().touchCells(p, -1.0);
 	loadedChunks.clear();
 
+	detail::spawnEdges(edgeSpawns, lastUpdTime);
+	edgeSpawns.clear();
 
-	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
+	weMgr.spawnNewEntities();
+	weMgr.removeFlagged();
 	
-	{
+	{ // Stuff that should be in data
+		visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
 		lightBackground.setPosition(util::Vec3d(0));
 
 		real32 phase= getDayPhase() + 0.75;
@@ -183,16 +281,19 @@ void WorldMgr::update()
 real64 WorldMgr::getTime() const
 { return util::gGameClock->getTime(); }
 
-real64 WorldMgr::getDayDuration() const {
+real64 WorldMgr::getDayDuration() const
+{
 	return 60*20;
 }
 
-real64 WorldMgr::getDayPhase() const {
+real64 WorldMgr::getDayPhase() const
+{
 	real64 intpart;
 	return modf(dayTime/getDayDuration(), &intpart);
 }
 
-void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev){
+void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev)
+{
 	if (prev == WorldChunk::State::Loading) {
 		loadedChunks.pushBack(ch.getPosition());
 	}
@@ -204,6 +305,9 @@ void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State 
 		physics::gWorld->removeChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
 	}
 }
+
+void WorldMgr::onEdgeSpawnTrigger(const nodes::WeEdgeSpawnerNodeInstance& spawn)
+{ edgeSpawns.emplaceBack(&spawn); }
 
 void WorldMgr::updateWorldIO(){
 	if (chunksLocked) {
