@@ -4,6 +4,7 @@
 #include "build.hpp"
 #include "util/map.hpp"
 #include "util/properties.hpp"
+#include "util/traits.hpp"
 #include "util/vector.hpp"
 
 namespace clover {
@@ -14,8 +15,7 @@ class Grid;
 } // physics
 namespace game {
 
-/// Grid containing arbitrary values used for
-/// spatial information exchange
+/// Grid used for spatial information exchange
 class PropertyGrid {
 public:
 	using CellVec= util::Vec2i;
@@ -36,6 +36,11 @@ public:
 		return it->second.find<T>(key);
 	}
 
+	void update();
+
+	physics::Grid& getPhysicsGrid() const
+	{ return *NONULL(physicsGrid); }
+
 private:
 	using Cell= util::Properties;
 
@@ -53,6 +58,14 @@ T tryGet(	const PropertyGrid& props,
 }
 
 } // game
+namespace util {
+
+template <>
+struct TypeStringTraits<game::PropertyGrid>{
+	static util::Str8 type(){ return "game::PropertyGrid"; }
+};
+
+} // util
 } // clover
 
 #endif // CLOVER_GAME_PROPERTYGRID_HPP

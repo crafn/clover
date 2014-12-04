@@ -28,6 +28,17 @@ struct RegisterSetAttribute {
 
 void registerToScript(){
 	nodes::callForEverySignalValueType<RegisterSetAttribute>();
+	gScriptMgr->registerObjectType<ChunkGen*>();
+
+	gScriptMgr->registerObjectType<WorkerLocation>();
+	gScriptMgr->registerMethod(&WorkerLocation::getPosition, "getPosition");
+	gScriptMgr->registerMethod(&WorkerLocation::getTime, "getTime");
+	gScriptMgr->registerMethod(&WorkerLocation::getChunkGen, "getChunkGen");
+
+	gScriptMgr->registerObjectType<Worker*>();
+	gScriptMgr->registerMethod(&Worker::getLocation, "getLocation");
+	gScriptMgr->registerMethod(&Worker::getRadius, "getRadius");
+	gScriptMgr->registerMethod(&Worker::getCreationTime, "getCreationTime");
 
 	gScriptMgr->registerObjectType<WorldGen*>();
 	gScriptMgr->registerMethod(&WorldGen::getWorldMgr, "getWorldMgr");
@@ -41,16 +52,10 @@ void registerToScript(){
 	
 	gScriptMgr->registerMethod(&WorldGen::createWorker, "createWorker");
 	
-	gScriptMgr->registerObjectType<ChunkGen*>();
 	gScriptMgr->registerMethod(&ChunkGen::getWorldGen, "getWorldGen");
 	gScriptMgr->registerMethod(&ChunkGen::createEntity, "createEntity");
 	gScriptMgr->registerMethod(&ChunkGen::getPosition, "getPosition");
 	gScriptMgr->registerMethod(&ChunkGen::createWorker, "createWorker");
-	
-	gScriptMgr->registerObjectType<WorkerLocation>();
-	gScriptMgr->registerMethod(&WorkerLocation::getPosition, "getPosition");
-	gScriptMgr->registerMethod(&WorkerLocation::getTime, "getTime");
-	gScriptMgr->registerMethod(&WorkerLocation::getChunkGen, "getChunkGen");
 }
 
 }} // game::world_gen

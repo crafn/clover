@@ -20,12 +20,14 @@ class WorldGen;
 /// Controls world generation of one chunk
 class ChunkGen {
 public:
+	static constexpr real64 inf= std::numeric_limits<real64>::infinity();
+
 	ChunkGen(WorldGen& owner, game::WorldChunk& chunk);
 	
 	void generate(real64 to_time, const util::SlicedTask::Yield& yield);
 	
-	/// Can be destroyed
-	bool isReady() const;
+	/// Chunk is generated (but there can still be workers)
+	bool isPlayable() const;
 	
 	///
 	/// Script interface
@@ -37,7 +39,11 @@ public:
 	void createEntity(const util::Str8& type_name, WorldVec position);
 	ChunkVec getPosition() const;
 	
-	void createWorker(const util::Str8& name, WorldVec position, real64 radius, real64 start_time);
+	Worker& createWorker(	const util::Str8& name,
+							WorldVec position,
+							real64 radius,
+							real64 start_time);
+	void addWorker(Worker w);
 	
 private:
 	real64 getMinWorkerTime() const;
@@ -46,7 +52,7 @@ private:
 	WorldGen* owner;
 	game::WorldChunk* chunk;
 	
-	real64 time; /// Time of generation. Zero is current time (= fully generated)
+	real64 time; /// Time of generation. Zero is start of the game (= fully generated)
 	util::LinkedList<Worker> workers;
 };
 

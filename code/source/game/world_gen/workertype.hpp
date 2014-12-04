@@ -11,6 +11,7 @@ namespace game { namespace world_gen {
 
 class ChunkGen;
 class WorldGen;
+class Worker;
 class WorkerLocation;
 class WorkerType;
 	
@@ -41,10 +42,10 @@ namespace game { namespace world_gen {
 
 using WorkerGlobalInitFuncDecl= void (WorldGen&);
 using WorkerChunkInitFuncDecl= void (ChunkGen&);
-using WorkFuncDecl= void (WorldGen&, const WorkerLocation&);
+using WorkFuncDecl= void (WorldGen&, const Worker*);
 
 /// Defines type of a world generation Worker
-/// Contains information of worker initialization and work-function
+/// Contains worker initialization and work function
 class WorkerType : public resources::Resource {
 public:
 	DECLARE_RESOURCE(WorkerType)
@@ -52,9 +53,9 @@ public:
 	WorkerType();
 	
 	/// Generation functions
-	void callGlobalInit(WorldGen& w) const;
-	void callChunkInit(ChunkGen& c) const;
-	void callWork(WorldGen& w, const WorkerLocation& loc) const;
+	void callGlobalInit(WorldGen& gen) const;
+	void callChunkInit(ChunkGen& gen) const;
+	void callWork(WorldGen& gen, const Worker& w) const;
 	
 	virtual void resourceUpdate(bool load, bool force=false) override;
 	virtual void createErrorResource() override;

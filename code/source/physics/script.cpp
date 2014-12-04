@@ -8,6 +8,7 @@
 #include "collision/shape.hpp"
 #include "collision/traceable.hpp"
 #include "entity.hpp"
+#include "grid.hpp"
 #include "object_rigid.hpp"
 #include "physics/armaturesuit.hpp"
 #include "physics/joints.hpp"
@@ -62,6 +63,10 @@ util::DynArray<Fixture*> fixturePotentialRectQuery(util::Vec2d pos, util::Vec2d 
 /// @todo Remove when scripts support variadic args in `emplace`
 util::SharedPtr<RigidObject> createObject(util::Vec2d pos)
 { return util::makeSharedPtr<RigidObject>(RigidObjectDef{pos}); }
+
+Object* getCellObject(const Grid::Cell& cell, SizeType i)
+{ return cell.objects[i]; }
+
 
 template <typename T>
 void registerObjectMethods(){
@@ -312,6 +317,28 @@ void registerToScript(){
 	s.registerMethod(&ArmatureSuit::update, "update");
 	s.registerMethod(&ArmatureSuit::get, "get");
 	s.registerMethod(&ArmatureSuit::clear, "clear");
+
+	// Grid::Cell
+	s.registerObjectType<Grid::Cell>();
+	s.registerMember(&Grid::Cell::staticPortion, "staticPortion");
+	s.registerMember(&Grid::Cell::lastStaticEdit, "lastStaticEdit");
+	s.registerMember(&Grid::Cell::dynamicPortion, "dynamicPortion");
+	s.registerMember(&Grid::Cell::lastDynamicEdit, "lastDynamicEdit");
+	s.registerMember(&Grid::Cell::staticNormal, "staticNormal");
+	s.registerMember(&Grid::Cell::staticEdge, "staticEdge");
+	s.registerMember(&Grid::Cell::worldEdge, "worldEdge");
+	s.registerGlobalFunction(getCellObject, "physics::getCellObject");
+	static uint32 gridCellObjects= Grid::Cell::maxObjects;
+	s.registerGlobalProperty(gridCellObjects, "physics::maxGridCellObjects");
+
+	// Grid
+	s.registerObjectType<Grid*>();
+	s.registerMethod(&Grid::hasChunk, "hasChunk");
+	s.registerMethod(&Grid::getChunkPositions, "getChunkPositions");
+	s.registerMethod(&Grid::getChunkCells, "getChunkCells");
+	s.registerMethod(&Grid::getCellsInUnit, "getCellsInUnit");
+	s.registerMethod(&Grid::getChunkWidth, "getChunkWidth");
+	s.registerMethod<Grid::Cell& (Grid::*)(util::Vec2d)>(&Grid::getCell, "getCell");
 }
 
 } // physics

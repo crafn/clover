@@ -11,8 +11,8 @@ namespace game {
 /// @todo Reconsider more dynamic solution
 class WorldGrid {
 public:
-	static constexpr uint32 chunkWidthInBlocks= 8; // x blokkia
-	static constexpr uint32 regionWidthInChunks= 16; // x chunkkia
+	static constexpr uint32 chunkWidthInBlocks= 8;
+	static constexpr uint32 regionWidthInChunks= 16;
 	static constexpr uint32 regionWidthInBlocks= chunkWidthInBlocks * regionWidthInChunks;
 	
 	static BlockVec worldToBlockVec(const WorldVec& p);

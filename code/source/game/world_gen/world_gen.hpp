@@ -30,7 +30,7 @@ public:
 	~WorldGen();
 
 	game::WorldMgr& getWorldMgr() const { return *worldMgr; }
-	
+
 	/// Generates world approx max_real_dt seconds
 	void generate(real64 max_real_dt);
 	void addToGeneration(ChunkSet chunks, WorldVec priority_pos);
@@ -52,8 +52,11 @@ public:
 	template <typename T>
 	game::WeHandle createEntity(const util::Str8& name, T t);
 
-	void createWorker(const util::Str8& name, WorldVec position, real64 radius, real64 start_time);
-	
+	Worker& createWorker(	const util::Str8& name,
+							WorldVec position,
+							real64 radius,
+							real64 start_time);
+
 private:
 	void generateChunks(const util::SlicedTask::Yield& yield);
 	ChunkGen* getChunkGen(WorldVec worldpos);
@@ -63,17 +66,11 @@ private:
 	util::DynArray<WorkerType*> workerTypes;
 	bool initialized;
 	util::LinkedList<ChunkGen> chunkGens;
+	bool quit;
 	
 	util::SlicedTask generationTask;
-	
-	struct WaitingWorker {
-		util::Str8 name;
-		WorldVec position;
-		real64 radius;
-		real64 time;
-	};
-	
-	util::LinkedList<WaitingWorker> workersWaitingForChunk;
+
+	util::LinkedList<Worker> workersWaitingForChunk;
 };
 
 template <typename T>

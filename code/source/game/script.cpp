@@ -1,5 +1,6 @@
 #include "physics.hpp"
 #include "physics/entity.hpp"
+#include "physics/grid.hpp"
 #include "physics/object.hpp"
 #include "script/script_mgr.hpp"
 #include "script.hpp"
@@ -21,20 +22,25 @@ void registerToScript()
 	auto&& script= *NONULL(script::gScriptMgr);
 
 	script.registerObjectType<WorldEntity*>();
+	script.registerMethod(&WorldEntity::getTypeName, "getTypeName");
 
 	script.registerObjectType<WeHandle>();
 	script.registerMethod(&WeHandle::get, "get");
 	script.registerMethod(&WeHandle::ref, "ref");
 
+	script.registerObjectType<game::PropertyGrid*>();
+	script.registerMethod(&game::PropertyGrid::getPhysicsGrid, "getPhysicsGrid");
+
 	script.registerObjectType<game::WeMgr*>();
-	
+
 	script.registerObjectType<game::WorldMgr*>();
 	script.registerMethod(&game::WorldMgr::getWeMgr, "getWeMgr");
+	script.registerMethod(&game::WorldMgr::getPropertyGrid, "getPropertyGrid");
 	script.registerMethod(&game::WorldMgr::getTime, "getTime");
 	script.registerMethod(&game::WorldMgr::getDayDuration, "getDayDuration");
 	script.registerMethod(&game::WorldMgr::getDayPhase, "getDayPhase");
 	script.registerGlobalFunction(getWorldMgr, "getWorldMgr");
-	
+
 	script.registerGlobalFunction(game::WorldGrid::chunkCornerToWorldVec, "chunkCornerToWorldVec");
 	script.registerGlobalFunction(game::WorldGrid::blockCornerToWorldVec, "blockCornerToWorldVec");
 	script.registerGlobalFunction(game::WorldGrid::regionCornerToWorldVec, "regionCornerToWorldVec");
@@ -42,6 +48,8 @@ void registerToScript()
 	script.registerGlobalFunction(game::WorldGrid::chunkCenterToWorldVec, "chunkCenterToWorldVec");
 	script.registerGlobalFunction(game::WorldGrid::blockCenterToWorldVec, "blockCenterToWorldVec");
 	script.registerGlobalFunction(game::WorldGrid::regionCenterToWorldVec, "regionCenterToWorldVec");
+
+	script.registerGlobalFunction(game::WorldGrid::worldToChunkVec, "worldToChunkVec");
 	
 	script.registerGlobalProperty(game::WorldGrid::chunkWidthInBlocks, "chunkWidthInBlocks");
 

@@ -27,19 +27,19 @@ WorkerType::WorkerType()
 	workFuncAttribute.setOnChangeCallback(try_refresh);
 }
 
-void WorkerType::callGlobalInit(WorldGen& w) const {
+void WorkerType::callGlobalInit(WorldGen& gen) const {
 	if (globalInitFunc)
-		globalInitFunc(w);
+		globalInitFunc(gen);
 }
 
-void WorkerType::callChunkInit(ChunkGen& c) const {
+void WorkerType::callChunkInit(ChunkGen& gen) const {
 	if (chunkInitFunc)
-		chunkInitFunc(c);
+		chunkInitFunc(gen);
 }
 
-void WorkerType::callWork(WorldGen& w, const WorkerLocation& loc) const {
+void WorkerType::callWork(WorldGen& gen, const Worker& w) const {
 	if (workFunc)
-		workFunc(w, loc);
+		workFunc(gen, &w);
 }
 
 void WorkerType::resourceUpdate(bool load, bool force){
@@ -87,8 +87,8 @@ void WorkerType::updateFromAttributes(){
 
 	if (!workFuncAttribute.get().empty()){
 		auto script_func= module->getGlobalFunction<WorkFuncDecl>(workFuncAttribute.get());
-		workFunc= [this, script_func] (WorldGen& g, const WorkerLocation& l){
-			script::gScriptMgr->getFreeContext().execute(script_func(g, l));
+		workFunc= [this, script_func] (WorldGen& g, const Worker* w){
+			script::gScriptMgr->getFreeContext().execute(script_func(g, w));
 		};
 	}
 	

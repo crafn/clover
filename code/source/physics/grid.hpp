@@ -6,6 +6,7 @@
 #include "util/containeralgorithms.hpp"
 #include "util/dyn_array.hpp"
 #include "util/map.hpp"
+#include "util/string.hpp"
 #include "util/traits.hpp"
 #include "util/transform.hpp"
 #include "util/vector.hpp"
@@ -35,12 +36,12 @@ public:
 		static constexpr SizeType maxObjects= 16;
 
 		real64 staticPortion= 0.0;
-		real64 lastStaticPortion= 0.0;
+		real64 lastStaticEdit= -std::numeric_limits<real64>::infinity(); // Game time
 		real64 dynamicPortion= 0.0;
-		real64 lastDynamicPortion= 0.0;
+		real64 lastDynamicEdit= -std::numeric_limits<real64>::infinity();
 		util::Vec2f staticNormal;
 		bool staticEdge= false;
-		uint8 worldEdge= false;
+		bool worldEdge= false;
 		Object* objects[maxObjects]= {};
 	};
 
@@ -51,11 +52,11 @@ public:
 
 	void clear();
 
-	void update();
-	void updateChunk(ChunkVec pos);
+	void touchCells(ChunkVec pos);
 
 	void addChunk(ChunkVec pos);
 	void removeChunk(ChunkVec pos);
+	bool hasChunk(ChunkVec pos) const;
 
 	/// true if `shp` is in a region completely isolated by static objs
 	bool isolated(const Shape& shp, util::RtTransform2d t);
@@ -64,8 +65,8 @@ public:
 	uint32 getChunkWidth() const { return def.chunkWidth; }
 	uint32 getCellsInUnit() const { return def.cellsInUnit; }
 
-	util::ArrayView<const Cell> getChunkCells(ChunkVec v) const
-	{ return util::asArrayView(chunks.at(v).cells); }
+	const util::DynArray<Cell>& getChunkCells(ChunkVec v) const
+	{ return chunks.at(v).cells; }
 	Cell& getCell(util::Vec2d world_pos);
 
 	util::DynArray<ChunkVec> getChunkPositions() const;
@@ -102,6 +103,19 @@ void add(Grid::Cell& cell, Object& obj);
 void remove(Grid::Cell& cell, Object& obj);
 
 } // physics
+namespace util {
+
+template <>
+struct TypeStringTraits<physics::Grid> {
+	static util::Str8 type() { return "physics::Grid"; }
+};
+
+template <>
+struct TypeStringTraits<physics::Grid::Cell> {
+	static util::Str8 type() { return "physics::GridCell"; }
+};
+
+} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_GRID_HPP

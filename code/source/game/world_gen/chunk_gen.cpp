@@ -12,10 +12,11 @@ ChunkGen::ChunkGen(WorldGen& o, game::WorldChunk& c)
 		: initialized(false)
 		, owner(&o)
 		, chunk(&c)
-		, time(0.0){
-}
+		, time(-inf)
+{ }
 
-void ChunkGen::generate(real64 to_time, const util::SlicedTask::Yield& yield){
+void ChunkGen::generate(real64 to_time, const util::SlicedTask::Yield& yield)
+{
 	PROFILE();
 	if (!initialized){
 		PROFILE();
@@ -26,10 +27,10 @@ void ChunkGen::generate(real64 to_time, const util::SlicedTask::Yield& yield){
 		yield();
 	}
 
-	while (!workers.empty() && getMinWorkerTime() <= to_time){
+	while (!workers.empty() && getMinWorkerTime() <= to_time) {
 		PROFILE();
 		// Do some work
-		for (auto it= workers.begin(); it != workers.end();){
+		for (auto it= workers.begin(); it != workers.end();) {
 			if (it->getLocation().getTime() <= to_time){
 				PROFILE();
 				it->work();
@@ -40,17 +41,17 @@ void ChunkGen::generate(real64 to_time, const util::SlicedTask::Yield& yield){
 				++it;
 			}
 		}
-		
+
 		{ PROFILE();
 			yield();
 		}
 	}
 
-	time= to_time;
-	
 	yield();
-	
-	if (workers.empty()){
+
+	time= to_time;
+	if (	getMinWorkerTime() >= 0.0 &&
+			chunk->getState() == game::WorldChunk::State::Generating){
 		PROFILE();
 		// Chunk is ready
 		ensure(chunk);
@@ -58,29 +59,43 @@ void ChunkGen::generate(real64 to_time, const util::SlicedTask::Yield& yield){
 	}
 }
 
-bool ChunkGen::isReady() const {
+bool ChunkGen::isPlayable() const
+{
 	ensure(chunk);
 	return initialized && chunk->getState() == game::WorldChunk::State::Active;
 }
 
-void ChunkGen::createEntity(const util::Str8& type_name, WorldVec position){
+void ChunkGen::createEntity(const util::Str8& type_name, WorldVec position)
+{
 	ensure(owner);
 	ensure(chunk);
 	owner->getWorldMgr().getWeMgr().createEntity(type_name, position, chunk);
 }
 
-ChunkVec ChunkGen::getPosition() const {
+ChunkVec ChunkGen::getPosition() const
+{
 	ensure(chunk);
 	return chunk->getPosition();
 }
 
-void ChunkGen::createWorker(const util::Str8& name, WorldVec position, real64 radius, real64 time){
+Worker& ChunkGen::createWorker(const util::Str8& name, WorldVec position, real64 radius, real64 time)
+{
 	/// @todo ensure that worker is inside chunk
-	workers.emplaceBack(resources::gCache->getResource<WorkerType>(name), WorkerLocation{position, time, *this}, radius);
+	workers.emplaceBack(name, WorkerLocation{position, time, this}, radius);
+	return workers.back();
 }
 
-real64 ChunkGen::getMinWorkerTime() const {
-	auto it=std::min_element(	workers.begin(), workers.end(),
+void ChunkGen::addWorker(Worker w)
+{
+	workers.emplaceBack(std::move(w));
+	workers.back().location.chunkGen= this;
+}
+real64 ChunkGen::getMinWorkerTime() const
+{
+	if (workers.empty())
+		return inf;
+
+	auto it= std::min_element(	workers.begin(), workers.end(),
 								[] (const Worker& w1, const Worker& w2){
 									return w1.getLocation().getTime() < w2.getLocation().getTime();
 								});

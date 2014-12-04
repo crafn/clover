@@ -30,17 +30,18 @@ namespace game {
 WorldMgr* gWorldMgr;
 
 WorldMgr::WorldMgr()
-	: chunksLocked(false)
+	: lastUpdTime(-std::numeric_limits<real64>::infinity())
+	, chunksLocked(false)
 	, worldGen(*this, resources::gCache->getSubCache<world_gen::WorkerType>().getResources())
 	, propertyGrid(physics::gPhysMgr->getWorld().getGrid())
 	, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
-		time += util::gGameClock->getDeltaTime()*300;
+		dayTime += util::gGameClock->getDeltaTime()*300;
 	})
 	, worldTimeRewindListener("host", "dev", "worldTimeRewind", [this] (){
-		time -= util::gGameClock->getDeltaTime()*300;
+		dayTime -= util::gGameClock->getDeltaTime()*300;
 	}){
 
-	time= getDayDuration()*0.45; // Start from day
+	dayTime= getDayDuration()*0.45; // Start from day
 
 	bgDefs[0].setModel("background_sky_evening");
 	bgDefs[1].setModel("background_sky_day");
@@ -80,7 +81,7 @@ WorldMgr::~WorldMgr(){
 }
 
 void WorldMgr::update(){
-	{ // Grid test
+	{ // Inform grid changes to WorldEntities
 		weMgr.removeFlagged(); // Removes phys objects flagged by ui
 
 		auto& grid= physics::gPhysMgr->getWorld().getGrid();
@@ -95,81 +96,24 @@ void WorldMgr::update(){
 				if (cells[i].worldEdge)
 					continue;
 
-				// Inform grid changes
-				if (	cells[i].lastStaticPortion != cells[i].staticPortion ||
-						cells[i].lastDynamicPortion != cells[i].dynamicPortion) {
-					for (physics::Object* obj : cells[i].objects) {
-						if (!obj)
-							continue;
-						WorldEntity* we= game::getOwnerWe(*obj);
-						if (!we || !we->hasAttribute("gridChange"))
-							continue;
-
-						we->setAttribute("gridChange", nodes::TriggerValue{});
-					}
-				}
-
-				// Create edge entities
-				if (cells[i].lastStaticPortion != cells[i].staticPortion) {
-					util::Vec2i cell_p{	static_cast<int32>(i%width_c),
-										static_cast<int32>(i/width_c)};
-					auto pos=	ch_pos.casted<util::Vec2d>()*width + 
-								cell_p.casted<util::Vec2d>()/width_c*width;
-
-					util::Vec2d offset=
-						cells[i].staticNormal.casted<util::Vec2d>()*
-						(cells[i].staticPortion - 1.0)*
-						1.2*2.0*half_cell;
-					util::Vec2d obj_pos= pos + util::Vec2d(half_cell) + offset;
-
-					auto& touch_cell= grid.getCell(obj_pos);
-					if (	touch_cell.staticPortion < 0.0001 ||
-							(!touch_cell.staticEdge && !cells[i].staticEdge))
+				if (	lastUpdTime > cells[i].lastStaticEdit &&
+						lastUpdTime > cells[i].lastDynamicEdit)
+					continue;
+			
+				for (physics::Object* obj : cells[i].objects) {
+					if (!obj)
+						continue;
+					WorldEntity* we= game::getOwnerWe(*obj);
+					if (!we || !we->hasAttribute("gridChange"))
 						continue;
 
-					SizeType grass_count= 0;
-					SizeType edge_count= 0;
-					for (physics::Object* obj : touch_cell.objects) {
-						if (!obj)
-							continue;
-						WorldEntity* we= game::getOwnerWe(*obj);
-						if (!we)
-							continue;
-						if (we->getTypeName() == "grassClump")
-							++grass_count;
-						if (we->getTypeName() == "block_dirt_edge")
-							++edge_count;
-					}
-
-					util::RtTransform2d obj_t;
-					obj_t.translation= obj_pos;
-					obj_t.rotation=
-						cells[i].staticNormal.rotationZ() - util::tau/4.0f;
-
-					if (edge_count <= 1) {
-						game::WeHandle edge= weMgr.createEntity("block_dirt_edge", obj_pos);
-						edge->setAttribute("transform", obj_t);
-					}
-					if (cells[i].staticNormal.y > 0.1 && grass_count <= 1) {
-						game::WeHandle grass= weMgr.createEntity("grassClump", obj_pos);
-						grass->setAttribute("transform", obj_t);
-					}
-
-					debug::gDebugDraw->addFilledCircle(
-						util::Coord(pos),
-						util::Coord(0.2),
-						util::Color{1.0, 0.0, 0.0, 0.5},
-						0.0,
-						0.1);
+					we->setAttribute("gridChange", nodes::TriggerValue{});
 				}
 			}
 		}
-		weMgr.spawnNewEntities(); // Created entities need to be updated this frame
 	}
-	physics::gPhysMgr->getWorld().getGrid().update();
-
 	updateWorldIO();
-	weMgr.spawnNewEntities();
+	weMgr.spawnNewEntities(); // Created entities need to be updated this frame
 
 	weMgr.update();
 	weMgr.spawnNewEntities();
@@ -181,7 +125,7 @@ void WorldMgr::update(){
 	///       Possible solution could be that spawnNewEntities runs node init,
 	///       and this extra chunk update would be done before weMgr.update
 	for (auto p : loadedChunks)
-		physics::gPhysMgr->getWorld().getGrid().updateChunk(p);
+		physics::gPhysMgr->getWorld().getGrid().touchCells(p);
 	loadedChunks.clear();
 
 
@@ -231,8 +175,12 @@ void WorldMgr::update(){
 		visual::gVisualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
 	}
 	
-	time += util::gGameClock->getDeltaTime();
+	dayTime += util::gGameClock->getDeltaTime();
+	lastUpdTime= util::gGameClock->getTime();
 }
+
+real64 WorldMgr::getTime() const
+{ return util::gGameClock->getTime(); }
 
 real64 WorldMgr::getDayDuration() const {
 	return 60*20;
@@ -240,7 +188,7 @@ real64 WorldMgr::getDayDuration() const {
 
 real64 WorldMgr::getDayPhase() const {
 	real64 intpart;
-	return modf(time/getDayDuration(), &intpart);
+	return modf(dayTime/getDayDuration(), &intpart);
 }
 
 void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev){
@@ -257,8 +205,11 @@ void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State 
 }
 
 void WorldMgr::updateWorldIO(){
-	if (chunksLocked)
+	if (chunksLocked) {
+		// Generate only stuff for already playable chunks
+		worldGen.generate(0.0);
 		return;
+	}
 
 	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
 	

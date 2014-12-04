@@ -4,6 +4,7 @@
 #include "grid.hpp"
 #include "util/boundingbox.hpp"
 #include "util/profiling.hpp"
+#include "util/time.hpp"
 // Debug
 #include "game/physics.hpp"
 #include "game/worldentity.hpp"
@@ -11,6 +12,9 @@
 namespace clover {
 namespace physics {
 namespace detail {
+
+real64 timestamp()
+{ return util::gGameClock->getTime(); }
 
 SizeType cellIndex(Grid::CellVec cell, Grid::CellVec origin, Grid::CellVec size)
 {
@@ -258,9 +262,10 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 			auto&& cell= getCell(polycells[i].position);
 
 			real64* cell_v_p= &cell.dynamicPortion;
-			if (is_static)
+			if (is_static) {
 				cell_v_p= &cell.staticPortion;
-
+			}
+	
 			real64& cell_v= *NONULL(cell_v_p);
 
 			if (a == Action::add) {
@@ -270,7 +275,14 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 				if (cell_v < 0.0)
 					cell_v= 0.0;
 			}
-	
+
+			if (polycells[i].fill != 0.0) {
+				if (is_static)
+					cell.lastStaticEdit= detail::timestamp();
+				else
+					cell.lastDynamicEdit= detail::timestamp();
+			}
+
 			// Marks too many - extras are removed at pp
 			cell.staticEdge= true;
 
@@ -320,20 +332,13 @@ void Grid::clear()
 	chunks.clear();
 }
 
-void Grid::update()
-{
-	for (auto&& pair : chunks) {
-		updateChunk(pair.first);
-	}
-}
-
-void Grid::updateChunk(ChunkVec pos)
+void Grid::touchCells(ChunkVec pos)
 {
 	auto& ch= chunks[pos];
 	for (SizeType i= 0; i < ch.cells.size(); ++i) {
 		auto& cell= ch.cells[i];
-		cell.lastStaticPortion= cell.staticPortion;
-		cell.lastDynamicPortion= cell.dynamicPortion;
+		cell.lastStaticEdit= detail::timestamp();
+		cell.lastDynamicEdit= detail::timestamp();
 	}
 }
 
@@ -352,6 +357,12 @@ void Grid::removeChunk(ChunkVec pos)
 	chunks.erase(it);
 
 	updateWorldEdges(pos);
+}
+
+bool Grid::hasChunk(ChunkVec pos) const
+{
+	auto it= chunks.find(pos);
+	return it != chunks.end() && it->second.valid;
 }
 
 bool Grid::isolated(const Shape& shp, util::RtTransform2d t)

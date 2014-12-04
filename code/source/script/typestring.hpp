@@ -29,6 +29,12 @@ struct TypeStringTraits<int64> {
 };
 
 template <>
+struct TypeStringTraits<uint8> {
+	static util::Str8 type(){ return "::uint8"; }
+	static util::Str8 shortType(){ return "b"; }
+};
+
+template <>
 struct TypeStringTraits<uint32> {
 	static util::Str8 type(){ return "::uint32"; }
 	static util::Str8 shortType(){ return "u"; }

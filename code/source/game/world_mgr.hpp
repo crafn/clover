@@ -40,7 +40,7 @@ public:
 	world_gen::WorldGen& getWorldGen(){ return worldGen; }
 	WorldAudioEnv& getAudioEnv(){ return audioEnv; }
 
-	real64 getTime() const { return time; }
+	real64 getTime() const;
 
 	/// @return Day + night duration in seconds
 	real64 getDayDuration() const;
@@ -55,7 +55,8 @@ private:
 	void updateWorldIO();
 	util::DynArray<util::Vec2i> loadedChunks;
 
-	real32 time;
+	real64 dayTime;
+	real64 lastUpdTime;
 	bool chunksLocked;
 
 	/// @todo Should be in script or somewhere else

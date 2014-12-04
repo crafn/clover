@@ -107,6 +107,13 @@ void constructVec2d2(real64 a, void* memory){
 	new (memory) util::Vec2d(a);
 }
 
+void constructVec2f(real32 x, real32 y, void* memory){
+	new (memory) util::Vec2f({x, y});
+}
+
+void constructVec2f2(real32 a, void* memory){
+	new (memory) util::Vec2f(a);
+}
 void constructVec2i(int32 x, int32 y, void* memory){
 	new (memory) util::Vec2i({x, y});
 }
@@ -156,8 +163,8 @@ void registerCommonVectorMethods(){
 	gScriptMgr->registerMethod<T>(&T::operator+=, "opAddAssign");
 	gScriptMgr->registerMethod<T>(&T::operator-=, "opSubAssign");
 	gScriptMgr->registerMethod<T, T& (T::*)(const T&)>(&T::operator*=, "opMulAssign");
-	gScriptMgr->registerMethod<T, T& (T::*)(const real64&)>(&T::operator*=, "opMulAssign");
-	gScriptMgr->registerMethod<T, T (T::*)(const real64&) const>(&T::operator*, "opMul");
+	gScriptMgr->registerMethod<T, T& (T::*)(const typename T::Type&)>(&T::operator*=, "opMulAssign");
+	gScriptMgr->registerMethod<T, T (T::*)(const typename T::Type&) const>(&T::operator*, "opMul");
 	gScriptMgr->registerMethod<T, T (T::*)(const T&) const>(&T::operator*, "opMul");
 	gScriptMgr->registerMethod<T>(&T::operator/, "opDiv");
 	gScriptMgr->registerMethod<T>(&T::inversed, "inversed");
@@ -333,6 +340,15 @@ void ScriptMgr::registerEssentials(){
 	registerMember<Vec2Type>(&Vec2Type::x, "x");
 	registerMember<Vec2Type>(&Vec2Type::y, "y");
 	
+	registerObjectType<util::Vec2f>();
+	registerConstructor<util::Vec2f>(constructVec2f);
+	registerConstructor<util::Vec2f>(constructVec2f2);
+	registerCommonVectorMethods<util::Vec2f>();
+	registerMethod<util::Vec2f>(&util::Vec2f::rotationZ, "rotationZ");
+	registerMethod<util::Vec2f>(&util::Vec2f::crossZ, "crossZ");
+	registerMember<util::Vec2f>(&util::Vec2f::x, "x");
+	registerMember<util::Vec2f>(&util::Vec2f::y, "y");
+
 	registerObjectType<util::Vec2i>();
 	registerConstructor<util::Vec2i>(constructVec2i);
 	registerMethod<util::Vec2i>(&util::Vec2i::operator+, "opAdd");

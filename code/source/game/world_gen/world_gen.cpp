@@ -11,10 +11,20 @@ WorldGen::WorldGen(game::WorldMgr& w, util::DynArray<WorkerType*> worker_types)
 		: worldMgr(&w)
 		, workerTypes(std::move(worker_types))
 		, initialized(false)
-		, generationTask(std::bind(&WorldGen::generateChunks, this, std::placeholders::_1)){
-}
+		, quit(false)
+		, generationTask(std::bind(&WorldGen::generateChunks, this, std::placeholders::_1))
+{ }
 
 WorldGen::~WorldGen(){
+	quit= true;
+	generationTask.runFor(eternity);
+
+	for (auto& gen : chunkGens) {
+		gen.generate(0.0, util::SlicedTask::nullYield());
+		ensure(gen.isPlayable());
+	}
+	chunkGens.clear();
+
 	ensure_msg(generationTask.isFinished(), "Generation isn't finished");
 }
 
@@ -28,8 +38,17 @@ void WorldGen::generate(real64 max_real_dt){
 		
 		initialized= true;
 	}
-	
-	if (!generationTask.isFinished()){
+
+	// Playable chunks need to be always up-to-date so that
+	// there's no discrepancies to be seen by the player
+	for (auto& chunk : chunkGens) {
+		if (!chunk.isPlayable())
+			continue;
+		PROFILE();
+		chunk.generate(worldMgr->getTime(), util::SlicedTask::nullYield());
+	}
+
+	if (!generationTask.isFinished() && max_real_dt > 0.0){
 		PROFILE();
 		generationTask.runFor(max_real_dt);
 	}
@@ -68,34 +87,29 @@ game::WeHandle WorldGen::createEntity(const util::Str8& name, util::Vec3d positi
 	return h;
 }
 
-void WorldGen::createWorker(const util::Str8& name, WorldVec position, real64 radius, real64 time){
+Worker& WorldGen::createWorker(const util::Str8& name, WorldVec position, real64 radius, real64 time){
 	PROFILE_("worldGen");
 	/// @todo ensure that chunk isn't active yet
-	
+
 	ChunkGen* ch= getChunkGen(position);
 	if (ch){
-		ch->createWorker(name, position, radius, time);
+		return ch->createWorker(name, position, radius, time);
 	}
 	else {
-		workersWaitingForChunk.pushBack(WaitingWorker{name, position, radius, time});
+		workersWaitingForChunk.pushBack(
+				Worker{name, WorkerLocation{position, time, nullptr}, radius});
+		return workersWaitingForChunk.back();
 	}
 }
 
 void WorldGen::generateChunks(const util::SlicedTask::Yield& yield){
 	PROFILE();
-	while (!chunkGens.empty()){
-		chunkGens.front().generate(worldMgr->getTime(), yield);
-		
-		// Destroy ready chunk generators
-		for (auto it= chunkGens.begin(); it != chunkGens.end();){
-			if (it->isReady()){
-				it= chunkGens.erase(it);
-			}
-			else {
-				++it;
-			}
+	while (!chunkGens.empty() && !quit){
+		for (auto it= chunkGens.begin(); it != chunkGens.end(); ++it) {
+			if (it->isPlayable())
+				continue; // Playable chunks are generated elswehere
+			it->generate(worldMgr->getTime(), yield);
 		}
-		
 		yield();
 	}
 }
@@ -110,13 +124,12 @@ ChunkGen* WorldGen::getChunkGen(WorldVec worldpos){
 }
 
 void WorldGen::transferWaitingWorkers(ChunkGen& gen){
-	util::LinkedList<WaitingWorker> workers= util::extractIf(workersWaitingForChunk, [&gen] (const WaitingWorker& w) -> bool {
-		return game::WorldGrid::worldToChunkVec(w.position) == gen.getPosition();
+	util::LinkedList<Worker> workers= util::extractIf(workersWaitingForChunk, [&gen] (const Worker& w) -> bool {
+		return game::WorldGrid::worldToChunkVec(w.getLocation().getPosition()) == gen.getPosition();
 	});
 	
-	for (auto& w : workers){
-		gen.createWorker(w.name, w.position, w.radius, w.time);
-	}
+	for (auto& w : workers)
+		gen.addWorker(std::move(w));
 }
 
 }} // game::world_gen
