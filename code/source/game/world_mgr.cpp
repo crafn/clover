@@ -119,8 +119,10 @@ void spawnEdges(
 				/// - spawning could include first node update 
 				/// When fixing this, note that if block is spawned, edges need
 				/// to become visible at the same frame..!
-				edge->spawn();
-				edge->update();
+				if (edge->isSpawningAllowed()) {
+					edge->spawn();
+					edge->update();
+				}
 			}
 		}
 	}
