@@ -102,6 +102,8 @@ void spawnEdges(
 						util::contains(used_spawners, spawners[s_i]->getSpawnerType()))
 					continue;
 
+				used_spawners.insert(spawners[s_i]->getSpawnerType());
+
 				util::RtTransform2d edge_t;
 				edge_t.translation= anchor_p;
 				edge_t.rotation=
@@ -111,9 +113,14 @@ void spawnEdges(
 					game::gWorldMgr->getWeMgr().createEntity(
 							NONULL(spawners[s_i]->getEdgeType())->getName(),
 							edge_t.translation);
-				edge.ref().setAttribute("transform", edge_t);
-
-				used_spawners.insert(spawners[s_i]->getSpawnerType());
+				edge->setAttribute("transform", edge_t);
+				/// @todo This ugliness could be removed in at least two ways:
+				/// - certain entity types could be updated at the creation frame
+				/// - spawning could include first node update 
+				/// When fixing this, note that if block is spawned, edges need
+				/// to become visible at the same frame..!
+				edge->spawn();
+				edge->update();
 			}
 		}
 	}

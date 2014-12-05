@@ -47,11 +47,9 @@ public:
 	void saveFieldSerialize(WEPack& p) const; // Save
 	void saveFieldDeserialize(WEPack& p); // Load
 
-	// Kutsutaan saman framen lopussa, missä chunkki ja riippuvuudet on ladattu loppuun
 	void spawn();
 	bool isSpawned() const { return spawned; }
 
-	//Lisää listaan, jonka objektit poistetaan
 	void setRemoveFlag(bool rm=true);
 	bool getRemoveFlag() const { return remove; }
 
