@@ -7,7 +7,7 @@
 def buildInfo(env, target):
 	if target == "default":
 		target= "dev"
-	
+
 	c_compiler= "gcc"
 	cpp_compiler= "g++"
 	linker= "ld"
@@ -18,7 +18,7 @@ def buildInfo(env, target):
 	dep_lib_paths= []
 	dep_libs= []
 	dep_defines= []
-	
+
 	target_defines= []
 	target_flags= []
 	if linker == "gold":
@@ -36,7 +36,7 @@ def buildInfo(env, target):
 
 	system_links= [ "OpenCL", "pthread" ]
 	if env.os == "linux":
-		system_links += [ "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11", "z", "dl" ]
+		system_links += [ "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11", "dl" ]
 	elif env.os == "windows":
 		system_links += [ "glu32", "opengl32", "gdi32", "wsock32", "ws2_32", "winmm", "ole32", "kernel32" ]
 
@@ -44,6 +44,7 @@ def buildInfo(env, target):
 	## @todo Intel and Amd stuff
 	if "CUDA_PATH" in os.environ:
 		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
+		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/Win32")
 		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/x64")
 
 	### Dependencies ###
@@ -241,21 +242,20 @@ def buildInfo(env, target):
 	dep_libs.append(ogg)
 
 	# Zlib
-	if env.os == "windows":
-		z_dir= "../deps/common/zlib-1.2.8"
-		z= Project()
-		z.name= "zlib_" + target
-		z.type= "obj"
-		z.targetDir= lib_dir
-		z.includeDirs= [ z_dir ]
-		z.src= findFiles(z_dir, "*.c")
-		z.flags= target_flags
-		z.defines= target_defines
-		z.compiler= c_compiler
-		z.linker= linker
-		dep_include_paths.append(z_dir)
-		dep_libs.append(z)
-	
+	z_dir= "../deps/common/zlib-1.2.8"
+	z= Project()
+	z.name= "zlib_" + target
+	z.type= "obj"
+	z.targetDir= lib_dir
+	z.includeDirs= [ z_dir ]
+	z.src= findFiles(z_dir, "*.c")
+	z.flags= target_flags
+	z.defines= target_defines
+	z.compiler= c_compiler
+	z.linker= linker
+	dep_include_paths.append(z_dir)
+	dep_libs.append(z)
+
 	# PNG
 	png_dir= "../deps/common/lpng1614"
 	png= Project()

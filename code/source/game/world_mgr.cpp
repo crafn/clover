@@ -29,8 +29,8 @@ namespace clover {
 namespace game {
 namespace detail {
 
-// Perform all edge spawns at once
-void spawnEdges(
+// Process all edge spawns at once
+void createEdges(
 		util::ArrayView<const nodes::WeEdgeSpawnerNodeInstance*> spawners,
 		real64 last_spawn_time)
 {
@@ -234,7 +234,7 @@ void WorldMgr::update()
 		physics::gPhysMgr->getWorld().getGrid().touchCells(p, -1.0);
 	loadedChunks.clear();
 
-	detail::spawnEdges(edgeSpawns, lastUpdTime);
+	detail::createEdges(edgeSpawns, lastUpdTime);
 	edgeSpawns.clear();
 
 	weMgr.spawnNewEntities();
