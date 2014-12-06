@@ -5,9 +5,7 @@
 #include "audiostream.hpp"
 #include "resources/resource.hpp"
 #include "vorbisdecoder.hpp"
-
-/// @todo Replace with util::Mutex
-#include <boost/thread/mutex.hpp>
+#include "util/mutex.hpp"
 
 namespace clover {
 namespace audio {
@@ -77,7 +75,7 @@ private:
 	real32 volume;
 	util::Str8 path;
 
-	mutable boost::mutex accessMutex;
+	mutable util::Mutex accessMutex;
 	
 	// These could be moved to AudioMgr or something to get rid of mutables
 	

@@ -3,12 +3,10 @@
 #include "global/event.hpp"
 #include "util/ensure.hpp"
 #include "util/misc.hpp"
+#include "util/mutex.hpp"
 #include "util/string.hpp"
-
 #include <stdarg.h>
 #include <iostream>
-/// @todo Replace with util
-#include <boost/thread/locks.hpp>
 
 namespace clover {
 namespace debug {
@@ -58,24 +56,24 @@ DebugPrint::DebugPrint(){
 }
 
 void DebugPrint::setVerbosity(Vb v){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	verbosity= v;
 }
 
 void DebugPrint::setChannelActive(Ch c, bool b){
 	ensure(static_cast<SizeType>(c) < channelCount);
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	filter.set(static_cast<SizeType>(c), b);
 }
 
 bool DebugPrint::isChannelActive(Ch c) const {
 	ensure(static_cast<SizeType>(c) < channelCount);
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	return filter.test(static_cast<SizeType>(c));
 }
 
 void DebugPrint::operator()(Ch c, Vb v, const char8 * str, ...){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 
 	va_list argList;
 	va_start(argList, str);
@@ -104,7 +102,7 @@ void DebugPrint::operator()(Ch c, Vb v, const char8 * str, ...){
 }
 
 void DebugPrint::updateBuffer(){
-	boost::mutex::scoped_lock lock(mutex);
+	util::LockGuard<util::Mutex> lock(mutex);
 	if (!buffer.empty()){
 		global::Event e(global::Event::OnConsoleBufferUpdate);
 		e(global::Event::Object)= &buffer;

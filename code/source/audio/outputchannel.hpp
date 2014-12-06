@@ -6,9 +6,6 @@
 #include "util/ringbuffer.hpp"
 #include "smoothed.hpp"
 
-/// @todo Replace with util::Mutex
-#include <boost/thread/mutex.hpp>
-
 namespace clover {
 namespace audio {
 

@@ -17,7 +17,7 @@ VorbisDecoder::~VorbisDecoder(){
 }
 
 void VorbisDecoder::preCode(util::DynArray<uint8> data){
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	if (!cleared)
 		clear();
@@ -168,7 +168,7 @@ void VorbisDecoder::destroyStream(const std::shared_ptr<AudioStream>& stream){
 void VorbisDecoder::clear(){
 	if (cleared) return;
 	
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	streams.clear();
 	

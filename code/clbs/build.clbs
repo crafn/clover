@@ -38,13 +38,13 @@ def buildInfo(env, target):
 	if env.os == "linux":
 		system_links += [ "GL", "GLU", "Xrandr", "Xxf86vm", "Xi", "X11", "z", "dl" ]
 	elif env.os == "windows":
-		system_links += [ "glu32", "opengl32", "gdi32", "wsock32", "ws2_32", "winmm", "ole32" ]
+		system_links += [ "glu32", "opengl32", "gdi32", "wsock32", "ws2_32", "winmm", "ole32", "kernel32" ]
 
 	# OpenCL
 	## @todo Intel and Amd stuff
 	if "CUDA_PATH" in os.environ:
 		dep_include_paths.append(os.environ["CUDA_PATH"] + "/include")
-		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/Win32")
+		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/x64")
 
 	### Dependencies ###
 
@@ -240,19 +240,36 @@ def buildInfo(env, target):
 	dep_include_paths.append(ogg_dir + "/include")
 	dep_libs.append(ogg)
 
+	# Zlib
+	if env.os == "windows":
+		z_dir= "../deps/common/zlib-1.2.8"
+		z= Project()
+		z.name= "zlib_" + target
+		z.type= "obj"
+		z.targetDir= lib_dir
+		z.includeDirs= [ z_dir ]
+		z.src= findFiles(z_dir, "*.c")
+		z.flags= target_flags
+		z.defines= target_defines
+		z.compiler= c_compiler
+		z.linker= linker
+		dep_include_paths.append(z_dir)
+		dep_libs.append(z)
+	
 	# PNG
 	png_dir= "../deps/common/lpng1614"
 	png= Project()
 	png.name= "png_" + target
 	png.type= "obj"
 	png.targetDir= lib_dir
-	png.includeDirs= [ png_dir ]
+	png.includeDirs= [ png_dir ] + z.includeDirs
 	png.headers= findFiles(png_dir, "*.h")
 	png.src= findFiles(png_dir, "*.c")
 	png.flags= target_flags
 	png.defines= target_defines
 	png.compiler= c_compiler
 	png.linker= linker
+	png.deps= [ z ]
 	dep_include_paths.append(png_dir)
 	dep_libs.append(png)
 	
@@ -317,22 +334,6 @@ def buildInfo(env, target):
 	vorbis.linker= linker
 	dep_include_paths.append(vorbis_dir + "/include")
 	dep_libs.append(vorbis)
-
-	# Zlib
-	if env.os == "windows":
-		z_dir= "../deps/common/zlib-1.2.8"
-		z= Project()
-		z.name= "zlib_" + target
-		z.type= "obj"
-		z.targetDir= lib_dir
-		z.includeDirs= [ z_dir ]
-		z.src= findFiles(z_dir, "*.c")
-		z.flags= target_flags
-		z.defines= target_defines
-		z.compiler= c_compiler
-		z.linker= linker
-		dep_include_paths.append(z_dir)
-		dep_libs.append(z)
 
 	### Combined deps ###
 
@@ -419,5 +420,6 @@ def buildInfo(env, target):
 	
 	if env.os == "windows":
 		clover.flags += [ "fno-strict-aliasing" ] # Boost.
+		clover.libDirs += [ "D:/ohjelmat/mingw_win-builds64/lib" ] # win-builds mingw is broken.
 	
 	return clover

@@ -3,10 +3,8 @@
 
 #include "build.hpp"
 #include "util/math.hpp"
+#include "util/mutex.hpp"
 #include "util/referencecountable.hpp"
-
-/// @todo Replace with util::Mutex
-#include <boost/thread/mutex.hpp>
 
 namespace clover {
 namespace audio {
@@ -15,7 +13,6 @@ namespace audio {
 /// Needed for output of spatial sounds
 class AudioReceiver : public util::ReferenceCountable {
 public:
-
 	AudioReceiver();
 	AudioReceiver(AudioReceiver&& other);
 	virtual ~AudioReceiver();
@@ -30,11 +27,10 @@ public:
 	
 private:
 	bool created;
-	
 	util::Vec2d position;
 	real32 lowpass;
 	
-	mutable boost::mutex accessMutex;
+	mutable util::Mutex accessMutex;
 };
 
 } // audio

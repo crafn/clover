@@ -20,7 +20,7 @@ void cancelIo(HANDLE h){
 std::thread FileWatcherWindowsImpl::changeDetectionThread;
 int32 FileWatcherWindowsImpl::watchCount= 0;
 Map<util::Str8, util::DynArray<FileWatcherWindowsImpl*>> FileWatcherWindowsImpl::implMap;
-boost::mutex FileWatcherWindowsImpl::implMapMutex;
+util::Mutex FileWatcherWindowsImpl::implMapMutex;
 HANDLE FileWatcherWindowsImpl::dirHandle;
 
 void FileWatcherWindowsImpl::globalInit(){
@@ -79,7 +79,7 @@ void FileWatcherWindowsImpl::addWatch(){
 							NULL);					// no attr. template
 
 		{
-			boost::mutex::scoped_lock lock(implMapMutex);
+			util::LockGuard<util::Mutex> lock(implMapMutex);
 
 			implMap[path].pushBack(this);
 			//print(debug::Ch::General, debug::Vb::Trivial, "Watch handle added: %s, %i, %i", path.cStr(), handle, implMap[path].size());
@@ -96,7 +96,7 @@ void FileWatcherWindowsImpl::removeWatch(){
 	//print(debug::Ch::General, debug::Vb::Trivial, "Watch handle removed: %s, %i", path.cStr(), handle, implMap[path].size());
 
 	{
-		boost::mutex::scoped_lock lock(implMapMutex);
+		util::LockGuard<util::Mutex>lock(implMapMutex);
 
 		auto it= implMap.find(path);
 		ensure_msg(it != implMap.end(), "Watch not found: %s, watchCount: %i",	path.cStr(), watchCount);
@@ -214,7 +214,7 @@ void FileWatcherWindowsImpl::directoryChangeDetectionLoop(const util::Str8& dir_
 				//print(debug::Ch::General, debug::Vb::Trivial, "File modified: %s", complete_file_path.cStr());
 
 				{
-					boost::mutex::scoped_lock lock(implMapMutex);
+					util::LockGuard<util::Mutex> lock(implMapMutex);
 
 					auto handles= implMap[complete_file_path];
 

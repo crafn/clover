@@ -1,11 +1,9 @@
 #ifndef CLOVER_AUDIO_AUDIOSTREAM_VORBIS_HPP
 #define CLOVER_AUDIO_AUDIOSTREAM_VORBIS_HPP
 
-#include "build.hpp"
 #include "audiostream.hpp"
-
-/// @todo Replace with util::Mutex
-#include <boost/thread/mutex.hpp>
+#include "build.hpp"
+#include "util/mutex.hpp"
 #include <vorbis/codec.h>
 
 namespace clover {
@@ -21,7 +19,7 @@ public:
 			const uint8* data_end,
 			SizeType channel_id,
 			vorbis_info& info,
-			boost::mutex& accessMutex);
+			util::Mutex& accessMutex);
 	virtual ~VorbisAudioStream();
 
 	virtual ChannelData getNextSamples(SizeType request_count);
@@ -32,7 +30,7 @@ private:
 	
 	SizeType submitPageData();
 	
-	boost::mutex* accessMutex;
+	util::Mutex* accessMutex;
 	const uint8* data;
 	SizeType dataSize;
 	SizeType dataIndex;

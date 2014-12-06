@@ -12,7 +12,7 @@ VorbisAudioStream::VorbisAudioStream(	const uint8* data_begin,
 										const uint8* data_end,
 										SizeType channel_id,
 										vorbis_info& info,
-										boost::mutex& access_mutex)
+										util::Mutex& access_mutex)
 		: accessMutex(&access_mutex)
 		, data(data_begin)
 		, dataSize(data_end - data_begin)
@@ -36,7 +36,7 @@ VorbisAudioStream::~VorbisAudioStream(){
 }
 
 AudioStream::ChannelData VorbisAudioStream::getNextSamples(SizeType request_count){
-	boost::mutex::scoped_lock lock(*accessMutex);
+	util::LockGuard<util::Mutex> lock(*accessMutex);
 	
 	ChannelData channeldata;
 	if (eos)

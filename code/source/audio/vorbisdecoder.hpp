@@ -4,7 +4,7 @@
 #include "build.hpp"
 #include "audiostream_vorbis.hpp"
 #include "util/dyn_array.hpp"
-
+#include "util/mutex.hpp"
 #include <vorbis/codec.h>
 #include <memory>
 
@@ -40,7 +40,7 @@ private:
 	util::DynArray<std::shared_ptr<VorbisAudioStream>> streams;
 
 	// Makes sure that audio isn't read when data is modified
-	boost::mutex accessMutex;
+	util::Mutex accessMutex;
 
 	ogg_stream_state oggStreamState; // Pages to stream
 	ogg_sync_state oggSyncState;

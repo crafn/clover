@@ -3,9 +3,7 @@
 #include "audiosourcehandle.hpp"
 #include "debug/debugdraw.hpp"
 #include "global/event.hpp"
-
-/// @todo Replace with util
-#include <boost/thread/locks.hpp>
+#include "util/mutex.hpp"
 
 namespace clover {
 namespace audio {
@@ -68,7 +66,7 @@ void AudioSource::onEvent(global::Event& e){
 }
 
 SoundInstanceHandle AudioSource::playSound(const Sound& s){
-	return (gAudioMgr->playSound(s, *this));
+	return gAudioMgr->playSound(s, *this);
 }
 
 void AudioSource::addSoundInstance(SoundInstance& h){
@@ -76,18 +74,18 @@ void AudioSource::addSoundInstance(SoundInstance& h){
 }
 
 void AudioSource::setPosition(const util::Vec2d& pos){
-	boost::mutex::scoped_lock lock(accessMutex); 
+	util::LockGuard<util::Mutex> lock(accessMutex); 
 	ensure(type == Type::Spatial);
 	position= pos;
 }
 
 util::Vec2d AudioSource::getPosition() const {
-	boost::mutex::scoped_lock lock(accessMutex); 
+	util::LockGuard<util::Mutex> lock(accessMutex); 
 	return position; 
 }
 
 void AudioSource::update(){
-	boost::mutex::scoped_lock lock(accessMutex); 
+	util::LockGuard<util::Mutex> lock(accessMutex); 
 	
 	debug::gDebugDraw->addFilledCircle(position, 0.3,  {0.9, 0.5, 0.3, 0.5});
 	debug::gDebugDraw->addText(position, "AudioSource", util::Vec2d{0.5f,0.5f});

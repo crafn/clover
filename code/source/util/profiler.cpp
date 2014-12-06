@@ -55,15 +55,15 @@ public:
 
 /// @note Initalization order might matter
 
-using Mutex= std::recursive_mutex;
-using LockGuard= std::lock_guard<Mutex>;
+using RMutex= std::recursive_mutex;
+using RLockGuard= std::lock_guard<RMutex>;
 constexpr ThreadUid threadUidNone= 0;
 
 /// Maps thread::ids of currently running threads to all-time unique ids
 static std::map<std::thread::id, ThreadUid> g_threadIdsToUids;
 static std::map<ThreadUid, Profiler::ThreadLocalInfo*> g_threadLocalInfos;
 static ThreadUid g_freeThreadUid= threadUidNone + 1;
-static Mutex g_threadInfosMutex;
+static RMutex g_threadInfosMutex;
 
 static thread_local Profiler::ThreadLocalInfo threadLocalInfo;
 static thread_local Profiler::ThreadRaii threadRaii;
@@ -75,13 +75,13 @@ Profiler::ThreadRaii::ThreadRaii(){ Profiler::onThreadBegin(threadLocalInfo); }
 Profiler::ThreadRaii::~ThreadRaii(){ Profiler::onThreadEnd(threadLocalInfo); }
 
 static ThreadUid getThreadUid(std::thread::id id){
-	LockGuard g(g_threadInfosMutex);
+	RLockGuard g(g_threadInfosMutex);
 	ensure(g_threadIdsToUids.find(id) != g_threadIdsToUids.end());
 	return g_threadIdsToUids.at(id);
 }
 
 static Profiler::ThreadLocalInfo& getThreadLocalInfo(ThreadUid uid){
-	LockGuard g(g_threadInfosMutex);
+	RLockGuard g(g_threadInfosMutex);
 	ensure(g_threadLocalInfos.find(uid) != g_threadLocalInfos.end());
 	return *g_threadLocalInfos.at(uid);
 }
@@ -98,7 +98,7 @@ static void staticThreadLocalInfoInit(){
 
 void Profiler::onThreadBegin(ThreadLocalInfo& info){
 	if (PROFILING_ENABLED){
-		LockGuard g(g_threadInfosMutex);
+		RLockGuard g(g_threadInfosMutex);
 
 		info.threadUid= g_freeThreadUid;
 		++g_freeThreadUid;
@@ -115,7 +115,7 @@ void Profiler::onThreadBegin(ThreadLocalInfo& info){
 
 void Profiler::onThreadEnd(ThreadLocalInfo& info){
 	if (PROFILING_ENABLED){
-		LockGuard g(g_threadInfosMutex);
+		RLockGuard g(g_threadInfosMutex);
 
 		ensure(threadLocalInfo.subThreadUid == threadUidNone);
 		ensure(g_threadLocalInfos.find(info.threadUid) != g_threadLocalInfos.end());
@@ -374,14 +374,14 @@ Profiler::~Profiler(){
 }
 
 Profiler::Result Profiler::popResult(real64 min_share){
-	LockGuard g(profileMutex);
+	RLockGuard g(profileMutex);
 	auto result= Result(profile, min_share);
 	profile= Profile{};
 	return result;
 }
 
 SizeType Profiler::getCallStackCount() const {
-	LockGuard g(g_threadInfosMutex);
+	RLockGuard g(g_threadInfosMutex);
 	return g_threadLocalInfos.size();
 }
 

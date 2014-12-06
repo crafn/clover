@@ -2,9 +2,6 @@
 #include "audiostream_raw.hpp"
 #include "global/file.hpp"
 
-/// @todo Replace with util
-#include <boost/thread/locks.hpp>
-
 namespace clover {
 namespace audio {
 
@@ -16,13 +13,13 @@ Sound::Sound()
 		, INIT_RESOURCE_ATTRIBUTE(volumeAttribute, "volume", 0.75){
 	
 	volumeAttribute.setOnChangeCallback([&] (){
-		boost::mutex::scoped_lock lock(accessMutex);
+		util::LockGuard<util::Mutex> lock(accessMutex);
 		volume= volumeAttribute.get();
 	});
 	
 	fileAttribute.setOnChangeCallback([&] (){
 		{
-			boost::mutex::scoped_lock lock(accessMutex);
+			util::LockGuard<util::Mutex> lock(accessMutex);
 			path= fileAttribute.get().value();
 		}
 		
@@ -60,7 +57,7 @@ void Sound::resourceUpdate(bool load, bool force){
 }
 
 void Sound::createErrorResource(){
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	errorStreams.clear();
 	decoder.clear();
@@ -86,12 +83,12 @@ void Sound::createErrorResource(){
 }
 
 SizeType Sound::getChannelCount() const {
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	return channelCount;
 }
 
 std::weak_ptr<AudioStream> Sound::createStream(SizeType channel_id) const {
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	if (getResourceState() == State::Error){
 		errorStreams.pushBack(std::shared_ptr<AudioStream>(
@@ -104,7 +101,7 @@ std::weak_ptr<AudioStream> Sound::createStream(SizeType channel_id) const {
 }
 
 void Sound::destroyStream(const std::shared_ptr<AudioStream>& stream) const {
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	if (getResourceState() == State::Error){
 		for (auto it= errorStreams.begin(); it != errorStreams.end(); ++it){
@@ -120,7 +117,7 @@ void Sound::destroyStream(const std::shared_ptr<AudioStream>& stream) const {
 }
 
 void Sound::load(const util::Str8& filename){
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	errorData.clear();
 
@@ -134,7 +131,7 @@ void Sound::load(const util::Str8& filename){
 }
 
 void Sound::unload(){
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	
 	decoder.clear();
 	errorStreams.clear();

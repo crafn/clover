@@ -2,9 +2,9 @@
 #define CLOVER_DEBUGPRINT_HPP
 
 #include "build.hpp"
-
+#include "util/mutex.hpp"
 #include <bitset>
-#include <boost/thread/mutex.hpp>
+#include <vector>
 
 #ifdef __GNUC__
 #define PRINTF_FORMAT(stringIndex, firstToCheck) \
@@ -75,16 +75,13 @@ public:
 		std::string string;
 	};
 
-	typedef std::vector<Message> Buffer;
-	
 	void updateBuffer();
 
+	typedef std::vector<Message> Buffer;
 private:
-	mutable boost::mutex mutex;
-
+	mutable util::Mutex mutex;
 	std::bitset<static_cast<SizeType>(Ch::Last)> filter;
 	Vb verbosity;
-	
 	Buffer buffer;
 };
 

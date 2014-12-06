@@ -3,12 +3,10 @@
 
 #include "build.hpp"
 #include "global/eventreceiver.hpp"
-#include "util/math.hpp"
-#include "util/referencecountable.hpp"
 #include "soundinstancehandle.hpp"
-
-/// @todo Replace with util::Mutex
-#include <boost/thread/mutex.hpp>
+#include "util/math.hpp"
+#include "util/mutex.hpp"
+#include "util/referencecountable.hpp"
 
 namespace clover {
 namespace audio {
@@ -54,7 +52,7 @@ private:
 	bool created;
 	Type type;
 	
-	mutable boost::mutex accessMutex;
+	mutable util::Mutex accessMutex;
 	
 	util::Vec2d position;
 	real32 volume;

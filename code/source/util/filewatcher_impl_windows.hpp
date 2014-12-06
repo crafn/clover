@@ -37,7 +37,7 @@ private:
 	static std::thread changeDetectionThread;
 	static int32 watchCount;
 	static Map<util::Str8, util::DynArray<FileWatcherWindowsImpl*>> implMap;
-	static boost::mutex implMapMutex;
+	static util::Mutex implMapMutex;
 	static HANDLE dirHandle;
 
 	void addWatch();

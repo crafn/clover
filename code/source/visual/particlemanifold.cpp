@@ -112,6 +112,7 @@ void ParticleManifold::spawn(util::DynArray<ParticleSpawnData>& particles){
 }
 
 void ParticleManifold::update(){
+	return; // Not in use currently
 	ensure(created);
 
 	real32 dt= util::gGameClock->getDeltaTime();

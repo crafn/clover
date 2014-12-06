@@ -1,5 +1,6 @@
 #include "thread.hpp"
 #include "debug/debugprint.hpp"
+#include <map>
 
 namespace clover {
 namespace util {

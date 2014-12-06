@@ -41,12 +41,12 @@ void AudioReceiver::destroy(){
 }
 
 void AudioReceiver::setPosition(const util::Vec2d& pos){
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	position= pos;
 }
 
 util::Vec2d AudioReceiver::getPosition() const {
-	boost::mutex::scoped_lock lock(accessMutex);
+	util::LockGuard<util::Mutex> lock(accessMutex);
 	return position;
 }
 
