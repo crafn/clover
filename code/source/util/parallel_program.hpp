@@ -11,6 +11,9 @@
 namespace clover {
 namespace util {
 
+/// If false, using util::Parallel* stuff will crash
+bool parallelProcessingSupported();
+
 class ParallelQueue;
 class ParallelProgram {
 public:

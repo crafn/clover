@@ -33,6 +33,7 @@ void ParallelKernel::enqueue(const Work& w){
 
 template <>
 void ParallelKernel::setArgument(uint32 arg_id, util::ParallelBuffer& b, uint32 count){
+	ensure(hardware::gClState);
 	ensure(count == 1 && attachedQueue);
 	hardware::gClState->setKernelArgument(kernel, arg_id, b.getDId(), count);
 	b.attachToQueue(*attachedQueue);

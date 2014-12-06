@@ -35,6 +35,7 @@ ParallelBuffer& ParallelBuffer::operator=(ParallelBuffer&& other){
 }
 
 void ParallelBuffer::alias(hardware::ClState::BufferFlag flags, const visual::BaseVertexArrayObject& vao){
+	ensure(hardware::gClState);
 	ensure(buffer.id == 0);
 	buffer=
 		hardware::gClState->createFromGLBuffer(
@@ -54,6 +55,7 @@ void ParallelBuffer::alias(hardware::ClState::BufferFlag flags, const visual::Te
 }
 
 void ParallelBuffer::aliasTex(hardware::ClState::BufferFlag flags, uint32 tex_target, uint32 tex_id){
+	ensure(hardware::gClState);
 	ensure(buffer.id == 0);
 	buffer=
 		hardware::gClState->createFromGLTexture(
@@ -64,6 +66,7 @@ void ParallelBuffer::aliasTex(hardware::ClState::BufferFlag flags, uint32 tex_ta
 }
 
 void ParallelBuffer::read(){
+	ensure(hardware::gClState);
 	ensure(hostData);
 	ensure(attachedQueue);
 
@@ -79,11 +82,13 @@ void ParallelBuffer::read(){
 }
 
 void ParallelBuffer::acquire(){
+	ensure(hardware::gClState);
 	ensure(attachedQueue);
 	hardware::gClState->acquireBuffer(attachedQueue->queue, buffer);
 }
 
 void ParallelBuffer::release(){
+	ensure(hardware::gClState);
 	ensure(attachedQueue);
 	hardware::gClState->releaseBuffer(attachedQueue->queue, buffer);
 }

@@ -420,6 +420,11 @@ def buildInfo(env, target):
 	
 	if env.os == "windows":
 		clover.flags += [ "fno-strict-aliasing" ] # Boost.
-		clover.libDirs += [ "D:/ohjelmat/mingw_win-builds64/lib" ] # win-builds mingw is broken.
+		
+		# win-builds mingw is broken.
+		win_builds_bin_paths= \
+			[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
+		if len(win_builds_bin_paths) > 0:
+			clover.libDirs += [ win_builds_bin_paths[0] + "/../lib" ] 
 	
 	return clover

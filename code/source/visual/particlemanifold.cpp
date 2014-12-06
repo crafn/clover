@@ -7,8 +7,6 @@ namespace visual {
 ParticleManifold::ParticleManifold():
 		type(0),
 		created(false),
-		simulationKernel(0),
-		spawnKernel(0),
 		activeParticleOffset(0),
 		activeParticleCount(0){
 
@@ -37,7 +35,7 @@ void ParticleManifold::create(const ParticleType& type_){
 	mesh.flush();
 
 	mesh.setBoundingBox(util::BoundingBox<util::Vec2f>(util::Vec2f(0), util::Vec2f(10000000)));
-
+/*
 	// Prepare the OpenCL program
 	program.compile(type->programPath);
 	simulationKernel= &program.createKernel("simulate");
@@ -47,7 +45,7 @@ void ParticleManifold::create(const ParticleType& type_){
 	particleBuffer.alias(hardware::ClState::ReadWrite, *mesh.getVao());
 
 	program.attachToQueue(queue);
-
+*/
 	// util::Set up material and drawing thingies
 	ensure(type->material);
 	model.setMaterial(*type->material);
@@ -78,7 +76,7 @@ void ParticleManifold::spawn(util::DynArray<ParticleSpawnData>& particles){
 	}
 
 	hardware::gGlState->finish();
-
+/*
 	util::ParallelBuffer spawn_buf;
 	spawn_buf.create(hardware::ClState::UseHostPtr, particles[0], particles.size());
 
@@ -96,7 +94,7 @@ void ParticleManifold::spawn(util::DynArray<ParticleSpawnData>& particles){
 	spawnKernel->enqueue(w);
 	particleBuffer.release();
 	queue.finish();
-
+*/
 	//std::cout << "smokeID: " << currentSmokeID << "\n";
 
 	activeParticleCount += real_amount;
@@ -114,7 +112,7 @@ void ParticleManifold::spawn(util::DynArray<ParticleSpawnData>& particles){
 void ParticleManifold::update(){
 	return; // Not in use currently
 	ensure(created);
-
+/*
 	real32 dt= util::gGameClock->getDeltaTime();
 
 	hardware::gGlState->finish();
@@ -130,7 +128,7 @@ void ParticleManifold::update(){
 
 	particleBuffer.release();
 	queue.finish();
-
+*/
 	// Update active range
 	real64 cur_time= util::gGameClock->getTime();
 
