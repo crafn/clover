@@ -72,7 +72,7 @@ void spawnEdges(
 			auto anchor_p= pos + util::Vec2d(half_cell) + offset;
 			physics::Grid::Cell& anchor_cell= grid.getCell(anchor_p);
 			if (	anchor_cell.staticPortion < 0.0001 ||
-					(!anchor_cell.staticEdge && !cells[i].staticEdge))
+					(!anchor_cell.staticEdge && !cells[i].staticEdge) )
 				continue;
 
 			// Scan cell for edge-spawning objects
@@ -95,6 +95,7 @@ void spawnEdges(
 			}
 
 			// Spawn edge entities
+			/// @todo Don't do allocations in loop
 			util::Set<const WeType*> used_spawners;
 			for (SizeType s_i= 0; s_i < spawners.size(); ++s_i) {
 				if (	!spawner_present[s_i] ||
@@ -107,7 +108,8 @@ void spawnEdges(
 				util::RtTransform2d edge_t;
 				edge_t.translation= anchor_p;
 				edge_t.rotation=
-					cells[i].staticNormal.rotationZ() - util::tau/4.0;
+					(cells[i].staticNormal).
+					rotationZ()	- util::tau/4.0;
 
 				game::WeHandle edge=
 					game::gWorldMgr->getWeMgr().createEntity(

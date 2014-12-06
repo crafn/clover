@@ -283,9 +283,6 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 					cell.lastDynamicEdit= detail::timestamp();
 			}
 
-			// Marks too many - extras are removed at pp
-			cell.staticEdge= true;
-
 			if (a == Action::add) {
 				physics::add(cell, obj);
 			} else if (a == Action::remove) {
@@ -320,8 +317,11 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 
 			auto& cell= getCell(coord);
 			cell.staticNormal= normal.normalized();
-			if (static_fill >= 0.95*4)
-				cell.staticEdge= false;
+
+			bool prev_edge= cell.staticEdge;
+			cell.staticEdge= static_fill < 0.8*4;
+			if (prev_edge != cell.staticEdge)
+				cell.lastStaticEdit= detail::timestamp();
 		}
 	}
 
