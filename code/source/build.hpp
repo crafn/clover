@@ -36,7 +36,7 @@
 	#define THRAEDS THRAEDS_PTHREADS
 #endif
 
-#if __LP64__
+#if defined(__LP64__) || defined(_WIN64)
 #define ARCHITECTURE ARCHITECTURE_64
 #else
 #define ARCHITECTURE ARCHITECTURE_32

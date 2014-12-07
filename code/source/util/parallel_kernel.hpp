@@ -46,6 +46,7 @@ void ParallelKernel::setArgument(uint32 arg_id, util::ParallelBuffer& b, uint32 
 
 template <typename T>
 void ParallelKernel::setArgument(uint32 arg_id, T &arg, uint32 count){
+	ensure(hardware::gClState);
 	hardware::gClState->setKernelArgument(kernel, arg_id, arg, count);
 }
 

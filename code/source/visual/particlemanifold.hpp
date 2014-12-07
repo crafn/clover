@@ -20,7 +20,8 @@ namespace visual {
 
 struct ParticleSpawnData;
 
-/// @class ParticleManifoldEntity Contains all particles of one type
+/// ParticleManifoldEntity Contains all particles of one type
+/// @todo Remove OpenCL stuff
 class ParticleManifold {
 public:
 	ParticleManifold();
@@ -39,13 +40,13 @@ private:
 
 	bool created;
 
-	util::ParallelProgram program;
-	util::ParallelQueue queue;
+	//util::ParallelProgram program;
+	//util::ParallelQueue queue;
 
-	util::ParallelKernel* simulationKernel;
-	util::ParallelKernel* spawnKernel;
+	//util::ParallelKernel* simulationKernel;
+	//util::ParallelKernel* spawnKernel;
 
-	util::ParallelBuffer particleBuffer;
+	//util::ParallelBuffer particleBuffer;
 
 	util::DynArray<real64> times;
 	PointMesh<ParticleVBOVertexData> mesh;

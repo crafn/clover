@@ -5,8 +5,9 @@
 namespace clover {
 namespace util {
 
-ParallelQueue::ParallelQueue()
-		: queue(hardware::gClState->createCommandQueue(hardware::gClState->getDefaultDevice())){
+ParallelQueue::ParallelQueue(){
+	ensure(hardware::gClState);
+	queue= hardware::gClState->createCommandQueue(hardware::gClState->getDefaultDevice());
 }
 
 ParallelQueue::ParallelQueue(ParallelQueue&& other):
@@ -15,6 +16,7 @@ ParallelQueue::ParallelQueue(ParallelQueue&& other):
 }
 
 ParallelQueue::~ParallelQueue(){
+	ensure(hardware::gClState);
 	if (queue.id){
 		hardware::gClState->destroyCommandQueue(queue);
 	}
@@ -28,14 +30,17 @@ ParallelQueue& ParallelQueue::operator=(ParallelQueue&& other){
 }
 
 void ParallelQueue::flush(){
+	ensure(hardware::gClState);
 	hardware::gClState->flush(queue);
 }
 
 void ParallelQueue::finish(){
+	ensure(hardware::gClState);
 	hardware::gClState->finish(queue);
 }
 
 void ParallelQueue::enqueue(const hardware::ClState::Work& w){
+	ensure(hardware::gClState);
 	hardware::gClState->enqueueWork(w, queue);
 }
 

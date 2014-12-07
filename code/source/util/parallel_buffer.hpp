@@ -60,6 +60,7 @@ private:
 
 template <typename T>
 void ParallelBuffer::create(hardware::ClState::BufferFlag flags, T& first, uint32 element_count){
+	ensure(hardware::gClState);
 	hostData= &first;
 	hostDataSize= sizeof(T)*element_count;
 

@@ -9,6 +9,8 @@
 namespace clover {
 namespace util {
 
+bool parallelProcessingSupported() { return hardware::gClState != nullptr; }
+
 ParallelProgram::ParallelProgram(util::Str8 path):attachedQueue(0){
 	program.id= 0;
 	compile(path);
@@ -23,10 +25,10 @@ ParallelProgram::ParallelProgram(ParallelProgram&& other){
 }
 
 ParallelProgram::~ParallelProgram(){
-	for (auto& m : kernels){
-
+	ensure(hardware::gClState);
+	
+	for (auto& m : kernels)
 		hardware::gClState->destroyKernel(m.kernel);
-	}
 	kernels.clear();
 
 	if (program.id != 0)
@@ -48,10 +50,12 @@ ParallelProgram& ParallelProgram::operator=(ParallelProgram&& other){
 }
 
 void ParallelProgram::compile(util::Str8 path){
+	ensure(hardware::gClState);
 	program= hardware::gClState->createProgram(hardware::gClState->getDefaultContext(), path);
 }
 
 util::ParallelKernel& ParallelProgram::createKernel(util::Str8 kernelname){
+	ensure(hardware::gClState);
 	ensure(program.id);
 
 	kernels.pushBack(std::move(util::ParallelKernel(hardware::gClState->createKernel(program, kernelname))));

@@ -79,20 +79,22 @@ void Device::create(util::Str8 title){
 	initGlew();
 	
 	// Initialize "hardware" subsystems
-	
+
 	hardware::gGlState= new hardware::GlState();
 	hardware::gGlState->errorCheck("GLError after glewInit()");
 	glEnable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 
-	hardware::gClState= new hardware::ClState();
-	hardware::gClState->choosePlatformWiselyAndCreateContextNicely();
+	if (global::gCfgMgr->get("hardware::enableOpenCL", false)) {
+		hardware::gClState= new hardware::ClState();
+		hardware::gClState->choosePlatformWiselyAndCreateContextNicely();
+	}
 
 	hardware::gMouse= new Mouse();
 	hardware::gKeyboard= new Keyboard();
-	
+
 	util::FileWatcher::globalInit();
-	
+
 	hidMgr= HidMgrPtr(new ui::hid::HidMgr());
 	hidMgr->create();
 	
