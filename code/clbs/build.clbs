@@ -27,7 +27,7 @@ def buildInfo(env, target):
 		target_defines += [ "DEBUG" ]
 		target_flags += [ "g", "Og" ] 
 	elif target == "dev":
-		target_flags += [ "g", "O2" ]
+		target_flags += [ "g", "O2", "mtune=native", "march=native", "pipe" ]
 	elif target == "release":
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
@@ -77,7 +77,7 @@ def buildInfo(env, target):
 	boost.includeDirs= [ boost_dir ]
 	boost.headers= findFiles(boost_dir, "*.hpp")
 	boost.src= findFiles(boost_dir, "*.cpp")
-	boost.flags= target_flags
+	boost.flags= target_flags + [ "fno-strict-aliasing" ]
 	boost.defines= target_defines
 	boost.compiler= cpp_compiler
 	boost.linker= linker
@@ -357,6 +357,9 @@ def buildInfo(env, target):
 		"Wno-unused-but-set-variable", "Wno-unused-local-typedefs",
 		"Wno-maybe-uninitialized", # False positives with gcc 4.8.2
 		"std=c++11" ]
+	if env.os == "windows":
+		# boost.
+		clover_flags += [ "fno-strict-aliasing" ]
 	clover_defines= target_defines
 
 	subsystem_dirs= [
@@ -419,8 +422,6 @@ def buildInfo(env, target):
 	clover.links += system_links
 	
 	if env.os == "windows":
-		clover.flags += [ "fno-strict-aliasing" ] # Boost.
-		
 		# win-builds mingw is broken.
 		win_builds_bin_paths= \
 			[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
