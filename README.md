@@ -7,7 +7,7 @@ This is what this does:
 Note that the project hasn't been built or tested on multiple systems, so it's very likely that some problems will occur. Also, the engine has many game specific features and is not production quality.
 
 ### On Windows
-1.  Install [MinGW-w64-4.8.2-posix-dwarf](http://mingw-w64.sourceforge.net/download.php#mingw-builds) compiler toolset. Be sure to add the `bin` directory inside your MinGW installation to your `PATH` environment variable so that `g++` can be called from the command line.
+1.  Install [64bit win-builds MinGW](http://win-builds.org/download.html) compiler toolset. Be sure to add the `bin` directory inside your MinGW installation to your `PATH` environment variable so that `g++` can be called from the command line.
 2.  Install an OpenCL library and headers. For NVidia GPUs you have to install the [CUDA Toolkit](https://developer.nvidia.com/getcuda). <sub><sup>This sucks and shouldn't be necessary in the future.</sup></sub>
 3.  Use [git](http://git-scm.com/) to download this repository
 
