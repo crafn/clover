@@ -6,7 +6,6 @@ namespace util {
 
 uint32 byteHash32(const uint8* buf, SizeType size){
 #define USE_DUFF_OPTIMZ 1
-	PROFILE();
 
 	// Modified FNV-1a
 	uint32 hash= 2166136261;
