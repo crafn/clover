@@ -183,6 +183,11 @@ protected:
 namespace util {
 
 template <>
+struct TypeStringTraits<game::BaseWorldEntity<game::WorldEntity>> {
+	static util::Str8 type(){ return "WorldEntity"; }
+};
+
+template <>
 struct TypeStringTraits<game::WorldEntity> {
 	static util::Str8 type(){ return "WorldEntity"; }
 };

@@ -23,10 +23,14 @@ void registerToScript()
 
 	script.registerObjectType<WorldEntity*>();
 	script.registerMethod(&WorldEntity::getTypeName, "getTypeName");
+	script.registerMethod(&WorldEntity::getId, "getId");
+	script.registerMethod(&WorldEntity::getPosition, "getPosition");
 
 	script.registerObjectType<WeHandle>();
 	script.registerMethod(&WeHandle::get, "get");
 	script.registerMethod(&WeHandle::ref, "ref");
+	script.registerMethod(&WeHandle::setId, "setId");
+	script.registerMethod(&WeHandle::reset, "reset");
 
 	script.registerObjectType<game::PropertyGrid*>();
 	script.registerMethod(&game::PropertyGrid::getPhysicsGrid, "getPhysicsGrid");
