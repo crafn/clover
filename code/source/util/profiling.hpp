@@ -19,6 +19,8 @@ struct BlockInfo {
 	/// Don't assume that labels with same string will point to
 	/// the same memory - depends on compiler optimizations
 	const char* label;
+	/// Total number of allocations performed inside this block
+	SizeType memAllocs;
 };
 
 struct BlockProfiler {
@@ -42,6 +44,17 @@ struct StackDetacher {
 void setSuperThread(std::thread::id super_id);
 
 } // detail
+
+/// Call in main() -- we don't want to see any impl defined pre-main stuff
+void tryEnableProfiling();
+
+#if PROFILING_ENABLED
+/// Should be called on system memory allocation
+void profileSystemMemAlloc();
+#else
+void profileSystemMemAlloc() {};
+#endif
+
 } // util
 } // clover
 

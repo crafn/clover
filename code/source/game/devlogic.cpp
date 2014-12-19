@@ -26,14 +26,14 @@ util::Str8 stringifyProfilingResult(util::Profiler::Result result, std::thread::
 	str += util::Str8::format("--- Profiling results ---\n%u measurements\n\n",
 			(uint32)result.getMeasureCount());
 
-	for (auto item : result.getSortedLabels(thread)){
-		str += util::Str8::format("%f: \t %s\n", item.share, item.id.c_str());
-	}
+	for (auto item : result.getSortedLabels(thread))
+		str += util::Str8::format("%.4f: \t %s\n", item.share, item.id.c_str());
 	str += "\n";
 
 	for (auto item : result.getSortedSamples(thread)){
-		str += util::Str8::format("%f: \t %s\n", item.share, item.id.c_str());
+		str += util::Str8::format("%.4f - %i: %s\n", item.share, (int)item.memAllocs, item.id.c_str());
 	}
+
 	return str;
 }
 

@@ -59,9 +59,13 @@ using RMutex= std::recursive_mutex;
 using RLockGuard= std::lock_guard<RMutex>;
 constexpr ThreadUid threadUidNone= 0;
 
-/// Maps thread::ids of currently running threads to all-time unique ids
-static std::map<std::thread::id, ThreadUid> g_threadIdsToUids;
-static std::map<ThreadUid, Profiler::ThreadLocalInfo*> g_threadLocalInfos;
+struct ThreadIdentity {
+	std::thread::id id;
+	ThreadUid uid; /// id's aren't unique
+	Profiler::ThreadLocalInfo* info;
+};
+
+static std::array<ThreadIdentity, 512> g_threads;
 static ThreadUid g_freeThreadUid= threadUidNone + 1;
 static RMutex g_threadInfosMutex;
 
@@ -76,14 +80,20 @@ Profiler::ThreadRaii::~ThreadRaii(){ Profiler::onThreadEnd(threadLocalInfo); }
 
 static ThreadUid getThreadUid(std::thread::id id){
 	RLockGuard g(g_threadInfosMutex);
-	ensure(g_threadIdsToUids.find(id) != g_threadIdsToUids.end());
-	return g_threadIdsToUids.at(id);
+	for (SizeType i= 0; i < g_threads.size(); ++i) {
+		if (g_threads[i].id == id)
+			return g_threads[i].uid;
+	}
+	ensure_msg(false, "Thread UID not found");
 }
 
 static Profiler::ThreadLocalInfo& getThreadLocalInfo(ThreadUid uid){
 	RLockGuard g(g_threadInfosMutex);
-	ensure(g_threadLocalInfos.find(uid) != g_threadLocalInfos.end());
-	return *g_threadLocalInfos.at(uid);
+	for (SizeType i= 0; i < g_threads.size(); ++i) {
+		if (g_threads[i].uid == uid)
+			return *NONULL(g_threads[i].info);
+	}
+	ensure_msg(false, "Thread LocalInfo not found");
 }
 
 static void staticThreadLocalInfoInit(){
@@ -107,9 +117,19 @@ void Profiler::onThreadBegin(ThreadLocalInfo& info){
 		if (g_freeThreadUid == threadUidNone)
 			++g_freeThreadUid;
 
-		/// @todo Remove memory allocations so profiling can be used in `new`
-		g_threadIdsToUids[std::this_thread::get_id()]= info.threadUid;
-		g_threadLocalInfos[info.threadUid]= &info;
+		// Add thread to global list
+		bool added= false;
+		for (SizeType i= 0; i < g_threads.size(); ++i) {
+			auto& t= g_threads[i];
+			if (t.uid == threadUidNone) {
+				t.id= std::this_thread::get_id();
+				t.uid= info.threadUid;
+				t.info= &info;
+				added= true;
+				break;
+			}
+		}
+		ensure_msg(added, "Too many threads");
 	}
 }
 
@@ -118,25 +138,28 @@ void Profiler::onThreadEnd(ThreadLocalInfo& info){
 		RLockGuard g(g_threadInfosMutex);
 
 		ensure(threadLocalInfo.subThreadUid == threadUidNone);
-		ensure(g_threadLocalInfos.find(info.threadUid) != g_threadLocalInfos.end());
-		ensure(g_threadIdsToUids.find(std::this_thread::get_id()) != g_threadIdsToUids.end());
-		ensure(	threadLocalInfo.superThreadUid == threadUidNone ||
-					g_threadLocalInfos[threadLocalInfo.superThreadUid]->subThreadUid
-					!= threadLocalInfo.threadUid);
 
-		g_threadLocalInfos.erase(g_threadLocalInfos.find(info.threadUid));
-		g_threadIdsToUids.erase(g_threadIdsToUids.find(std::this_thread::get_id()));
+		bool removed= false;
+		for (SizeType i= 0; i < g_threads.size(); ++i) {
+			auto& t= g_threads[i];
+			if (t.uid == info.threadUid) {
+				t.uid= threadUidNone;
+				t.info= nullptr;
+				removed= true;
+				break;
+			}
+		}
+		ensure(removed);
 	}
 }
 
 void Profiler::onBlockEnter(BlockInfo& block){
 	if (PROFILING_ENABLED){
-			staticThreadLocalInfoInit();
+		staticThreadLocalInfoInit();
 
-			if (threadLocalInfo.freeFrame < ThreadLocalInfo::maxDepth){
+		if (threadLocalInfo.freeFrame < ThreadLocalInfo::maxDepth){
 			threadLocalInfo.frames[threadLocalInfo.freeFrame]= &block;
-		}
-		else {
+		} else {
 			release_ensure_msg(0, "Profiler::onBlockEnter(..): out of info");
 		}
 		++threadLocalInfo.freeFrame;
@@ -186,11 +209,28 @@ void Profiler::onStackDetach(){
 	super_info.subThreadUid= threadUidNone;
 }
 
+void Profiler::onSystemMemAlloc(){
+	if (PROFILING_ENABLED){
+		staticThreadLocalInfoInit();
 
-Profiler::Sample Profiler::readStack(const ThreadLocalInfo& info){
+		for (SizeType i= 0; i < threadLocalInfo.freeFrame; ++i) {
+			ensure(i < ThreadLocalInfo::maxDepth);
+			BlockInfo* b= threadLocalInfo.frames[i];
+			if (b) { // This might be unnecessary check
+				++b->memAllocs;
+			}
+		}
+
+		// Make sure that info is seen as coherent in other thread
+		std::atomic_thread_fence(std::memory_order_release);
+	}
+}
+
+Profiler::StackFrames Profiler::readStack(SizeType& mem_alloc_count, const ThreadLocalInfo& info){
+	mem_alloc_count= 0;
 	ensure(info.threadUid != threadUidNone);
 
-	Profiler::Sample frames;
+	Profiler::StackFrames frames;
 	frames.reserve(ThreadLocalInfo::maxDepth);
 
 	for (SizeType i= 0; i < ThreadLocalInfo::maxDepth; ++i){
@@ -204,6 +244,8 @@ Profiler::Sample Profiler::readStack(const ThreadLocalInfo& info){
 		if (frames.back() == nullptr){
 			frames.pop_back();
 			break;
+		} else {
+			mem_alloc_count= frames.back()->memAllocs;
 		}
 	}
 
@@ -211,8 +253,11 @@ Profiler::Sample Profiler::readStack(const ThreadLocalInfo& info){
 	ThreadUid sub_uid= info.subThreadUid;
 	if (sub_uid != threadUidNone){
 		// Append frames from sub thread
-		Profiler::Sample sub_frames= readStack(getThreadLocalInfo(sub_uid));
+		SizeType sub_alloc_count= 0;
+		Profiler::StackFrames sub_frames= readStack(sub_alloc_count, getThreadLocalInfo(sub_uid));
 		frames.insert(frames.end(), sub_frames.begin(), sub_frames.end());
+
+		mem_alloc_count += sub_alloc_count;
 	}
 
 	return frames;
@@ -231,24 +276,34 @@ Profiler::Result::Result(const Profile& profile, real64 min_share)
 		const Samples& samples= p1.second;
 		SizeType total= totalSampleCount(samples);
 		for (auto& p2 : samples){
-			const Sample& sample= p2.first;
-			SizeType count= p2.second;
+			const StackFrames& stack= p2.first;
+			const Sample& s= p2.second;
 
-			real64 share= (double)count/total;
-			if (share >= min_share)
-				addSample(sample, thread, share);
+			real64 share= (double)s.count/total;
+			if (share >= min_share) {
+				Label label= lastLabel(stack);
+
+				StackResult result;
+				result.share= share;
+				result.memAllocs= s.totalMemAllocs - s.memAllocsAtStartup;
+				stackResults[StackInfo{thread, stack}]= result;
+
+				if (!label.empty())
+					labelResults[LabelInfo{thread, std::move(label)}] += share;
+			}
 		}
 	}
 }
 
 auto Profiler::Result::getSortedSamples(std::thread::id thread_id) const -> std::vector<Item> {
 	std::vector<Item> samples;
-	for (auto& p : flippedMap<std::greater<real64>>(sampleResults)){
-		const SampleInfo& info= p.second;
+	for (auto& p : flippedMap<std::greater<StackResult>>(stackResults)){
+		const StackInfo& info= p.second;
+		const StackResult& result= p.first;
 		if (info.threadUid != threadIdsToUids.at(thread_id))
 			continue;
 
-		samples.push_back(Item{sampleStr(info), p.first});
+		samples.push_back(Item{sampleStr(info), result.share, result.memAllocs});
 	}
 	return samples;
 }
@@ -265,15 +320,6 @@ auto Profiler::Result::getSortedLabels(std::thread::id thread_id) const -> std::
 	return labels;
 }
 
-void Profiler::Result::addSample(Sample sample, ThreadUid thread, real64 share){
-	Label label= lastLabel(sample);
-
-	sampleResults[SampleInfo{thread, std::move(sample)}]= share;
-
-	if (!label.empty())
-		labelResults[LabelInfo{thread, std::move(label)}] += share;
-}
-
 SizeType Profiler::Result::totalSampleCount(const Profile& profile){
 	SizeType total= 0;
 	for (const auto& p1 : profile.samplesByThread){
@@ -286,7 +332,7 @@ SizeType Profiler::Result::totalSampleCount(const Profile& profile){
 SizeType Profiler::Result::totalSampleCount(const Samples& samples){
 	SizeType total= 0;
 	for (auto& p : samples){
-		total += p.second; // += sample count
+		total += p.second.count; // += sample count
 	}
 	return total;
 }
@@ -311,14 +357,14 @@ std::string Profiler::Result::funcStr(const char* funcname){
 	return funcname + start;
 }
 
-std::string Profiler::Result::sampleStr(const SampleInfo& s){
-	if (s.sample.empty())
+std::string Profiler::Result::sampleStr(const StackInfo& s){
+	if (s.stackFrames.empty())
 		return "unknown";
 
 	bool first= true;
 	std::string last_func;
 	std::stringstream ss;
-	for (auto& block : s.sample){
+	for (auto& block : s.stackFrames){
 		if (!first)
 			ss << "-> ";
 
@@ -338,7 +384,7 @@ std::string Profiler::Result::sampleStr(const SampleInfo& s){
 	return ss.str();
 }
 
-auto Profiler::Result::lastLabel(const Sample& s) -> Label {
+auto Profiler::Result::lastLabel(const StackFrames& s) -> Label {
 	const char* block_label= nullptr;
 	for (auto& block : s){
 		ensure(block);
@@ -380,24 +426,27 @@ Profiler::Result Profiler::popResult(real64 min_share){
 	return result;
 }
 
-SizeType Profiler::getCallStackCount() const {
-	RLockGuard g(g_threadInfosMutex);
-	return g_threadLocalInfos.size();
-}
-
 void Profiler::profileLoop(){
 	if (!PROFILING_ENABLED)
 		return;
 
 	while (keepProfiling){
 		{ LockGuard g1(g_threadInfosMutex); LockGuard g2(profileMutex);
-			// Just overwrite if std::thread::id is reused
-			profile.threadIdsToUids.insert(g_threadIdsToUids.begin(), g_threadIdsToUids.end());
+			for (SizeType i= 0; i < g_threads.size(); ++i) {
+				auto& t= g_threads[i];
+				if (t.uid == threadUidNone)
+					continue;
 
-			for (const auto& pair : g_threadLocalInfos){
-				ThreadLocalInfo& info= *pair.second;
-				ensure(info.threadUid != threadUidNone);
-				++profile.samplesByThread[info.threadUid][readStack(info)];
+				// Just overwrite if std::thread::id is reused
+				profile.threadIdsToUids[t.id]= t.uid;
+
+				ThreadLocalInfo& info= *NONULL(t.info);
+				SizeType mem_alloc_count= 0;
+				Sample& s= profile.samplesByThread[info.threadUid][readStack(mem_alloc_count, info)];
+				++s.count;
+				s.totalMemAllocs= mem_alloc_count;
+				if (s.memAllocsAtStartup == 0)
+					s.memAllocsAtStartup= s.totalMemAllocs;
 			}
 
 		}

@@ -7,6 +7,7 @@
 
 int main(int, char *argv[]){
 	clover::util::CrashHandler crashHandler;
+	clover::util::tryEnableProfiling();
 	
 	try {
 		clover::App app(argv[0]);

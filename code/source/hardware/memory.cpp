@@ -1,4 +1,5 @@
 #include "memory.hpp"
+#include "util/profiling.hpp"
 
 #include <array>
 #include <cassert>
@@ -12,13 +13,11 @@
 #define INIT_MEM_SIZE 1024*1024*50
 #define INIT_MEM_MAX_BLOCKS 1024*10
 
-void* operator new(size_t size){
-	return clover::hardware::allocate(size);
-}
+void* operator new(size_t size)
+{ return clover::hardware::allocate(size); }
 
-void operator delete(void* mem) noexcept {
-	clover::hardware::deallocate(mem);
-}
+void operator delete(void* mem) noexcept
+{ clover::hardware::deallocate(mem); }
 
 namespace clover {
 namespace hardware {
@@ -252,20 +251,22 @@ std::mutex g_memMutex;
 } // detail
 using namespace detail;
 
-void createHeap(SizeType size, SizeType max_allocations){
+void createHeap(SizeType size, SizeType max_allocations)
+{
 #if OVERRIDE_DEFAULT_NEW
 	std::lock_guard<std::mutex> g(g_memMutex);
 	g_heap.create(size, max_allocations);
 #endif
 }
 
-void* allocate(SizeType size){
+void* allocate(SizeType size)
+{
+	util::profileSystemMemAlloc();
 #if OVERRIDE_DEFAULT_NEW
 	std::lock_guard<std::mutex> g(g_memMutex);
-	if (g_heap.isValid()){
+	if (g_heap.isValid()) {
 		return g_heap.allocate(size);
-	}
-	else {
+	} else {
 		if (!g_initHeap.isValid())
 			g_initHeap.create(INIT_MEM_SIZE, INIT_MEM_MAX_BLOCKS);
 
@@ -276,7 +277,8 @@ void* allocate(SizeType size){
 #endif
 }
 
-void deallocate(void* mem){
+void deallocate(void* mem)
+{
 #if OVERRIDE_DEFAULT_NEW
 	std::lock_guard<std::mutex> g(g_memMutex);
 	if (!mem)

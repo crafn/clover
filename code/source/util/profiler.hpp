@@ -27,9 +27,14 @@ public:
 	/// @warning ThreadUid should have atomic read/write
 	using ThreadUid= uint32;
 	using Label= std::string;
-	using Sample= std::vector<BlockInfo*>;
+	using StackFrames= std::vector<BlockInfo*>;
+	struct Sample {
+		SizeType count;
+		SizeType totalMemAllocs;
+		SizeType memAllocsAtStartup;
+	};
 	/// <sample, count>
-	using Samples= std::map<Sample, SizeType>;
+	using Samples= std::map<StackFrames, Sample>;
 	struct Profile {
 		std::map<ThreadUid, Samples> samplesByThread;
 		std::map<std::thread::id, ThreadUid> threadIdsToUids;
@@ -42,6 +47,7 @@ public:
 			/// Approximate portion of time spent within this item during
 			/// profiling. Shares don't overlap, so sum ~ 1.0 within a thread
 			real64 share;
+			SizeType memAllocs;
 		};
 
 		Result(const Profile& profile, real64 min_share);
@@ -52,13 +58,21 @@ public:
 		SizeType getMeasureCount() const { return measureCount; }
 
 	private:
-		struct SampleInfo {
+		struct StackInfo {
 			ThreadUid threadUid;
-			Sample sample;
-			bool operator<(const SampleInfo& other) const {
-				return	std::make_pair(threadUid, sample) <
-						std::make_pair(other.threadUid, other.sample);
+			StackFrames stackFrames;
+			bool operator<(const StackInfo& other) const {
+				return	std::make_pair(threadUid, stackFrames) <
+						std::make_pair(other.threadUid, other.stackFrames);
 			}
+		};
+
+		struct StackResult {
+			real64 share;
+			SizeType memAllocs;
+
+			bool operator>(const StackResult& other) const
+			{ return share > other.share; }
 		};
 
 		struct LabelInfo {
@@ -70,19 +84,17 @@ public:
 			}
 		};
 
-		void addSample(Sample sample, ThreadUid thread, real64 share);
-
 		static SizeType totalSampleCount(const Profile& p);
 		static SizeType totalSampleCount(const Samples& s);
 		static SizeType maxSamplesPerThread(const Profile& p);
 		static std::string funcStr(const char* funcname);
-		static std::string sampleStr(const SampleInfo& s);
-		static Label lastLabel(const Sample& s);
+		static std::string sampleStr(const StackInfo& s);
+		static Label lastLabel(const StackFrames& s);
 
 		SizeType measureCount;
 
 		/// <sample, share>
-		Map<SampleInfo, real64> sampleResults;
+		Map<StackInfo, StackResult> stackResults;
 
 		/// Results for labels are joined from sample shares
 		/// If a sample contains more than one label, share of the
@@ -99,8 +111,6 @@ public:
 
 	Result popResult(real64 min_share);
 
-	SizeType getCallStackCount() const;
-
 protected: // Static, possibly called from other threads
 
 	friend class ThreadLocalInfo;
@@ -109,6 +119,7 @@ protected: // Static, possibly called from other threads
 	friend class util::detail::StackJoiner;
 	friend class util::detail::StackDetacher;
 	friend void util::detail::setSuperThread(std::thread::id);
+	friend void util::profileSystemMemAlloc();
 
 	static void onThreadBegin(ThreadLocalInfo& info);
 	static void onThreadEnd(ThreadLocalInfo& info);
@@ -120,9 +131,11 @@ protected: // Static, possibly called from other threads
 	static void onStackJoin();
 	static void onStackDetach();
 
+	static void onSystemMemAlloc();
+
 private: // Static
 	/// @warning Assuming that threads can't be destroyed during this function
-	static Sample readStack(const ThreadLocalInfo& stack);
+	static StackFrames readStack(SizeType& mem_alloc_count, const ThreadLocalInfo& stack);
 
 private: // Non-static
 	using Mutex= std::recursive_mutex;
