@@ -15,17 +15,17 @@ namespace detail {
 
 struct BlockInfo {
 	const char* funcName;
-	SizeType line;
+	uint32 line;
 	/// Don't assume that labels with same string will point to
 	/// the same memory - depends on compiler optimizations
 	const char* label;
-	/// Total number of allocations performed inside this block
-	SizeType memAllocs;
+	uint64 exclusiveMemAllocs;
+	uint64 inclusiveMemAllocs;
 };
 
 struct BlockProfiler {
 	static BlockInfo createBlockInfo(	const char* func,
-										SizeType line,
+										uint32 line,
 										const char* label);
 	BlockProfiler(BlockInfo& info);
 	~BlockProfiler();

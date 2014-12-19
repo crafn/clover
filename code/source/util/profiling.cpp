@@ -5,8 +5,8 @@ namespace clover {
 namespace util {
 namespace detail {
 
-BlockInfo BlockProfiler::createBlockInfo(const char* func, SizeType line, const char* label)
-{ return BlockInfo{func, line, label, 0}; }
+BlockInfo BlockProfiler::createBlockInfo(const char* func, uint32 line, const char* label)
+{ return BlockInfo{func, line, label, 0, 0}; }
 
 BlockProfiler::BlockProfiler(BlockInfo& block)
 { Profiler::onBlockEnter(block); }

@@ -90,9 +90,13 @@ extern DebugPrint gDebugPrint;
 /// Convenience function for debug printing
 /// @example print(debug::Ch::Audio, debug::Vb::Trivial, "test %i", 5);
 template <typename... Args>
-void print(Ch ch, Vb vb, const char* fmt, Args&&... args){
-	gDebugPrint(ch, vb, fmt, std::forward<Args>(args)...);
-}
+void print(Ch ch, Vb vb, const char* fmt, Args&&... args)
+{ gDebugPrint(ch, vb, fmt, std::forward<Args>(args)...); }
+
+/// Less verbose printing command for temp purposes
+template <typename... Args>
+void print(const char* fmt, Args&&... args)
+{ print(Ch::General, Vb::Trivial, fmt, std::forward<Args>(args)...); }
 
 } // debug
 } // clover

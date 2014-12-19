@@ -31,7 +31,11 @@ util::Str8 stringifyProfilingResult(util::Profiler::Result result, std::thread::
 	str += "\n";
 
 	for (auto item : result.getSortedSamples(thread)){
-		str += util::Str8::format("%.4f - %i: %s\n", item.share, (int)item.memAllocs, item.id.c_str());
+		str += util::Str8::format("%.4f - %i/%i: %s\n",
+				item.share,
+				(int)item.exclusiveMemAllocs,
+				(int)item.inclusiveMemAllocs,
+				item.id.c_str());
 	}
 
 	return str;

@@ -42,6 +42,8 @@ void createEdges(
 	edge_counts.resize(spawners.size());
 	util::DynArray<bool> spawner_present;
 	spawner_present.resize(spawners.size());
+	util::DynArray<const WeType*> used_spawners;
+	used_spawners.resize(spawners.size()); // Larger than usually needed
 
 	// Scan through the whole grid
 	auto& grid= physics::gPhysMgr->getWorld().getGrid();
@@ -50,14 +52,14 @@ void createEdges(
 	uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
 	real32 half_cell= 0.5f/grid.getCellsInUnit();
 	for (auto& ch_pos : chunk_positions) {
-		util::ArrayView<const physics::Grid::Cell> cells=
-			grid.getChunkCells(ch_pos);
+		auto cells= asArrayView(grid.getChunkCells(ch_pos));
 		for (SizeType i= 0; i < cells.size(); ++i) {
 			if (cells[i].worldEdge)
 				continue;
 
-			if (	last_spawn_time > cells[i].lastStaticEdit &&
-					last_spawn_time > cells[i].lastDynamicEdit)
+			/// @todo Enable dynamic trigger when needed
+			if (	last_spawn_time > cells[i].lastStaticEdit /*&&
+					last_spawn_time > cells[i].lastDynamicEdit*/)
 				continue;
 
 			// Find anchor point sufficiently deep
@@ -95,15 +97,17 @@ void createEdges(
 			}
 
 			// Spawn edge entities
-			/// @todo Don't do allocations in loop
-			util::Set<const WeType*> used_spawners;
+			for (auto& m : used_spawners)
+				m= nullptr;
+			SizeType used_spawners_count= 0;
 			for (SizeType s_i= 0; s_i < spawners.size(); ++s_i) {
 				if (	!spawner_present[s_i] ||
 						edge_counts[s_i] > 0 ||
 						util::contains(used_spawners, spawners[s_i]->getSpawnerType()))
 					continue;
 
-				used_spawners.insert(spawners[s_i]->getSpawnerType());
+				used_spawners[used_spawners_count]= spawners[s_i]->getSpawnerType();
+				++used_spawners_count;
 
 				util::RtTransform2d edge_t;
 				edge_t.translation= anchor_p;
@@ -111,19 +115,22 @@ void createEdges(
 					(cells[i].staticNormal).
 					rotationZ()	- util::tau/4.0;
 
-				game::WeHandle edge=
-					game::gWorldMgr->getWeMgr().createEntity(
-							NONULL(spawners[s_i]->getEdgeType())->getName(),
-							edge_t.translation);
-				edge->setAttribute("transform", edge_t);
-				/// @todo This ugliness could be removed in at least two ways:
-				/// - certain entity types could be updated at the creation frame
-				/// - spawning could include first node update 
-				/// When fixing this, note that if block is spawned, edges need
-				/// to become visible at the same frame..!
-				if (edge->isSpawningAllowed()) {
-					edge->spawn();
-					edge->update();
+				{ // Create entity
+					PROFILE();
+					game::WeHandle edge=
+						game::gWorldMgr->getWeMgr().createEntity(
+								NONULL(spawners[s_i]->getEdgeType())->getName(),
+								edge_t.translation);
+					edge->setAttribute("transform", edge_t);
+					/// @todo This ugliness could be removed in at least two ways:
+					/// - certain entity types could be updated at the creation frame
+					/// - spawning could include first node update 
+					/// When fixing this, note that if block is spawned, edges need
+					/// to become visible at the same frame..!
+					if (edge->isSpawningAllowed()) {
+						edge->spawn();
+						edge->update();
+					}
 				}
 			}
 		}

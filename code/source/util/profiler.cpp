@@ -215,10 +215,10 @@ void Profiler::onSystemMemAlloc(){
 
 		for (SizeType i= 0; i < threadLocalInfo.freeFrame; ++i) {
 			ensure(i < ThreadLocalInfo::maxDepth);
-			BlockInfo* b= threadLocalInfo.frames[i];
-			if (b) { // This might be unnecessary check
-				++b->memAllocs;
-			}
+			BlockInfo& b= *NONULL(threadLocalInfo.frames[i]);
+			++b.inclusiveMemAllocs;
+			if (i + 1 == threadLocalInfo.freeFrame)
+				++b.exclusiveMemAllocs;
 		}
 
 		// Make sure that info is seen as coherent in other thread
@@ -226,14 +226,15 @@ void Profiler::onSystemMemAlloc(){
 	}
 }
 
-Profiler::StackFrames Profiler::readStack(SizeType& mem_alloc_count, const ThreadLocalInfo& info){
-	mem_alloc_count= 0;
+Profiler::StackFrames Profiler::readStack(uint64& e_mallocs, uint64& i_mallocs, const ThreadLocalInfo& info){
+	e_mallocs= 0;
+	i_mallocs= 0;
 	ensure(info.threadUid != threadUidNone);
 
 	Profiler::StackFrames frames;
 	frames.reserve(ThreadLocalInfo::maxDepth);
 
-	for (SizeType i= 0; i < ThreadLocalInfo::maxDepth; ++i){
+	for (SizeType i= 0; i < ThreadLocalInfo::maxDepth; ++i) {
 		std::atomic_thread_fence(std::memory_order_acquire);
 
 		// Don't care if frames change during the loop, because
@@ -241,11 +242,12 @@ Profiler::StackFrames Profiler::readStack(SizeType& mem_alloc_count, const Threa
 		// at average, and that's the whole point of sampling
 		frames.push_back(info.frames[i]);
 
-		if (frames.back() == nullptr){
+		if (frames.back() == nullptr) {
 			frames.pop_back();
 			break;
 		} else {
-			mem_alloc_count= frames.back()->memAllocs;
+			e_mallocs= frames.back()->exclusiveMemAllocs;
+			i_mallocs= frames.back()->inclusiveMemAllocs;
 		}
 	}
 
@@ -253,11 +255,16 @@ Profiler::StackFrames Profiler::readStack(SizeType& mem_alloc_count, const Threa
 	ThreadUid sub_uid= info.subThreadUid;
 	if (sub_uid != threadUidNone){
 		// Append frames from sub thread
-		SizeType sub_alloc_count= 0;
-		Profiler::StackFrames sub_frames= readStack(sub_alloc_count, getThreadLocalInfo(sub_uid));
+		uint64 sub_e_mallocs= 0;
+		uint64 sub_i_mallocs= 0;
+		Profiler::StackFrames sub_frames=
+			readStack(
+					sub_e_mallocs, sub_i_mallocs,
+					getThreadLocalInfo(sub_uid));
 		frames.insert(frames.end(), sub_frames.begin(), sub_frames.end());
 
-		mem_alloc_count += sub_alloc_count;
+		i_mallocs += sub_i_mallocs;
+		e_mallocs += sub_e_mallocs;
 	}
 
 	return frames;
@@ -285,7 +292,8 @@ Profiler::Result::Result(const Profile& profile, real64 min_share)
 
 				StackResult result;
 				result.share= share;
-				result.memAllocs= s.totalMemAllocs - s.memAllocsAtStartup;
+				result.iMemAllocs= s.totalIMemAllocs - s.iMemAllocsAtStartup;
+				result.eMemAllocs= s.totalEMemAllocs - s.eMemAllocsAtStartup;
 				stackResults[StackInfo{thread, stack}]= result;
 
 				if (!label.empty())
@@ -303,7 +311,11 @@ auto Profiler::Result::getSortedSamples(std::thread::id thread_id) const -> std:
 		if (info.threadUid != threadIdsToUids.at(thread_id))
 			continue;
 
-		samples.push_back(Item{sampleStr(info), result.share, result.memAllocs});
+		samples.push_back(
+				Item{	sampleStr(info),
+						result.share,
+						result.iMemAllocs,
+						result.eMemAllocs});
 	}
 	return samples;
 }
@@ -441,12 +453,20 @@ void Profiler::profileLoop(){
 				profile.threadIdsToUids[t.id]= t.uid;
 
 				ThreadLocalInfo& info= *NONULL(t.info);
-				SizeType mem_alloc_count= 0;
-				Sample& s= profile.samplesByThread[info.threadUid][readStack(mem_alloc_count, info)];
+				uint64 e_malloc_count= 0;
+				uint64 i_malloc_count= 0;
+				Sample& s=
+					profile.samplesByThread[info.threadUid][
+						readStack(e_malloc_count, i_malloc_count, info)];
 				++s.count;
-				s.totalMemAllocs= mem_alloc_count;
-				if (s.memAllocsAtStartup == 0)
-					s.memAllocsAtStartup= s.totalMemAllocs;
+
+				s.totalIMemAllocs= i_malloc_count;
+				if (s.iMemAllocsAtStartup == 0)
+					s.iMemAllocsAtStartup= s.totalIMemAllocs;
+
+				s.totalEMemAllocs= e_malloc_count;
+				if (s.eMemAllocsAtStartup == 0)
+					s.eMemAllocsAtStartup= s.totalEMemAllocs;
 			}
 
 		}

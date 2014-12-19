@@ -29,9 +29,11 @@ public:
 	using Label= std::string;
 	using StackFrames= std::vector<BlockInfo*>;
 	struct Sample {
-		SizeType count;
-		SizeType totalMemAllocs;
-		SizeType memAllocsAtStartup;
+		uint64 count;
+		uint64 totalIMemAllocs;
+		uint64 totalEMemAllocs;
+		uint64 iMemAllocsAtStartup;
+		uint64 eMemAllocsAtStartup;
 	};
 	/// <sample, count>
 	using Samples= std::map<StackFrames, Sample>;
@@ -47,7 +49,8 @@ public:
 			/// Approximate portion of time spent within this item during
 			/// profiling. Shares don't overlap, so sum ~ 1.0 within a thread
 			real64 share;
-			SizeType memAllocs;
+			uint64 inclusiveMemAllocs;
+			uint64 exclusiveMemAllocs;
 		};
 
 		Result(const Profile& profile, real64 min_share);
@@ -69,7 +72,8 @@ public:
 
 		struct StackResult {
 			real64 share;
-			SizeType memAllocs;
+			uint64 iMemAllocs;
+			uint64 eMemAllocs;
 
 			bool operator>(const StackResult& other) const
 			{ return share > other.share; }
@@ -135,7 +139,7 @@ protected: // Static, possibly called from other threads
 
 private: // Static
 	/// @warning Assuming that threads can't be destroyed during this function
-	static StackFrames readStack(SizeType& mem_alloc_count, const ThreadLocalInfo& stack);
+	static StackFrames readStack(uint64& e_mallocs, uint64& i_mallocs, const ThreadLocalInfo& stack);
 
 private: // Non-static
 	using Mutex= std::recursive_mutex;
