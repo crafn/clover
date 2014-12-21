@@ -2,8 +2,8 @@
 #include "chunk_util.hpp"
 #include "collision/baseshape_circle.hpp"
 #include "collision/query.hpp"
-#include "hardware/glstate.hpp"
 #include "global/file.hpp"
+#include "hardware/glstate.hpp"
 #include "util/profiling.hpp"
 
 namespace clover {
@@ -313,8 +313,8 @@ auto DistanceField::genPolys(
 		const PosToIdMap& pos_to_id) const -> PolyGenResult {
 	PROFILE();
 
-	util::DynArray<const b2Shape*, game::SingleFrameAtor> shapes;
-	util::DynArray<PolyVertex, game::SingleFrameAtor> polygons;
+	util::DynArray<const b2Shape*, global::SingleFrameAtor> shapes;
+	util::DynArray<PolyVertex, global::SingleFrameAtor> polygons;
 
 	// Triangle count in extruded distance mesh
 	SizeType distmesh_triangle_count= 0;

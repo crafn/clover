@@ -3,7 +3,7 @@
 #include "util/unique_ptr.hpp"
 
 namespace clover {
-namespace game {
+namespace global {
 
 static util::UniquePtr<util::MemChunk> g_singleFrameMemChunk;
 
@@ -18,5 +18,5 @@ void destroyMemoryPools(){
 	g_singleFrameMemChunk.reset();
 }
 
-} // game
+} // global
 } // clover

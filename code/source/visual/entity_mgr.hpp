@@ -77,7 +77,7 @@ private:
 		/// Filled in finalize
 		util::Map<const ModelEntityLogic*, const RenderEntity*> logicToRenderEntity;
 	};
-	
+
 	struct RenderBatch {
 		RenderBatch(): logic(def){}
 		RenderBatch(const RenderBatch&)= delete;
@@ -92,7 +92,7 @@ private:
 		ModelEntityLogic logic;
 		const ModelEntityLogic* lastEntityLogic= nullptr;
 	};
-	
+
 	class RenderEntityCache {
 	public:
 		using Grid= util::FiniteGridContainer<const ModelEntityLogic*, 3>;
@@ -110,13 +110,13 @@ private:
 		
 		util::DynArray<RenderEntity> query(	const Camera& cam,
 										util::Vec2d occlusion_rad_addition);
-		
+
 		SizeType getModelEntityCount() const { return modelEntityCount; }
-		
+
 	private:
 		Grid::Vec gridPos(util::Vec3d p) const;
 		void addToGrid(const ModelEntityLogic& logic);
-	
+
 		real64 chunkSize;
 		util::DynArray<const ModelEntityLogic*> viewSpace;
 		/// Contains entities in a 3d grid
@@ -148,9 +148,10 @@ private:
 	
 	RenderingAnalyzer analyzer;
 	/// <Batch contentHash, batch>
-	util::Map<uint32, RenderBatch> batchMap;
-	/// <Entity contentHash, batch*>
-	util::Map<uint32, RenderBatch*> entityToBatch;
+	util::HashMap<uint32, RenderBatch> batchMap;
+	/// Entity index in cfg -> batch*
+	util::DynArray<RenderBatch*> entityToBatch;
+
 	RenderEntityCache reCache;
 };
 } // visual

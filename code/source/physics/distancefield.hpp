@@ -3,7 +3,7 @@
 
 #include "build.hpp"
 #include "collision/baseshape_polygon.hpp"
-#include "game/memory.hpp"
+#include "global/memory.hpp"
 #include "util/dyn_array.hpp"
 #include "util/map.hpp"
 #include "util/mesh.hpp"
@@ -107,7 +107,7 @@ public:
 
 private:
 	struct PolyGenResult {
-		util::DynArray<PolyVertex, game::SingleFrameAtor> polys;
+		util::DynArray<PolyVertex, global::SingleFrameAtor> polys;
 		SizeType distMeshTriCount;
 	};
 

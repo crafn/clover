@@ -8,8 +8,8 @@
 namespace clover {
 namespace util {
 
-template <typename T>
-using Set= std::set<T>;
+template <typename T, template <typename> class Ator= std::allocator>
+using Set= std::set<T, std::less<T>, Ator<T>>;
 
 template <typename T>
 struct Hash32<Set<T>> {

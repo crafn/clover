@@ -3,7 +3,7 @@
 #include "debug/debugdraw.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/event_mgr.hpp"
-#include "game/memory.hpp"
+#include "global/memory.hpp"
 #include "game/worldquery.hpp"
 #include "game/worldchunk.hpp"
 #include "game/worldentity_mgr.hpp"
@@ -47,8 +47,8 @@ App::App(const util::Str8& executablePath){
 			global::gCfgMgr->get<SizeType>("hardware::heapSize"),
 			global::gCfgMgr->get<SizeType>("hardware::heapBlocks"));
 
-	game::createMemoryPools(
-			global::gCfgMgr->get<SizeType>("game::singleFrameMemory"));
+	global::createMemoryPools(
+			global::gCfgMgr->get<SizeType>("global::singleFrameMemory"));
 
 	auto filemgr = new global::FileMgr();
 	global::File bin(executablePath);
@@ -98,7 +98,7 @@ App::~App(){
 	delete global::gEventMgr; global::gEventMgr= nullptr;
 	delete global::gFileMgr;
 
-	game::destroyMemoryPools();
+	global::destroyMemoryPools();
 
 	delete global::gCfgMgr; global::gCfgMgr= nullptr;
 }
@@ -112,7 +112,7 @@ void App::run(){
 	util::Timer sleepTimer;
 
 	while (1){
-		game::SingleFrameStorage::value.clear();
+		global::SingleFrameStorage::value.clear();
 
 		physics::gPhysMgr->preFrameUpdate();
 

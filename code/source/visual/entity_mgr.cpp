@@ -9,6 +9,7 @@
 #include "entitylogic_light.hpp"
 #include "entitylogic_model.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/memory.hpp"
 #include "hardware/device.hpp"
 #include "hardware/glstate.hpp"
 #include "model_text.hpp"
@@ -603,22 +604,25 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::sortedByDepth(util::DynArray<
 
 void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const RenderFrameConfig& cfg) {
 	PROFILE();
-	
+
 	entityToBatch.clear();
-	
+	entityToBatch.resize(cfg.entities.size());
+
 	// <batchContentHash>
-	util::Set<uint32> preservedBatches;
+	util::Set<uint32, global::SingleFrameAtor> preservedBatches;
 	SizeType preserved_count= 0;
-	
+
 	for (const auto& a_batch : a.batches) {
 		{ PROFILE();
 			// Check if batch was same in the previous frame
 			auto preserved_batch_it= batchMap.find(a_batch.contentHash);
 			if (preserved_batch_it != batchMap.end()) {
 				preservedBatches.insert(a_batch.contentHash);
-				
-				for (const auto& logic : a_batch.modelLogics) {
-					entityToBatch[logic->getContentHash()]= &preserved_batch_it->second;
+
+				for (SizeType i= 0; i < a_batch.modelLogics.size(); ++i) {
+					SizeType entity_index= a_batch.firstEntityDrawIndex + i;
+					assert(entity_index < entityToBatch.size());
+					entityToBatch[entity_index]= &preserved_batch_it->second;
 				}
 
 				++preserved_count;
@@ -630,7 +634,7 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 
 		RenderBatch batch;
 		batch.lastEntityLogic= a_batch.modelLogics.back();
-	
+
 		ensure(a_batch.material);
 		util::Color batch_mat_color= a_batch.material->getColor();
 		for (SizeType i= 0; i < a_batch.meshes.size(); ++i) {
@@ -683,8 +687,11 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 						std::move(batch))).first;
 			RenderBatch* batch_ptr= &it->second;
 
+			SizeType i= a_batch.firstEntityDrawIndex;
 			for (const auto& logic : a_batch.modelLogics){
-				entityToBatch[logic->getContentHash()]= batch_ptr;
+				assert(i < entityToBatch.size());
+				entityToBatch[i]= batch_ptr;
+				++i;
 			}
 		}
 	}
@@ -711,19 +718,17 @@ void EntityMgr::optimizeRenderFrameConfig(RenderFrameConfig& cfg){
 	for (SizeType i= 0; i < cfg.entities.size(); ++i){
 		// Check if entity belongs to a batch
 		ensure(cfg.entities[i].logic);
-		auto batch_it= entityToBatch.find(cfg.entities[i].logic->getContentHash());
-		if (batch_it != entityToBatch.end()){
-			ensure(batch_it->second);
-			const RenderBatch& batch= *batch_it->second;
+		ensure(i < entityToBatch.size());
+		RenderBatch* batch= entityToBatch[i];
+		if (batch) {
 			// Use batch as a RenderEntity
-			entities.pushBack(batch.asRenderEntity());
+			entities.pushBack(batch->asRenderEntity());
 
 			// Jump over entities which belong to the same batch
 			while (	i < cfg.entities.size() &&
-					cfg.entities[i].logic != batch.lastEntityLogic) {
+					cfg.entities[i].logic != batch->lastEntityLogic) {
 				++i;
 			}
-
 			continue;
 		}
 		else {

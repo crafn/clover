@@ -1,14 +1,12 @@
 #ifndef CLOVER_GAME_MEMORY_HPP
 #define CLOVER_GAME_MEMORY_HPP
 
-/// @todo Move to global!
-
 #include "build.hpp"
 #include "util/mem_pool_linear.hpp"
 #include "util/ator_bound.hpp"
 
 namespace clover {
-namespace game {
+namespace global {
 
 struct SingleFrameStorageTag;
 using SingleFrameStorage=
@@ -22,7 +20,7 @@ using SingleFrameAtor= util::BoundAtor<T, SingleFrameStorage>;
 void createMemoryPools(SizeType single_frame_mem_size);
 void destroyMemoryPools();
 
-} // game
+} // global
 } // clover
 
 #endif // CLOVER_GAME_MEMORY_HPP

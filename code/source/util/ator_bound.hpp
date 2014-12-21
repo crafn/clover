@@ -18,6 +18,14 @@ template <	typename T,
 class BoundAtor {
 public:
 	using value_type= T;
+	using pointer= T*;
+	using const_pointer= const T*;
+	using reference= T&;
+	using const_reference= const T&;
+	using size_type= std::size_t;
+	using difference_type= std::ptrdiff_t;
+	template<typename U>
+    struct rebind { using other= BoundAtor<U, BoundStorage>; };
 
 	BoundAtor()
 			: ator(BoundStorage::value){}
@@ -27,20 +35,25 @@ public:
 
 	template <typename U, typename S>
 	BoundAtor(const BoundAtor<U, S>& other)
-			: ator(other.ator){
-	}
+			: ator(other.ator)
+	{ }
 
-	T* allocate(SizeType count){
-		return ator. template allocate(count);
-	}
+	T* allocate(SizeType count)
+	{ return ator. template allocate(count); }
 
-	void deallocate(T* mem, SizeType count){
-		ator. template deallocate(mem, count);
-	}
+	void deallocate(T* mem, SizeType count)
+	{ ator. template deallocate(mem, count); }
 
-	bool operator==(const BoundAtor& other) const {
-		return ator. template operator==(other.ator);
-	}
+	template<typename U, typename... Args >
+	void construct( U* p, Args&&... args)
+	{ ::new ((void*)p) U(std::forward<Args>(args)...); }
+
+	template <typename U>
+	void destroy(U* p)
+	{ p->~U(); }
+
+	bool operator==(const BoundAtor& other) const
+	{ return ator. template operator==(other.ator); }
 
 	static typename BoundStorage::Value& storage(){ return BoundStorage::value; }
 

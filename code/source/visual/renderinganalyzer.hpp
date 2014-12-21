@@ -22,6 +22,7 @@ public:
 			util::DynArray<const ModelEntityLogic*> modelLogics;
 			util::DynArray<const TriMesh*> meshes;
 			const Material* material= nullptr;
+			SizeType firstEntityDrawIndex;
 		};
 
 		/// Meshes in these should be batched together
@@ -36,25 +37,25 @@ private:
 
 	/// Necessary information for figuring out which meshes can be merged
 	struct MeshInfo {
-		MeshInfo(const visual::ModelEntityLogic& logic);
+		MeshInfo(const visual::ModelEntityLogic& logic, SizeType i);
 
 		const visual::ModelEntityLogic* entityLogic;
 		Entity::Transform transform; // Transform of the mesh
 		uint32 batchCompatibilityHash= 0;
 		uint32 contentHash= 0; // MeshInfos with same contentHash looks the same
 		bool unbatchable= false;
+		SizeType drawIndex;
 	};
 
 	struct FrameInfo {
 		util::DynArray<MeshInfo> meshInfos;
-		util::Vec2d viewCenter, viewRadius;
+		SizeType entityCount;
 	};
 
 	static bool batchCompatible(const MeshInfo& m1, const MeshInfo& m2);
 	static const TriMesh* asTriMesh(const BaseMesh* mesh);
 	static uint32 hash(const BaseMesh* mesh);
 	static uint32 hash(const Material* mat);
-
 
 	FrameInfo frameInfo;
 };

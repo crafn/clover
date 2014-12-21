@@ -6,13 +6,15 @@
 namespace clover {
 namespace visual {
 
-void RenderingAnalyzer::onFrameStart(/*util::Vec2d worldview_center, util::Vec2d worldview_rad*/){
+void RenderingAnalyzer::onFrameStart()
+{
 	frameInfo.meshInfos.clear();
-	//frameInfo.viewCenter= worldview_center;
-	//frameInfo.viewRadius= worldview_rad;
+	frameInfo.entityCount= 0;
 }
 
-void RenderingAnalyzer::onDraw(const ModelEntityLogic& logic){
+void RenderingAnalyzer::onDraw(const ModelEntityLogic& logic)
+{
+	++frameInfo.entityCount;
 	// Only trimesh entities should be added (discard particles)
 	{ PROFILE();
 		auto& def= logic.getDef();
@@ -25,11 +27,12 @@ void RenderingAnalyzer::onDraw(const ModelEntityLogic& logic){
 	}
 
 	{ PROFILE();
-		frameInfo.meshInfos.emplaceBack(logic);
+		frameInfo.meshInfos.emplaceBack(logic, frameInfo.entityCount - 1);
 	}
 }
 
-RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
+RenderingAnalyzer::Analysis RenderingAnalyzer::analyze()
+{
 	PROFILE();
 	Analysis a;
 	
@@ -40,35 +43,35 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
 	const int32 min_group_size= global::gCfgMgr->get<int32>("visual::minBatchEntityCount", 10);
 	const int32 max_group_size= global::gCfgMgr->get<int32>("visual::maxBatchEntityCount", 100);
 	const auto& mesh_infos= frameInfo.meshInfos;
-	
+
 	if (mesh_infos.empty() || min_group_size > max_group_size)
 		return a;
-	
-	for (SizeType i= 0; i < mesh_infos.size(); ++i){
+
+	for (SizeType i= 0; i < mesh_infos.size(); ++i) { 
 		int32 group_size= i - group_begin_i;
 
 		// If this mesh_infos[i] is last of a group
 		if (i + 1 == frameInfo.meshInfos.size() ||
 			!batchCompatible(mesh_infos[i], mesh_infos[i + 1]) ||
 			group_size == max_group_size ||
-			mesh_infos[i + 1].unbatchable){
-			
-			if (group_size >= min_group_size){
-				
+			mesh_infos[i + 1].unbatchable) {
+
+			if (group_size >= min_group_size) {
 				a.batches.emplaceBack();
 				Analysis::Batch& b= a.batches.back();
-				
+
 				for (SizeType i2= group_begin_i; i2 < i + 1; ++i2){
 					ensure(i2 < mesh_infos.size());
-					
+
 					auto& mesh_info= mesh_infos[i2];
-					
+
 					ensure(mesh_info.entityLogic);
 					ensure(mesh_info.entityLogic->getDef().getModel());
 
-					if (i2 == group_begin_i){
+					if (i2 == group_begin_i) {
 						// First round
 						b.material= mesh_info.entityLogic->getDef().getModel()->getMaterial();
+						b.firstEntityDrawIndex= mesh_info.drawIndex;
 					}
 
 					b.modelLogics.pushBack(mesh_info.entityLogic);
@@ -81,14 +84,15 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze(){
 		}
 		++drawable_count;
 	}
-	
+
 	real64 ratio= (real64)drawable_count/mesh_infos.size();
 	//print(debug::Ch::General, debug::Vb::Trivial, "Batch count: %zu", a.batches.size());
 	//print(debug::Ch::General, debug::Vb::Trivial, "Optimized drawcount ratio: %f", ratio);
 	return a;
 }
 
-RenderingAnalyzer::MeshInfo::MeshInfo(const visual::ModelEntityLogic& logic){
+RenderingAnalyzer::MeshInfo::MeshInfo(const visual::ModelEntityLogic& logic, SizeType i)
+{
 	PROFILE();
 	entityLogic= &logic;
 
@@ -98,6 +102,8 @@ RenderingAnalyzer::MeshInfo::MeshInfo(const visual::ModelEntityLogic& logic){
 	// Batching normalmapped things could be done using some uv tricks
 	unbatchable=	logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_Normal) || 
 					logic.getDef().getModel()->getMaterial()->hasTexture(Material::TexType_EnvShadow); 
+
+	drawIndex= i;
 }
 
 bool RenderingAnalyzer::batchCompatible(const MeshInfo& m1, const MeshInfo& m2){

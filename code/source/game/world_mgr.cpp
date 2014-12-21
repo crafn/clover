@@ -1,6 +1,7 @@
 #include "world_mgr.hpp"
 #include "audio/audio_mgr.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/memory.hpp"
 #include "debug/debugdraw.hpp"
 #include "hardware/device.hpp"
 #include "nodes/native_instances/nodeinstance_we_edgespawner.hpp"
@@ -38,11 +39,11 @@ void createEdges(
 	if (spawners.empty())
 		return;
 
-	util::DynArray<uint32> edge_counts;
+	util::DynArray<uint32, global::SingleFrameAtor> edge_counts;
 	edge_counts.resize(spawners.size());
-	util::DynArray<bool> spawner_present;
+	util::DynArray<bool, global::SingleFrameAtor> spawner_present;
 	spawner_present.resize(spawners.size());
-	util::DynArray<const WeType*> used_spawners;
+	util::DynArray<const WeType*, global::SingleFrameAtor> used_spawners;
 	used_spawners.resize(spawners.size()); // Larger than usually needed
 
 	// Scan through the whole grid

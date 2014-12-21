@@ -10,7 +10,7 @@
 namespace clover {
 namespace util {
 
-template <typename K, typename V>
+template <typename K, typename V, template <typename> class Ator= std::allocator>
 class HashMap {
 public:
 	typedef HashMap<K, V> This;
@@ -57,11 +57,14 @@ public:
 	void insert(It first, It last)
 	{ c.insert(first, last); }
 
-	void erase(Iter it)
-	{ c.erase(it); }
+	Iter erase(Iter it)
+	{ return c.erase(it); }
 
 	void clear()
 	{ c.clear(); }
+
+	void reserve(SizeType size)
+	{ c.reserve(size); }
 
 	Iter end() { return c.end(); }
 	cIter end() const { return c.end(); }
@@ -76,7 +79,11 @@ public:
 	{ return util::removed(*this, other); }
 
 private:
-	std::unordered_map<K, V, Hash32<K>> c;
+	std::unordered_map<	K,
+						V,
+						Hash32<K>,
+						std::equal_to<K>,
+						Ator<std::pair<const K, V>>> c;
 };
 
 } // util
