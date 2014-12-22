@@ -195,7 +195,9 @@ WorldMgr::~WorldMgr()
 
 void WorldMgr::update()
 {
+	PROFILE();
 	{ // Inform grid changes to WorldEntities
+		PROFILE();
 		weMgr.removeFlagged(); // Removes phys objects flagged by ui
 
 		auto& grid= physics::gPhysMgr->getWorld().getGrid();

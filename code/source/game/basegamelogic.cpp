@@ -2,6 +2,7 @@
 #include "ingamelogic.hpp"
 #include "devlogic.hpp"
 #include "global/cfg_mgr.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace game {
@@ -19,6 +20,7 @@ BaseGameLogic::~BaseGameLogic(){
 }
 
 void BaseGameLogic::update(){
+	PROFILE();
 	if (global::gCfgMgr->get<bool>("game::useFixedTimeStep", false)){
 		util::gGameClock->setFixedDeltaTime(global::gCfgMgr->get<real64>("game::fixedTimeStep", 1.0/60.0));
 	}

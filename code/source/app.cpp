@@ -130,7 +130,7 @@ void App::run(){
 
 		hardware::gDevice->updateEvents();
 		hardware::gDevice->updateFrameTime();
-		
+
 		util::Clock::updateAll();
 
 		visual::gVisualMgr->getCameraMgr().update();
@@ -157,9 +157,9 @@ void App::run(){
 		}
 
 		resources::gCache->update();
-		
+
 		gui::gGuiMgr->update();
-		
+
 		physics::gPhysMgr->postFrameUpdate();
 		visual::gVisualMgr->renderFrame();
 	}

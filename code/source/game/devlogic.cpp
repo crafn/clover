@@ -76,6 +76,8 @@ DevLogic::DevLogic()
 }
 
 void DevLogic::update(){
+	PROFILE();
+
 	debug::gDebugPrint.updateBuffer();
 	
 	// SubSystem info update

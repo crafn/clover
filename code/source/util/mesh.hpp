@@ -36,33 +36,34 @@ public:
 	GenericMesh& operator=(const GenericMesh&)= default;
 	GenericMesh& operator=(GenericMesh&&)= default;
 
-	/// @brief Conversion to be used like converted<A,B>()
+	/// Conversion to be used like converted<A,B>()
 	template <typename VV, typename II>
 	GenericMesh<VV, II> converted() const;
 
-	/// @brief Conversion to be used like converted<Mesh<A,B>>()
+	/// Conversion to be used like converted<Mesh<A,B>>()
 	template <class M>
 	M converted() const;
 
-	/// @brief Adds a vertex to the mesh
+	/// Adds a vertex to the mesh
 	void addVertex(const VType& v);
 
-	/// @brief Adds a triangle to the mesh (also indices)
+	/// Adds a triangle to the mesh (also indices)
 	void addTriangle(const VType& a, const VType& b, const VType& c);
 
 	const VType& getVertex(const IType& i) const;
 	void setVertex(const IType& i, const VType& v);
-	void setVertices(const util::DynArray<V>& v);
+	void setVertices(util::DynArray<V> v);
 	uint32 getVertexCount() const { return vertices.size(); }
 
-	/// @brief Adds a triangle between existing vertices
+	/// Adds a triangle between existing vertices
 	void addTriangle(const IType& a, const IType& b, const IType& c);
 
-	/// @brief Adds a index to the mesh (remember to have indices.size() % 3 == 0)
+	/// Adds a index to the mesh (remember to have indices.size() % 3 == 0)
 	void addIndex(const IType& i);
 
 	const IType& getIndex(uint32 i) const;
 	void setIndex(uint32 i, const IType& ind);
+	void setIndices(util::DynArray<I> i);
 	uint32 getIndexCount() const { return indices.size(); }
 
 	/// @brief If needed, calculates and returns a bounding box

@@ -57,8 +57,8 @@ void GenericMesh<V, I>::setVertex(const I& i, const V& v) {
 }
 
 template <typename V, typename I>
-void GenericMesh<V, I>::setVertices(const util::DynArray<V>& v){
-	vertices= v;
+void GenericMesh<V, I>::setVertices(util::DynArray<V> v){
+	vertices= std::move(v);
 	/// @todo Recalculate contentHash
 	dirty= true;
 }
@@ -88,6 +88,13 @@ void GenericMesh<V, I>::setIndex(uint32 i, const I& ind) {
 	debug_ensure(i < indices.size());
 	indices[i]= ind;
 
+	dirty= true;
+}
+
+template <typename V, typename I>
+void GenericMesh<V, I>::setIndices(util::DynArray<I> i) {
+	indices= std::move(i);
+	/// @todo Recalculate contentHash
 	dirty= true;
 }
 

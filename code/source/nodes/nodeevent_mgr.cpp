@@ -1,4 +1,5 @@
 #include "nodeevent_mgr.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace nodes {
@@ -11,6 +12,7 @@ void NodeEventMgr::queue(NodeEvent& e){
 }
 
 void NodeEventMgr::dispatch(){
+	PROFILE();
 	for (auto& m : events){
 		m.send();
 	}

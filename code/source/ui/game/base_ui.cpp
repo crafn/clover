@@ -22,6 +22,7 @@
 #include "game/editor/editor.hpp"
 #include "ui/userinput.hpp"
 #include "physics/phys_mgr.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace ui { namespace game {
@@ -64,6 +65,7 @@ void BaseUi::onEvent(global::Event& e){
 }
 
 bool BaseUi::update(){
+	PROFILE();
 	gUserInput->update();
 	
 	cursorOnWorld= hardware::gMouse->getPosition().converted(util::Coord::World).getValue();

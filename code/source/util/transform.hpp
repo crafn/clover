@@ -146,6 +146,11 @@ typename RtTransform<R, T>::Translation operator*(const typename RtTransform<R, 
 	return (RtTransform<R, T>(zeroValue<R>(), v)*t).translation;
 }
 
+template <typename S, typename R, typename T>
+typename SrtTransform<S, R, T>::Translation operator*(const typename SrtTransform<S, R, T>::Translation& v, const SrtTransform<S, R, T>& t){
+	return (SrtTransform<S, R, T>(unitValue<S>(), zeroValue<R>(), v)*t).translation;
+}
+
 template <typename R, typename T>
 RtTransform<R, T> lerp(RtTransform<R, T> t1, RtTransform<R, T> t2, real64 f){
 	return RtTransform<R, T>(	lerp(t1.rotation, t2.rotation, f),

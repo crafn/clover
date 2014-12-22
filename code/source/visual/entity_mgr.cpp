@@ -612,6 +612,11 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 	util::Set<uint32, global::SingleFrameAtor> preservedBatches;
 	SizeType preserved_count= 0;
 
+	/// @todo Use global::SingleFrameAtor (requires Mesh tweaking)
+	util::DynArray<Vertex> batch_vertices;
+	batch_vertices.reserve(1024);
+	util::DynArray<uint32> batch_indices;
+	batch_indices.reserve(1024);
 	for (const auto& a_batch : a.batches) {
 		{ PROFILE();
 			// Check if batch was same in the previous frame
@@ -643,21 +648,24 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 			const RenderEntity* re= cfg.logicToRenderEntity.find(a_batch.modelLogics[i])->second;
 			ensure(re);
 
-			TriMesh tempmesh= *a_batch.meshes[i];
-			tempmesh.scale(re->transform.scale.casted<util::Vec3f>());
-			tempmesh.rotate(re->transform.rotation.casted<util::Quatf>());
-			tempmesh.translate(re->transform.translation.casted<util::Vec3f>());
-			
-			for (SizeType i= 0; i < tempmesh.getVertexCount(); ++i) {
-				auto vert= tempmesh.getVertex(i);
-				/// @todo Do transforms here for fastness
+			auto t= commonReplaced(util::SrtTransform3f{}, re->transform);
+			uint32 index_offset= batch_vertices.size();
+			auto& single_mesh= *a_batch.meshes[i];
+			for (SizeType i= 0; i < single_mesh.getVertexCount(); ++i) {
+				auto vert= single_mesh.getVertex(i);
+				vert.position= vert.position*t;	
 				vert.color *=
 					re->def->getColorMul()*re->logic->getColorMul()/batch_mat_color;
-				tempmesh.setVertex(i, vert);
+				batch_vertices.pushBack(vert);
 			}
-
-			batch.mesh.add(tempmesh);
+			for (SizeType i= 0; i < single_mesh.getIndexCount(); ++i) {
+				batch_indices.pushBack(single_mesh.getIndex(i) + index_offset);
+			}
 		}
+		batch.mesh.setVertices(batch_vertices);
+		batch.mesh.setIndices(batch_indices);
+		batch_vertices.clear();
+		batch_indices.clear();
 
 		{ PROFILE();
 			batch.mesh.flush();
