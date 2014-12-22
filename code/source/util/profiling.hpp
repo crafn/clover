@@ -7,7 +7,7 @@
 #include <thread>
 
 // No profiling on windows due to odd crashes with mingw 4.8.2
-#define PROFILING_ENABLED (ATOMIC_PTR_READWRITE == true && OS != OS_WINDOWS)
+#define PROFILING_ENABLED (ATOMIC_PTR_READWRITE == true)
 
 namespace clover {
 namespace util {
