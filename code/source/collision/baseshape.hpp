@@ -17,6 +17,7 @@ namespace clover {
 namespace collision {
 
 /// Abstract collision shape
+/// @todo Using abstraction and virtual functions here is just stupid.
 class BaseShape {
 public:
 	typedef util::RtTransform<real64, util::Vec2d> Transform;

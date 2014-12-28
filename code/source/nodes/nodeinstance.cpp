@@ -27,6 +27,7 @@ const CompositionNodeLogic& NodeInstance::getCompositionNodeLogic() const
 
 void NodeInstance::receiveSignals()
 {
+	PROFILE();
 	for (auto& m : inputSlots) {
 		m.slot->update();
 	}

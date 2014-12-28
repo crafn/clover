@@ -62,6 +62,7 @@ void createEdges(
 			if (	last_spawn_time > cells[i].lastStaticEdit /*&&
 					last_spawn_time > cells[i].lastDynamicEdit*/)
 				continue;
+			PROFILE();
 
 			// Find anchor point sufficiently deep
 			auto cell_p= util::Vec2i{	static_cast<int32>(i%width_c),
@@ -86,6 +87,7 @@ void createEdges(
 			for (physics::Object* obj : anchor_cell.objects) {
 				if (!obj)
 					continue;
+				PROFILE();
 				game::WorldEntity* we= game::getOwnerWe(*obj);
 				if (!we)
 					continue;
@@ -219,6 +221,7 @@ void WorldMgr::update()
 				for (physics::Object* obj : cells[i].objects) {
 					if (!obj)
 						continue;
+					PROFILE();
 					WorldEntity* we= game::getOwnerWe(*obj);
 					if (!we || !we->hasAttribute("gridChange"))
 						continue;

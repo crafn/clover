@@ -82,12 +82,15 @@ void ScriptNodeInstance::create(){
 		PROFILE();
 		auto on_receive= object.getType().getMethod<void (const BaseInputSlot*)>("onReceive");
 		m.slot->setOnReceiveCallback([=, &m] () {
+			PROFILE();
 			context.execute(object, on_receive(m.slot.get()));
 		});
 	}
 }
 
-void ScriptNodeInstance::update(){
+void ScriptNodeInstance::update()
+{
+	PROFILE();
 	context.execute(object, updateFunc());
 }
 

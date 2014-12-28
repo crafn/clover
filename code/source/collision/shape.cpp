@@ -80,10 +80,11 @@ util::DynArray<util::Polygon> Shape::asPolygons(real64 imprecision) const {
 	return ret;
 }
 
-util::DynArray<util::Polygon> Shape::asConvexPolygons(real64 imprecision) const {
+util::DynArray<util::Polygon> Shape::asConvexPolygons(real64 imprecision) const
+{
 	util::DynArray<util::Polygon> ret;
-	for (const auto& shp : baseShapesAttribute.get()){
-		for (const auto& p : shp->asConvexPolygons(imprecision)){
+	for (const auto& shp : baseShapesAttribute.get()) {
+		for (const auto& p : shp->asConvexPolygons(imprecision)) {
 			ret.pushBack(p);
 		}
 	}

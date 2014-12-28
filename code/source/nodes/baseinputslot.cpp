@@ -1,5 +1,6 @@
 #include "baseinputslot.hpp"
 #include "debug/debugprint.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace nodes {
@@ -17,8 +18,10 @@ void BaseInputSlot::setOnReceiveCallback(const CallbackType& c){
 }
 
 void BaseInputSlot::update(){
-	if (valueReceived && onReceiveCallback)
+	if (valueReceived && onReceiveCallback) {
+		PROFILE();
 		onReceiveCallback();
+	}
 		
 	valueReceived= false;
 }
