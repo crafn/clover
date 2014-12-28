@@ -14,6 +14,7 @@
 #include "nodeinstance_lerp_pose.hpp"
 #include "nodeinstance_lerp_vec2.hpp"
 #include "nodeinstance_multiply_real.hpp"
+#include "nodeinstance_randomize_srttransform2.hpp"
 #include "nodeinstance_rollbot_ai.hpp"
 #include "nodeinstance_triggertosignal.hpp"
 #include "nodeinstance_we_attachedphysicsobject.hpp"
@@ -44,6 +45,7 @@ NODEINSTANCE(RealAddNodeInstance)
 NODEINSTANCE(RealExpReleaseNodeInstance)
 NODEINSTANCE(RealMultiplyNodeInstance)
 NODEINSTANCE(RollBotAiNodeInstance)
+NODEINSTANCE(SrtTransform2RandomizeNodeInstance)
 NODEINSTANCE(TriggerToSignalNodeInstance)
 NODEINSTANCE(Vec2LerpNodeInstance)
 NODEINSTANCE(WeAttachedPhysicsObjectNodeInstance)
