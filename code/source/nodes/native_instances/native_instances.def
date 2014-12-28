@@ -7,6 +7,7 @@
 #include "nodeinstance_delayedtrigger.hpp"
 #include "nodeinstance_eventfactory.hpp"
 #include "nodeinstance_eventhandler.hpp"
+#include "nodeinstance_exp_release_real.hpp"
 #include "nodeinstance_guiinput.hpp"
 #include "nodeinstance_logicor.hpp"
 #include "nodeinstance_lerp_pose.hpp"
@@ -34,6 +35,7 @@ NODEINSTANCE(EventFactoryNodeInstance)
 NODEINSTANCE(EventHandlerNodeInstance)
 NODEINSTANCE(LogicOrNodeInstance)
 NODEINSTANCE(PoseLerpNodeInstance)
+NODEINSTANCE(RealExpReleaseNodeInstance)
 NODEINSTANCE(RollBotAiNodeInstance)
 NODEINSTANCE(WeAttachedPhysicsObjectNodeInstance)
 NODEINSTANCE(WeEdgeSpawnerNodeInstance)
