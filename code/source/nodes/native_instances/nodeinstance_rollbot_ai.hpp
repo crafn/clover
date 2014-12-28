@@ -9,8 +9,8 @@ namespace nodes {
 
 class RollBotAiNodeInstance : public NodeInstance {
 public:
-	virtual void create();
-	virtual void update();
+	virtual void create() override;
+	virtual void update() override;
 
 private:
 	InputSlot<SignalType::RtTransform2>* aIn;

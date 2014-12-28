@@ -4,6 +4,7 @@
 #include "nodeinstance_cameratarget.hpp"
 #include "nodeinstance_clippose.hpp"
 #include "nodeinstance_clipplayer.hpp"
+#include "nodeinstance_delayedtrigger.hpp"
 #include "nodeinstance_eventfactory.hpp"
 #include "nodeinstance_eventhandler.hpp"
 #include "nodeinstance_guiinput.hpp"
@@ -27,6 +28,7 @@ NODEINSTANCE(ActionListenerNodeInstance)
 NODEINSTANCE(CameraTargetNodeInstance)
 NODEINSTANCE(ClipPlayerNodeInstance)
 NODEINSTANCE(ClipPoseNodeInstance)
+NODEINSTANCE(DelayedTriggerNodeInstance)
 NODEINSTANCE(GuiInputNodeInstance)
 NODEINSTANCE(EventFactoryNodeInstance)
 NODEINSTANCE(EventHandlerNodeInstance)
