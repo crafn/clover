@@ -70,10 +70,8 @@ private:
 	RESOURCE_ATTRIBUTE(String, compositionLogicClassAttribute)
 	
 	// Instance
-	script::ObjectType scriptInstanceObjectType;
 	RESOURCE_ATTRIBUTE(String, nativeInstanceClassAttribute)
-	RESOURCE_ATTRIBUTE(String, scriptInstanceClassAttribute)
-	
+
 	void tryStartReloading();
 };
 

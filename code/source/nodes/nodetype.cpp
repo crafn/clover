@@ -17,11 +17,10 @@ NodeType::NodeType()
 		, INIT_RESOURCE_ATTRIBUTE(scriptModuleAttribute, "scriptModule", "")
 		, INIT_RESOURCE_ATTRIBUTE(compositionLogicClassAttribute, "compositionLogicScriptClass", "")
 		, INIT_RESOURCE_ATTRIBUTE(nativeInstanceClassAttribute, "nativeInstanceClass", "")
-		, INIT_RESOURCE_ATTRIBUTE(scriptInstanceClassAttribute, "scriptInstanceClass", ""){
+{
 	scriptModuleAttribute.setOnChangeCallback([&] {tryStartReloading(); });
 	compositionLogicClassAttribute.setOnChangeCallback([&] {tryStartReloading(); });
 	nativeInstanceClassAttribute.setOnChangeCallback([&] {tryStartReloading(); });
-	scriptInstanceClassAttribute.setOnChangeCallback([&] {tryStartReloading(); });
 }
 
 NodeType::~NodeType(){
@@ -43,15 +42,6 @@ void NodeType::resourceUpdate(bool load, bool force){
 					getName().cStr(), module.getName().cStr());
 			
 			compositionLogicObjectType= module.getObjectType(compositionLogicClassAttribute.get());
-
-			if (nativeInstanceClassAttribute.get().empty()){
-				// Script implementation
-				scriptInstanceObjectType= module.getObjectType(scriptInstanceClassAttribute.get());
-			}
-			else {
-				// Native implementation
-				scriptInstanceObjectType= script::ObjectType(); // Reset script type
-			}
 
 			setResourceState(State::Loaded);
 		}
@@ -75,15 +65,8 @@ CompositionNodeLogic* NodeType::createCompositionLogic(script::Context& context)
 
 NodeInstance* NodeType::createInstanceLogic(const CompositionNodeLogic& comp, script::Context& context) const {
 	PROFILE();
-	NodeInstance* ret= nullptr;
-	if (nativeInstanceClassAttribute.get().empty()){
-		PROFILE();
-		ret= new ScriptNodeInstance(*this, scriptInstanceObjectType, context);
-	}
-	else {
-		PROFILE();
-		ret= NodeFactory::createNodeInstanceNativeLogic(nativeInstanceClassAttribute.get());
-	}
+	NodeInstance* ret=
+		NodeFactory::createNodeInstanceNativeLogic(nativeInstanceClassAttribute.get());
 	ret->setCompositionNodeLogic(comp);
 	ret->setType(*this);
 	return ret;
