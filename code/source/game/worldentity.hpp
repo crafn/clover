@@ -149,6 +149,7 @@ public:
 	void setAttribute(const util::Str8& name, const boost::any& value);
 	template <typename T>
 	void setAttribute(const util::Str8& name, const T& value){ setAttribute(name, boost::any(value)); }
+	void setAttribute(const util::Str8& name, const char* str){ setAttribute(name, util::Str8(str)); }
 	
 	void saveFieldSerialize(WEPack& p) const;
 	void saveFieldDeserialize(WEPack& p);

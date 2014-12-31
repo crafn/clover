@@ -380,6 +380,7 @@ def buildInfo(env, target):
 		"ui",
 		"util",
 		"visual",
+		"mod" # Not really a subsystem
 	]
 	
 	subsystem_names= []

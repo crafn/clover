@@ -33,9 +33,14 @@
 #include <thread>
 #include <list>
 
+/// TEMPTEST
+#include "mod/world_gen.hpp"
+
 namespace clover {
 
 App::App(const util::Str8& executablePath){
+	temp_hack_to_make_symbols_exported();
+
 	print(debug::Ch::General, debug::Vb::Trivial, getBuildStr());
 
 	// Initial cfg loading should be as early as possible, 
