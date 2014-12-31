@@ -3,6 +3,9 @@
 namespace clover {
 namespace nodes {
 
+CompNode* PlayerMgrNodeInstance::compNode()
+{ return new CompNode{}; }
+
 void PlayerMgrNodeInstance::create()
 {
 	setUpdateNeeded(false);

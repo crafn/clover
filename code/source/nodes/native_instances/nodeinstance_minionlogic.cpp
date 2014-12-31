@@ -6,6 +6,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* MinionLogicNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("active", SignalType::Boolean, false);
+	n->addInputSlot("transform", SignalType::RtTransform2);
+	n->addInputSlot("wake", SignalType::Trigger);
+	n->addInputSlot("we", SignalType::WeHandle);
+	n->addOutputSlot("transform", SignalType::RtTransform2);
+	n->addOutputSlot("estimatedTransform", SignalType::SrtTransform3);
+	return n;
+}
 
 void MinionPhysicsEntity::setActive(bool active)
 {

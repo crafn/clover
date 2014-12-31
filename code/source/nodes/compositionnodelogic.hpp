@@ -24,9 +24,12 @@ namespace script {
 namespace nodes {
 class NodeType;
 
-/// Connection to script
-class CompNode {
+class CompositionNodeLogicGroup;
+
+/// Contains settings for a NodeType which'll be instantiated
+class CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
 public:
+	/// Copypasted from former BaseCompositionNodeScriptLogic
 	typedef std::unique_ptr<CompositionNodeSlot> CompositionNodeSlotPtr;
 	typedef std::unique_ptr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
 	
@@ -143,7 +146,6 @@ private:
 	bool batched;
 	int32 batchPriority;
 
-	CompositionNodeLogic* owner;
 	util::HashMap<SlotIdentifier, CompositionNodeSlotPtr> slots;
 	util::DynArray<CompositionNodeSlot*> slotArray; // To preserve ordering
 	util::HashMap<util::Str8, CompositionNodeSlotTemplateGroupPtr> templateGroups;
@@ -151,15 +153,9 @@ private:
 	bool updateRouteStart;
 	bool silent; // Don't emit any events (doesn't probably cover all cases, is used when slot is replaced by changed one)
 	util::CbMultiListener<util::OnChangeCb> resourceChangeListener; // These are added by script
-};
-
-class CompositionNodeLogicGroup;
-
-/// Contains settings for a NodeType which'll be instantiated
-class CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
-public:
 	typedef CompNode::CompositionNodeSlotTemplateGroupPtr CompositionNodeSlotTemplateGroupPtr;
 	
+public: // Original CompositionNodeLogic
 	CompositionNodeLogic(	const NodeType& type,
 							util::UniquePtr<CompNode> impl);
 	CompositionNodeLogic(CompositionNodeLogic&&)= delete;
@@ -211,6 +207,7 @@ public:
 	void onDefaultValueChange(CompositionNodeSlot& slot);
 	void onRoutingChange(CompositionNodeSlot& slot);
 	
+
 private:
 	void recreate();
 	

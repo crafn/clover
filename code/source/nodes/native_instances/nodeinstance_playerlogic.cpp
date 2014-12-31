@@ -7,6 +7,38 @@
 namespace clover {
 namespace nodes {
 
+CompNode* PlayerLogicNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("player", SignalType::String, util::Str8("player0"));
+	n->addInputSlot("movement", SignalType::Vec2);
+	n->addInputSlot("respawn", SignalType::Trigger);
+	n->addInputSlot("kill", SignalType::Trigger);
+	n->addInputSlot("actionPoint", SignalType::Vec2);
+	n->addInputSlot("hitEnded", SignalType::Trigger);
+	n->addInputSlot("tryPickup", SignalType::Trigger);
+	n->addInputSlot("tryDrop", SignalType::Trigger);
+	n->addInputSlot("tryUseInHand", SignalType::Trigger);
+	n->addInputSlot("we", SignalType::WeHandle);
+
+	n->addOutputSlot("dead", SignalType::Boolean);
+
+	// Physics
+
+	n->addInputSlot("active", SignalType::Boolean, false);
+	n->addInputSlot("transform", SignalType::RtTransform2);
+	n->addInputSlot("pose", SignalType::ArmaturePose);
+	
+	n->addOutputSlot("transform", SignalType::RtTransform2);
+	n->addOutputSlot("estimatedTransform", SignalType::SrtTransform3);
+	n->addOutputSlot("normalizedFeetVelocity", SignalType::Real);
+	n->addOutputSlot("normalizedJumpApexDistance", SignalType::Real);
+	n->addOutputSlot("swingHit", SignalType::Trigger);
+	n->addOutputSlot("pose", SignalType::ArmaturePose);
+
+	return n;
+}
+
 void PlayerPhysicsEntity::setActive(bool active)
 {
 	if (bodyObject)

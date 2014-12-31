@@ -5,6 +5,68 @@
 namespace clover {
 namespace nodes {
 
+class EventHandlerCompositionNodeLogic : public CompNode {
+public:
+	EventHandlerCompositionNodeLogic()
+	{
+		eventTypeSlot= &addInputSlot("eventType", SignalType::EventType);
+		addInputSlot("events", SignalType::EventArray);
+		addOutputSlot("forward", SignalType::Event);
+	}
+
+	bool hasEventType()
+	{ return eventTypeSlot->getDefaultValue<SignalType::EventType>() != ""; }
+
+	void onDefaultValueChange(CompositionNodeSlot& slot) override
+	{
+		if (&slot == eventTypeSlot && hasEventType()){
+			clearResourceChangeListeners();
+			addResourceChangeListener<NodeEventType>(eventTypeSlot->getDefaultValue<SignalType::EventType>());
+			recreateArgSlots();
+		}
+	}
+
+	void onResourceChange(const resources::Resource& res){
+		recreateArgSlots();	
+	}
+
+	void recreateArgSlots(){
+		if (!hasEventType())
+			return;
+
+		util::DynArray<SignalArgument> args= 
+			resources::gCache->getResource<NodeEventType>(
+					eventTypeSlot->getDefaultValue<SignalType::EventType>()
+			).getArguments();
+
+		// Remove slots of old EventType
+		for (SizeType i= 0; i < argSlots.size(); ++i){
+			if (args.count(SignalArgument(argSlots[i]->getName(), argSlots[i]->getSignalType())) == 0)
+				removeSlot(*argSlots[i]);
+		}
+
+		argSlots.clear();
+
+		// Add new
+		for (SizeType i= 0; i < args.size(); ++i){
+			SlotIdentifier id{args[i].name, "arg", args[i].signalType, false}; // is_input == false
+
+			if (hasSlot(id)){
+				argSlots.pushBack(&getSlot(id));
+			} else {
+				argSlots.pushBack(&addSlot(id));
+			}
+		}
+	}
+
+private:
+	CompositionNodeSlot* eventTypeSlot;
+	util::DynArray<CompositionNodeSlot*> argSlots;
+};
+
+CompNode* EventHandlerNodeInstance::compNode()
+{ return new EventHandlerCompositionNodeLogic{}; }
+
 void EventHandlerNodeInstance::create(){
 	eventTypeInput= addInputSlot<SignalType::EventType>("eventType");
 	eventsInput= addInputSlot<SignalType::EventArray>("events");

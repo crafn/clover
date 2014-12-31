@@ -3,6 +3,26 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WeInterfaceNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->setAsUpdateRouteStart(true);
+
+	n->addInputSlot("active", SignalType::Boolean, false);
+	n->addInputSlot("remove", SignalType::Trigger);
+
+	n->addOutputSlot("active", SignalType::Boolean);
+	n->addOutputSlot("events", SignalType::EventArray);
+	n->addOutputSlot("we", SignalType::WeHandle);
+	
+	CompositionNodeSlotTemplateGroup& attribs_group= n->addOutputSlotTemplateGroup("attribs");
+	attribs_group.setAsVariant(true);
+	attribs_group.setMirroring(true);
+	attribs_group.addSlotTemplate("transform", SignalType::RtTransform2);
+	attribs_group.addSlotTemplate("gridChange", SignalType::Trigger);
+	return n;
+}
+
 WeInterfaceNodeInstance::~WeInterfaceNodeInstance(){
 	if (onDestroy)
 		onDestroy();

@@ -9,6 +9,8 @@ namespace nodes {
 
 class PoseLerpNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual ~PoseLerpNodeInstance(){}
 	
 	virtual void create() override;

@@ -3,6 +3,18 @@
 namespace clover {
 namespace nodes {
 
+CompNode* SrtTransform2RandomizeNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("transform", SignalType::SrtTransform2);
+	n->addInputSlot("rotBias", SignalType::Real);
+	n->addInputSlot("scaleBias", SignalType::Real);
+	n->addInputSlot("flipX", SignalType::Boolean);
+
+	n->addOutputSlot("randomized", SignalType::SrtTransform2);
+	return n;
+}
+
 void SrtTransform2RandomizeNodeInstance::create()
 {
 	transformIn= addInputSlot<SignalType::SrtTransform2>("transform");

@@ -1,3 +1,4 @@
+#include "batchpriorities.hpp"
 #include "collision/baseshape_polygon.hpp"
 #include "game/physics.hpp"
 #include "game/physicalmaterial.hpp"
@@ -8,6 +9,23 @@
 
 namespace clover {
 namespace nodes {
+
+CompNode* WePhysicsEntityNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("active", SignalType::Boolean, true);
+	n->addInputSlot("transform", SignalType::SrtTransform3);
+	n->addInputSlot("entityDef", SignalType::String, util::Str8(""));
+	n->addInputSlot("we", SignalType::WeHandle);
+
+	n->addOutputSlot("transform", SignalType::SrtTransform3);
+	n->addOutputSlot("estimatedTransform", SignalType::SrtTransform3);
+	n->addOutputSlot("pose", SignalType::ArmaturePose);
+
+	n->setBatched(true);
+	n->setBatchPriority(nodeBatchPriority_physicsEntity);
+	return n;
+}
 
 void WePhysicsEntityNodeInstance::create(){
 	activeInput= addInputSlot<SignalType::Boolean>("active");

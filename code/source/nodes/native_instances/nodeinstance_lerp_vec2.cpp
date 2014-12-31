@@ -3,6 +3,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* Vec2LerpNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("input1", SignalType::Vec2);
+	n->addInputSlot("input2", SignalType::Vec2);
+	n->addInputSlot("factor", SignalType::Real);
+
+	n->addOutputSlot("result", SignalType::Vec2);
+	return n;
+}
+
 void Vec2LerpNodeInstance::create()
 {
 	in1= addInputSlot<SignalType::Vec2>("input1");

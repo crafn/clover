@@ -9,6 +9,8 @@ namespace nodes {
 
 class RealMultiplyNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual void create() override;
 
 private:

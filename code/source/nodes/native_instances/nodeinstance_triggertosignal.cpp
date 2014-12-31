@@ -3,6 +3,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* TriggerToSignalNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("trigger", SignalType::Trigger);
+	n->addInputSlot("onValue", SignalType::Real, 1.0);
+	n->addInputSlot("offValue", SignalType::Real, 0.0);
+
+	n->addOutputSlot("signal", SignalType::Real);
+	return n;
+}
+
 void TriggerToSignalNodeInstance::create()
 {
 	triggerIn= addInputSlot<SignalType::Trigger>("trigger");

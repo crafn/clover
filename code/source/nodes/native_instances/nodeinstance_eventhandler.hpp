@@ -11,6 +11,7 @@ class NodeEventType;
 
 class EventHandlerNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
 
 	virtual ~EventHandlerNodeInstance(){}
 

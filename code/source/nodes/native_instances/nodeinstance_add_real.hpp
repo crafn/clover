@@ -9,6 +9,8 @@ namespace nodes {
 
 class RealAddNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual void create() override;
 
 private:

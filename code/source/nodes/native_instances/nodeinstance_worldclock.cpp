@@ -4,6 +4,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WorldClockNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	// Midnight: 0, morning: 0.15, midday: 0.5, evening: 0.75
+	n->addOutputSlot("dayPhase", SignalType::Real);
+	
+	// Midnight: 0, midday: 1.0
+	n->addOutputSlot("dayness", SignalType::Real);
+	return n;
+}
+
 void WorldClockNodeInstance::create()
 {
 	dayPhaseOut= addOutputSlot<SignalType::Real>("dayPhase");

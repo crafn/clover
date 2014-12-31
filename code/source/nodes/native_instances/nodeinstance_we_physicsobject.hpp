@@ -10,6 +10,8 @@ namespace nodes {
 
 class WePhysicsObjectNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual ~WePhysicsObjectNodeInstance(){}
 	
 	virtual void create();

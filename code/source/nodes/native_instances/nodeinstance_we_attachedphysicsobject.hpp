@@ -13,6 +13,8 @@ namespace nodes {
 
 class WeAttachedPhysicsObjectNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual void create();
 	virtual void update();
 

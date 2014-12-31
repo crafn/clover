@@ -1,3 +1,4 @@
+#include "batchpriorities.hpp"
 #include "nodeinstance_we_visualentity.hpp"
 #include "resources/cache.hpp"
 #include "visual/entity_def.hpp"
@@ -7,6 +8,21 @@
 
 namespace clover {
 namespace nodes {
+
+CompNode* WeVisualEntityNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("active", SignalType::Boolean, true);
+	n->addInputSlot("entityDef", SignalType::String, util::Str8("dev_square_white"));
+	n->addInputSlot("transform", SignalType::SrtTransform3);
+	n->addInputSlot("pose", SignalType::ArmaturePose); // Only for CompoundEntities
+	n->addInputSlot("colorMul", SignalType::Vec4, util::Vec4d(1.0));
+	n->addInputSlot("events", SignalType::EventArray);
+
+	n->setBatched(true);
+	n->setBatchPriority(nodeBatchPriority_visualEntity);
+	return n;
+}
 
 void WeVisualEntityNodeInstance::create(){
 	entityInput= addInputSlot<SignalType::String>("entityDef");

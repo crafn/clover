@@ -3,6 +3,16 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WeSpatialAudioSourceNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("soundName", SignalType::String, util::Str8(""));
+	n->addInputSlot("position", SignalType::Vec2);
+	n->addInputSlot("volume", SignalType::Real, 1.0);
+	n->addInputSlot("play", SignalType::Trigger);
+	return n;
+}
+
 void WeSpatialAudioSourceNodeInstance::create(){
 	soundNameIn= addInputSlot<SignalType::String>("soundName");
 	positionIn= addInputSlot<SignalType::Vec2>("position");

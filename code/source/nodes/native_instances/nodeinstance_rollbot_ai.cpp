@@ -4,6 +4,22 @@
 namespace clover {
 namespace nodes {
 
+CompNode* RollBotAiNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("acceleration", SignalType::RtTransform2);
+	n->addInputSlot("angularVelocity", SignalType::Real, 0.0);
+	n->addInputSlot("torqueMul", SignalType::Real, 1.0);
+	n->addInputSlot("wakeUp", SignalType::Trigger);
+	n->addInputSlot("timeAwake", SignalType::Real, 1.0);
+	n->addInputSlot("escape", SignalType::Vec2);
+	n->addInputSlot("position", SignalType::Vec2);
+
+	n->addOutputSlot("torque", SignalType::Real);
+	n->addOutputSlot("awake", SignalType::Boolean);
+	return n;
+}
+
 void RollBotAiNodeInstance::create()
 {
 	aIn= addInputSlot<SignalType::RtTransform2>("acceleration");

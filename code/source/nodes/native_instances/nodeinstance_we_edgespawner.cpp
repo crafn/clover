@@ -6,6 +6,15 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WeEdgeSpawnerNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("edgeEntity", SignalType::String);
+	n->addInputSlot("we", SignalType::WeHandle);
+	n->addInputSlot("spawn", SignalType::Trigger);
+	return n;
+}
+
 void WeEdgeSpawnerNodeInstance::create()
 {
 	edgeEntityIn= addInputSlot<SignalType::String>("edgeEntity");

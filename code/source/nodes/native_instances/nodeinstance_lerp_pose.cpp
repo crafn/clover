@@ -4,6 +4,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* PoseLerpNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("input1", SignalType::ArmaturePose);
+	n->addInputSlot("input2", SignalType::ArmaturePose);
+	n->addInputSlot("factor", SignalType::Real, 0.0);
+	n->addInputSlot("limitFactor", SignalType::Boolean, true);
+	n->addOutputSlot("result", SignalType::ArmaturePose);
+	return n;
+}
+
 void PoseLerpNodeInstance::create(){
 	input1= addInputSlot<SignalType::ArmaturePose>("input1");
 	input2= addInputSlot<SignalType::ArmaturePose>("input2");

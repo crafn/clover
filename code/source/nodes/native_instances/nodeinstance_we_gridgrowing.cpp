@@ -7,6 +7,18 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WeGridGrowingNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("transform", SignalType::RtTransform2);
+	n->addInputSlot("growRate", SignalType::Real, 1.0);
+	n->addInputSlot("decayRate", SignalType::Real, 1.0);
+	n->addInputSlot("check", SignalType::Trigger);
+
+	n->addOutputSlot("state", SignalType::Real);
+	return n;
+}
+
 template <typename T>
 T smootherStep(T t)
 { return 6*t*t*t*t*t - 15*t*t*t*t + 10*t*t*t; }

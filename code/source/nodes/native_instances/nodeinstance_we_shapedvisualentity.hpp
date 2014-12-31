@@ -12,6 +12,7 @@ namespace nodes {
 
 class WeShapedVisualEntityNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
 
 	virtual ~WeShapedVisualEntityNodeInstance(){}
 	

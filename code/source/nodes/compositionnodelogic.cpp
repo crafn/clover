@@ -5,7 +5,7 @@
 namespace clover {
 namespace nodes {
 
-CompNode::CompNode()
+CompositionNodeLogic::CompositionNodeLogic()
 		: batched(false)
 		, batchPriority(0)
 		, owner(nullptr)
@@ -13,7 +13,7 @@ CompNode::CompNode()
 		, silent(false){
 }
 
-CompNode& CompNode::operator=(CompNode&& other){
+CompositionNodeLogic& CompositionNodeLogic::operator=(CompNode&& other){
 	ensure(&other != this);
 	
 	owner= other.owner;
@@ -77,11 +77,11 @@ CompNode& CompNode::operator=(CompNode&& other){
 	return *this;
 }
 
-CompNode::~CompNode(){
+CompositionNodeLogic::~CompositionNodeLogic(){
 	clear();
 }
 
-CompositionNodeSlot& CompNode::addInputSlot(const SlotIdentifier& id, const boost::any& init_value){
+CompositionNodeSlot& CompositionNodeLogic::addInputSlot(const SlotIdentifier& id, const boost::any& init_value){
 	ensure(!slots.count(id));
 	
 	auto& slot= addSlotMinimal(id);
@@ -101,7 +101,7 @@ CompositionNodeSlot& CompNode::addInputSlot(const SlotIdentifier& id, const boos
 }
 
 
-CompositionNodeSlot& CompNode::addOutputSlot(const SlotIdentifier& id){
+CompositionNodeSlot& CompositionNodeLogic::addOutputSlot(const SlotIdentifier& id){
 	ensure(!slots.count(id));
 
 	auto& slot= addSlotMinimal(id);
@@ -114,7 +114,7 @@ CompositionNodeSlot& CompNode::addOutputSlot(const SlotIdentifier& id){
 	return slot;
 }
 
-void CompNode::removeSlot(const SlotIdentifier& id){
+void CompositionNodeLogic::removeSlot(const SlotIdentifier& id){
 	auto it= slots.find(id);
 	ensure(it != slots.end());
 	
@@ -128,19 +128,19 @@ void CompNode::removeSlot(const SlotIdentifier& id){
 	slots.erase(it);
 }
 
-CompositionNodeSlot& CompNode::addSlot(const SlotIdentifier& id, boost::any init_value){
+CompositionNodeSlot& CompositionNodeLogic::addSlot(const SlotIdentifier& id, boost::any init_value){
 	if (id.input)
 		return addInputSlot(id, init_value);
 	return addOutputSlot(id);
 }
 
-CompositionNodeSlot& CompNode::addSlot(const SlotIdentifier& id){
+CompositionNodeSlot& CompositionNodeLogic::addSlot(const SlotIdentifier& id){
 	if (id.input)
 		return addInputSlot(id);
 	return addOutputSlot(id);
 }
 
-CompositionNodeSlot& CompNode::getSlot(const SlotIdentifier& id){
+CompositionNodeSlot& CompositionNodeLogic::getSlot(const SlotIdentifier& id){
 	auto it= slots.find(id);
 	
 	if (it == slots.end())
@@ -150,7 +150,7 @@ CompositionNodeSlot& CompNode::getSlot(const SlotIdentifier& id){
 }
 
 
-util::DynArray<SlotIdentifier> CompNode::getSlotIdentifiers() const {
+util::DynArray<SlotIdentifier> CompositionNodeLogic::getSlotIdentifiers() const {
 	util::DynArray<SlotIdentifier> ret;
 	for (const auto& m : getSlots()){
 		ret.pushBack(m->getIdentifier());
@@ -159,7 +159,7 @@ util::DynArray<SlotIdentifier> CompNode::getSlotIdentifiers() const {
 }
 
 
-CompositionNodeSlotTemplateGroup& CompNode::addSlotTemplateGroup(const util::Str8& name, bool input){
+CompositionNodeSlotTemplateGroup& CompositionNodeLogic::addSlotTemplateGroup(const util::Str8& name, bool input){
 	ensure(!templateGroups.count(name));
 	ensure(owner);
 	
@@ -169,51 +169,51 @@ CompositionNodeSlotTemplateGroup& CompNode::addSlotTemplateGroup(const util::Str
 	return *pair.first->second;
 }
 
-const CompositionNodeSlotTemplateGroup& CompNode::getSlotTemplateGroup(const util::Str8& name) const {
+const CompositionNodeSlotTemplateGroup& CompositionNodeLogic::getSlotTemplateGroup(const util::Str8& name) const {
 	auto it= templateGroups.find(name);
 	ensure_msg(it != templateGroups.end(), "Couldn't find template slot group: %s",
 		name.cStr());
 	return *it->second;
 }
 
-CompositionNodeSlotTemplateGroup& CompNode::getSlotTemplateGroup(const util::Str8& name){
+CompositionNodeSlotTemplateGroup& CompositionNodeLogic::getSlotTemplateGroup(const util::Str8& name){
 	auto it= templateGroups.find(name);
 	ensure_msg(it != templateGroups.end(), "Couldn't find template slot group: %s",
 		name.cStr());
 	return *it->second;
 }
 
-bool CompNode::hasSlotTemplateGroup(const util::Str8& name) const {
+bool CompositionNodeLogic::hasSlotTemplateGroup(const util::Str8& name) const {
 	auto it= templateGroups.find(name);
 	if (it == templateGroups.end()) return false;
 	return true;
 }
 
-void CompNode::setAsUpdateRouteStart(bool b){
+void CompositionNodeLogic::setAsUpdateRouteStart(bool b){
 	updateRouteStart= b;
 }
 
 
-void CompNode::setOwner(CompositionNodeLogic& owner_){
+void CompositionNodeLogic::setOwner(CompositionNodeLogic& owner_){
 	owner= &owner_;
 	
 	ensure(slots.empty());
 	ensure(resourceChangeListener.empty());
 }
 
-void CompNode::onRoutingChange(CompositionNodeSlot& slot){
+void CompositionNodeLogic::onRoutingChange(CompositionNodeSlot& slot){
 	ensure(owner);
 	owner->onRoutingChange(slot);
 }
 
-void CompNode::clear(){
+void CompositionNodeLogic::clear(){
 	while (!slotArray.empty())
 		removeSlot(*slotArray.back());
 	resourceChangeListener.clear();
 }
 
 
-CompositionNodeSlot& CompNode::addSlotMinimal(const SlotIdentifier& id){
+CompositionNodeSlot& CompositionNodeLogic::addSlotMinimal(const SlotIdentifier& id){
 	auto pair= slots.insert(std::move(std::make_pair(
 		id, CompositionNodeSlotPtr(new CompositionNodeSlot(id)))));
 	pair.first->second->setOwner(owner);
@@ -223,7 +223,7 @@ CompositionNodeSlot& CompNode::addSlotMinimal(const SlotIdentifier& id){
 	return *pair.first->second;
 }
 
-void CompNode::sendOnSlotAddEvent(const SlotIdentifier& id_){
+void CompositionNodeLogic::sendOnSlotAddEvent(const SlotIdentifier& id_){
 	ensure(!silent);
 	
 	SlotIdentifier id= id_;
@@ -233,7 +233,7 @@ void CompNode::sendOnSlotAddEvent(const SlotIdentifier& id_){
 	e.send();
 }
 
-void CompNode::sendOnSlotRemoveEvent(const SlotIdentifier& id_){
+void CompositionNodeLogic::sendOnSlotRemoveEvent(const SlotIdentifier& id_){
 	ensure(!silent);
 	
 	SlotIdentifier id= id_;
@@ -243,7 +243,7 @@ void CompNode::sendOnSlotRemoveEvent(const SlotIdentifier& id_){
 	e.send();
 }
 
-void CompNode::addOnResourceChangeCallback(const resources::Resource& res){
+void CompositionNodeLogic::addOnResourceChangeCallback(const resources::Resource& res){
 	resourceChangeListener.listen(res, [&] () {
 		onResourceChange(res);
 	});
@@ -254,7 +254,7 @@ void CompNode::addOnResourceChangeCallback(const resources::Resource& res){
 //
 
 CompositionNodeLogic::CompositionNodeLogic(	const NodeType& type_,
-											util::UniquePtr<CompNode> impl_)
+											util::UniquePtr<CompositionNodeLogic> impl_)
 	: type(&type_)
 	, owner(nullptr)
 	, impl(std::move(impl_)) {

@@ -5,6 +5,18 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WeSpatialEventDispatcherNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("event", SignalType::Event);
+	n->addInputSlot("transform", SignalType::SrtTransform2);
+	n->addInputSlot("radius", SignalType::Real, 1.0);
+
+	// Event is not sent but forwarded if this is attached
+	n->addOutputSlot("forward", SignalType::Event);
+	return n;
+}
+
 void WeSpatialEventDispatcherNodeInstance::create(){
 	transformInput= addInputSlot<SignalType::SrtTransform2>("transform");
 	eventInput= addInputSlot<SignalType::Event>("event");

@@ -11,6 +11,7 @@ class NodeEventType;
 
 class WeSpatialEventDispatcherNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
 
 	virtual ~WeSpatialEventDispatcherNodeInstance(){}
 

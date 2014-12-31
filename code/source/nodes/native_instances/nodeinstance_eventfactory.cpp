@@ -6,7 +6,8 @@ namespace nodes {
 
 class EventFactoryCompositionNodeLogic : public CompNode {
 public:
-	void create() {
+	EventFactoryCompositionNodeLogic()
+	{
 		eventTypeSlot= &addInputSlot("eventType", SignalType::EventType, util::Str8(""));
 		addInputSlot("trigger", SignalType::Trigger);
 		addOutputSlot("event", SignalType::Event);
@@ -64,9 +65,7 @@ private:
 };
 
 CompNode* EventFactoryNodeInstance::compNode()
-{
-	return new EventFactoryCompositionNodeLogic{};
-}
+{ return new EventFactoryCompositionNodeLogic{}; }
 
 void EventFactoryNodeInstance::create(){
 	eventTypeInput= addInputSlot<SignalType::EventType>("eventType");

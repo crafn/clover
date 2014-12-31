@@ -5,7 +5,7 @@ namespace nodes {
 
 util::LinkedList<CameraTargetNodeInstance*> CameraTargetNodeInstance::targets;
 
-CompNode* compNode()
+CompNode* CameraTargetNodeInstance::compNode()
 {
 	CompNode* n= new CompNode{};
 	n->addInputSlot("name", SignalType::String, util::Str8("player0"));

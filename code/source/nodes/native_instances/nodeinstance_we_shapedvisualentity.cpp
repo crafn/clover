@@ -7,6 +7,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* WeShapedVisualEntityNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("active", SignalType::Boolean, true);
+	n->addInputSlot("transform", SignalType::SrtTransform3);
+	n->addInputSlot("material", SignalType::String);
+	n->addInputSlot("shape", SignalType::Shape);
+	n->addInputSlot("shadowCasting", SignalType::Boolean, false);
+	return n;
+}
+
 void WeShapedVisualEntityNodeInstance::create(){
 	activeInput= addInputSlot<SignalType::Boolean>("active");
 	transformInput= addInputSlot<SignalType::SrtTransform3>("transform");

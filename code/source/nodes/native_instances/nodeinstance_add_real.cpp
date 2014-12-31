@@ -3,6 +3,15 @@
 namespace clover {
 namespace nodes {
 
+CompNode* RealAddNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("input1", SignalType::Real, 0.0);
+	n->addInputSlot("input2", SignalType::Real, 0.0);
+	n->addOutputSlot("result", SignalType::Real);
+	return n;
+}
+
 void RealAddNodeInstance::create()
 {
 	input1= addInputSlot<SignalType::Real>("input1");

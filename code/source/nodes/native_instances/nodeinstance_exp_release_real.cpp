@@ -3,6 +3,17 @@
 namespace clover {
 namespace nodes {
 
+CompNode* RealExpReleaseNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("accumSignal", SignalType::Real, 0.0);
+	n->addInputSlot("target", SignalType::Real, 0.0);
+	n->addInputSlot("halfValueTime", SignalType::Real, 1.0);
+	n->addInputSlot("upperLimit", SignalType::Real, 9999.0);
+	n->addOutputSlot("value", SignalType::Real);
+	return n;
+}
+
 void RealExpReleaseNodeInstance::create()
 {
 	halfValueTime= addInputSlot<SignalType::Real>("halfValueTime");

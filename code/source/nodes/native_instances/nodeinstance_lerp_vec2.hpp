@@ -9,6 +9,8 @@ namespace nodes {
 
 class Vec2LerpNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual void create() override;
 	virtual void update() override;
 

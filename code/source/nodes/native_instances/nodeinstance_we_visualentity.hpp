@@ -12,6 +12,8 @@ namespace nodes {
 
 class WeVisualEntityNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual void create();
 	virtual void update();
 	

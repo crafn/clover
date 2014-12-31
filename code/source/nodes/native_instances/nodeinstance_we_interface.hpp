@@ -14,6 +14,8 @@ namespace nodes {
 
 class WeInterfaceNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual ~WeInterfaceNodeInstance();
 	
 	void setEntity(game::WorldEntity& we);

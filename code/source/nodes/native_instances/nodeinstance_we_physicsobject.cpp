@@ -1,13 +1,41 @@
-#include "nodeinstance_we_physicsobject.hpp"
+#include "batchpriorities.hpp"
 #include "collision/baseshape_polygon.hpp"
 #include "game/physics.hpp"
 #include "game/physicalmaterial.hpp"
+#include "nodeinstance_we_physicsobject.hpp"
 #include "physics/fixture_rigid.hpp"
 #include "resources/cache.hpp"
 #include "util/time.hpp"
 
 namespace clover {
 namespace nodes {
+
+CompNode* WePhysicsObjectNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("active", SignalType::Boolean, true);
+	n->addInputSlot("force", SignalType::RtTransform2);
+	n->addInputSlot("transform", SignalType::SrtTransform3);
+	n->addInputSlot("impulse", SignalType::RtTransform2);
+	n->addInputSlot("shape", SignalType::Shape, resources::ResourceRef<collision::Shape>("unitCircle"));
+	n->addInputSlot("material", SignalType::String);
+	n->addInputSlot("static", SignalType::Boolean, false);
+	n->addInputSlot("event", SignalType::Event);
+	n->addInputSlot("partialBreaking", SignalType::Boolean, false);
+	n->addInputSlot("we", SignalType::WeHandle);
+
+	n->addOutputSlot("transform", SignalType::SrtTransform3);
+	n->addOutputSlot("estimatedTransform", SignalType::SrtTransform3);
+	n->addOutputSlot("velocity", SignalType::RtTransform2);
+	n->addOutputSlot("totalImpulse", SignalType::RtTransform2);
+	n->addOutputSlot("acceleration", SignalType::RtTransform2);
+	n->addOutputSlot("onShapeChange", SignalType::Shape);
+	n->addOutputSlot("onBreak", SignalType::Trigger);
+
+	n->setBatched(true);
+	n->setBatchPriority(nodeBatchPriority_physicsObject);
+	return n;
+}
 
 void WePhysicsObjectNodeInstance::create(){
 	activeInput= addInputSlot<SignalType::Boolean>("active");

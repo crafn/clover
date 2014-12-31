@@ -10,6 +10,8 @@ namespace nodes {
 
 class WeSpatialAudioSourceNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual ~WeSpatialAudioSourceNodeInstance(){}
 	
 	virtual void create() override;

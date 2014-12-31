@@ -1,9 +1,27 @@
+#include "batchpriorities.hpp"
 #include "collision/query.hpp"
 #include "game/physics.hpp"
 #include "nodeinstance_we_attachedphysicsobject.hpp"
 
 namespace clover {
 namespace nodes {
+
+CompNode* WeAttachedPhysicsObjectNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("active", SignalType::Boolean, true);
+	n->addInputSlot("transform", SignalType::SrtTransform3);
+	n->addInputSlot("anchor", SignalType::Vec2);
+	n->addInputSlot("we", SignalType::WeHandle);
+
+	n->addOutputSlot("transform", SignalType::SrtTransform3);
+	n->addOutputSlot("estimatedTransform", SignalType::SrtTransform3);
+	n->addOutputSlot("detached", SignalType::Trigger);
+
+	n->setBatched(true);
+	n->setBatchPriority(nodeBatchPriority_physicsEntity);
+	return n;
+}
 
 void WeAttachedPhysicsObjectNodeInstance::create()
 {
