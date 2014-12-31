@@ -23,7 +23,7 @@ struct ResourceTraits<game::world_gen::WorkerType> {
 	DECLARE_RESOURCE_TRAITS(game::world_gen::WorkerType, String)
 	
 	RESOURCE_ATTRIBUTE_DEFS(AttributeDef::String("name"),
-							AttributeDef::Resource("scriptModule"),
+							AttributeDef::Resource("module"),
 							AttributeDef::String("globalInitFunc"),
 							AttributeDef::String("chunkInitFunct"),
 							AttributeDef::String("workFunc"));
@@ -70,7 +70,7 @@ private:
 	std::function<WorkFuncDecl> workFunc;
 
 	RESOURCE_ATTRIBUTE(String, nameAttribute);
-	RESOURCE_ATTRIBUTE(Resource, scriptModuleAttribute);
+	RESOURCE_ATTRIBUTE(Resource, moduleAttribute);
 	RESOURCE_ATTRIBUTE(String, globalInitFuncAttribute);
 	RESOURCE_ATTRIBUTE(String, chunkInitFuncAttribute);
 	RESOURCE_ATTRIBUTE(String, workFuncAttribute);

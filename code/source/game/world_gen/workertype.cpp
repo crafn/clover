@@ -5,13 +5,16 @@
 #include "world_gen.hpp"
 #include "workerlocation.hpp"
 
+/// TEMPTEST
+#include "mod/world_gen.hpp"
+
 namespace clover {
 namespace game { namespace world_gen {
 
 WorkerType::WorkerType()
 		: module(nullptr)
 		, INIT_RESOURCE_ATTRIBUTE(nameAttribute, "name", "")
-		, INIT_RESOURCE_ATTRIBUTE(scriptModuleAttribute, "scriptModule", "")
+		, INIT_RESOURCE_ATTRIBUTE(moduleAttribute, "module", "")
 		, INIT_RESOURCE_ATTRIBUTE(globalInitFuncAttribute, "globalInitFunc", "")
 		, INIT_RESOURCE_ATTRIBUTE(chunkInitFuncAttribute, "chunkInitFunc", "")
 		, INIT_RESOURCE_ATTRIBUTE(workFuncAttribute, "workFunc", ""){
@@ -21,7 +24,7 @@ WorkerType::WorkerType()
 			resourceUpdate(false);
 	};
 	
-	scriptModuleAttribute.setOnChangeCallback(try_refresh);
+	moduleAttribute.setOnChangeCallback(try_refresh);
 	globalInitFuncAttribute.setOnChangeCallback(try_refresh);
 	chunkInitFuncAttribute.setOnChangeCallback(try_refresh);
 	workFuncAttribute.setOnChangeCallback(try_refresh);
@@ -65,8 +68,34 @@ void WorkerType::createErrorResource(){
 
 void WorkerType::updateFromAttributes(){
 	clear();
-	
-	module= &resources::gCache->getResource<script::Module>(scriptModuleAttribute.get());
+
+	/// TEMPTEST
+	void* module= NULL; //dlopen(nullptr, RTLD_LAZY);
+	if (!globalInitFuncAttribute.get().empty()){
+		auto func= (WorkerGlobalInitFuncDecl*)tempfake_dlsym(module, globalInitFuncAttribute.get().cStr());
+		ensure(func);
+		globalInitFunc= [this, func] (WorldGen& g){
+			func(g);
+		};
+	}
+
+	if (!chunkInitFuncAttribute.get().empty()){
+		auto func= (WorkerChunkInitFuncDecl*)tempfake_dlsym(module, chunkInitFuncAttribute.get().cStr());
+		ensure_msg(func, "Chunk func not found: %s", chunkInitFuncAttribute.get().cStr());
+		chunkInitFunc= [this, func] (ChunkGen& c){
+			func(c);
+		};
+	}
+
+	if (!workFuncAttribute.get().empty()){
+		auto func= (WorkFuncDecl*)tempfake_dlsym(module, workFuncAttribute.get().cStr());
+		ensure(func);
+		workFunc= [this, func] (WorldGen& g, const Worker* w){
+			func(g, w);
+		};
+	}
+
+	/*module= &resources::gCache->getResource<script::Module>(moduleAttribute.get());
 	ensure(module);
 	
 	/// @todo Deuglify this code
@@ -91,7 +120,7 @@ void WorkerType::updateFromAttributes(){
 			script::gScriptMgr->getFreeContext().execute(script_func(g, w));
 		};
 	}
-	
+*/	
 }
 
 void WorkerType::clear(){

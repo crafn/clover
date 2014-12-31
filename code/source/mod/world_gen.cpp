@@ -9,7 +9,7 @@
 #include "util/vector.hpp"
 #include "world_gen.hpp"
 
-#define DLL_EXPORT extern "C"
+#define DLL_EXPORT extern "C" __attribute__((visibility ("default")))
 
 __attribute__((visibility ("default"))) void temp_hack_to_make_symbols_exported()
 { }
@@ -445,3 +445,16 @@ DLL_EXPORT void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 
 }
 
+void* tempfake_dlsym(void*, const char* name)
+{
+#define FUNC(x) if (!std::strcmp(name, #x)) return (void*)x;
+	FUNC(createGroundWorkers);
+	FUNC(groundWork);
+	FUNC(initWorld);
+	FUNC(playerSpawnWork);
+	FUNC(protoChunkInit);
+	FUNC(protoWork);
+	FUNC(createGrowWorkers);
+	FUNC(growWork);
+	return nullptr;
+}

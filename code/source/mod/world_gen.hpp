@@ -1,6 +1,7 @@
 #ifndef MOD_WORLD_GEN_HPP
 #define MOD_WORLD_GEN_HPP
 
-extern "C" __attribute__ ((visibility ("default"))) void temp_hack_to_make_symbols_exported();
+/// @todo Remove when this is in dll
+void* tempfake_dlsym(void*, const char* name);
 
 #endif // MOD_WORLD_GEN_HPP
