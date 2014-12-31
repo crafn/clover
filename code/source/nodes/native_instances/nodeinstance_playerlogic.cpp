@@ -425,7 +425,7 @@ void PlayerLogicNodeInstance::chooseActionState(util::Vec2d pos)
 		if (obj) {
 			game::WorldEntity* we= game::getOwnerWe(*obj);
 
-			if (we) {
+			if (!we) {
 				clearTagEntry();
 			} else {
 				setTagEntry("hover_pickup");
