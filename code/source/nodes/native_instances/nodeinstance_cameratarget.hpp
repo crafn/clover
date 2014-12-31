@@ -12,6 +12,8 @@ namespace nodes {
 
 class CameraTargetNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	CameraTargetNodeInstance()= default;
 	CameraTargetNodeInstance(CameraTargetNodeInstance&&)= delete;
 	virtual ~CameraTargetNodeInstance();

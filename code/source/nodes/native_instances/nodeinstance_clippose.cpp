@@ -5,6 +5,16 @@
 namespace clover {
 namespace nodes {
 
+CompNode* ClipPoseNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("clip", SignalType::String);
+	n->addInputSlot("phase", SignalType::Real, 0.0);
+	n->addInputSlot("interpolate", SignalType::Boolean, true);
+	n->addOutputSlot("pose", SignalType::ArmaturePose);
+	return n;
+}
+
 void ClipPoseNodeInstance::create(){
 	clip= nullptr;
 	

@@ -3,8 +3,6 @@
 
 #include "build.hpp"
 #include "resources/resource.hpp"
-#include "script/context.hpp"
-#include "script/objecttype.hpp"
 #include "util/cb_listener.hpp"
 
 namespace clover {
@@ -18,10 +16,8 @@ namespace resources {
 template <>
 struct ResourceTraits<nodes::NodeType> {
 	DECLARE_RESOURCE_TRAITS(nodes::NodeType, String)
-	
-	RESOURCE_ATTRIBUTE_DEFS(AttributeDef::String("name"),
-							AttributeDef::Resource("compositionLogicClass"));
-	
+
+	RESOURCE_ATTRIBUTE_DEFS(AttributeDef::String("name"))	
 	typedef SubCache<nodes::NodeType> SubCacheType;
 
 	static util::Str8 typeName(){ return "NodeType"; }
@@ -42,35 +38,23 @@ class CompositionNodeUi;
 class NodeType : public resources::Resource {
 public:
 	DECLARE_RESOURCE(NodeType)
-	
+
 	NodeType();
 	virtual ~NodeType();
-	
+
 	virtual void resourceUpdate(bool load, bool force= true);
 	virtual void createErrorResource();
-	
-	CompositionNodeLogic* createCompositionLogic(script::Context& context) const;
-	CompositionNodeUi createCompositionUi() const;
-	NodeInstance* createInstanceLogic(const CompositionNodeLogic& comp, script::Context& context) const;
-	
-	const util::Str8& getName() const { return nameAttribute.get(); }
-	
-private:
 
-	script::Module* scriptModule;
-	
-	util::CbListener<util::OnChangeCb> moduleChangeListener;
-	
+	CompositionNodeLogic* createCompositionLogic() const;
+	CompositionNodeUi createCompositionUi() const;
+	NodeInstance* createInstanceLogic(const CompositionNodeLogic& comp) const;
+
+	const util::Str8& getName() const { return nameAttribute.get(); }
+
+private:
 	RESOURCE_ATTRIBUTE(String, nameAttribute)
-	RESOURCE_ATTRIBUTE(Resource, scriptModuleAttribute)
-	
-	
-	// Composition
-	script::ObjectType compositionLogicObjectType;
-	RESOURCE_ATTRIBUTE(String, compositionLogicClassAttribute)
-	
-	// Instance
-	RESOURCE_ATTRIBUTE(String, nativeInstanceClassAttribute)
+	RESOURCE_ATTRIBUTE(Resource, moduleAttribute)
+	RESOURCE_ATTRIBUTE(String, classAttribute)
 
 	void tryStartReloading();
 };

@@ -7,7 +7,6 @@
 #include "global/cfg_mgr.hpp"
 #include "global/cvar.hpp"
 #include "global/event.hpp"
-#include "nodes/script.hpp"
 #include "nodes/signaltypetraits.hpp"
 #include "physics/script.hpp"
 #include "resources/script.hpp"
@@ -192,8 +191,6 @@ ScriptMgr::ScriptMgr(){
 	Utils::devErrorCheck("", ret);
 	
 	engine->SetEngineProperty(asEP_AUTO_GARBAGE_COLLECT, true);
-	
-	registerEssentials();
 	
 	global::Event e(global::Event::OnScriptMgrCreate);
 	e(global::Event::Object)= this;
@@ -420,7 +417,6 @@ void ScriptMgr::registerEssentials(){
 	animation::registerToScript();
 	physics::registerToScript();
 	game::registerToScript();
-	nodes::registerToScript();
 	resources::registerToScript();
 	game::world_gen::registerToScript();
 	ui::registerToScript();	

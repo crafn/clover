@@ -5,6 +5,20 @@
 namespace clover {
 namespace nodes {
 
+CompNode* ClipPlayerNodeInstance::compNode()
+{
+	CompNode* n= new CompNode{};
+	n->addInputSlot("clip", SignalType::String);
+	n->addInputSlot("play", SignalType::Real, 0.0); // Value is starting phase
+	n->addInputSlot("timeScale", SignalType::Real, 1.0);
+	n->addInputSlot("loopCount", SignalType::Integer, -1);
+	n->addInputSlot("interpolate", SignalType::Boolean, true);
+	n->addOutputSlot("pose", SignalType::ArmaturePose);
+	n->addOutputSlot("phase", SignalType::Real);
+	n->addOutputSlot("onEnd", SignalType::Trigger);
+	return n;
+}
+
 void ClipPlayerNodeInstance::create(){
 	clip= nullptr;
 	time= 0.0;

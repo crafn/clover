@@ -37,7 +37,7 @@ CompositionNodeLogicGroup::CompositionNodeLogicGroup():
 
 CompositionNodeLogic& CompositionNodeLogicGroup::add(const NodeType& type){
 	
-	nodes.pushBack(CompositionNodeLogicPtr(type.createCompositionLogic(context)));
+	nodes.pushBack(CompositionNodeLogicPtr(type.createCompositionLogic()));
 	nodes.back()->setOwner(*this);
 
 	// Update resource state when node changes

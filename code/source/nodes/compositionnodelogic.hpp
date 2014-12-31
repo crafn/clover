@@ -25,16 +25,16 @@ namespace nodes {
 class NodeType;
 
 /// Connection to script
-class BaseCompositionNodeScriptLogic {
+class CompNode {
 public:
 	typedef std::unique_ptr<CompositionNodeSlot> CompositionNodeSlotPtr;
 	typedef std::unique_ptr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
 	
-	BaseCompositionNodeScriptLogic();
-	BaseCompositionNodeScriptLogic(BaseCompositionNodeScriptLogic&&)= delete;
-	BaseCompositionNodeScriptLogic(const BaseCompositionNodeScriptLogic&)= delete;
-	BaseCompositionNodeScriptLogic& operator=(BaseCompositionNodeScriptLogic&& other);
-	virtual ~BaseCompositionNodeScriptLogic();
+	CompNode();
+	CompNode(CompNode&&)= delete;
+	CompNode(const CompNode&)= delete;
+	CompNode& operator=(CompNode&& other);
+	virtual ~CompNode();
 
 	///
 	/// Called from script
@@ -122,10 +122,9 @@ public:
 	
 	const util::HashMap<util::Str8, CompositionNodeSlotTemplateGroupPtr>& getSlotTemplateGroups() const { return templateGroups; }
 
-	/// Called by CompositionNodeSlot
-	/// @todo Change to callbacks
-	void onDefaultValueChange(CompositionNodeSlot& slot);
+	virtual void onDefaultValueChange(CompositionNodeSlot& slot) {}
 	void onRoutingChange(CompositionNodeSlot& slot);
+	virtual void onResourceChange(const resources::Resource& res) {}
 	
 	void clear();
 	
@@ -159,11 +158,10 @@ class CompositionNodeLogicGroup;
 /// Contains settings for a NodeType which'll be instantiated
 class CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
 public:
-	typedef BaseCompositionNodeScriptLogic::CompositionNodeSlotTemplateGroupPtr CompositionNodeSlotTemplateGroupPtr;
+	typedef CompNode::CompositionNodeSlotTemplateGroupPtr CompositionNodeSlotTemplateGroupPtr;
 	
 	CompositionNodeLogic(	const NodeType& type,
-							const script::ObjectType& obj_type,
-							script::Context& context);
+							util::UniquePtr<CompNode> impl);
 	CompositionNodeLogic(CompositionNodeLogic&&)= delete;
 	
 	CompositionNodeLogic& operator=(CompositionNodeLogic&&)= delete;
@@ -202,38 +200,25 @@ public:
 	
 	bool isUpdateRouteStart() const { ensure(impl); return impl->isUpdateRouteStart(); }
 
-	void setBatched(bool b= true){ NONULL(impl)->setBatched(b); }
-	void setBatchPriority(int32 p){ NONULL(impl)->setBatchPriority(p); }
+	void setBatched(bool b= true){ impl->setBatched(b); }
+	void setBatchPriority(int32 p){ impl->setBatchPriority(p); }
 	
-	bool isBatched() const { return NONULL(impl)->isBatched(); }
-	int32 getBatchPriority() const { return NONULL(impl)->getBatchPriority(); }
+	bool isBatched() const { return impl->isBatched(); }
+	int32 getBatchPriority() const { return impl->getBatchPriority(); }
 
 
 	/// Called by impl
 	void onDefaultValueChange(CompositionNodeSlot& slot);
 	void onRoutingChange(CompositionNodeSlot& slot);
-	void onResourceChange(const resources::Resource& res); /// Called when listened resource changes
 	
 private:
-	void create();
 	void recreate();
 	
-	void runImplSetScript();
-	void runCreateScript();
-
 	const NodeType* type;
 	const CompositionNodeLogicGroup* owner;
 
-	script::Context context;
-	const script::ObjectType& objectType;
-	script::Object object;
-	script::Function<void (CompositionNodeSlot*)> onDefaultValueChangeFunc;
-	script::Function<void (const resources::Resource*)> onResourceChangeFunc;
-	
 	util::Vec2d position;
-	
-	BaseCompositionNodeScriptLogic* impl;
-	
+	util::UniquePtr<CompNode> impl;
 	util::CbListener<util::OnChangeCb> typeChangeListener;
 };
 
@@ -241,8 +226,8 @@ private:
 namespace util {
 
 template <>
-struct TypeStringTraits<nodes::BaseCompositionNodeScriptLogic> {
-	static util::Str8 type(){ return "::BaseCompositionNodeScriptLogic"; } 
+struct TypeStringTraits<nodes::CompNode> {
+	static util::Str8 type(){ return "::CompNode"; } 
 };
 
 } // util

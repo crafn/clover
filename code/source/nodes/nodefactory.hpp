@@ -10,13 +10,11 @@ namespace script {
 
 namespace nodes {
 
-class CompositionNodeLogic;
+class CompNode;
 class NodeInstance;
 
-class NodeFactory {
-public:
-	static NodeInstance* createNodeInstanceNativeLogic(const util::Str8& type_string);
-};
+NodeInstance* createNodeInstanceNativeLogic(const util::Str8& type_string);
+CompNode* createCompNode(const util::Str8& type_string);
 
 } // nodes
 } // clover

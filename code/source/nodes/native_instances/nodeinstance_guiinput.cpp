@@ -5,6 +5,14 @@
 namespace clover {
 namespace nodes {
 
+CompNode* GuiInputNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("channelName", SignalType::String, util::Str8("host"));
+	n->addOutputSlot("cursorPos_world", SignalType::Vec2);
+	return n;
+}
+
 void GuiInputNodeInstance::create()
 {
 	channelNameIn= addInputSlot<SignalType::String>("channelName");

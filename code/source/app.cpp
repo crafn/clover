@@ -78,8 +78,6 @@ App::App(const util::Str8& executablePath){
 	gui::gGuiMgr= new gui::GuiMgr();
 	ui::game::gBaseUi= new ui::game::BaseUi();
 	game::gBaseGameLogic= new game::BaseGameLogic();	
-
-	global::gCfgMgr->registerVarsToScript();
 }
 
 App::~App(){

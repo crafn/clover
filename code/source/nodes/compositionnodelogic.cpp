@@ -5,7 +5,7 @@
 namespace clover {
 namespace nodes {
 
-BaseCompositionNodeScriptLogic::BaseCompositionNodeScriptLogic()
+CompNode::CompNode()
 		: batched(false)
 		, batchPriority(0)
 		, owner(nullptr)
@@ -13,7 +13,7 @@ BaseCompositionNodeScriptLogic::BaseCompositionNodeScriptLogic()
 		, silent(false){
 }
 
-BaseCompositionNodeScriptLogic& BaseCompositionNodeScriptLogic::operator=(BaseCompositionNodeScriptLogic&& other){
+CompNode& CompNode::operator=(CompNode&& other){
 	ensure(&other != this);
 	
 	owner= other.owner;
@@ -77,11 +77,11 @@ BaseCompositionNodeScriptLogic& BaseCompositionNodeScriptLogic::operator=(BaseCo
 	return *this;
 }
 
-BaseCompositionNodeScriptLogic::~BaseCompositionNodeScriptLogic(){
+CompNode::~CompNode(){
 	clear();
 }
 
-CompositionNodeSlot& BaseCompositionNodeScriptLogic::addInputSlot(const SlotIdentifier& id, const boost::any& init_value){
+CompositionNodeSlot& CompNode::addInputSlot(const SlotIdentifier& id, const boost::any& init_value){
 	ensure(!slots.count(id));
 	
 	auto& slot= addSlotMinimal(id);
@@ -101,7 +101,7 @@ CompositionNodeSlot& BaseCompositionNodeScriptLogic::addInputSlot(const SlotIden
 }
 
 
-CompositionNodeSlot& BaseCompositionNodeScriptLogic::addOutputSlot(const SlotIdentifier& id){
+CompositionNodeSlot& CompNode::addOutputSlot(const SlotIdentifier& id){
 	ensure(!slots.count(id));
 
 	auto& slot= addSlotMinimal(id);
@@ -114,7 +114,7 @@ CompositionNodeSlot& BaseCompositionNodeScriptLogic::addOutputSlot(const SlotIde
 	return slot;
 }
 
-void BaseCompositionNodeScriptLogic::removeSlot(const SlotIdentifier& id){
+void CompNode::removeSlot(const SlotIdentifier& id){
 	auto it= slots.find(id);
 	ensure(it != slots.end());
 	
@@ -128,19 +128,19 @@ void BaseCompositionNodeScriptLogic::removeSlot(const SlotIdentifier& id){
 	slots.erase(it);
 }
 
-CompositionNodeSlot& BaseCompositionNodeScriptLogic::addSlot(const SlotIdentifier& id, boost::any init_value){
+CompositionNodeSlot& CompNode::addSlot(const SlotIdentifier& id, boost::any init_value){
 	if (id.input)
 		return addInputSlot(id, init_value);
 	return addOutputSlot(id);
 }
 
-CompositionNodeSlot& BaseCompositionNodeScriptLogic::addSlot(const SlotIdentifier& id){
+CompositionNodeSlot& CompNode::addSlot(const SlotIdentifier& id){
 	if (id.input)
 		return addInputSlot(id);
 	return addOutputSlot(id);
 }
 
-CompositionNodeSlot& BaseCompositionNodeScriptLogic::getSlot(const SlotIdentifier& id){
+CompositionNodeSlot& CompNode::getSlot(const SlotIdentifier& id){
 	auto it= slots.find(id);
 	
 	if (it == slots.end())
@@ -150,7 +150,7 @@ CompositionNodeSlot& BaseCompositionNodeScriptLogic::getSlot(const SlotIdentifie
 }
 
 
-util::DynArray<SlotIdentifier> BaseCompositionNodeScriptLogic::getSlotIdentifiers() const {
+util::DynArray<SlotIdentifier> CompNode::getSlotIdentifiers() const {
 	util::DynArray<SlotIdentifier> ret;
 	for (const auto& m : getSlots()){
 		ret.pushBack(m->getIdentifier());
@@ -159,7 +159,7 @@ util::DynArray<SlotIdentifier> BaseCompositionNodeScriptLogic::getSlotIdentifier
 }
 
 
-CompositionNodeSlotTemplateGroup& BaseCompositionNodeScriptLogic::addSlotTemplateGroup(const util::Str8& name, bool input){
+CompositionNodeSlotTemplateGroup& CompNode::addSlotTemplateGroup(const util::Str8& name, bool input){
 	ensure(!templateGroups.count(name));
 	ensure(owner);
 	
@@ -169,56 +169,51 @@ CompositionNodeSlotTemplateGroup& BaseCompositionNodeScriptLogic::addSlotTemplat
 	return *pair.first->second;
 }
 
-const CompositionNodeSlotTemplateGroup& BaseCompositionNodeScriptLogic::getSlotTemplateGroup(const util::Str8& name) const {
+const CompositionNodeSlotTemplateGroup& CompNode::getSlotTemplateGroup(const util::Str8& name) const {
 	auto it= templateGroups.find(name);
 	ensure_msg(it != templateGroups.end(), "Couldn't find template slot group: %s",
 		name.cStr());
 	return *it->second;
 }
 
-CompositionNodeSlotTemplateGroup& BaseCompositionNodeScriptLogic::getSlotTemplateGroup(const util::Str8& name){
+CompositionNodeSlotTemplateGroup& CompNode::getSlotTemplateGroup(const util::Str8& name){
 	auto it= templateGroups.find(name);
 	ensure_msg(it != templateGroups.end(), "Couldn't find template slot group: %s",
 		name.cStr());
 	return *it->second;
 }
 
-bool BaseCompositionNodeScriptLogic::hasSlotTemplateGroup(const util::Str8& name) const {
+bool CompNode::hasSlotTemplateGroup(const util::Str8& name) const {
 	auto it= templateGroups.find(name);
 	if (it == templateGroups.end()) return false;
 	return true;
 }
 
-void BaseCompositionNodeScriptLogic::setAsUpdateRouteStart(bool b){
+void CompNode::setAsUpdateRouteStart(bool b){
 	updateRouteStart= b;
 }
 
 
-void BaseCompositionNodeScriptLogic::setOwner(CompositionNodeLogic& owner_){
+void CompNode::setOwner(CompositionNodeLogic& owner_){
 	owner= &owner_;
 	
 	ensure(slots.empty());
 	ensure(resourceChangeListener.empty());
 }
 
-void BaseCompositionNodeScriptLogic::onDefaultValueChange(CompositionNodeSlot& slot){
-	ensure(owner);
-	owner->onDefaultValueChange(slot);
-}
-
-void BaseCompositionNodeScriptLogic::onRoutingChange(CompositionNodeSlot& slot){
+void CompNode::onRoutingChange(CompositionNodeSlot& slot){
 	ensure(owner);
 	owner->onRoutingChange(slot);
 }
 
-void BaseCompositionNodeScriptLogic::clear(){
+void CompNode::clear(){
 	while (!slotArray.empty())
 		removeSlot(*slotArray.back());
 	resourceChangeListener.clear();
 }
 
 
-CompositionNodeSlot& BaseCompositionNodeScriptLogic::addSlotMinimal(const SlotIdentifier& id){
+CompositionNodeSlot& CompNode::addSlotMinimal(const SlotIdentifier& id){
 	auto pair= slots.insert(std::move(std::make_pair(
 		id, CompositionNodeSlotPtr(new CompositionNodeSlot(id)))));
 	pair.first->second->setOwner(owner);
@@ -228,7 +223,7 @@ CompositionNodeSlot& BaseCompositionNodeScriptLogic::addSlotMinimal(const SlotId
 	return *pair.first->second;
 }
 
-void BaseCompositionNodeScriptLogic::sendOnSlotAddEvent(const SlotIdentifier& id_){
+void CompNode::sendOnSlotAddEvent(const SlotIdentifier& id_){
 	ensure(!silent);
 	
 	SlotIdentifier id= id_;
@@ -238,7 +233,7 @@ void BaseCompositionNodeScriptLogic::sendOnSlotAddEvent(const SlotIdentifier& id
 	e.send();
 }
 
-void BaseCompositionNodeScriptLogic::sendOnSlotRemoveEvent(const SlotIdentifier& id_){
+void CompNode::sendOnSlotRemoveEvent(const SlotIdentifier& id_){
 	ensure(!silent);
 	
 	SlotIdentifier id= id_;
@@ -248,10 +243,9 @@ void BaseCompositionNodeScriptLogic::sendOnSlotRemoveEvent(const SlotIdentifier&
 	e.send();
 }
 
-void BaseCompositionNodeScriptLogic::addOnResourceChangeCallback(const resources::Resource& res){
+void CompNode::addOnResourceChangeCallback(const resources::Resource& res){
 	resourceChangeListener.listen(res, [&] () {
-		ensure(owner);
-		owner->onResourceChange(res);
+		onResourceChange(res);
 	});
 }
 
@@ -260,35 +254,20 @@ void BaseCompositionNodeScriptLogic::addOnResourceChangeCallback(const resources
 //
 
 CompositionNodeLogic::CompositionNodeLogic(	const NodeType& type_,
-											const script::ObjectType& obj_type,
-											script::Context& context_)
+											util::UniquePtr<CompNode> impl_)
 	: type(&type_)
 	, owner(nullptr)
-	, context(context_)
-	, objectType(obj_type)
-	, impl(nullptr) {
+	, impl(std::move(impl_)) {
 
 	typeChangeListener.listen(*type, [&] () {
 		recreate();
 		util::OnChangeCb::trigger();
 	});
-	
-	create();
-}
-
-void CompositionNodeLogic::create(){
-	try {
-		object= context.instantiateObject(objectType);
-		runImplSetScript();
-		runCreateScript();
-	}
-	catch (const resources::ResourceException& e){
-		throw resources::ResourceException("CompositionNodeLogic::create failed for %s", getType().getName().cStr());
-	}
 }
 
 void CompositionNodeLogic::recreate(){
-	try {
+	release_ensure_msg(false, "Not implemented");
+	/*try {
 		// Take changes in script into account without breaking any connections etc.
 		
 		script::Object old_object= std::move(object);
@@ -312,23 +291,7 @@ void CompositionNodeLogic::recreate(){
 	}
 	catch (const resources::ResourceException& e){
 		throw resources::ResourceException("CompositionNodeLogic::recreate failed for %s", getType().getName().cStr());
-	}
-}
-
-void CompositionNodeLogic::runImplSetScript(){
-	auto get_impl= objectType.getMethod<BaseCompositionNodeScriptLogic& ()>("getImpl");
-	impl= &context.execute(object, get_impl());
-	ensure(impl);
-	
-	impl->setOwner(*this);
-	
-	onDefaultValueChangeFunc= objectType.getMethod<void (CompositionNodeSlot*)>("onDefaultValueChange");
-	onResourceChangeFunc= objectType.getMethod<void (const resources::Resource*)>("onResourceChange");
-}
-
-void CompositionNodeLogic::runCreateScript(){
-	auto create= objectType.getMethod<void ()>("create");
-	context.execute(object, create());
+	}*/
 }
 
 CompositionNodeSlot& CompositionNodeLogic::getSlot(const SlotIdentifier& id) const {
@@ -426,8 +389,6 @@ void CompositionNodeLogic::removeSlot(const SlotTemplate& slot){
 }
 
 void CompositionNodeLogic::onDefaultValueChange(CompositionNodeSlot& slot){
-	
-	// Thought this would have needed queuing, but works just like that
 	bool found= false;
 	for (auto& m : getSlots()){
 		if (&slot == m){
@@ -436,21 +397,13 @@ void CompositionNodeLogic::onDefaultValueChange(CompositionNodeSlot& slot){
 		}
 	}
 	ensure(found);
-	
-	context.execute(object, onDefaultValueChangeFunc(&slot));
-	
+
+	impl->onDefaultValueChange(slot);
 	util::OnChangeCb::trigger();
 }
 
 void CompositionNodeLogic::onRoutingChange(CompositionNodeSlot& slot){	
 	util::OnChangeCb::trigger();
-}
-
-void CompositionNodeLogic::onResourceChange(const resources::Resource& res){
-	ensure(object.isGood());
-	ensure(onResourceChangeFunc.isGood());
-	
-	context.execute(object, onResourceChangeFunc(&res));
 }
 
 } // nodes

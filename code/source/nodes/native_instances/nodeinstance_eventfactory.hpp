@@ -11,6 +11,8 @@ class NodeEventType;
 
 class EventFactoryNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual ~EventFactoryNodeInstance(){}
 
 	virtual void create();

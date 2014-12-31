@@ -60,19 +60,11 @@ void profileFor(double time){
 	t.detach();
 }
 
-struct ScriptRegistrator {
-	ScriptRegistrator(){
-		script::gScriptMgr->registerGlobalFunction(profileFor, "dev::profileFor");
-	}
-};
-
 DevLogic::DevLogic()
 	: profiler(global::gCfgMgr->get("dev::profilerSampleRate", 2.0))
 	, fpsFrameCount(0)
 	, fpsTimer(0)
 	, fpsPrintFilter(0){
-	
-	static ScriptRegistrator sr;
 }
 
 void DevLogic::update(){

@@ -14,6 +14,7 @@ namespace nodes {
 
 class ClipPlayerNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
 	
 	virtual ~ClipPlayerNodeInstance(){}
 	

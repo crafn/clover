@@ -38,11 +38,9 @@ public:
 	util::Str8 generateString() const;
 
 	/// Internals of cfg system
-	void tryRegisterToScript();
 	void setObjectNode(util::ObjectNode ob){ value= std::move(ob); }
 
 private:
-
 	util::Str8 name;
 	util::ObjectNode value;
 };

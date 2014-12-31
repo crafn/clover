@@ -45,10 +45,7 @@ AudioMgr::AudioMgr()
 	
 	if (gAudioMgr == nullptr)
 		gAudioMgr= this;
-	
-	script::gScriptMgr->registerGlobalFunction(scriptPlayGlobalSound, "audio::playGlobalSound");
-	script::gScriptMgr->registerGlobalFunction(scriptPlaySpatialSound, "audio::playSpatialSound");
-		
+
 	feedThread= std::thread(std::bind(&AudioMgr::feedLoop, this));
 }
 

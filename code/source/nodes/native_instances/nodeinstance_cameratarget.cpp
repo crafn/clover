@@ -5,6 +5,14 @@ namespace nodes {
 
 util::LinkedList<CameraTargetNodeInstance*> CameraTargetNodeInstance::targets;
 
+CompNode* compNode()
+{
+	CompNode* n= new CompNode{};
+	n->addInputSlot("name", SignalType::String, util::Str8("player0"));
+	n->addInputSlot("transform", SignalType::SrtTransform2);
+	return n;
+}
+
 CameraTargetNodeInstance::~CameraTargetNodeInstance(){
 	targets.erase(iterator);
 }

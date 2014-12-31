@@ -10,6 +10,8 @@ namespace nodes {
 /// Provides information of gui interactions
 class GuiInputNodeInstance : public NodeInstance {
 public:
+	static CompNode* compNode();
+
 	virtual void create() override;
 	virtual void update() override;
 

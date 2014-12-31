@@ -82,7 +82,7 @@ void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
 
 NodeInstance& NodeInstanceGroup::add(const CompositionNodeLogic& comp){
 	PROFILE();
-	NodeInstance* logic= comp.getType().createInstanceLogic(comp, context);
+	NodeInstance* logic= comp.getType().createInstanceLogic(comp);
 	ensure(logic);
 	logic->setGroupVars(&groupVars);
 	logic->create();

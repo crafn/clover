@@ -38,8 +38,6 @@ public:
 	/// Saves settings to file
 	void save();
 	
-	void registerVarsToScript();
-
 private:
 	
 	void createVars();

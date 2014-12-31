@@ -43,13 +43,6 @@ void CfgMgr::save(){
 	file << root.generateText().cStr();
 }
 
-void CfgMgr::registerVarsToScript(){
-	for (auto& pair : vars){
-		auto& var = pair.second;
-		var.tryRegisterToScript();
-	}
-}
-
 void CfgMgr::createVars(){
 	for (SizeType n_i= 0; n_i < root.size(); ++n_i){
 		util::ObjectNode name_space= std::move(root[root.getMemberNames()[n_i]]);

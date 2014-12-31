@@ -11,11 +11,23 @@
 namespace clover {
 namespace nodes {
 
-NodeInstance* NodeFactory::createNodeInstanceNativeLogic(const util::Str8& type_string){
+NodeInstance* createNodeInstanceNativeLogic(const util::Str8& type_string)
+{
 	#define NODEINSTANCE(x) if (type_string == util::TypeStringTraits<x>::type()){ return new x; }
 	#include "native_instances/native_instances.def"
 	#undef NODEINSTANCE
 	
+	throw global::Exception("Invalid native NodeInstance name: %s", type_string.cStr());
+}
+
+CompNode* createCompNode(const util::Str8& type_string)
+{
+#define NODEINSTANCE(x) \
+	if (type_string == util::TypeStringTraits<x>::type()) \
+		return x::compNode();
+#include "native_instances/native_instances.def"
+#undef NODEINSTANCE
+
 	throw global::Exception("Invalid native NodeInstance name: %s", type_string.cStr());
 }
 

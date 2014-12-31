@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 #include "nodeinstance.hpp"
-#include "script/context.hpp"
 #include "updateline.hpp"
 #include "util/cb_listener.hpp"
 #include "util/linkedlist.hpp"
@@ -46,15 +45,10 @@ private:
 	void create(const CompositionNodeLogicGroup& g);
 	NodeInstance& add(const CompositionNodeLogic& comp);
 	
-	script::Context context; // Might be a good idea to use single context for all groups
-
 	using NodeInstancePtr= std::unique_ptr<NodeInstance>;
 	util::DynArray<NodeInstancePtr> nodes;
-	
 	util::CbListener<util::OnChangeCb> compGroupListener;
-	
 	NodeInstance::GroupVars groupVars;
-	
 	const CompositionNodeLogicGroup* compositionGroup= nullptr;
 };
 

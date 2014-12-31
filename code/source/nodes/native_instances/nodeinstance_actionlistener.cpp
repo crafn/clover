@@ -3,6 +3,19 @@
 namespace clover {
 namespace nodes {
 
+CompNode* ActionListenerNodeInstance::compNode()
+{
+	CompNode* n= new CompNode{};
+	n->addInputSlot("channelName", SignalType::String, util::Str8("player0")); // Channel to listen
+	n->addInputSlot("tag", SignalType::String, util::Str8("")); // Tag to listen
+	n->addInputSlot("actionName", SignalType::String, util::Str8(""));
+	n->addOutputSlot("onAction", SignalType::Trigger); // Triggered on action
+
+	CompositionNodeSlotTemplateGroup& attribs_group= n->addOutputSlotTemplateGroup("value");
+	attribs_group.setAsVariant(true);
+	return n;
+}
+
 void ActionListenerNodeInstance::create(){
 	channelNameIn= addInputSlot<SignalType::String>("channelName");
 	tagIn= addInputSlot<SignalType::String>("tag");

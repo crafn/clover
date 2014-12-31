@@ -87,7 +87,7 @@ void Module::create(){
 }
 
 void Module::build(){
-	
+/*	
 	CScriptBuilder builder;
 	
 	print(debug::Ch::Script, debug::Vb::Trivial, "Building module: %s", nameAttribute.get().cStr());
@@ -103,13 +103,15 @@ void Module::build(){
 	
 	module= gScriptMgr->getAsEngine().GetModule(nameAttribute.get().cStr());
 	Utils::errorCheck("Module " + nameAttribute.get() + " build failed", ret);
+	*/
 }
 
 void Module::destroy(){
+	/*
 	if (module && getResourceState() != State::Error){ // Error-module is freed when ScriptMgr is destroyed
 		print(debug::Ch::Script, debug::Vb::Trivial, "Unloading module: %s", nameAttribute.get().cStr());
 		gScriptMgr->getAsEngine().DiscardModule(nameAttribute.get().cStr());
-	}
+	}*/
 	module= nullptr;
 	
 	setResourceState(State::Unloaded);

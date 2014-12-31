@@ -3,6 +3,15 @@
 namespace clover {
 namespace nodes {
 
+CompNode* DelayedTriggerNodeInstance::compNode()
+{
+	auto n= new CompNode{};
+	n->addInputSlot("trigger", SignalType::Trigger);
+	n->addInputSlot("delay", SignalType::Real, 1.0);
+	n->addOutputSlot("trigger", SignalType::Trigger);
+	return n;
+}
+
 void DelayedTriggerNodeInstance::create()
 {
 	triggerIn= addInputSlot<SignalType::Trigger>("trigger");
