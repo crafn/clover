@@ -12,7 +12,7 @@ namespace nodes {
 
 class WeVisualEntityNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual void create();
 	virtual void update();

@@ -12,7 +12,7 @@ namespace nodes {
 
 class CameraTargetNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	CameraTargetNodeInstance()= default;
 	CameraTargetNodeInstance(CameraTargetNodeInstance&&)= delete;

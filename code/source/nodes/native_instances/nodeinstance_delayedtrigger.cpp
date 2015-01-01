@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* DelayedTriggerNodeInstance::compNode()
+CompositionNodeLogic* DelayedTriggerNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("trigger", SignalType::Trigger);
 	n->addInputSlot("delay", SignalType::Real, 1.0);
 	n->addOutputSlot("trigger", SignalType::Trigger);

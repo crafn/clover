@@ -5,9 +5,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* LogicOrNodeInstance::compNode()
+CompositionNodeLogic* LogicOrNodeInstance::compNode()
 {
-	CompNode* n= new CompNode{};
+	CompositionNodeLogic* n= new CompositionNodeLogic{};
 	n->addInputSlot("input1", SignalType::Boolean, false);
 	n->addInputSlot("input2", SignalType::Boolean, false);
 	n->addOutputSlot("output", SignalType::Boolean);

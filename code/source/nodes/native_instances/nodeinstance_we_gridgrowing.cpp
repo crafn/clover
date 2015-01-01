@@ -7,9 +7,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeGridGrowingNodeInstance::compNode()
+CompositionNodeLogic* WeGridGrowingNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("transform", SignalType::RtTransform2);
 	n->addInputSlot("growRate", SignalType::Real, 1.0);
 	n->addInputSlot("decayRate", SignalType::Real, 1.0);

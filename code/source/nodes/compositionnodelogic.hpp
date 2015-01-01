@@ -28,17 +28,11 @@ class CompositionNodeLogicGroup;
 
 /// Contains settings for a NodeType which'll be instantiated
 class CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
-public:
-	/// Copypasted from former BaseCompositionNodeScriptLogic
+public: // Copypasted from former BaseCompositionNodeScriptLogic
+
 	typedef std::unique_ptr<CompositionNodeSlot> CompositionNodeSlotPtr;
 	typedef std::unique_ptr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
 	
-	CompNode();
-	CompNode(CompNode&&)= delete;
-	CompNode(const CompNode&)= delete;
-	CompNode& operator=(CompNode&& other);
-	virtual ~CompNode();
-
 	///
 	/// Called from script
 	///
@@ -83,7 +77,7 @@ public:
 	void removeSlot(const SlotIdentifier& id);
 	void removeSlot(const CompositionNodeSlot& slot){ removeSlot(slot.getIdentifier()); }
 	
-	CompositionNodeSlot& getSlot(const SlotIdentifier& id);
+	CompositionNodeSlot& getSlot(const SlotIdentifier& id) const;
 	bool hasSlot(const SlotIdentifier& id) const { return slots.find(id) != slots.end(); }
 	
 	const util::DynArray<CompositionNodeSlot*>& getSlots() const { return slotArray; }
@@ -121,11 +115,10 @@ public:
 	// Not called by script
 	//
 	
-	void setOwner(CompositionNodeLogic& owner);
 	
 	const util::HashMap<util::Str8, CompositionNodeSlotTemplateGroupPtr>& getSlotTemplateGroups() const { return templateGroups; }
 
-	virtual void onDefaultValueChange(CompositionNodeSlot& slot) {}
+	virtual void onDefaultValueChange(CompositionNodeSlot& slot);
 	void onRoutingChange(CompositionNodeSlot& slot);
 	virtual void onResourceChange(const resources::Resource& res) {}
 	
@@ -153,37 +146,25 @@ private:
 	bool updateRouteStart;
 	bool silent; // Don't emit any events (doesn't probably cover all cases, is used when slot is replaced by changed one)
 	util::CbMultiListener<util::OnChangeCb> resourceChangeListener; // These are added by script
-	typedef CompNode::CompositionNodeSlotTemplateGroupPtr CompositionNodeSlotTemplateGroupPtr;
-	
+
+
+
+
 public: // Original CompositionNodeLogic
-	CompositionNodeLogic(	const NodeType& type,
-							util::UniquePtr<CompNode> impl);
+	CompositionNodeLogic();
+	void setType(const NodeType& type_);
 	CompositionNodeLogic(CompositionNodeLogic&&)= delete;
-	
-	CompositionNodeLogic& operator=(CompositionNodeLogic&&)= delete;
 	
 	void setOwner(const CompositionNodeLogicGroup& o){ owner= &o; }
 	const CompositionNodeLogicGroup& getOwner() const { ensure(owner); return *owner; }
 	
-	
-	CompositionNodeSlot& getSlot(const SlotIdentifier& id) const;
 	CompositionNodeSlot& getInputSlot(const SlotIdentifier& id) const;
 	CompositionNodeSlot& getOutputSlot(const SlotIdentifier& id) const;
 	
-	bool hasSlot(const SlotIdentifier& id) const;
-	
 	const NodeType& getType() const;
 	
-	util::DynArray<CompositionNodeSlot*> getSlots() const;
 	util::DynArray<CompositionNodeSlot*> getTemplateGroupSlots() const;
-	
-	
-	const CompositionNodeSlotTemplateGroup& getSlotTemplateGroup(const util::Str8& name) const;
-	CompositionNodeSlotTemplateGroup& getSlotTemplateGroup(const util::Str8& name);
-	
-	bool hasSlotTemplateGroup(const util::Str8& name) const;
-	
-	const util::HashMap<util::Str8, CompositionNodeSlotTemplateGroupPtr>& getSlotTemplateGroups() const;
+
 	util::DynArray<CompositionNodeSlotTemplateGroup*> getInputSlotTemplateGroups() const;
 	util::DynArray<CompositionNodeSlotTemplateGroup*> getOutputSlotTemplateGroups() const;
 	util::DynArray<CompositionNodeSlotTemplateGroup*> getSlotTemplateGroups(bool input) const;
@@ -194,20 +175,6 @@ public: // Original CompositionNodeLogic
 	void setPosition(const util::Vec2d& p){ position= p; }
 	const util::Vec2d& getPosition() const { return position; }
 	
-	bool isUpdateRouteStart() const { ensure(impl); return impl->isUpdateRouteStart(); }
-
-	void setBatched(bool b= true){ impl->setBatched(b); }
-	void setBatchPriority(int32 p){ impl->setBatchPriority(p); }
-	
-	bool isBatched() const { return impl->isBatched(); }
-	int32 getBatchPriority() const { return impl->getBatchPriority(); }
-
-
-	/// Called by impl
-	void onDefaultValueChange(CompositionNodeSlot& slot);
-	void onRoutingChange(CompositionNodeSlot& slot);
-	
-
 private:
 	void recreate();
 	
@@ -215,7 +182,6 @@ private:
 	const CompositionNodeLogicGroup* owner;
 
 	util::Vec2d position;
-	util::UniquePtr<CompNode> impl;
 	util::CbListener<util::OnChangeCb> typeChangeListener;
 };
 
@@ -223,8 +189,8 @@ private:
 namespace util {
 
 template <>
-struct TypeStringTraits<nodes::CompNode> {
-	static util::Str8 type(){ return "::CompNode"; } 
+struct TypeStringTraits<nodes::CompositionNodeLogic> {
+	static util::Str8 type(){ return "::CompositionNodeLogic"; } 
 };
 
 } // util

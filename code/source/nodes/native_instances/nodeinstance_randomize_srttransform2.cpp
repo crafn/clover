@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* SrtTransform2RandomizeNodeInstance::compNode()
+CompositionNodeLogic* SrtTransform2RandomizeNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("transform", SignalType::SrtTransform2);
 	n->addInputSlot("rotBias", SignalType::Real);
 	n->addInputSlot("scaleBias", SignalType::Real);

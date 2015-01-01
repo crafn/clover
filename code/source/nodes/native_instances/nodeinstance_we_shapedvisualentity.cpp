@@ -7,9 +7,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeShapedVisualEntityNodeInstance::compNode()
+CompositionNodeLogic* WeShapedVisualEntityNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("active", SignalType::Boolean, true);
 	n->addInputSlot("transform", SignalType::SrtTransform3);
 	n->addInputSlot("material", SignalType::String);

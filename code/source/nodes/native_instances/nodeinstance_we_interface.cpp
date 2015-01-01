@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeInterfaceNodeInstance::compNode()
+CompositionNodeLogic* WeInterfaceNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->setAsUpdateRouteStart(true);
 
 	n->addInputSlot("active", SignalType::Boolean, false);

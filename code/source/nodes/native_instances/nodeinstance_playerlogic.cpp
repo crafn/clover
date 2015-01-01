@@ -7,9 +7,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* PlayerLogicNodeInstance::compNode()
+CompositionNodeLogic* PlayerLogicNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("player", SignalType::String, util::Str8("player0"));
 	n->addInputSlot("movement", SignalType::Vec2);
 	n->addInputSlot("respawn", SignalType::Trigger);

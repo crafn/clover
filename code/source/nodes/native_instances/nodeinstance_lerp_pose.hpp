@@ -9,7 +9,7 @@ namespace nodes {
 
 class PoseLerpNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual ~PoseLerpNodeInstance(){}
 	

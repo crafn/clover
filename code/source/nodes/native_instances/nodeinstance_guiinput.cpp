@@ -5,9 +5,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* GuiInputNodeInstance::compNode()
+CompositionNodeLogic* GuiInputNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("channelName", SignalType::String, util::Str8("host"));
 	n->addOutputSlot("cursorPos_world", SignalType::Vec2);
 	return n;

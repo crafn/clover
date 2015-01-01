@@ -6,9 +6,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* MinionLogicNodeInstance::compNode()
+CompositionNodeLogic* MinionLogicNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("active", SignalType::Boolean, false);
 	n->addInputSlot("transform", SignalType::RtTransform2);
 	n->addInputSlot("wake", SignalType::Trigger);

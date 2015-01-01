@@ -10,7 +10,7 @@ namespace nodes {
 
 class WeSpatialAudioSourceNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual ~WeSpatialAudioSourceNodeInstance(){}
 	

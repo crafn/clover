@@ -34,7 +34,7 @@ private:
 
 class MinionLogicNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual void create() override;
 	virtual void update() override;

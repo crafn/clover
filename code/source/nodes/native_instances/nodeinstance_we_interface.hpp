@@ -14,7 +14,7 @@ namespace nodes {
 
 class WeInterfaceNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual ~WeInterfaceNodeInstance();
 	

@@ -9,9 +9,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeVisualEntityNodeInstance::compNode()
+CompositionNodeLogic* WeVisualEntityNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("active", SignalType::Boolean, true);
 	n->addInputSlot("entityDef", SignalType::String, util::Str8("dev_square_white"));
 	n->addInputSlot("transform", SignalType::SrtTransform3);

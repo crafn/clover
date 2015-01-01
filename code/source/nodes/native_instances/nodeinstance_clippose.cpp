@@ -5,9 +5,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* ClipPoseNodeInstance::compNode()
+CompositionNodeLogic* ClipPoseNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("clip", SignalType::String);
 	n->addInputSlot("phase", SignalType::Real, 0.0);
 	n->addInputSlot("interpolate", SignalType::Boolean, true);

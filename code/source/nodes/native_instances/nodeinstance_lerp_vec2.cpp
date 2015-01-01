@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* Vec2LerpNodeInstance::compNode()
+CompositionNodeLogic* Vec2LerpNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("input1", SignalType::Vec2);
 	n->addInputSlot("input2", SignalType::Vec2);
 	n->addInputSlot("factor", SignalType::Real);

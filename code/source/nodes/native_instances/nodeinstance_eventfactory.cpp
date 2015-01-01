@@ -4,7 +4,7 @@
 namespace clover {
 namespace nodes {
 
-class EventFactoryCompositionNodeLogic : public CompNode {
+class EventFactoryCompositionNodeLogic : public CompositionNodeLogic {
 public:
 	EventFactoryCompositionNodeLogic()
 	{
@@ -23,6 +23,7 @@ public:
 			clearResourceChangeListeners();
 			addResourceChangeListener<NodeEventType>(eventTypeSlot->getDefaultValue<SignalType::EventType>());
 		}
+		CompositionNodeLogic::onDefaultValueChange(slot);
 	}
 
 	void onResourceChange(const resources::Resource& res) override
@@ -64,7 +65,7 @@ private:
 	util::DynArray<CompositionNodeSlot*> argSlots;
 };
 
-CompNode* EventFactoryNodeInstance::compNode()
+CompositionNodeLogic* EventFactoryNodeInstance::compNode()
 { return new EventFactoryCompositionNodeLogic{}; }
 
 void EventFactoryNodeInstance::create(){

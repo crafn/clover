@@ -5,9 +5,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeSpatialEventDispatcherNodeInstance::compNode()
+CompositionNodeLogic* WeSpatialEventDispatcherNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("event", SignalType::Event);
 	n->addInputSlot("transform", SignalType::SrtTransform2);
 	n->addInputSlot("radius", SignalType::Real, 1.0);

@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* RealMultiplyNodeInstance::compNode()
+CompositionNodeLogic* RealMultiplyNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("input1", SignalType::Real, 0.0);
 	n->addInputSlot("input2", SignalType::Real, 0.0);
 	n->addOutputSlot("result", SignalType::Real);

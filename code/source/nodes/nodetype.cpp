@@ -35,9 +35,10 @@ void NodeType::createErrorResource(){
 
 CompositionNodeLogic* NodeType::createCompositionLogic() const
 {
-	return new CompositionNodeLogic(
-			*this,
-			util::UniquePtr<CompNode>(createCompNode(classAttribute.get())));
+	CompositionNodeLogic* comp= createCompositionNodeLogic(classAttribute.get());
+	ensure(comp);
+	comp->setType(*this);
+	return comp;
 }
 
 NodeInstance* NodeType::createInstanceLogic(const CompositionNodeLogic& comp) const

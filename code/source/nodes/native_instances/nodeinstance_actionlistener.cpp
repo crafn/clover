@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* ActionListenerNodeInstance::compNode()
+CompositionNodeLogic* ActionListenerNodeInstance::compNode()
 {
-	CompNode* n= new CompNode{};
+	CompositionNodeLogic* n= new CompositionNodeLogic{};
 	n->addInputSlot("channelName", SignalType::String, util::Str8("player0")); // Channel to listen
 	n->addInputSlot("tag", SignalType::String, util::Str8("")); // Tag to listen
 	n->addInputSlot("actionName", SignalType::String, util::Str8(""));

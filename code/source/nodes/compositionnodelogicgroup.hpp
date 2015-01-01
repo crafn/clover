@@ -40,7 +40,7 @@ namespace nodes {
 class NodeType;
 class NodeInstanceGroup;
 
-typedef std::unique_ptr<CompositionNodeLogic> CompositionNodeLogicPtr;
+typedef util::UniquePtr<CompositionNodeLogic> CompositionNodeLogicPtr;
 
 class CompositionNodeLogicGroup : public resources::Resource {
 public:

@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* TriggerToSignalNodeInstance::compNode()
+CompositionNodeLogic* TriggerToSignalNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("trigger", SignalType::Trigger);
 	n->addInputSlot("onValue", SignalType::Real, 1.0);
 	n->addInputSlot("offValue", SignalType::Real, 0.0);

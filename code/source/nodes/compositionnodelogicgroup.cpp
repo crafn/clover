@@ -612,6 +612,7 @@ void CompositionNodeLogicGroup::applySerializationGraph(const SerializationGraph
 		
 		// Create template slots
 		for (auto& slot_wrap : graph_node.templateSlots){
+			ensure(nodes.back());
 			nodes.back()->addSlot(
 				nodes.back()->getSlotTemplateGroup(slot_wrap.groupName).getSlotTemplate(slot_wrap.slotIdentifier));
 		}

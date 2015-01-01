@@ -14,7 +14,7 @@ namespace nodes {
 
 class ActionListenerNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual ~ActionListenerNodeInstance(){}
 	virtual void create();

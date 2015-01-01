@@ -6,9 +6,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeEdgeSpawnerNodeInstance::compNode()
+CompositionNodeLogic* WeEdgeSpawnerNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("edgeEntity", SignalType::String);
 	n->addInputSlot("we", SignalType::WeHandle);
 	n->addInputSlot("spawn", SignalType::Trigger);

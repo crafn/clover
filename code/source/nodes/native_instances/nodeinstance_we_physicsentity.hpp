@@ -10,7 +10,7 @@ namespace nodes {
 
 class WePhysicsEntityNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual ~WePhysicsEntityNodeInstance(){}
 	

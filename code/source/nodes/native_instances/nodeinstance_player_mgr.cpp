@@ -3,8 +3,8 @@
 namespace clover {
 namespace nodes {
 
-CompNode* PlayerMgrNodeInstance::compNode()
-{ return new CompNode{}; }
+CompositionNodeLogic* PlayerMgrNodeInstance::compNode()
+{ return new CompositionNodeLogic{}; }
 
 void PlayerMgrNodeInstance::create()
 {

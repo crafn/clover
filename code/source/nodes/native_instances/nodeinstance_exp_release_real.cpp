@@ -3,9 +3,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* RealExpReleaseNodeInstance::compNode()
+CompositionNodeLogic* RealExpReleaseNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("accumSignal", SignalType::Real, 0.0);
 	n->addInputSlot("target", SignalType::Real, 0.0);
 	n->addInputSlot("halfValueTime", SignalType::Real, 1.0);

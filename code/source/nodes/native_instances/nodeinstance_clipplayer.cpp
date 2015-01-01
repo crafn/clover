@@ -5,13 +5,13 @@
 namespace clover {
 namespace nodes {
 
-CompNode* ClipPlayerNodeInstance::compNode()
+CompositionNodeLogic* ClipPlayerNodeInstance::compNode()
 {
-	CompNode* n= new CompNode{};
+	CompositionNodeLogic* n= new CompositionNodeLogic{};
 	n->addInputSlot("clip", SignalType::String);
 	n->addInputSlot("play", SignalType::Real, 0.0); // Value is starting phase
 	n->addInputSlot("timeScale", SignalType::Real, 1.0);
-	n->addInputSlot("loopCount", SignalType::Integer, -1);
+	n->addInputSlot("loopCount", SignalType::Integer, (int64)-1);
 	n->addInputSlot("interpolate", SignalType::Boolean, true);
 	n->addOutputSlot("pose", SignalType::ArmaturePose);
 	n->addOutputSlot("phase", SignalType::Real);

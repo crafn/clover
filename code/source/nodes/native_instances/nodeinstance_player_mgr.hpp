@@ -10,7 +10,7 @@ namespace nodes {
 
 class PlayerMgrNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual void create() override;
 

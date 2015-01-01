@@ -4,9 +4,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* PoseLerpNodeInstance::compNode()
+CompositionNodeLogic* PoseLerpNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("input1", SignalType::ArmaturePose);
 	n->addInputSlot("input2", SignalType::ArmaturePose);
 	n->addInputSlot("factor", SignalType::Real, 0.0);

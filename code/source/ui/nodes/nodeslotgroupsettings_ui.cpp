@@ -100,7 +100,6 @@ void NodeSlotGroupSettingsUi::addGroupGuiElements(CompositionNodeSlotTemplateGro
 	for (auto& slot : group.getSlots()){
 		addCheckBox(compositionNodeLogic->hasSlot(slot.getIdentifier()), slot);
 	}
-	
 }
 
 void NodeSlotGroupSettingsUi::showCreateSlotDialog(CompositionNodeSlotTemplateGroup& group){

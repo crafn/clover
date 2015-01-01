@@ -10,9 +10,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WePhysicsEntityNodeInstance::compNode()
+CompositionNodeLogic* WePhysicsEntityNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("active", SignalType::Boolean, true);
 	n->addInputSlot("transform", SignalType::SrtTransform3);
 	n->addInputSlot("entityDef", SignalType::String, util::Str8(""));

@@ -5,9 +5,9 @@ namespace nodes {
 
 util::LinkedList<CameraTargetNodeInstance*> CameraTargetNodeInstance::targets;
 
-CompNode* CameraTargetNodeInstance::compNode()
+CompositionNodeLogic* CameraTargetNodeInstance::compNode()
 {
-	CompNode* n= new CompNode{};
+	CompositionNodeLogic* n= new CompositionNodeLogic{};
 	n->addInputSlot("name", SignalType::String, util::Str8("player0"));
 	n->addInputSlot("transform", SignalType::SrtTransform2);
 	return n;

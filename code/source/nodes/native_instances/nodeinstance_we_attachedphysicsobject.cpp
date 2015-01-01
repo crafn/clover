@@ -6,9 +6,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* WeAttachedPhysicsObjectNodeInstance::compNode()
+CompositionNodeLogic* WeAttachedPhysicsObjectNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("active", SignalType::Boolean, true);
 	n->addInputSlot("transform", SignalType::SrtTransform3);
 	n->addInputSlot("anchor", SignalType::Vec2);

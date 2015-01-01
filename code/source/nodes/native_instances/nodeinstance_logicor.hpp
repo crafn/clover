@@ -9,7 +9,7 @@ namespace nodes {
 
 class LogicOrNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 
 	virtual ~LogicOrNodeInstance(){}
 	

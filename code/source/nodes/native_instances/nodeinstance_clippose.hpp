@@ -14,7 +14,7 @@ namespace nodes {
 
 class ClipPoseNodeInstance : public NodeInstance {
 public:
-	static CompNode* compNode();
+	static CompositionNodeLogic* compNode();
 	
 	virtual ~ClipPoseNodeInstance(){}
 	

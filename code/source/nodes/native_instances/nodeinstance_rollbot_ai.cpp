@@ -4,9 +4,9 @@
 namespace clover {
 namespace nodes {
 
-CompNode* RollBotAiNodeInstance::compNode()
+CompositionNodeLogic* RollBotAiNodeInstance::compNode()
 {
-	auto n= new CompNode{};
+	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("acceleration", SignalType::RtTransform2);
 	n->addInputSlot("angularVelocity", SignalType::Real, 0.0);
 	n->addInputSlot("torqueMul", SignalType::Real, 1.0);

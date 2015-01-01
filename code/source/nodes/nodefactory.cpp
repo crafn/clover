@@ -17,10 +17,10 @@ NodeInstance* createNodeInstanceNativeLogic(const util::Str8& type_string)
 	#include "native_instances/native_instances.def"
 	#undef NODEINSTANCE
 	
-	throw global::Exception("Invalid native NodeInstance name: %s", type_string.cStr());
+	throw global::Exception("Invalid NodeInstance name: %s", type_string.cStr());
 }
 
-CompNode* createCompNode(const util::Str8& type_string)
+CompositionNodeLogic* createCompositionNodeLogic(const util::Str8& type_string)
 {
 #define NODEINSTANCE(x) \
 	if (type_string == util::TypeStringTraits<x>::type()) \
@@ -28,7 +28,7 @@ CompNode* createCompNode(const util::Str8& type_string)
 #include "native_instances/native_instances.def"
 #undef NODEINSTANCE
 
-	throw global::Exception("Invalid native NodeInstance name: %s", type_string.cStr());
+	throw global::Exception("Invalid NodeInstance name: %s", type_string.cStr());
 }
 
 } // nodes
