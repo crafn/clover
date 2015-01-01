@@ -3,8 +3,6 @@
 
 #include "build.hpp"
 #include "collision/ray.hpp"
-#include "script/reference.hpp"
-#include "script/typestring.hpp"
 #include "util/transform.hpp"
 #include "util/dyn_array.hpp"
 
@@ -12,7 +10,7 @@ namespace clover {
 namespace collision {
 
 /// Abstract base class for queriable objects
-class Traceable : public script::NoCountReference {
+class Traceable {
 public:
 	using Transform= util::RtTransform<real64, util::Vec2d>;
 
@@ -55,14 +53,6 @@ private:
 };
 
 } // collision
-namespace util {
-
-template <>
-struct TypeStringTraits<collision::Traceable> {
-	static util::Str8 type(){ return "collision::Traceable"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_COLLISION_TRACEABLE_HPP

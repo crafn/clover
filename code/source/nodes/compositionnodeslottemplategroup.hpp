@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 #include "compositionnodeslottemplategrouphandle.hpp"
-#include "script/reference.hpp"
 #include "signaltypetraits.hpp"
 #include "slotidentifier.hpp"
 
@@ -38,7 +37,7 @@ private:
 };
 
 /// Rules for a dynamic group of slots
-class CompositionNodeSlotTemplateGroup : public script::NoCountReference {
+class CompositionNodeSlotTemplateGroup {
 public:
 
 	CompositionNodeSlotTemplateGroup(CompositionNodeLogic& owner_, const util::Str8& name_, bool is_input);

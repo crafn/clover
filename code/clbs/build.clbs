@@ -50,25 +50,6 @@ def buildInfo(env, target):
 
 	### Dependencies ###
 
-	# AngelScript
-	ascript_dir= "../deps/common/angelscript"
-	ascript= Project()
-	ascript.name= "angelscript_" + target
-	ascript.type= "obj"
-	ascript.targetDir= lib_dir
-	ascript.includeDirs= [ ascript_dir, ascript_dir + "/angelscript/include" ]
-	ascript.headers= findFiles(ascript_dir, "*.h")
-	ascript.src= findFiles(ascript_dir, "*.cpp")
-	ascript.flags= target_flags + funsafe_flags
-	ascript.defines= target_defines
-	ascript.compiler= cpp_compiler
-	ascript.linker= linker
-	dep_include_paths += [
-		ascript_dir + "/angelscript/include",
-		ascript_dir + "/add_on"
-	]
-	dep_libs.append(ascript)
-
 	# Boost
 	boost_dir= "../deps/common/boost"
 	boost= Project()
@@ -376,7 +357,6 @@ def buildInfo(env, target):
 		"nodes",
 		"physics",
 		"resources",
-		"script",
 		"ui",
 		"util",
 		"visual",

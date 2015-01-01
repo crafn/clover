@@ -6,7 +6,6 @@
 #include "collision/shape.hpp"
 #include "game/worldentity_handle.hpp"
 #include "resources/resource_ref.hpp"
-#include "script/typestring.hpp"
 #include "signaltype.hpp"
 #include "util/any.hpp"
 #include "util/dyn_array.hpp"

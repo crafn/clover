@@ -43,17 +43,6 @@ public:
 private:
 	// Perfoms shallow update for entities and takes care of chunk changes
 	void shallowUpdate(const util::DynArray<game::WorldEntity*> update_needing);
-
-	static void registerToScript();
-	static bool registeredToScript;
-};
-
-} // game
-namespace util {
-
-template <>
-struct TypeStringTraits<game::WeMgr> {
-	static util::Str8 type(){ return "::WeMgr"; }
 };
 
 } // util

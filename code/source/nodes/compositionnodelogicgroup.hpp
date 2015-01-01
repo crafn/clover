@@ -74,7 +74,6 @@ private:
 	/// Sets fileAttribute
 	void setDefaultPath();
 
-	script::Context context;
 	// Careful with this, mutable is only for sorting
 	mutable util::DynArray<CompositionNodeLogicPtr> nodes;
 

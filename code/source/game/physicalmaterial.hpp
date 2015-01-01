@@ -3,8 +3,6 @@
 
 #include "build.hpp"
 #include "resources/resource.hpp"
-#include "script/reference.hpp"
-#include "script/typestring.hpp"
 #include "physics/material.hpp"
 
 namespace clover {

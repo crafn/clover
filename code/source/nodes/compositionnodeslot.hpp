@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 #include "slotidentifier.hpp"
-#include "script/reference.hpp"
 #include "signaltypetraits.hpp"
 #include "compositionnodeslothandle.hpp"
 #include "compositionnodeslottemplategrouphandle.hpp"
@@ -20,7 +19,7 @@ namespace nodes {
 class CompositionNodeLogic;
 class CompositionNodeSlotTemplateGroup;
 
-class CompositionNodeSlot : public script::NoCountReference {
+class CompositionNodeSlot {
 public:
 
 	struct AttachedSlotInfo {
@@ -92,7 +91,7 @@ private:
 
 	util::DynArray<AttachedSlotInfo> attachedSlotInfos;
 
-	/// Value set in script
+	// Value set in node code
 	boost::any initValue;
 
 	// Value set in editor

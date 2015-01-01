@@ -18,7 +18,6 @@
 #include "nodes/nodeevent_mgr.hpp"
 #include "physics/phys_mgr.hpp"
 #include "resources/cache.hpp"
-#include "script/script_mgr.hpp"
 #include "ui/game/base_ui.hpp"
 #include "ui/game/editor/editor_ui.hpp"
 #include "util/pack.hpp"
@@ -60,7 +59,6 @@ App::App(const util::Str8& executablePath){
 	//global::gCfgMgr->loadAdditionalCfgs();
 
 	global::gEventMgr= new global::EventMgr();
-	new script::ScriptMgr();
 
 	hardware::gDevice= new hardware::Device();
 	hardware::gDevice->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
@@ -92,7 +90,6 @@ App::~App(){
 	delete util::gGameClock; util::gGameClock= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;
-	delete script::gScriptMgr;
 	delete global::gEventMgr; global::gEventMgr= nullptr;
 	delete global::gFileMgr;
 

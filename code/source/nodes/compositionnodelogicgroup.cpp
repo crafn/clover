@@ -3,7 +3,6 @@
 #include "nodetype.hpp"
 #include "nodeinstancegroup.hpp"
 #include "resources/cache.hpp"
-#include "script/module.hpp"
 #include "util/map.hpp"
 
 #include <boost/archive/text_oarchive.hpp>

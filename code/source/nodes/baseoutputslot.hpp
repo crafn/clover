@@ -40,14 +40,6 @@ protected:
 };
 
 } // nodes
-namespace util {
-
-template <>
-struct TypeStringTraits<nodes::BaseOutputSlot> {
-	static util::Str8 type(){ return "::BaseOutputSlot"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_NODES_BASEOUTPUTSLOT_HPP

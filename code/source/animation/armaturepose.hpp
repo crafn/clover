@@ -4,6 +4,7 @@
 #include "build.hpp"
 #include "jointpose.hpp"
 #include "util/dyn_array.hpp"
+#include "util/string.hpp"
 
 #include <boost/serialization/split_member.hpp>
 

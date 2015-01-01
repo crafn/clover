@@ -4,7 +4,8 @@
 #include "build.hpp"
 #include "util/quaternion.hpp"
 #include "util/transform.hpp"
-#include "script/typestring.hpp"
+
+#include <limits>
 
 namespace clover {
 namespace animation {
@@ -32,15 +33,6 @@ struct JointPose {
 		ar & jointId;
 		ar & transform;
 	}
-};
-
-} // util
-
-namespace util {
-
-template <>
-struct TypeStringTraits<animation::JointPose> {
-	static util::Str8 type(){ return "::ArmatureJointPose"; }
 };
 
 } // util

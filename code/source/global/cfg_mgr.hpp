@@ -4,7 +4,6 @@
 #include "build.hpp"
 #include "cvar.hpp"
 #include "exception.hpp"
-#include "script/reference.hpp"
 #include "util/hashmap.hpp"
 #include "util/string.hpp"
 
@@ -12,7 +11,7 @@ namespace clover {
 namespace global {
 
 /// Manages global configuration variables
-class CfgMgr : public script::NoCountReference {
+class CfgMgr {
 public:
 	CfgMgr();
 	~CfgMgr();

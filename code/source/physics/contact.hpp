@@ -3,7 +3,6 @@
 
 #include "b2_fixtureuserdata.hpp"
 #include "build.hpp"
-#include "script/typestring.hpp"
 #include "util/cb_listener.hpp"
 #include "util/dyn_array.hpp"
 #include "util/vector.hpp"
@@ -188,29 +187,6 @@ U BaseContact<T>::converted() const {
 }
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::Contact> {
-	static util::Str8 type(){ return "physics::Contact"; }
-};
-
-template <>
-struct TypeStringTraits<physics::ContactSide> {
-	static util::Str8 type(){ return "physics::ContactSide"; }
-};
-
-template <>
-struct TypeStringTraits<physics::PostSolveContact> {
-	static util::Str8 type(){ return "physics::PostSolveContact"; }
-};
-
-template <>
-struct TypeStringTraits<physics::PostSolveContactSide> {
-	static util::Str8 type(){ return "physics::ContactSide"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_CONTACT_HPP

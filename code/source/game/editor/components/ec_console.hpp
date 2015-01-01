@@ -4,7 +4,6 @@
 #include "../editorcomponent.hpp"
 #include "build.hpp"
 #include "debug/debugprint.hpp"
-#include "script/context.hpp"
 
 namespace clover {
 namespace game { namespace editor {
@@ -30,8 +29,6 @@ public:
 	void tryExecute(const util::Str8& string);
 
 private:
-	script::Context scriptContext;
-	
 };
 
 }} // game::editor

@@ -5,6 +5,7 @@
 #include "game/world_gen/chunk_gen.hpp"
 #include "game/world_gen/world_gen.hpp"
 #include "physics/grid.hpp"
+#include "util/dynamic.hpp"
 #include "util/math.hpp"
 #include "util/vector.hpp"
 #include "world_gen.hpp"

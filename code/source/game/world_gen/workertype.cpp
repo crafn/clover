@@ -1,7 +1,6 @@
 #include "workertype.hpp"
 #include "chunk_gen.hpp"
 #include "resources/cache.hpp"
-#include "script/script_mgr.hpp"
 #include "world_gen.hpp"
 #include "workerlocation.hpp"
 
@@ -12,8 +11,7 @@ namespace clover {
 namespace game { namespace world_gen {
 
 WorkerType::WorkerType()
-		: module(nullptr)
-		, INIT_RESOURCE_ATTRIBUTE(nameAttribute, "name", "")
+		: INIT_RESOURCE_ATTRIBUTE(nameAttribute, "name", "")
 		, INIT_RESOURCE_ATTRIBUTE(moduleAttribute, "module", "")
 		, INIT_RESOURCE_ATTRIBUTE(globalInitFuncAttribute, "globalInitFunc", "")
 		, INIT_RESOURCE_ATTRIBUTE(chunkInitFuncAttribute, "chunkInitFunc", "")
@@ -94,37 +92,9 @@ void WorkerType::updateFromAttributes(){
 			func(g, w);
 		};
 	}
-
-	/*module= &resources::gCache->getResource<script::Module>(moduleAttribute.get());
-	ensure(module);
-	
-	/// @todo Deuglify this code
-	
-	if (!globalInitFuncAttribute.get().empty()){
-		auto script_func= module->getGlobalFunction<WorkerGlobalInitFuncDecl>(globalInitFuncAttribute.get());
-		globalInitFunc= [this, script_func] (WorldGen& g){
-			script::gScriptMgr->getFreeContext().execute(script_func(g));
-		};
-	}
-
-	if (!chunkInitFuncAttribute.get().empty()){
-		auto script_func= module->getGlobalFunction<WorkerChunkInitFuncDecl>(chunkInitFuncAttribute.get());
-		chunkInitFunc= [this, script_func] (ChunkGen& c){
-			script::gScriptMgr->getFreeContext().execute(script_func(c));
-		};
-	}
-
-	if (!workFuncAttribute.get().empty()){
-		auto script_func= module->getGlobalFunction<WorkFuncDecl>(workFuncAttribute.get());
-		workFunc= [this, script_func] (WorldGen& g, const Worker* w){
-			script::gScriptMgr->getFreeContext().execute(script_func(g, w));
-		};
-	}
-*/	
 }
 
 void WorkerType::clear(){
-	module= nullptr;
 	globalInitFunc= nullptr;
 	chunkInitFunc= nullptr;
 	workFunc= nullptr;

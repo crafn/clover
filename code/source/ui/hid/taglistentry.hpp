@@ -5,16 +5,12 @@
 #include "context.hpp"
 #include "contextchannel.hpp"
 #include "util/linkedlist.hpp"
-#include "script/typestring.hpp"
 
 namespace clover {
 namespace ui { namespace hid {
 
 class TagListEntry {
 public:
-	/// Invalid state, needed by script
-	TagListEntry();
-
 	TagListEntry(	const ContextChannel::Name& channel_name,
 					const Context::Tag& tag);
 	TagListEntry(	const ContextChannel::Name& channel_name,

@@ -2,7 +2,6 @@
 #define CLOVER_UTIL_UNIQUEPTR_HPP
 
 #include "build.hpp"
-#include "script/typestring.hpp"
 
 #include <memory>
 
@@ -15,9 +14,6 @@ namespace util {
 template <typename T>
 class UniquePtr {
 public:
-	template <typename Script>
-	static void registerToScript(Script& s);
-	
 	UniquePtr()= default;
 	UniquePtr(T* value): ptr(value){}
 	
@@ -43,24 +39,6 @@ template <typename T, typename... Args>
 UniquePtr<T> makeUniquePtr(Args&&... args){
 	return UniquePtr<T>(new T(std::forward<Args>(args)...));
 }
-
-template <typename T>
-template <typename Script>
-void UniquePtr<T>::registerToScript(Script& s){
-	using Type= UniquePtr<T>;
-	
-	s. template registerObjectType<Type>();
-	s. template registerMethod(&Type::emplace<>, "emplace");
-	s. template registerMethod(&Type::reset, "reset");
-	s. template registerMethod(&Type::get, "get");
-	s. template registerMethod(&Type::ref, "ref");
-}
-
-template <typename T>
-struct TypeStringTraits<UniquePtr<T>> {
-	/// Must use T* because T probably isn't registered to script as a value type
-	static util::Str8 type(){ return "::UniquePtr<" + script::TypeString<T*>()() + ">"; }
-};
 
 } // util
 } // clover

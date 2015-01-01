@@ -2,7 +2,6 @@
 #define CLOVER_GAME_WORLDENTITY_HANDLE_HPP
 
 #include "build.hpp"
-#include "script/typestring.hpp"
 #include "worldentity_table.hpp"
 
 #include <boost/serialization/split_member.hpp>
@@ -89,14 +88,6 @@ private:
 };
 
 } // game
-namespace util {
-
-template <>
-struct TypeStringTraits<game::WeHandle> {
-	static util::Str8 type(){ return "WeHandle"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_WORLDENTITY_HANDLE_HPP

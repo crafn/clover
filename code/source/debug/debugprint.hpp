@@ -32,7 +32,6 @@ enum class Ch {
 	Gui,
 	Ui,
 	WorldChunk,
-	Script,
 	Net,
 	Nodes,
 	Dev,

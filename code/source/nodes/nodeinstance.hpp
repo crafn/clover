@@ -8,6 +8,7 @@
 #include "inputslot.hpp"
 #include "outputslot.hpp"
 #include "util/linkedlist.hpp"
+#include "util/traits.hpp"
 
 #include <memory>
 

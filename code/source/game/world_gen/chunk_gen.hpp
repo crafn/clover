@@ -2,7 +2,6 @@
 #define CLOVER_GAME_WORLD_GEN_CHUNK_GEN_HPP
 
 #include "build.hpp"
-#include "script/typestring.hpp"
 #include "util/linkedlist.hpp"
 #include "util/slicedtask.hpp"
 #include "worker.hpp"
@@ -57,14 +56,6 @@ private:
 };
 
 }} // game::world_gen
-namespace util {
-
-template <>
-struct TypeStringTraits<game::world_gen::ChunkGen>{
-	static util::Str8 type(){ return "world_gen::ChunkGen"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_WORLD_GEN_CHUNK_GEN_HPP

@@ -131,8 +131,7 @@ struct IsAbstract {
   static constexpr bool value = sizeof(IsAbstract<T>::template check_sig<T>(0)) - 1;
 };
 
-/// @todo Separate identifier and namespaces
-/// @todo Add TemplateTypeStringTraits
+/// @todo Replace with automatic tool
 template <typename T>
 struct TypeStringTraits; /*
 	static util::Str8 type();

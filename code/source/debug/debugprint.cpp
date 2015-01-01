@@ -29,7 +29,6 @@ util::Str8& DebugPrint::getChannelString(Ch id){
 		"Gui",
 		"Ui",
 		"WorldChunk",
-		"Script",
 		"Net",
 		"Nodes",
 		"Dev",

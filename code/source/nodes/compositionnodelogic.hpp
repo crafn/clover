@@ -6,9 +6,6 @@
 #include "compositionnodeslottemplategroup.hpp"
 #include "resources/cache.hpp"
 #include "resources/resource.hpp"
-#include "script/context.hpp"
-#include "script/object.hpp"
-#include "script/script_mgr.hpp"
 #include "slotidentifier.hpp"
 #include "util/cb_listener.hpp"
 #include "util/hashmap.hpp"
@@ -16,11 +13,6 @@
 #include <memory>
 
 namespace clover {
-namespace script {
-	class Module;
-	class Context;
-}
-
 namespace nodes {
 class NodeType;
 
@@ -32,10 +24,6 @@ public: // Copypasted from former BaseCompositionNodeScriptLogic
 
 	typedef std::unique_ptr<CompositionNodeSlot> CompositionNodeSlotPtr;
 	typedef std::unique_ptr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
-	
-	///
-	/// Called from script
-	///
 	
 	CompositionNodeSlot& addInputSlot(const SlotIdentifier& identifier, const boost::any& init_value);
 	
@@ -111,11 +99,6 @@ public: // Copypasted from former BaseCompositionNodeScriptLogic
 	bool isBatched() const { return batched; }
 	int32 getBatchPriority() const { return batchPriority; }
 
-	//
-	// Not called by script
-	//
-	
-	
 	const util::HashMap<util::Str8, CompositionNodeSlotTemplateGroupPtr>& getSlotTemplateGroups() const { return templateGroups; }
 
 	virtual void onDefaultValueChange(CompositionNodeSlot& slot);
@@ -145,7 +128,7 @@ private:
 	
 	bool updateRouteStart;
 	bool silent; // Don't emit any events (doesn't probably cover all cases, is used when slot is replaced by changed one)
-	util::CbMultiListener<util::OnChangeCb> resourceChangeListener; // These are added by script
+	util::CbMultiListener<util::OnChangeCb> resourceChangeListener;
 
 
 

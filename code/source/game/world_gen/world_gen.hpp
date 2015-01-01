@@ -4,7 +4,6 @@
 #include "build.hpp"
 #include "chunk_gen.hpp"
 #include "game/worldentity.hpp"
-#include "script/script_mgr.hpp"
 #include "util/linkedlist.hpp"
 #include "util/set.hpp"
 #include "util/slicedtask.hpp"
@@ -82,14 +81,6 @@ game::WeHandle WorldGen::createEntity(const util::Str8& name, T t){
 }
 
 }} // game::world_gen
-namespace util {
-
-template <>
-struct TypeStringTraits<game::world_gen::WorldGen>{
-	static util::Str8 type(){ return "world_gen::WorldGen"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_WORLD_GEN_WORLD_GEN_HPP

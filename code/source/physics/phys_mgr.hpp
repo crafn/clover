@@ -6,6 +6,7 @@
 #include "global/eventreceiver.hpp"
 #include "util/math.hpp"
 #include "util/time.hpp"
+#include "util/unique_ptr.hpp"
 
 namespace clover {
 namespace physics {

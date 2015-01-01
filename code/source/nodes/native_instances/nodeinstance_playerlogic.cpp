@@ -445,7 +445,7 @@ void PlayerLogicNodeInstance::setTagEntry(const util::Str8& s)
 
 void PlayerLogicNodeInstance::clearTagEntry()
 {
-	tagEntry= ui::hid::TagListEntry();
+	tagEntry= util::optionalNone;
 }
 
 void PlayerLogicNodeInstance::chooseActionState(util::Vec2d pos)

@@ -3,12 +3,11 @@
 
 #include "build.hpp"
 #include "signaltypetraits.hpp"
-#include "script/reference.hpp"
 
 namespace clover {
 namespace nodes {
 
-class BaseSlot : public script::NoCountReference {
+class BaseSlot {
 public:
 	BaseSlot(SignalType t);
 	virtual ~BaseSlot();

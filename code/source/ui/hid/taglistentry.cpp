@@ -4,10 +4,6 @@ namespace clover {
 namespace ui { namespace hid {
 util::Map<ContextChannel::Name, TagListEntry::TagList> TagListEntry::tagLists;
 
-TagListEntry::TagListEntry()
-	: iterator(endIter()){
-}
-
 TagListEntry::TagListEntry(const ContextChannel::Name& channel_name_, const Context::Tag& tag_)
 	: channelName(channel_name_)
 	, tag(tag_)

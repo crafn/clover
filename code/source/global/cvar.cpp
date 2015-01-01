@@ -1,5 +1,4 @@
 #include "cvar.hpp"
-#include "script/script_mgr.hpp"
 
 namespace clover {
 namespace global {

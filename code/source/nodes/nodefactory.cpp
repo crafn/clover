@@ -1,6 +1,5 @@
 #include "nodefactory.hpp"
 #include "resources/exception.hpp"
-#include "script/module.hpp"
 #include "util/string.hpp"
 #include "util/traits.hpp"
 

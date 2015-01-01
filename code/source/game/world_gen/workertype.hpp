@@ -3,8 +3,6 @@
 
 #include "build.hpp"
 #include "resources/resource.hpp"
-#include "script/function.hpp"
-#include "script/module.hpp"
 
 namespace clover {
 namespace game { namespace world_gen {
@@ -64,7 +62,6 @@ private:
 	void updateFromAttributes();
 	void clear();
 
-	const script::Module* module;
 	std::function<WorkerGlobalInitFuncDecl> globalInitFunc;
 	std::function<WorkerChunkInitFuncDecl> chunkInitFunc;
 	std::function<WorkFuncDecl> workFunc;

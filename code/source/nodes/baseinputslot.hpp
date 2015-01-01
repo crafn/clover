@@ -63,14 +63,6 @@ typename SignalTypeTraits<SubSignalTypeTraits<S>::signalType>::Value BaseInputSl
 }
 
 } // nodes
-namespace util {
-
-template <>
-struct TypeStringTraits<nodes::BaseInputSlot> {
-	static util::Str8 type(){ return "::BaseInputSlot"; } 
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_NODES_BASEINPUSTSLOT_HPP

@@ -3,7 +3,7 @@
 
 #include "b2_joint.hpp"
 #include "build.hpp"
-#include "script/typestring.hpp"
+#include "util/traits.hpp"
 
 namespace clover {
 namespace physics {

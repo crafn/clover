@@ -8,7 +8,6 @@
 #include "resources/baseattribute.hpp"
 #include "resources/resource_id.hpp"
 #include "resources/serializedresource.hpp"
-#include "script/reference.hpp"
 #include "util/ensure.hpp"
 #include "util/hashmap.hpp"
 #include "util/string.hpp"

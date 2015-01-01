@@ -1,6 +1,5 @@
 #include "worldentity_mgr.hpp"
 #include "global/event.hpp"
-#include "script/script_mgr.hpp"
 #include "util/profiling.hpp"
 #include "worldentity_table.hpp"
 #include "worldchunk.hpp"

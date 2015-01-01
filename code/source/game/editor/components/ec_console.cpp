@@ -23,12 +23,7 @@ bool ConsoleEc::isChannelActive(debug::Ch id) const {
 }
 
 void ConsoleEc::tryExecute(const util::Str8& string){
-	try {
-		scriptContext.execute(string);
-	}
-	catch (const script::ScriptException& e){
-		print(debug::Ch::Dev, debug::Vb::Critical, "Console command error: %s", e.what());
-	}
+	print(debug::Ch::Dev, debug::Vb::Critical, "@todo Reimplement console");
 }
 
 }} // game::editor

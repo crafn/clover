@@ -181,19 +181,6 @@ protected:
 };
 
 } // game
-namespace util {
-
-template <>
-struct TypeStringTraits<game::BaseWorldEntity<game::WorldEntity>> {
-	static util::Str8 type(){ return "WorldEntity"; }
-};
-
-template <>
-struct TypeStringTraits<game::WorldEntity> {
-	static util::Str8 type(){ return "WorldEntity"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_WORLDENTITY_H

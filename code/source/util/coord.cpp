@@ -1,6 +1,5 @@
 #include "coord.hpp"
 #include "hardware/device.hpp"
-#include "script/script_mgr.hpp"
 #include "util/profiling.hpp"
 #include "visual/camera.hpp"
 #include "visual/visual_mgr.hpp"
@@ -8,14 +7,6 @@
 
 namespace clover {
 namespace util {
-
-util::Vec2d viewStretchToWorldVec(util::Vec2d view){
-	return Coord::VSt(view).converted(Coord::World).getValue();
-}
-
-void Coord::registerToScript(){
-	script::gScriptMgr->registerGlobalFunction(viewStretchToWorldVec, "viewStretchToWorldVec");
-}
 
 Coord::Coord(real64 d, Type t):
 					x(value.x),

@@ -3,7 +3,6 @@
 
 #include "animation/bvh_util.hpp"
 #include "build.hpp"
-#include "script/reference.hpp"
 #include "util/dyn_array.hpp"
 #include "util/hashmap.hpp"
 #include "util/map.hpp"
@@ -30,7 +29,7 @@ class Font;
 namespace resources {
 
 /// Owner of resources
-class Cache : public script::NoCountReference {
+class Cache {
 public:
 	static const util::Str8 shaderPath;
 

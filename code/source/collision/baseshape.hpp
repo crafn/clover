@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 #include "collision/ray.hpp"
-#include "script/reference.hpp"
 #include "util/dyn_array.hpp"
 #include "util/objectnode.hpp"
 #include "util/polygon.hpp"

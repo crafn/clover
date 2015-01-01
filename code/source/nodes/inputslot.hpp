@@ -42,14 +42,6 @@ private:
 #include "inputslot.tpp"
 
 } // nodes
-namespace util {
-
-template <nodes::SignalType S>
-struct TypeStringTraits<nodes::InputSlot<S>> {
-	static util::Str8 type(){ return util::Str8("::") + nodes::SignalTypeTraits<S>::enumString() + "InputSlot"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_NODES_INPUTSLOT_HPP

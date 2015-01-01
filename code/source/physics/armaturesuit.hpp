@@ -4,7 +4,6 @@
 #include "animation/armaturepose.hpp"
 #include "build.hpp"
 #include "object_rigid.hpp"
-#include "script/typestring.hpp"
 #include "util/class_preproc.hpp"
 #include "util/map.hpp"
 #include "util/pair.hpp"
@@ -17,8 +16,7 @@ namespace physics {
 class PhysMgr;
 
 /// A set of empty objects which follow the joints of an armature
-class ArmatureSuit	: public script::NoCountReference
-					, public util::StaticListCrtp<ArmatureSuit> {
+class ArmatureSuit : public util::StaticListCrtp<ArmatureSuit> {
 public:
 	ArmatureSuit()= default;
 	DELETE_COPY(ArmatureSuit);

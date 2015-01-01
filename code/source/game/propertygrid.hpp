@@ -58,14 +58,6 @@ T tryGet(	const PropertyGrid& props,
 }
 
 } // game
-namespace util {
-
-template <>
-struct TypeStringTraits<game::PropertyGrid>{
-	static util::Str8 type(){ return "game::PropertyGrid"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_PROPERTYGRID_HPP

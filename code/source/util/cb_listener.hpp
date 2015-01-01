@@ -4,7 +4,6 @@
 #include "base_cb_listener.hpp"
 #include "basecallbacker.hpp"
 #include "build.hpp"
-#include "script/typestring.hpp"
 
 namespace clover {
 namespace util {
@@ -14,9 +13,6 @@ class CbListener : public BaseCbListener {
 public:
 	typedef typename CbType::Cb Cb;
 	typedef typename CbType::LinkId LinkId;
-
-	template <typename Script>
-	static void registerToScript(Script& s);
 
 	CbListener()
 		: callbacker(nullptr){}
@@ -121,21 +117,6 @@ private:
 	}
 
 	util::LinkedList<CbListener<CbType>> listeners;
-};
-
-template <typename T>
-template <typename Script>
-void CbListener<T>::registerToScript(Script& s){
-	using Type= CbListener<T>;
-	s. template registerObjectType<Type>();
-	s. template registerMethod(&Type::listen, "listen");
-	s. template registerMethod(&Type::isListening, "isListening");
-	s. template registerMethod(&Type::clear, "clear");
-}
-
-template <typename T>
-struct TypeStringTraits<util::CbListener<T>> {
-	static util::Str8 type(){ return "::CbListener<" + script::TypeString<T*>()() + ">"; }
 };
 
 } // util

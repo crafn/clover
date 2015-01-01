@@ -4,10 +4,6 @@
 #include "build.hpp"
 
 namespace clover {
-namespace script {
-	class Module;
-}
-
 namespace nodes {
 
 class CompositionNodeLogic;

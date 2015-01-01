@@ -2,7 +2,6 @@
 #define CLOVER_UTIL_SHARED_PTR_HPP
 
 #include "build.hpp"
-#include "script/typestring.hpp"
 
 #include <memory>
 
@@ -15,9 +14,6 @@ namespace util {
 template <typename T>
 class SharedPtr {
 public:
-	template <typename Script>
-	static void registerToScript(Script& s);
-	
 	SharedPtr()= default;
 	SharedPtr(T* value): ptr(value){}
 	
@@ -43,26 +39,6 @@ private:
 template <typename T, typename... Args>
 SharedPtr<T> makeSharedPtr(Args&&... args)
 { return SharedPtr<T>(new T(std::forward<Args>(args)...)); }
-
-template <typename T>
-template <typename Script>
-void SharedPtr<T>::registerToScript(Script& s){
-	using Type= SharedPtr<T>;
-	
-	s. template registerObjectType<Type>();
-	s. template registerMethod(&Type::emplace, "emplace");
-	s. template registerMethod(&Type::clear, "clear");
-	s. template registerMethod<const T* (Type::*)() const>(&Type::get, "get");
-	s. template registerMethod<T* (Type::*)()>(&Type::get, "get");
-	s. template registerMethod<const T& (Type::*)() const>(&Type::ref, "ref");
-	s. template registerMethod<T& (Type::*)()>(&Type::ref, "ref");
-}
-
-template <typename T>
-struct TypeStringTraits<SharedPtr<T>> {
-	/// Must use T* because T probably isn't registered to script as a value type
-	static util::Str8 type(){ return "::SharedPtr<" + script::TypeString<T*>()() + ">"; }
-};
 
 } // util
 } // clover

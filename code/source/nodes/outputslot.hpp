@@ -39,14 +39,6 @@ private:
 #include "outputslot.tpp"
 
 } // nodes
-namespace util {
-
-template <nodes::SignalType S>
-struct TypeStringTraits<nodes::OutputSlot<S>> {
-	static util::Str8 type(){ return util::Str8("::") + nodes::SignalTypeTraits<S>::enumString() + "OutputSlot"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_NODES_OUTPUTSLOT_HPP

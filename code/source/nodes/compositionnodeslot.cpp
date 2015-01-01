@@ -1,6 +1,5 @@
 #include "compositionnodeslot.hpp"
 #include "compositionnodelogic.hpp"
-#include "script/typestring.hpp"
 #include "util/ensure.hpp"
 
 namespace clover {

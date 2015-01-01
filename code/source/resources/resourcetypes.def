@@ -21,7 +21,6 @@
 #include "visual/entity_def_compound.hpp"
 #include "visual/entity_def_light.hpp"
 #include "visual/entity_def_model.hpp"
-#include "script/module.hpp"
 
 #else
 
@@ -45,7 +44,6 @@ RESOURCE(game::PhysicalMaterial, true)
 RESOURCE(game::PhysicalMaterialPair, true)
 RESOURCE(collision::Shape, true)
 RESOURCE(physics::EntityDef, true)
-RESOURCE(script::Module, true)
 RESOURCE(nodes::NodeEventType, true)
 RESOURCE(nodes::NodeType, true)
 RESOURCE(nodes::CompositionNodeLogicGroup, true)

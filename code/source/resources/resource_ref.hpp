@@ -4,8 +4,6 @@
 #include "build.hpp"
 #include "resource.hpp"
 #include "resources/cache.hpp"
-#include "script/script_mgr.hpp"
-#include "script/typestring.hpp"
 
 #include <memory>
 
@@ -19,8 +17,6 @@ class ResourceRef {
 public:
 	using Identifier= typename ResourceTraits<Res>::IdentifierValue;
 	using ResPtr= std::shared_ptr<Res>;
-	
-	static void registerToScript();
 	
 	ResourceRef()
 			: cacheRes(nullptr){
@@ -143,30 +139,7 @@ private:
 	const Res* cacheRes;
 };
 
-
-template <typename Res>
-void ResourceRef<Res>::registerToScript(){
-	static bool template_registered;
-	if (!template_registered){
-		script::gScriptMgr->registerTemplateType<ResourceRef>();
-		template_registered= true;
-	}
-	
-	script::gScriptMgr->registerObjectType<ResourceRef<Res>>();
-	script::gScriptMgr->registerConstructor<ResourceRef<Res>, const Identifier&>();
-	script::gScriptMgr->registerMethod(&ResourceRef<Res>::ref, "ref");
-	script::gScriptMgr->registerMethod(&ResourceRef<Res>::get, "get");
-}
-
 } // resources
-namespace util {
-
-template <typename Res>
-struct TypeStringTraits<resources::ResourceRef<Res>>{
-	static util::Str8 type(){ return "::ResourceRef<" + script::TypeString<Res*>()() + ">"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_RESOURCES_RESOURCE_REF_HPP

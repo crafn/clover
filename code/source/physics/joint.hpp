@@ -3,8 +3,6 @@
 
 #include "build.hpp"
 #include "jointtype.hpp"
-#include "script/reference.hpp"
-#include "script/typestring.hpp"
 #include "util/callbacker.hpp"
 #include "util/class_preproc.hpp"
 #include "util/dyn_array.hpp"
@@ -27,8 +25,7 @@ struct JointTypeCrtp;
 /// Constraint between Objects
 /// OnAttach called after objects and box2d joint are attached
 /// OnDetach called before objects are detached and box2d joint destroyed
-class Joint	: public util::Callbacker<OnAttachCb, OnDetachCb>
-			, public script::NoCountReference {
+class Joint	: public util::Callbacker<OnAttachCb, OnDetachCb> {
 public:
 	Joint();
 	DELETE_COPY(Joint);

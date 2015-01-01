@@ -2,7 +2,6 @@
 #define CLOVER_GAME_WORLD_GEN_WORKER_HPP
 
 #include "build.hpp"
-#include "util/traits.hpp"
 #include "workerlocation.hpp"
 
 namespace clover {
@@ -31,14 +30,6 @@ private:
 };
 
 }} // game::world_gen
-namespace util {
-
-template <>
-struct TypeStringTraits<game::world_gen::Worker> {
-	static util::Str8 type() { return "world_gen::Worker"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_WORLD_GEN_WORKER_HPP

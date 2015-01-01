@@ -2,8 +2,6 @@
 #define CLOVER_PHYSICS_MATERIAL_HPP
 
 #include "build.hpp"
-#include "script/reference.hpp"
-#include "script/typestring.hpp"
 #include "util/map.hpp"
 #include "util/referencecountable.hpp"
 
@@ -12,7 +10,7 @@ namespace physics {
 
 class FixtureDef;
 /// Use game::PhysicalMaterial instead of this for a fixture!
-class Material : public util::ReferenceCountable, public script::NoCountReference {
+class Material : public util::ReferenceCountable {
 public:
 	Material();
 	Material(real32 density, real32 friction, real32 restitution, real32 toughness= -1.0);
@@ -40,14 +38,6 @@ private:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::Material> {
-	static util::Str8 type(){ return "physics::Material"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_MATERIAL_HPP

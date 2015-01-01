@@ -4,6 +4,7 @@
 #include "../nodeinstance.hpp"
 #include "build.hpp"
 #include "game/worldentity_handle.hpp"
+#include "util/unique_ptr.hpp"
 
 namespace clover {
 namespace physics {

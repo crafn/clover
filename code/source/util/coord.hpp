@@ -12,8 +12,6 @@ namespace util {
 /// @todo Remove when refactoring gui
 struct Coord {
 public:
-	static void registerToScript();
-
 	enum Type {
 		None,
 		World,	  // World coordinate

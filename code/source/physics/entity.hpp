@@ -21,7 +21,7 @@ namespace physics {
 class EntityDef;
 
 /// A collection of objects, joints and shapes
-class Entity : public script::NoCountReference {
+class Entity {
 public:
 
 	Entity()= default;

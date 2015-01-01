@@ -6,7 +6,6 @@
 #include "audioreceiverhandle.hpp"
 #include "debug/debugprint.hpp"
 #include "hardware/device.hpp"
-#include "script/script_mgr.hpp"
 #include "soundinstance.hpp"
 #include "sound.hpp"
 #include "global/exception.hpp"

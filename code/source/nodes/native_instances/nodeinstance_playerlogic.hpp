@@ -10,6 +10,7 @@
 #include "physics/joint_hardweld.hpp"
 #include "ui/hid/taglistentry.hpp"
 #include "util/dynamic.hpp"
+#include "util/optional.hpp"
 
 namespace clover {
 namespace physics {
@@ -106,7 +107,7 @@ private:
 	util::RtTransform2d transform;
 	real64 accumImpulse;
 	real64 health; // full == 1.0
-	ui::hid::TagListEntry tagEntry;
+	util::Optional<ui::hid::TagListEntry> tagEntry;
 
 	// Physics
 	InputSlot<SignalType::Boolean>* activeIn;

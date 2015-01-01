@@ -2,8 +2,6 @@
 #define CLOVER_PHYSICS_OBJECT_HPP
 
 #include "build.hpp"
-#include "script/reference.hpp"
-#include "script/typestring.hpp"
 #include "util/callbacker.hpp"
 #include "util/class_preproc.hpp"
 #include "util/properties.hpp"
@@ -23,7 +21,7 @@ class Joint;
 class PhysMgr;
 
 /// Physics object
-class Object : public util::Callbacker<util::OnDestroyCb>, public script::NoCountReference {
+class Object : public util::Callbacker<util::OnDestroyCb> {
 public:
 	using Transform= util::RtTransform2d;
 	using Transform3= util::SrtTransform3d;

@@ -93,14 +93,6 @@ private:
 extern WorldMgr* gWorldMgr;
 
 } // game
-namespace util {
-
-template <>
-struct TypeStringTraits<game::WorldMgr> {
-	static util::Str8 type(){ return "::WorldMgr"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_GAME_WORLD_MGR_HPP
