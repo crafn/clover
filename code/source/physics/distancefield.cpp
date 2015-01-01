@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "distancefield.hpp"
 #include "chunk_util.hpp"
 #include "collision/baseshape_circle.hpp"
@@ -393,7 +394,7 @@ auto DistanceField::genPolys(
 				ensure(b2_poly.m_count <= (int32)PolyVertex::maxVertexCount);
 				for (int32 i= 0; i < b2_poly.m_count; ++i){
 					ensure(i < (int32)PolyVertex::maxVertexCount);
-					poly.vertices[i]= util::Vec2f(b2_poly.m_vertices[i]);
+					poly.vertices[i]= fromB2(b2_poly.m_vertices[i]).casted<util::Vec2f>();
 				}
 				poly.vertexCount= b2_poly.m_count;
 			}
@@ -404,7 +405,7 @@ auto DistanceField::genPolys(
 				/// @todo Adjust vertex count by size
 				util::DynArray<util::Vec2d> verts=
 					collision::circleVertices(
-							b2_circle.m_p,
+							fromB2(b2_circle.m_p),
 							b2_circle.m_radius,
 							PolyVertex::maxVertexCount);
 				ensure(verts.size() <= PolyVertex::maxVertexCount);

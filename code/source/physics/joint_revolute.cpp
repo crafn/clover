@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_revolute.hpp"
 #include "object_rigid.hpp"
 
@@ -19,7 +20,7 @@ void RevoluteJoint::attach(Object& a, Object& b, const WorldVec& anchor_pos){
 	
 	def.Initialize(	aa, 
 					bb,
-					anchor_pos.b2() );
+					toB2(anchor_pos));
 	
 	if (!joint)
 		createB2Joint();

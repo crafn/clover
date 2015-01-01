@@ -54,43 +54,6 @@ public:
 	/// These work like normal queries, but use the template parameter instead of Traceable
 	static SubQuery<physics::Fixture> fixture;
 	static SubQuery<physics::RigidFixture> rigidFixture;
-
-
-private:
-	template <typename Func>
-	class RayCallback : public b2RayCastCallback {
-	public:
-		RayCallback(Func& f): func(f) {}
-
-		Func& func;
-
-		real64 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, real64 fraction){
-			ensure(fixture);
-			physics::B2FixtureUserData* user_data= static_cast<physics::B2FixtureUserData*>(fixture->GetUserData());
-			ensure(user_data->owner);
-
-			RayCastResult output;
-			output.normal= normal;
-			output.fraction= fraction;
-			return func(*user_data->owner, output);
-		}
-	};
-
-	template <typename Func>
-	class RectCallback : public b2QueryCallback {
-	public:
-		RectCallback(Func& f): func(f) {}
-
-		Func& func;
-
-		bool ReportFixture(b2Fixture* fixture){
-			ensure(fixture);
-			physics::B2FixtureUserData* user_data= static_cast<physics::B2FixtureUserData*>(fixture->GetUserData());
-			ensure(user_data->owner);
-
-			return func(*user_data->owner);
-		}
-	};
 };
 
 

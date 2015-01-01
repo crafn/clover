@@ -1,4 +1,5 @@
 #include "baseshape.hpp"
+#include "box2d.hpp"
 #include "collision/baseshape_circle.hpp"
 #include "collision/baseshape_polygon.hpp"
 #include "collision/box2d.hpp"
@@ -13,10 +14,10 @@ namespace collision {
 
 bool BaseShape::overlaps(const util::Vec2d& pos, const Transform& transform) const {
 	b2Transform t;
-	t.Set(transform.translation.b2(), transform.rotation);
+	t.Set(toB2(transform.translation), transform.rotation);
 
 	for (SizeType i= 0; i < b2ShapeCount; ++i){
-		if (getB2Shape(i).TestPoint(t, pos.b2()))
+		if (getB2Shape(i).TestPoint(t, toB2(pos)))
 			return true;
 	}
 
@@ -27,8 +28,8 @@ bool BaseShape::overlaps(const collision::Ray& ray, const Transform& transform, 
 	b2Transform b2_t= toB2(transform);
 
 	b2RayCastInput b2_input;
-	b2_input.p1= ray.start.b2();
-	b2_input.p2= util::Vec2d(ray.start + ray.endOffset).b2();
+	b2_input.p1= toB2(ray.start);
+	b2_input.p2= toB2(ray.start + ray.endOffset);
 	b2_input.maxFraction= 1.0;
 
 	bool found= false;
@@ -41,7 +42,7 @@ bool BaseShape::overlaps(const collision::Ray& ray, const Transform& transform, 
 	for (SizeType i= 0; i < b2ShapeCount; ++i){
 		if (getB2Shape(i).RayCast(&b2_output, b2_input, b2_t, 0)){
 			if (output && b2_output.fraction <= output->fraction){
-				output->normal= b2_output.normal;
+				output->normal= fromB2(b2_output.normal);
 				output->fraction= b2_output.fraction;
 				found= true;
 			}

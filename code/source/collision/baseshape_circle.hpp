@@ -17,8 +17,8 @@ public:
 	void setRadius(real64 r){ shape.m_radius= r; }
 	real64 getRadius() const { return shape.m_radius; }
 	
-	void setPosition(const util::Vec2d& pos){ shape.m_p= pos.b2(); }
-	util::Vec2d getPosition() const { return util::Vec2d(shape.m_p); }
+	void setPosition(const util::Vec2d& pos);
+	util::Vec2d getPosition() const;
 
 	virtual void transform(const Transform& t) override;
 	virtual void mirror() override;

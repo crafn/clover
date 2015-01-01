@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_weld.hpp"
 #include "object_rigid.hpp"
 
@@ -18,7 +19,7 @@ void WeldJoint::attach(Object& a, Object& b){
 	ensure(aa && bb);
 	
 	util::Vec2d anchor= (a.getPosition() + b.getPosition())*0.5;
-	def.Initialize(aa, bb, anchor.b2());
+	def.Initialize(aa, bb, toB2(anchor));
 	
 	
 	if (!joint)

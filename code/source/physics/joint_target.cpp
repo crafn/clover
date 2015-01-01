@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_target.hpp"
 #include "world.hpp"
 #include "object_rigid.hpp"
@@ -13,7 +14,7 @@ void TargetJoint::attach(Object& o, util::Vec2d world_anchor_pos){
 	addObject(o);
 	def.bodyA= gWorld->getStaticRigidObject().getB2Body();
 	def.bodyB= static_cast<RigidObject*>(&o)->getB2Body();
-	def.target= world_anchor_pos.b2();
+	def.target= toB2(world_anchor_pos);
 
 	if (!joint)
 		createB2Joint();
@@ -40,9 +41,9 @@ void TargetJoint::setDamping(real64 d){
 }
 
 void TargetJoint::setTarget(util::Vec2d t){
-	def.target= t.b2();
+	def.target= toB2(t);
 	if (joint)
-		joint->SetTarget(t.b2());
+		joint->SetTarget(toB2(t));
 }
 
 } // physics

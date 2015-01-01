@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "chunk_util.hpp"
 #include "debug/debugdraw.hpp"
 #include "draw.hpp"
@@ -46,7 +47,7 @@ World::World(GridDef grid_def, util::Vec2d gravity, FluidMgr* fluid_mgr)
 		: grid(grid_def)
 		, gravity(gravity)
 		, fluidMgr(fluid_mgr){
-	box2dWorld= new b2World(gravity.b2());
+	box2dWorld= new b2World(toB2(gravity));
 	box2dWorld->SetContactListener(&contactListener);
 }
 

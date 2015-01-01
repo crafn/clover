@@ -4,13 +4,13 @@
 namespace clover {
 namespace gui {
 
-util::DynArray<std::unique_ptr<BaseElementVisualEntity>> BaseElementVisualEntity::visualEntities;
+util::DynArray<util::UniquePtr<BaseElementVisualEntity>> BaseElementVisualEntity::visualEntities;
 
 BaseElementVisualEntity::BaseElementVisualEntity(ContainerType& container_):
 	container(&container_),
 	remove(false),
 	onTopOfElement(false){
-	visualEntities.pushBack(std::unique_ptr<BaseElementVisualEntity>(this));
+	visualEntities.pushBack(util::UniquePtr<BaseElementVisualEntity>(this));
 	addToContainer();
 }
 

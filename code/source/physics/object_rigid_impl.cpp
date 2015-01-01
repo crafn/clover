@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "debug/debugprint.hpp"
 #include "object_rigid.hpp"
 #include "physics/fixture_rigid.hpp"
@@ -13,9 +14,9 @@ namespace physics {
 
 RigidObjectDef::RigidObjectDef(util::Vec2d pos, real32 rot, util::Vec2d vel, real32 angularvel){
 	def.type= b2_dynamicBody;
-	def.position= pos.b2();
+	def.position= toB2(pos);
 	def.angle= rot;
-	def.linearVelocity= vel.b2();
+	def.linearVelocity= toB2(vel);
 	def.angularVelocity= angularvel;
 	def.fixedRotation= false;
 }
@@ -26,7 +27,7 @@ void RigidObjectDef::setTransform(Object::Transform t){
 }
 
 void RigidObjectDef::setPosition(util::Vec2d pos){
-	def.position= pos.b2();
+	def.position= toB2(pos);
 }
 
 void RigidObjectDef::setRotation(real64 rot){
@@ -188,7 +189,7 @@ util::Vec2d RigidObject::getCenterOfMass() const {
 
 	if (!body)
 		return getPosition();
-	return body->GetWorldCenter();
+	return fromB2(body->GetWorldCenter());
 }
 
 real64 RigidObject::getMass() const {
@@ -233,7 +234,7 @@ void RigidObject::applyForce(util::Vec2d force, util::Vec2d point){
 		return;
 
 	if (getB2Body())
-		getB2Body()->ApplyForce(force.b2(), point.b2(), true);
+		getB2Body()->ApplyForce(toB2(force), toB2(point), true);
 }
 
 void RigidObject::applyForce(util::Vec2d force){
@@ -241,7 +242,7 @@ void RigidObject::applyForce(util::Vec2d force){
 		return;
 
 	if (getB2Body())
-		getB2Body()->ApplyForceToCenter(force.b2(), true);
+		getB2Body()->ApplyForceToCenter(toB2(force), true);
 }
 
 void RigidObject::applyImpulse(util::Vec2d impulse, util::Vec2d point){
@@ -249,7 +250,7 @@ void RigidObject::applyImpulse(util::Vec2d impulse, util::Vec2d point){
 		return;
 
 	if (getB2Body())
-		getB2Body()->ApplyLinearImpulse(impulse.b2(), point.b2(), true);
+		getB2Body()->ApplyLinearImpulse(toB2(impulse), toB2(point), true);
 }
 
 void RigidObject::applyImpulse(util::Vec2d impulse){
@@ -257,7 +258,7 @@ void RigidObject::applyImpulse(util::Vec2d impulse){
 		return;
 
 	if (getB2Body())
-		getB2Body()->ApplyLinearImpulse(impulse.b2(), getB2Body()->GetWorldCenter(), true);
+		getB2Body()->ApplyLinearImpulse(toB2(impulse), getB2Body()->GetWorldCenter(), true);
 }
 
 void RigidObject::applyTorque(real64 momentum){
@@ -278,7 +279,7 @@ void RigidObject::applyAngularImpulse(real64 impulse){
 
 void RigidObject::setVelocity(const util::Vec2d& vel){
 	if (getB2Body()){
-		getB2Body()->SetLinearVelocity(vel.b2());
+		getB2Body()->SetLinearVelocity(toB2(vel));
 		overrideCachedValuesByB2();
 	}
 }
@@ -287,7 +288,7 @@ util::Vec2d RigidObject::getVelocity(util::Vec2d worldpoint) const {
 	if (!getB2Body())
 		return util::Vec2d(0);
 
-	return getB2Body()->GetLinearVelocityFromWorldPoint(worldpoint.b2());
+	return fromB2(getB2Body()->GetLinearVelocityFromWorldPoint(toB2(worldpoint)));
 }
 
 void RigidObject::setAngularVelocity(real64 omega){
@@ -306,7 +307,7 @@ void RigidObject::setTransform(const Transform& t){
 		proxyData->master->setTransform(offset_t*t);
 	}
 	else if (body){
-		body->SetTransform(t.translation.b2(), t.rotation);
+		body->SetTransform(toB2(t.translation), t.rotation);
 		body->SetAwake(true);
 		overrideCachedValuesByB2();
 	}
@@ -321,7 +322,7 @@ void RigidObject::setPosition(util::Vec2d p){
 		proxyData->master->setPosition(p + offset_t.translation);
 	}
 	else if (body){
-		body->SetTransform(p.b2(), body->GetAngle());
+		body->SetTransform(toB2(p), body->GetAngle());
 		body->SetAwake(true);
 		overrideCachedValuesByB2();
 	}
@@ -716,10 +717,10 @@ void RigidObject::createB2Body(bool use_cached_values){
 	ensure(!body);
 
 	if (use_cached_values) {
-		bodyDef.def.position= getPosition().b2();
+		bodyDef.def.position= toB2(getPosition());
 		bodyDef.def.angle= getRotation();
 		bodyDef.def.angularVelocity= getAngularVelocity();
-		bodyDef.def.linearVelocity= getVelocity().b2();
+		bodyDef.def.linearVelocity= toB2(getVelocity());
 	}
 
 	body= gWorld->getB2World().CreateBody(&bodyDef.def);
@@ -739,9 +740,9 @@ void RigidObject::destroyB2Body(){
 
 util::Vec2d RigidObject::getB2Position() const {
 	if (getB2Body())
-		return util::Vec2d(getB2Body()->GetPosition());
+		return fromB2(getB2Body()->GetPosition());
 	else
-		return bodyDef.def.position;
+		return fromB2(bodyDef.def.position);
 }
 
 real64 RigidObject::getB2Rotation() const {
@@ -753,9 +754,9 @@ real64 RigidObject::getB2Rotation() const {
 
 util::Vec2d RigidObject::getB2Velocity() const {
 	if (getB2Body())
-		return getB2Body()->GetLinearVelocity();
+		return fromB2(getB2Body()->GetLinearVelocity());
 	else
-		return bodyDef.def.linearVelocity;
+		return fromB2(bodyDef.def.linearVelocity);
 }
 
 real64 RigidObject::getB2AngularVelocity() const {

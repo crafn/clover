@@ -1,4 +1,5 @@
 #include "baseshape_polygon.hpp"
+#include "box2d.hpp"
 #include "util/vector.hpp"
 #include "util/dyn_array.hpp"
 #include "util/polygon.hpp"
@@ -48,7 +49,7 @@ void PolygonBaseShape::setVertices(util::DynArray<util::Vec2d> v){
 
 		b2Vec2 bvec[count];
 		for (uint32 i=0; i<count; i++){
-			bvec[i]= p.getVertex(i).b2();
+			bvec[i]= toB2(p.getVertex(i));
 		}
 
 		shapes.emplaceBack();

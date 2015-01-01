@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_friction.hpp"
 #include "object_rigid.hpp"
 
@@ -14,7 +15,7 @@ void FrictionJoint::attach(Object& a, Object& b){
 		  * bb= static_cast<RigidObject*>(&b)->getB2Body();
 	ensure(aa && bb);
 	
-	def.Initialize(aa, bb, a.getPosition().b2());
+	def.Initialize(aa, bb, toB2(a.getPosition()));
 
 	addObject(a);
 	addObject(b);

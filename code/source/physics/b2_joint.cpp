@@ -1,4 +1,5 @@
 #include "b2_joint.hpp"
+#include "box2d.hpp"
 #include "object_rigid.hpp"
 
 namespace clover {
@@ -126,9 +127,9 @@ template <typename DefType, typename JointType>
 WorldVec B2Joint<DefType, JointType>::getAnchor(SizeType i) const {
 	ensure(joint);
 	if (i == 0)
-		return joint->GetAnchorA();
+		return fromB2(joint->GetAnchorA());
 	if (i == 1)
-		return joint->GetAnchorB();
+		return fromB2(joint->GetAnchorB());
 	release_ensure(0);
 }
 

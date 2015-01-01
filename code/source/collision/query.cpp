@@ -1,18 +1,54 @@
+#include "box2d.hpp"
 #include "query.hpp"
 
 namespace clover {
 namespace collision {
 
+template <typename Func>
+class RayCallback : public b2RayCastCallback {
+public:
+	RayCallback(Func& f): func(f) {}
+
+	Func& func;
+
+	real64 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, real64 fraction){
+		ensure(fixture);
+		physics::B2FixtureUserData* user_data= static_cast<physics::B2FixtureUserData*>(fixture->GetUserData());
+		ensure(user_data->owner);
+
+		RayCastResult output;
+		output.normal= fromB2(normal);
+		output.fraction= fraction;
+		return func(*user_data->owner, output);
+	}
+};
+
+template <typename Func>
+class RectCallback : public b2QueryCallback {
+public:
+	RectCallback(Func& f): func(f) {}
+
+	Func& func;
+
+	bool ReportFixture(b2Fixture* fixture){
+		ensure(fixture);
+		physics::B2FixtureUserData* user_data= static_cast<physics::B2FixtureUserData*>(fixture->GetUserData());
+		ensure(user_data->owner);
+
+		return func(*user_data->owner);
+	}
+};
+
 void Query::rayCast(const Ray& ray, std::function<real64 (Traceable&, const RayCastResult&)> report){
 	RayCallback<decltype(report)> callback(report);
-	physics::gWorld->getB2World().RayCast(&callback, ray.start.b2(), util::Vec2d(ray.start+ray.endOffset).b2());
+	physics::gWorld->getB2World().RayCast(&callback, toB2(ray.start), toB2(util::Vec2d(ray.start+ray.endOffset)));
 }
 
 void Query::potentialRect(const util::Vec2d& pos, const util::Vec2d& rad, std::function<bool (Traceable&)> report){
 	RectCallback<decltype(report)> callback(report);
 	b2AABB aabb;
-	aabb.lowerBound= util::Vec2d(pos-rad).b2();
-	aabb.upperBound= util::Vec2d(pos+rad).b2();
+	aabb.lowerBound= toB2(pos-rad);
+	aabb.upperBound= toB2(pos+rad);
 	physics::gWorld->getB2World().QueryAABB(&callback, aabb);
 }
 

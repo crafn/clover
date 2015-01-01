@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_rope.hpp"
 #include "object_rigid.hpp"
 
@@ -19,8 +20,8 @@ void RopeJoint::attach(	Object& a, Object& b,
 
 	def.bodyA= aa;
 	def.bodyB= bb;
-	def.localAnchorA= aa->GetLocalPoint(anchor_a.b2());
-	def.localAnchorB= bb->GetLocalPoint(anchor_b.b2());
+	def.localAnchorA= aa->GetLocalPoint(toB2(anchor_a));
+	def.localAnchorB= bb->GetLocalPoint(toB2(anchor_b));
 	def.maxLength= (anchor_b - anchor_a).length();
 	createB2Joint();
 		

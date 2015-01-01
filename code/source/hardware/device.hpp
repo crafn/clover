@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "util/math.hpp"
+#include "util/unique_ptr.hpp"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -73,7 +74,7 @@ private:
 	real32 prevFrameTime;
 	real32 curFrameTime;
 	
-	using HidMgrPtr= std::unique_ptr<ui::hid::HidMgr>;
+	using HidMgrPtr= util::UniquePtr<ui::hid::HidMgr>;
 	HidMgrPtr hidMgr;
 };
 

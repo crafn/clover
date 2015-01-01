@@ -9,9 +9,6 @@
 #include "matrix.hpp"
 #include "quaternion.hpp"
 
-/// @todo Remove box2d from here
-#include <Box2D/Box2D.h>
-#include <iostream>
 #include <random>
 
 namespace clover {

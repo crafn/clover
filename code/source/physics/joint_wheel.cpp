@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_wheel.hpp"
 #include "object_rigid.hpp"
 
@@ -22,7 +23,7 @@ void WheelJoint::attach(Object& a, Object& b, const WorldVec& axis){
 	addObject(b);
 	
 	util::Vec2d anchor= b.getPosition();
-	def.Initialize(aa, bb, anchor.b2(), axis.b2());
+	def.Initialize(aa, bb, toB2(anchor), toB2(axis));
 	
 	if (!joint)
 		createB2Joint();

@@ -12,9 +12,6 @@
 
 #define DLL_EXPORT extern "C" __attribute__((visibility ("default")))
 
-__attribute__((visibility ("default"))) void temp_hack_to_make_symbols_exported()
-{ }
-
 namespace world_gen= clover::game::world_gen;
 using namespace clover;
 

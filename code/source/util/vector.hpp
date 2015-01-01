@@ -9,7 +9,6 @@
 
 #include <numeric>
 #include <cstdlib>
-#include <Box2D/Common/b2Math.h>
 
 #define TYPEDEF(N) typedef T VectorElements<T, N>::* const PtrArray[N];
 
@@ -111,12 +110,6 @@ public:
 		std::copy(other.begin(), other.end(), &v(0));
 	}
 
-	GenericVector(const b2Vec2& other){
-		ensure(N == 2);
-		v(0)= other.x;
-		v(1)= other.y;
-	}
-	
 	T& operator[](uint32 i) {
 		return v(i);
 	}
@@ -359,12 +352,6 @@ public:
 	RealVector(const Base& other):Base(other){
 	}
 	
-	RealVector(const b2Vec2& other){
-		debug_ensure(N == 2);
-		Base::v(0)= other.x;
-		Base::v(1)= other.y;
-	}
-
 	RealVector rounded(T step, T offset) const {
 		This vec;
 		for (uint32 i=0; i<N; ++i){
@@ -477,14 +464,6 @@ public:
 		return vec;
 	}
 	
-	template <int Q = 1>
-	typename std::enable_if<	N == 2 && Q &&
-								(	std::is_same<T, real32>::value || 
-									std::is_same<T, real64>::value ),
-	b2Vec2>::type b2() const {
-		return b2Vec2(Base::v(0), Base::v(1));
-	}
-
 	template<int Q = 1>
 	typename std::enable_if<	N == 3 && Q ,
 	This>::type cross(const This& o) const {

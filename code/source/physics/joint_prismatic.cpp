@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_prismatic.hpp"
 #include "object_rigid.hpp"
 
@@ -17,7 +18,7 @@ void PrismaticJoint::attach(Object& a, Object& b, const WorldVec& axis){
 	addObject(a); addObject(b);
 
 	util::Vec2d anchor= (a.getPosition() + b.getPosition())*0.5;
-	def.Initialize(aa, bb, anchor.b2(), axis.b2());
+	def.Initialize(aa, bb, toB2(anchor), toB2(axis));
 	if (!joint)
 		createB2Joint();
 		

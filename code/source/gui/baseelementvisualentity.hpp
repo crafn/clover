@@ -4,6 +4,7 @@
 #include "build.hpp"
 #include "util/coord.hpp"
 #include "util/dyn_array.hpp"
+#include "util/unique_ptr.hpp"
 
 namespace clover {
 namespace gui {
@@ -52,7 +53,7 @@ private:
 	void addToContainer();
 	void removeFromContainer();
 
-	static util::DynArray<std::unique_ptr<BaseElementVisualEntity>> visualEntities;
+	static util::DynArray<util::UniquePtr<BaseElementVisualEntity>> visualEntities;
 };
 
 } // gui

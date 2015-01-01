@@ -1,3 +1,4 @@
+#include "box2d.hpp"
 #include "joint_distance.hpp"
 #include "object_rigid.hpp"
 
@@ -17,7 +18,7 @@ void DistanceJoint::attach(	Object& a, Object& b,
 		  * bb= static_cast<RigidObject*>(&b)->getB2Body();
 	ensure(aa && bb);
 	
-	def.Initialize(aa, bb, anchor_a.b2(), anchor_b.b2());
+	def.Initialize(aa, bb, toB2(anchor_a), toB2(anchor_b));
 	
 	if (!joint)
 		createB2Joint();

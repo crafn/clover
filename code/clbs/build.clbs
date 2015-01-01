@@ -14,6 +14,8 @@ def buildInfo(env, target):
 	if env.os == "linux":
 		linker= "gold" # Required for -gsplit-dwarf
 	lib_dir= "./lib"
+	build_dest_dir= "../../builds/"
+	clover_src_dir= "../source/"
 	dep_include_paths= []
 	dep_lib_paths= []
 	dep_libs= []
@@ -27,13 +29,27 @@ def buildInfo(env, target):
 	if target == "debug":
 		target_defines += [ "DEBUG" ]
 		target_flags += [ "g", "Og", "mtune=native", "march=native" ]
-	elif target == "dev":
+	elif target == "dev" or target == "mod":
 		target_flags += [ "g", "O2", "mtune=native", "march=native" ]
 	elif target == "release":
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
 	else:
 		fail("Invalid target: " + target)
+
+	if target == "mod": # Game DLL
+		mod= Project()
+		mod.name= "mod"
+		mod.type= "dll"
+		mod.targetDir= build_dest_dir
+		mod.includeDirs= [ clover_src_dir ]
+		mod.headers= findFiles(clover_src_dir + "mod/", [ "*.hpp" ])
+		mod.src= findFiles(clover_src_dir + "mod/", [ "*.cpp" ])
+		mod.flags= target_flags + funsafe_flags
+		mod.defines= target_defines
+		mod.compiler= cpp_compiler
+		mod.linker= linker
+		return mod
 
 	system_links= [ "OpenCL", "pthread" ]
 	if env.os == "linux":
@@ -332,7 +348,6 @@ def buildInfo(env, target):
 
 	### Clover ###
 
-	clover_dir= "../source"
 	clover_flags= target_flags + funsafe_flags +  [
 		"Wall", "Werror",
 		"Wno-unused-variable",
@@ -360,7 +375,7 @@ def buildInfo(env, target):
 		"ui",
 		"util",
 		"visual",
-		"mod" # Not really a subsystem
+		"mod" # Not a subsystem
 	]
 	
 	subsystem_names= []
@@ -371,7 +386,7 @@ def buildInfo(env, target):
 		p.name= "clover_" + s_dir + "_" + target
 		p.type= "lib"
 		p.targetDir= lib_dir
-		p.includeDirs= [ clover_dir ] + dep_include_paths
+		p.includeDirs= [ clover_src_dir ] + dep_include_paths
 		p.headers= findFiles(dir, ["*.hpp", "*.tpp", "*.def"])
 		p.src= findFiles(dir, ["*.cpp"])
 		p.flags= clover_flags
@@ -384,16 +399,16 @@ def buildInfo(env, target):
 	clover= Project()
 	clover.name= "clover_" + target
 	clover.type= "exe"
-	clover.targetDir= "../../builds/" + env.os + env.arch[1:]
-	clover.includeDirs= [ clover_dir ] + dep_include_paths
+	clover.targetDir= build_dest_dir + env.os + env.arch[1:]
+	clover.includeDirs= [ clover_src_dir ] + dep_include_paths
 	clover.libDirs= dep_lib_paths
 	clover.headers= [
-		clover_dir + "/build.hpp",
-		clover_dir + "/app.hpp" ]
+		clover_src_dir + "/build.hpp",
+		clover_src_dir + "/app.hpp" ]
 	clover.src= [
-		clover_dir + "/build.cpp",
-		clover_dir + "/main.cpp",
-		clover_dir + "/app.cpp" ]
+		clover_src_dir + "/build.cpp",
+		clover_src_dir + "/main.cpp",
+		clover_src_dir + "/app.cpp" ]
 	clover.flags= clover_flags
 	clover.defines= clover_defines + dep_defines
 	clover.compiler= cpp_compiler
