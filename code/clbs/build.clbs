@@ -14,42 +14,26 @@ def buildInfo(env, target):
 	if env.os == "linux":
 		linker= "gold" # Required for -gsplit-dwarf
 	lib_dir= "./lib"
-	build_dest_dir= "../../builds/"
-	clover_src_dir= "../source/"
 	dep_include_paths= []
 	dep_lib_paths= []
 	dep_libs= []
 	dep_defines= []
 
 	target_defines= []
-	target_flags= [ "pipe" ]
+	target_flags= [ "pipe", "fPIC", "fvisibility=hidden" ]
 	funsafe_flags= [ "ffast-math" ] 
 	if linker == "gold":
 		target_flags += [ "gsplit-dwarf" ] # Fast linking with separate debug info
 	if target == "debug":
 		target_defines += [ "DEBUG" ]
 		target_flags += [ "g", "Og", "mtune=native", "march=native" ]
-	elif target == "dev" or target == "mod":
+	elif target == "dev":
 		target_flags += [ "g", "O2", "mtune=native", "march=native" ]
 	elif target == "release":
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
 	else:
 		fail("Invalid target: " + target)
-
-	if target == "mod": # Game DLL
-		mod= Project()
-		mod.name= "mod"
-		mod.type= "dll"
-		mod.targetDir= build_dest_dir
-		mod.includeDirs= [ clover_src_dir ]
-		mod.headers= findFiles(clover_src_dir + "mod/", [ "*.hpp" ])
-		mod.src= findFiles(clover_src_dir + "mod/", [ "*.cpp" ])
-		mod.flags= target_flags + funsafe_flags
-		mod.defines= target_defines
-		mod.compiler= cpp_compiler
-		mod.linker= linker
-		return mod
 
 	system_links= [ "OpenCL", "pthread" ]
 	if env.os == "linux":
@@ -348,6 +332,8 @@ def buildInfo(env, target):
 
 	### Clover ###
 
+	build_dest_dir= "../../builds/" + env.os + env.arch[1:]
+	clover_src_dir= "../source"
 	clover_flags= target_flags + funsafe_flags +  [
 		"Wall", "Werror",
 		"Wno-unused-variable",
@@ -374,10 +360,9 @@ def buildInfo(env, target):
 		"resources",
 		"ui",
 		"util",
-		"visual",
-		"mod" # Not a subsystem
+		"visual"
 	]
-	
+
 	subsystem_names= []
 	subsystem_projs= []
 	for s_dir in subsystem_dirs:
@@ -399,7 +384,7 @@ def buildInfo(env, target):
 	clover= Project()
 	clover.name= "clover_" + target
 	clover.type= "exe"
-	clover.targetDir= build_dest_dir + env.os + env.arch[1:]
+	clover.targetDir= build_dest_dir
 	clover.includeDirs= [ clover_src_dir ] + dep_include_paths
 	clover.libDirs= dep_lib_paths
 	clover.headers= [
@@ -424,5 +409,20 @@ def buildInfo(env, target):
 			[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
 		if len(win_builds_bin_paths) > 0:
 			clover.libDirs += [ win_builds_bin_paths[0] + "/../lib" ] 
-	
-	return clover
+
+	# Game DLL
+	mod= Project()
+	mod.name= "mod"
+	mod.type= "dll"
+	mod.targetDir= clover.targetDir
+	mod.includeDirs= clover.includeDirs
+	mod.libDirs= clover.libDirs
+	mod.headers= findFiles(clover_src_dir + "/mod", [ "*.hpp" ])
+	mod.src= findFiles(clover_src_dir + "/mod", [ "*.cpp" ])
+	mod.flags= clover.flags
+	mod.defines= clover.defines
+	mod.compiler= clover.compiler
+	mod.linker= clover.linker
+	mod.deps= [ clover ]
+	mod.links= clover.links
+	return mod

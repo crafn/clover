@@ -1,11 +1,9 @@
 #include "workertype.hpp"
 #include "chunk_gen.hpp"
+#include "hardware/dll.hpp"
 #include "resources/cache.hpp"
 #include "world_gen.hpp"
 #include "workerlocation.hpp"
-
-/// TEMPTEST
-#include "mod/world_gen.hpp"
 
 namespace clover {
 namespace game { namespace world_gen {
@@ -68,9 +66,11 @@ void WorkerType::updateFromAttributes(){
 	clear();
 
 	/// TEMPTEST
-	void* module= NULL; //dlopen(nullptr, RTLD_LAZY);
+	auto h= hardware::loadDll("./mod");
+	ensure_msg(h, "dll not loaded: %s", hardware::dllError());
 	if (!globalInitFuncAttribute.get().empty()){
-		auto func= (WorkerGlobalInitFuncDecl*)tempfake_dlsym(module, globalInitFuncAttribute.get().cStr());
+		auto func= (WorkerGlobalInitFuncDecl*)
+			hardware::queryDllSym(h, globalInitFuncAttribute.get().cStr());
 		ensure(func);
 		globalInitFunc= [this, func] (WorldGen& g){
 			func(g);
@@ -78,7 +78,8 @@ void WorkerType::updateFromAttributes(){
 	}
 
 	if (!chunkInitFuncAttribute.get().empty()){
-		auto func= (WorkerChunkInitFuncDecl*)tempfake_dlsym(module, chunkInitFuncAttribute.get().cStr());
+		auto func= (WorkerChunkInitFuncDecl*)
+			hardware::queryDllSym(h, chunkInitFuncAttribute.get().cStr());
 		ensure_msg(func, "Chunk func not found: %s", chunkInitFuncAttribute.get().cStr());
 		chunkInitFunc= [this, func] (ChunkGen& c){
 			func(c);
@@ -86,7 +87,8 @@ void WorkerType::updateFromAttributes(){
 	}
 
 	if (!workFuncAttribute.get().empty()){
-		auto func= (WorkFuncDecl*)tempfake_dlsym(module, workFuncAttribute.get().cStr());
+		auto func= (WorkFuncDecl*)
+			hardware::queryDllSym(h, workFuncAttribute.get().cStr());
 		ensure(func);
 		workFunc= [this, func] (WorldGen& g, const Worker* w){
 			func(g, w);

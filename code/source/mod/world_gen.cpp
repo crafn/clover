@@ -12,6 +12,7 @@
 
 #define DLL_EXPORT extern "C" __attribute__((visibility ("default")))
 
+
 namespace world_gen= clover::game::world_gen;
 using namespace clover;
 
@@ -78,6 +79,8 @@ DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 						util::Vec2d{1.0, groundSurfaceY(0.0) + 5.0},
 						0.0,
 						0.0);
+
+	debug::print("Global world init end");
 }
 
 DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
