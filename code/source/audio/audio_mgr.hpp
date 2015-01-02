@@ -50,8 +50,6 @@ private:
 	void feedLoop();
 };
 
-extern AudioMgr* gAudioMgr;
-
 } // audio
 } // clover
 

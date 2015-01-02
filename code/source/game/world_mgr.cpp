@@ -1,6 +1,7 @@
 #include "world_mgr.hpp"
 #include "audio/audio_mgr.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "global/memory.hpp"
 #include "debug/debugdraw.hpp"
 #include "hardware/device.hpp"
@@ -47,7 +48,7 @@ void createEdges(
 	used_spawners.resize(spawners.size()); // Larger than usually needed
 
 	// Scan through the whole grid
-	auto& grid= physics::gPhysMgr->getWorld().getGrid();
+	auto& grid= global::g_env.physMgr->getWorld().getGrid();
 	auto&& chunk_positions= grid.getChunkPositions();
 	uint32 width= grid.getChunkWidth();
 	uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
@@ -147,7 +148,7 @@ WorldMgr* gWorldMgr;
 WorldMgr::WorldMgr()
 	: lastUpdTime(-std::numeric_limits<real64>::infinity())
 	, chunksLocked(false)
-	, propertyGrid(physics::gPhysMgr->getWorld().getGrid())
+	, propertyGrid(global::g_env.physMgr->getWorld().getGrid())
 	, worldGen(*this, resources::gCache->getSubCache<world_gen::WorkerType>().getResources())
 	, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
 		dayTime += util::gGameClock->getDeltaTime()*300;
@@ -202,7 +203,7 @@ void WorldMgr::update()
 		PROFILE();
 		weMgr.removeFlagged(); // Removes phys objects flagged by ui
 
-		auto& grid= physics::gPhysMgr->getWorld().getGrid();
+		auto& grid= global::g_env.physMgr->getWorld().getGrid();
 		auto&& chunk_positions= grid.getChunkPositions();
 		uint32 width= grid.getChunkWidth();
 		uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
@@ -244,7 +245,7 @@ void WorldMgr::update()
 	///       Possible solution could be that spawnNewEntities runs node init,
 	///       and this extra chunk update would be done before weMgr.update
 	for (auto p : loadedChunks)
-		physics::gPhysMgr->getWorld().getGrid().touchCells(p, -1.0);
+		global::g_env.physMgr->getWorld().getGrid().touchCells(p, -1.0);
 	loadedChunks.clear();
 
 	detail::createEdges(edgeSpawns, lastUpdTime);

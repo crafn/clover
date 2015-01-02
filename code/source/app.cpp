@@ -72,7 +72,7 @@ App::App(const util::Str8& executablePath){
 	new audio::AudioMgr();
 	new visual::VisualMgr();
 	debug::gDebugDraw= new debug::DebugDraw();
-	physics::gPhysMgr= new physics::PhysMgr();
+	new physics::PhysMgr();
 	gui::gGuiMgr= new gui::GuiMgr();
 	ui::game::gBaseUi= new ui::game::BaseUi();
 	game::gBaseGameLogic= new game::BaseGameLogic();	
@@ -82,10 +82,10 @@ App::~App(){
 	delete game::gBaseGameLogic; game::gBaseGameLogic= nullptr;
 	delete ui::game::gBaseUi; ui::game::gBaseUi= nullptr;
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
-	delete physics::gPhysMgr; physics::gPhysMgr= nullptr;
+	delete global::g_env.physMgr;
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
 	delete visual::gVisualMgr;
-	delete audio::gAudioMgr;
+	delete global::g_env.audioMgr;
 	delete resources::gCache; resources::gCache= nullptr;
 	delete util::gGameClock; util::gGameClock= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
@@ -109,7 +109,7 @@ void App::run(){
 	while (1){
 		global::SingleFrameStorage::value.clear();
 
-		physics::gPhysMgr->preFrameUpdate();
+		global::g_env.physMgr->preFrameUpdate();
 
 		{ PROFILE_("sleep");
 			// FPS limiter
@@ -138,24 +138,24 @@ void App::run(){
 			break;
 
 		if (!util::gGameClock->isPaused()){
-			physics::gPhysMgr->update();
+			global::g_env.physMgr->update();
 
 			global::gEventMgr->dispatch();
 			nodes::gNodeEventMgr->dispatch();
 
 			// Update world logic
 			game::gBaseGameLogic->update();
-			audio::gAudioMgr->update();
+			global::g_env.audioMgr->update();
 
 			/// @todo Call just after gpu has finished with fluid preupdate
-			physics::gPhysMgr->fluidUpdate();
+			global::g_env.physMgr->fluidUpdate();
 		}
 
 		resources::gCache->update();
 
 		gui::gGuiMgr->update();
 
-		physics::gPhysMgr->postFrameUpdate();
+		global::g_env.physMgr->postFrameUpdate();
 		visual::gVisualMgr->renderFrame();
 	}
 

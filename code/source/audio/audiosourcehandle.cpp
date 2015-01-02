@@ -1,6 +1,7 @@
 #include "audiosourcehandle.hpp"
 #include "audio_mgr.hpp"
 #include "audiosource.hpp"
+#include "global/env.hpp"
 #include "sound.hpp"
 #include "soundinstancehandle.hpp"
 #include "resources/cache.hpp"
@@ -33,7 +34,7 @@ void AudioSourceHandle::assignNewSource(AudioSource::Type type){
 	if (!audioSource)
 		listenForEvent(global::Event::OnAudioSourceDestroy);
 	
-	operator=(gAudioMgr->createAudioSource(type));
+	operator=(global::g_env.audioMgr->createAudioSource(type));
 	
 	ensure(audioSource);
 }

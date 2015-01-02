@@ -3,6 +3,7 @@
 #include "game/worldentity.hpp"
 #include "game/worldentity_set.hpp"
 #include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "hardware/keyboard.hpp"
 #include "physics/phys_mgr.hpp"
 #include "physics/world.hpp"
@@ -48,7 +49,7 @@ util::DynArray<util::Str8> WeToolsEc::getWeNames() const {
 }
 
 void WeToolsEc::eraseTerrain(util::Vec2d pos){
-	physics::gPhysMgr->getWorld().applyRadialStressField(pos, 20.0, 1.0);
+	global::g_env.physMgr->getWorld().applyRadialStressField(pos, 20.0, 1.0);
 }
 
 void WeToolsEc::deleteWe(util::Vec2d pos){

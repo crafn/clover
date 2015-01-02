@@ -1,6 +1,7 @@
 #include "devlogic.hpp"
 #include "debug/debugprint.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "global/event.hpp"
 #include "game/worldchunk.hpp"
 #include "game/worldentity_mgr.hpp"
@@ -86,10 +87,10 @@ void DevLogic::update(){
 					"visual::ModelEntity count: %i,	  shader count: %i",
 					(int)visual::gVisualMgr->getEntityMgr().getModelEntityCount(),
 					(int)visual::gVisualMgr->getShaderMgr().getShaderCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", physics::gPhysMgr->calcObjectCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)audio::gAudioMgr->getSoundInstanceCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)audio::gAudioMgr->getAudioSourceCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)audio::gAudioMgr->getFreeChannelCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", global::g_env.physMgr->calcObjectCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env.audioMgr->getSoundInstanceCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env.audioMgr->getAudioSourceCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env.audioMgr->getFreeChannelCount());
 			if (game::gBaseGameLogic->getInGameLogic()->getLocalPlayer().getPlayerWE())
 				print(debug::Ch::General, debug::Vb::Trivial, "Player position: %f, %f",
 				game::gBaseGameLogic->getInGameLogic()->getLocalPlayer().getPlayerWE()->getPosition().x,

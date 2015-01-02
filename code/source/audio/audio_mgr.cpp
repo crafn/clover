@@ -5,24 +5,22 @@
 #include "audioreceiver.hpp"
 #include "audioreceiverhandle.hpp"
 #include "debug/debugprint.hpp"
+#include "global/env.hpp"
+#include "global/exception.hpp"
 #include "hardware/device.hpp"
 #include "soundinstance.hpp"
 #include "sound.hpp"
-#include "global/exception.hpp"
+#include "util/atomic.hpp"
 #include "util/math.hpp"
 #include "util/profiling.hpp"
 
 // For debugging purposes
 #include "hardware/keyboard.hpp"
 
-/// @todo Replace with util::Atomic
-#include <atomic>
-
 namespace clover {
 namespace audio {
 
-AudioMgr* gAudioMgr= nullptr;
-
+/// @todo Rename and expose - these are useful
 void scriptPlayGlobalSound(const util::Str8& sound_name, real32 volume, real32 panning){
 	audio::AudioSourceHandle as;
 	as.assignNewSource(AudioSource::Type::Global);
@@ -40,29 +38,30 @@ void scriptPlaySpatialSound(const util::Str8& sound_name, const util::Vec2d& pos
 
 AudioMgr::AudioMgr()
 		: quitFeedThread(false)
-		, outputStream(gAudioDevice->getOutputStream()){
-	
-	if (gAudioMgr == nullptr)
-		gAudioMgr= this;
+		, outputStream(gAudioDevice->getOutputStream())
+{
+	if (global::g_env.audioMgr == nullptr)
+		global::g_env.audioMgr= this;
 
 	feedThread= std::thread(std::bind(&AudioMgr::feedLoop, this));
 }
 
-AudioMgr::~AudioMgr(){
+AudioMgr::~AudioMgr()
+{
 	quitFeedThread= true;
 	feedThread.join();
-	
+
 	for (auto& m : soundInstances)
 		m.destroy();
-		
+
 	for (auto& m : audioSources)
 		m.destroy();
-		
+
 	for (auto& m : audioReceivers)
 		m.destroy();
-		
-	if (gAudioMgr == this)
-		gAudioMgr= nullptr;
+
+	if (global::g_env.audioMgr == this)
+		global::g_env.audioMgr= nullptr;
 }
 
 SizeType AudioMgr::getSoundInstanceCount() const {

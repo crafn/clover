@@ -2,6 +2,7 @@
 #include "audio_mgr.hpp"
 #include "audiosourcehandle.hpp"
 #include "debug/debugdraw.hpp"
+#include "global/env.hpp"
 #include "global/event.hpp"
 #include "util/mutex.hpp"
 
@@ -66,7 +67,7 @@ void AudioSource::onEvent(global::Event& e){
 }
 
 SoundInstanceHandle AudioSource::playSound(const Sound& s){
-	return gAudioMgr->playSound(s, *this);
+	return global::g_env.audioMgr->playSound(s, *this);
 }
 
 void AudioSource::addSoundInstance(SoundInstance& h){

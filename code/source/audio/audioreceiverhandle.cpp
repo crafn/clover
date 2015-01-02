@@ -1,5 +1,6 @@
 #include "audioreceiverhandle.hpp"
 #include "audio_mgr.hpp"
+#include "global/env.hpp"
 
 namespace clover {
 namespace audio {
@@ -33,7 +34,7 @@ void AudioReceiverHandle::assignNewReceiver(){
 	if (!audioReceiver)
 		listenForEvent(global::Event::OnAudioReceiverDestroy);
 	
-	operator=(gAudioMgr->createAudioReceiver());
+	operator=(global::g_env.audioMgr->createAudioReceiver());
 	
 	ensure(audioReceiver);
 }

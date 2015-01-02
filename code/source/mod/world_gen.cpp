@@ -4,14 +4,12 @@
 #include "game/worldgrid.hpp"
 #include "game/world_gen/chunk_gen.hpp"
 #include "game/world_gen/world_gen.hpp"
+#include "hardware/dll.hpp"
 #include "physics/grid.hpp"
 #include "util/dynamic.hpp"
 #include "util/math.hpp"
 #include "util/vector.hpp"
 #include "world_gen.hpp"
-
-#define DLL_EXPORT extern "C" __attribute__((visibility ("default")))
-
 
 namespace world_gen= clover::game::world_gen;
 using namespace clover;
@@ -85,6 +83,7 @@ DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 
 DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
 {
+	return;
 	util::Vec2d corner_pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d{0.5, 0.5};
 
 	for (uint32 x= 0; x < chunkWidthInBlocks; ++x){
@@ -110,12 +109,14 @@ DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
 
 DLL_EXPORT void createGrowWorkers(world_gen::ChunkGen& gen)
 {
+	return;
 	util::Vec2d pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d(1);
 	gen.createWorker("grow", pos, 0.0, randReal(0.0, 1.0));
 }
 
 DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 {
+	return;
 	const real64 check_interval= 5.0;
 	gen.createWorker("grow", w.getLocation().getPosition(), 0.0, gen.getWorldMgr().getTime() + check_interval);
 
@@ -191,6 +192,7 @@ DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 
 // Create ground block
 DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+	return;
 	util::Vec2d pos= w.getLocation().getPosition();
 	
 	real64 left_g_y= groundSurfaceY(pos.x - 0.5);
@@ -236,6 +238,7 @@ DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 
 // Spawn player
 DLL_EXPORT void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+	return;
 	gen.createEntity("playerMgr");
 
 	game::WeHandle we;
@@ -406,6 +409,7 @@ DLL_EXPORT void createBg(world_gen::WorldGen& gen){
 
 // For prototyping and testing purposes
 DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
+	return;
 	if (gen.getPosition() == util::Vec2i{0, 0})
 		createBg(gen.getWorldGen());
 
@@ -426,6 +430,7 @@ DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
 }
 
 DLL_EXPORT void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+	return;
 	// Create some stones
 	util::Vec2d pos= w.getLocation().getPosition();
 	for (SizeType i= 0; i < 2; ++i){
@@ -446,16 +451,3 @@ DLL_EXPORT void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 
 }
 
-void* tempfake_dlsym(void*, const char* name)
-{
-#define FUNC(x) if (!std::strcmp(name, #x)) return (void*)x;
-	FUNC(createGroundWorkers);
-	FUNC(groundWork);
-	FUNC(initWorld);
-	FUNC(playerSpawnWork);
-	FUNC(protoChunkInit);
-	FUNC(protoWork);
-	FUNC(createGrowWorkers);
-	FUNC(growWork);
-	return nullptr;
-}

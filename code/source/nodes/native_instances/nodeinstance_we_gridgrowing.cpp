@@ -1,3 +1,4 @@
+#include "global/env.hpp"
 #include "nodeinstance_we_gridgrowing.hpp"
 #include "physics/grid.hpp"
 #include "physics/phys_mgr.hpp"
@@ -35,7 +36,7 @@ void WeGridGrowingNodeInstance::create()
 	checkIn->setOnReceiveCallback([&] ()
 	{
 		util::Vec2d check_pos= transformIn->get().translation;
-		auto& grid= physics::gPhysMgr->getWorld().getGrid();
+		auto& grid= global::g_env.physMgr->getWorld().getGrid();
 		physics::Grid::Cell& cell= grid.getCell(check_pos);
 		grow= cell.staticPortion + cell.dynamicPortion < 0.5;
 

@@ -1,5 +1,6 @@
 #include "shadertech_fluid.hpp"
 #include "debug/debugdraw.hpp"
+#include "global/env.hpp"
 #include "physics/draw.hpp"
 #include "physics/phys_mgr.hpp"
 #include "resources/cache.hpp"
@@ -58,7 +59,7 @@ FluidST::FluidST(){
 
 void FluidST::render(Camera& cam){
 	physics::FluidMgr* fluid_mgr=
-		physics::gPhysMgr->getFluidMgr();
+		global::g_env.physMgr->getFluidMgr();
 	if (!fluid_mgr)
 		return;
 
@@ -125,7 +126,7 @@ void FluidST::render(Camera& cam){
 
 /// @todo Distribute to render(..) and remove
 void FluidST::use(Shader& shd){
-	physics::FluidMgr* fluid_mgr= physics::gPhysMgr->getFluidMgr();
+	physics::FluidMgr* fluid_mgr= global::g_env.physMgr->getFluidMgr();
 	if (!fluid_mgr)
 		return;
 
@@ -144,7 +145,7 @@ void FluidST::use(Shader& shd){
 
 		particleDraw.shader.setUniform(
 				"u_timeOffset",
-				physics::gPhysMgr->getFluidTimeOffset());
+				global::g_env.physMgr->getFluidTimeOffset());
 
 		particleDraw.shader.setUniform(
 				"u_hueCycle",

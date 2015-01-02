@@ -3,10 +3,12 @@
 
 #include "build.hpp"
 
+
 namespace clover {
 namespace hardware {
 
 #if OS == OS_LINUX
+#define DLL_EXPORT extern "C" __attribute__((visibility ("default")))
 using DllHandle= void*;
 #else
 #error @todo Implement

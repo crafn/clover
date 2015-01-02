@@ -64,8 +64,6 @@ private:
 	util::UniquePtr<FluidMgr> fluidMgr;
 };
 
-extern PhysMgr *gPhysMgr;
-
 } // physics
 } // clover
 

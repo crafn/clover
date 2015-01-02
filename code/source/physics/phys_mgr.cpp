@@ -2,6 +2,7 @@
 #include "armaturesuit.hpp"
 #include "draw.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "joint.hpp"
 #include "object_rigid.hpp"
 #include "object.hpp"
@@ -37,8 +38,6 @@ SimulationParams getSimulationParamsFromCfg(){
 }
 
 
-PhysMgr *gPhysMgr= nullptr;
-
 PhysMgr::PhysMgr()
 		: rigidObjectPoolMem(
 				sizeof(RigidObject)*
@@ -51,8 +50,8 @@ PhysMgr::PhysMgr()
 		, fluidTimeOffset(0.0){
 	
 	// staticRigidObject needs this
-	if (!gPhysMgr)
-		gPhysMgr= this;
+	if (!global::g_env.physMgr)
+		global::g_env.physMgr= this;
 
 	RigidObject::setPoolMem(&rigidObjectPoolMem);
 
@@ -93,8 +92,8 @@ PhysMgr::~PhysMgr(){
 
 	RigidObject::setPoolMem(nullptr);
 
-	if (gPhysMgr == this)
-		gPhysMgr= nullptr;
+	if (global::g_env.physMgr == this)
+		global::g_env.physMgr= nullptr;
 }
 
 void PhysMgr::preFrameUpdate(){

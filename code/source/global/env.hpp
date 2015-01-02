@@ -2,19 +2,20 @@
 #define CLOVER_GLOBAL_ENV_HPP
 
 namespace clover {
+namespace audio { class AudioMgr; }
+namespace physics { class PhysMgr; }
+namespace resources { class Cache; }
 namespace global {
 
 /// Top level accessors for each subsystem
-/// Semantics: all global accesses should be possible to replace
-///	by giving instance of 'Env' as a parameter
-/// @todo Refactor global pointers to here
+/// This is the global data for dll's
 struct Env {
-	//audio::AudioMgr* audioMgr;
-	//physics::PhysMgr* physMgr;
-	//...
+	audio::AudioMgr* audioMgr= nullptr;
+	physics::PhysMgr* physMgr= nullptr;
+	resources::Cache* resCache= nullptr;
 };
 
-//extern Env g_env;
+extern Env g_env;
 
 } // global
 } // clover
