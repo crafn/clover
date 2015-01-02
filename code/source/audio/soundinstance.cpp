@@ -1,6 +1,7 @@
 #include "soundinstance.hpp"
 #include "sound.hpp"
 #include "soundinstancehandle.hpp"
+#include "global/env.hpp"
 #include "global/event.hpp"
 #include "resources/cache.hpp"
 
@@ -73,7 +74,7 @@ Sound::ChannelData SoundInstance::getNextSamples(SizeType request_count, SizeTyp
 		
 		streams.clear();
 		
-		resources::gCache->setResourceToErrorState<Sound>(sound->getIdentifierAsString());
+		global::g_env.resCache->setResourceToErrorState<Sound>(sound->getIdentifierAsString());
 
 		// Create streams for error-sound
 		for (SizeType i=0; i<sound->getChannelCount(); ++i){

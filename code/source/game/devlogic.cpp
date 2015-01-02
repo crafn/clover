@@ -14,7 +14,6 @@
 #include "resources/cache.hpp"
 #include "basegamelogic.hpp"
 #include "ingamelogic.hpp"
-#include "localplayer.hpp"
 #include "hardware/device.hpp"
 
 #include <fstream>
@@ -91,10 +90,6 @@ void DevLogic::update(){
 			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env.audioMgr->getSoundInstanceCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env.audioMgr->getAudioSourceCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env.audioMgr->getFreeChannelCount());
-			if (game::gBaseGameLogic->getInGameLogic()->getLocalPlayer().getPlayerWE())
-				print(debug::Ch::General, debug::Vb::Trivial, "Player position: %f, %f",
-				game::gBaseGameLogic->getInGameLogic()->getLocalPlayer().getPlayerWE()->getPosition().x,
-				game::gBaseGameLogic->getInGameLogic()->getLocalPlayer().getPlayerWE()->getPosition().y);
 			print(debug::Ch::General, debug::Vb::Trivial, "Viewport: %i, %i", hardware::gDevice->getViewportSize().x, hardware::gDevice->getViewportSize().y);
 
 			print(debug::Ch::General, debug::Vb::Trivial, "Timers");

@@ -52,6 +52,12 @@ private:
 	std::array<T, N*N> v;
 };
 
+typedef Matrix<real32, 3> Mat33f;
+typedef Matrix<real32, 4> Mat44f;
+
+typedef Matrix<real64, 3> Mat33d;
+typedef Matrix<real64, 4> Mat44d;
+
 /// 'vec' transformed by 'mat'
 template <typename T, SizeType N>
 RealVector<T, N> operator*(RealVector<T, N> vec, const Matrix<T, N>& mat)

@@ -107,7 +107,7 @@ void PlayerPhysicsEntity::reset(util::RtTransform2d transform,
 		ragdoll.emplace();
 		ragdoll->setAsRagdoll(	bodyObject->getTransform(),
 								0.08,
-								resources::gCache->getResource<game::PhysicalMaterial>("player_ragdoll"),
+								global::g_env.resCache->getResource<game::PhysicalMaterial>("player_ragdoll"),
 								ragdoll_pose);
 	}
 }

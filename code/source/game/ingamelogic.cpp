@@ -19,9 +19,6 @@ void InGameLogic::update()
 	if (temp == 3) worldLogic.getAudioEnv().setAmbientTrack("ambientTrack");
 	
 	worldLogic.update();
-
-	localPlayer.update();
-
 }
 
 void InGameLogic::onQuit()

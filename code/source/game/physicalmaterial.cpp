@@ -1,5 +1,6 @@
-#include "physicalmaterial.hpp"
 #include "audio/sound.hpp"
+#include "global/env.hpp"
+#include "physicalmaterial.hpp"
 #include "resources/cache.hpp"
 
 namespace clover {
@@ -84,7 +85,7 @@ void PhysicalMaterial::createErrorResource(){
 
 void PhysicalMaterial::setDefaultCollisionSound(const util::Str8& sound_name){
 		if (!sound_name.empty()){
-			defaultCollisionSound= &resources::gCache->getResource<audio::Sound>(sound_name);
+			defaultCollisionSound= &global::g_env.resCache->getResource<audio::Sound>(sound_name);
 		}
 		else
 			defaultCollisionSound= 0;

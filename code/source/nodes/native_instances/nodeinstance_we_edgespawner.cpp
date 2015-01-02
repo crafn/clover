@@ -24,7 +24,7 @@ void WeEdgeSpawnerNodeInstance::create()
 	edgeEntityIn->setOnReceiveCallback([&] ()
 	{
 		edgeType=
-			&resources::gCache->getResource<game::WeType>(edgeEntityIn->get());
+			&global::g_env.resCache->getResource<game::WeType>(edgeEntityIn->get());
 	});
 
 	spawnIn->setOnReceiveCallback([&] ()

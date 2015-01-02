@@ -1,8 +1,9 @@
-#include "entity.hpp"
 #include "animation/armature.hpp"
 #include "collision/baseshape_polygon.hpp"
+#include "entity.hpp"
 #include "entity_def.hpp"
 #include "fixture_rigid.hpp"
+#include "global/env.hpp"
 #include "joints.hpp"
 #include "resources/cache.hpp"
 
@@ -109,7 +110,7 @@ void Entity::set(const util::SrtTransform3d& transform, const EntityDef& def){
 }
 
 void Entity::set(const util::SrtTransform3d& t, const util::Str8& entity_def_name){
-	set(t, resources::gCache->getResource<EntityDef>(entity_def_name));
+	set(t, global::g_env.resCache->getResource<EntityDef>(entity_def_name));
 }
 
 void Entity::setActive(bool b){

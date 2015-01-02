@@ -149,7 +149,7 @@ WorldMgr::WorldMgr()
 	: lastUpdTime(-std::numeric_limits<real64>::infinity())
 	, chunksLocked(false)
 	, propertyGrid(global::g_env.physMgr->getWorld().getGrid())
-	, worldGen(*this, resources::gCache->getSubCache<world_gen::WorkerType>().getResources())
+	, worldGen(*this, global::g_env.resCache->getSubCache<world_gen::WorkerType>().getResources())
 	, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
 		dayTime += util::gGameClock->getDeltaTime()*300;
 	})

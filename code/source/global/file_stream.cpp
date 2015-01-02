@@ -2,6 +2,8 @@
 #include "file.hpp"
 #include "util/objectnode.hpp"
 
+#include <cstring>
+
 namespace clover {
 namespace global {
 

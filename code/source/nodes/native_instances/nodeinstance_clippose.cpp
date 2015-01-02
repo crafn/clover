@@ -26,7 +26,7 @@ void ClipPoseNodeInstance::create(){
 	
 	clipIn->setValueReceived();
 	clipIn->setOnReceiveCallback([&] (){
-		clip= &resources::gCache->getResource<animation::Clip>(clipIn->get());
+		clip= &global::g_env.resCache->getResource<animation::Clip>(clipIn->get());
 		setUpdateNeeded();
 	});
 	

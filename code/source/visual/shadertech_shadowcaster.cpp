@@ -1,6 +1,7 @@
 #include "entitylogic_light.hpp"
 #include "entity_def_light.hpp"
 #include "entity_def_model.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 #include "shader.hpp"
 #include "shader_mgr.hpp"
@@ -23,7 +24,7 @@ void ShadowCasterST::setEntity(const visual::ModelEntityDef& re){
 		texture= 0;
 
 	if (!texture)
-		texture= resources::gCache->getResource<visual::Texture>("Texture_Black").getDId();
+		texture= global::g_env.resCache->getResource<visual::Texture>("Texture_Black").getDId();
 }
 
 void ShadowCasterST::use(){

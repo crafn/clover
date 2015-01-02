@@ -1,6 +1,7 @@
 #include "nodeevent.hpp"
 #include "game/worldentity_handle.hpp"
 #include "game/worldentity_set.hpp"
+#include "global/env.hpp"
 #include "nodeevent_mgr.hpp"
 #include "nodeeventreceiverproxy_we.hpp"
 #include "resources/cache.hpp"
@@ -14,7 +15,7 @@ NodeEvent::NodeEvent()
 }
 
 NodeEvent::NodeEvent(const util::Str8& type_name)
-		: NodeEvent(resources::gCache->getResource<NodeEventType>(type_name)){
+		: NodeEvent(global::g_env.resCache->getResource<NodeEventType>(type_name)){
 }
 
 NodeEvent::NodeEvent(const NodeEventType& t)

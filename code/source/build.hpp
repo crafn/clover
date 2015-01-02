@@ -1,8 +1,6 @@
 #ifndef CLOVER_BUILD_HPP
 #define CLOVER_BUILD_HPP
 
-/// @todo Prefix for macros
-
 #define PLATFORM_UNKNOWN 0
 #define PLATFORM_UNIX 1
 #define PLATFORM_WINDOWS 2
@@ -45,10 +43,11 @@
 /// @todo Determine correctly
 #define ATOMIC_PTR_READWRITE true
 
+#include <cstddef>
 #include <cstdint>
-#include <cstring>
 
 namespace clover {
+namespace util { class Str8; }
 
 const char* getBuildStr();
 
@@ -74,79 +73,9 @@ typedef uint32_t uint32;
 typedef int64_t int64;
 typedef uint64_t uint64;
 
-typedef char	   char8;
+typedef char char8;
 
-typedef size_t SizeType;
-
-/// @todo Move these somewhere else
-// UTF-8 string, u8"String literal in C++11"
-namespace util {
-class Str8;
-
-template<typename T>
-class Angle;
-
-typedef Angle<real32> Angle1f;
-typedef Angle<real64> Angle1d;
-typedef Angle1f Rotation;
-
-
-template <typename T, SizeType N>
-class RealVector;
-
-template <typename T, SizeType N>
-class IntegerVector;
-
-typedef RealVector<real32, 2> Vec2f;
-typedef RealVector<real32, 3> Vec3f;
-typedef RealVector<real32, 4> Vec4f;
-
-typedef RealVector<real64, 2> Vec2d;
-typedef RealVector<real64, 3> Vec3d;
-typedef RealVector<real64, 4> Vec4d;
-
-typedef IntegerVector<int32, 2> Vec2i;
-typedef IntegerVector<int32, 3> Vec3i;
-
-typedef IntegerVector<int64, 2> Vec2l;
-typedef IntegerVector<int64, 3> Vec3l;
-
-template <typename T>
-class Quaternion;
-
-typedef Quaternion<real32> Quatf;
-typedef Quaternion<real64> Quatd;
-
-template <typename P, typename R>
-class RtTransform;
-
-template <typename P, typename R, typename S>
-class SrtTransform;
-
-typedef RtTransform<real32, Vec2f> RtTransform2f;
-typedef SrtTransform<Vec2f, real32, Vec2f> SrtTransform2f;
-typedef SrtTransform<Vec3f, Quatf, Vec3f> SrtTransform3f;
-
-typedef RtTransform<real64, Vec2d> RtTransform2d;
-typedef RtTransform<Quatd, Vec3d> RtTransform3d;
-typedef SrtTransform<Vec2d, real64, Vec2d> SrtTransform2d;
-typedef SrtTransform<Vec3d, Quatd, Vec3d> SrtTransform3d;
-
-template<typename T, SizeType N>
-class Matrix;
-
-typedef Matrix<real32, 3> Mat33f;
-typedef Matrix<real32, 4> Mat44f;
-
-typedef Matrix<real64, 3> Mat33d;
-typedef Matrix<real64, 4> Mat44d;
-
-} // util
-
-typedef util::Vec2d WorldVec;
-typedef util::Vec2i BlockVec;
-typedef util::Vec2i ChunkVec;
-typedef util::Vec2i RegionVec;
+typedef std::size_t SizeType;
 
 } // clover
 

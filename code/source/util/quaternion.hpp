@@ -68,6 +68,9 @@ public:
 	T x, y, z, w;
 };
 
+typedef Quaternion<real32> Quatf;
+typedef Quaternion<real64> Quatd;
+
 /// Rotate vector with quaternion
 template <typename T>
 RealVector<T, 3> operator*(RealVector<T, 3> vec, Quaternion<T> q){

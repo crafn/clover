@@ -15,6 +15,26 @@
 namespace clover {
 namespace util {
 
+template <typename T, SizeType N>
+class RealVector;
+template <typename T, SizeType N>
+class IntegerVector;
+
+typedef RealVector<real32, 2> Vec2f;
+typedef RealVector<real32, 3> Vec3f;
+typedef RealVector<real32, 4> Vec4f;
+
+typedef RealVector<real64, 2> Vec2d;
+typedef RealVector<real64, 3> Vec3d;
+typedef RealVector<real64, 4> Vec4d;
+
+typedef IntegerVector<int32, 2> Vec2i;
+typedef IntegerVector<int32, 3> Vec3i;
+
+typedef IntegerVector<int64, 2> Vec2l;
+typedef IntegerVector<int64, 3> Vec3l;
+
+
 template <typename T, int N>
 struct VectorElements {
 protected:

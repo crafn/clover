@@ -1,6 +1,7 @@
+#include "global/env.hpp"
 #include "nodeinstance_eventhandler.hpp"
-#include "resources/cache.hpp"
 #include "nodes/nodeeventtype.hpp"
+#include "resources/cache.hpp"
 
 namespace clover {
 namespace nodes {
@@ -36,7 +37,7 @@ public:
 			return;
 
 		util::DynArray<SignalArgument> args= 
-			resources::gCache->getResource<NodeEventType>(
+			global::g_env.resCache->getResource<NodeEventType>(
 					eventTypeSlot->getDefaultValue<SignalType::EventType>()
 			).getArguments();
 
@@ -75,9 +76,9 @@ void EventHandlerNodeInstance::create(){
 	forwardOutput= addOutputSlot<SignalType::Event>("forward");
 	
 	if (!eventTypeInput->get().empty())
-		eventType= &resources::gCache->getResource<NodeEventType>(eventTypeInput->get());
+		eventType= &global::g_env.resCache->getResource<NodeEventType>(eventTypeInput->get());
 	else
-		eventType= &resources::gCache->getErrorResource<NodeEventType>();
+		eventType= &global::g_env.resCache->getErrorResource<NodeEventType>();
 	
 	for (auto& m : eventType->getArguments()){
 		argumentOutputs[m.name]= addOutputSlot(m.name, "arg", m.signalType);

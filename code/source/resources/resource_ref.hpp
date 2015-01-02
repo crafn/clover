@@ -2,6 +2,7 @@
 #define CLOVER_RESOURCES_RESOURCE_REF_HPP
 
 #include "build.hpp"
+#include "global/env.hpp"
 #include "resource.hpp"
 #include "resources/cache.hpp"
 
@@ -27,7 +28,7 @@ public:
 	}
 	
 	ResourceRef(const Identifier& id)
-			: cacheRes(&resources::gCache->getResource<Res>(id)){
+			: cacheRes(&global::g_env.resCache->getResource<Res>(id)){
 	}
 	
 	ResourceRef(const ResourceRef& other)
@@ -112,7 +113,7 @@ public:
 		if (in_cache){
 			Identifier id;
 			ar & id;
-			cacheRes= &resources::gCache->getResource<Res>(id);
+			cacheRes= &global::g_env.resCache->getResource<Res>(id);
 		}
 		else {
 			res= newRes();

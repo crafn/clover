@@ -1,7 +1,8 @@
-#include "physicalmaterialpair.hpp"
 #include "audio/sound.hpp"
-#include "util/ensure.hpp"
+#include "global/env.hpp"
+#include "physicalmaterialpair.hpp"
 #include "resources/cache.hpp"
+#include "util/ensure.hpp"
 
 namespace clover {
 namespace game {
@@ -13,7 +14,7 @@ PhysicalMaterialPair::PhysicalMaterialPair()
 
 	collisionSoundAttribute.setOnChangeCallback([&] (){
 		if (!collisionSoundAttribute.get().empty())
-			collisionSound= &resources::gCache->getResource<audio::Sound>(collisionSoundAttribute.get());
+			collisionSound= &global::g_env.resCache->getResource<audio::Sound>(collisionSoundAttribute.get());
 		else
 			collisionSound= 0;
 	});
@@ -36,13 +37,13 @@ void PhysicalMaterialPair::resourceUpdate(bool load, bool force){
 
 		const auto& physmaterials_key= pairAttribute.get();
 
-		pair= PairType(	&resources::gCache->getResource<game::PhysicalMaterial>(physmaterials_key.first),
-						&resources::gCache->getResource<game::PhysicalMaterial>(physmaterials_key.second));
+		pair= PairType(	&global::g_env.resCache->getResource<game::PhysicalMaterial>(physmaterials_key.first),
+						&global::g_env.resCache->getResource<game::PhysicalMaterial>(physmaterials_key.second));
 
 		util::Str8 sound_str= collisionSoundAttribute.get();
 
 		if (!sound_str.empty())
-			collisionSound= &resources::gCache->getResource<audio::Sound>(sound_str);
+			collisionSound= &global::g_env.resCache->getResource<audio::Sound>(sound_str);
 		else
 			collisionSound= 0;
 
@@ -56,9 +57,9 @@ void PhysicalMaterialPair::resourceUpdate(bool load, bool force){
 void PhysicalMaterialPair::createErrorResource(){
 	setResourceState(State::Error);
 
-	auto mat= resources::gCache->getErrorResource<game::PhysicalMaterial>();
+	auto mat= global::g_env.resCache->getErrorResource<game::PhysicalMaterial>();
 	pair= PairType(&mat, &mat);
-	collisionSound= &resources::gCache->getErrorResource<audio::Sound>();
+	collisionSound= &global::g_env.resCache->getErrorResource<audio::Sound>();
 }
 
 } // game

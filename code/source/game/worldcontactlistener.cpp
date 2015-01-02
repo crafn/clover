@@ -1,12 +1,13 @@
-#include "worldcontactlistener.hpp"
 #include "audio/audiosourcehandle.hpp"
+#include "debug/debugdraw.hpp"
+#include "global/env.hpp"
 #include "physics/object.hpp"
 #include "physics/fixture.hpp"
 #include "physicalmaterial.hpp"
 #include "physicalmaterialpair.hpp"
 #include "util/string.hpp"
 #include "resources/cache.hpp"
-#include "debug/debugdraw.hpp"
+#include "worldcontactlistener.hpp"
 
 namespace clover {
 namespace game {
@@ -125,7 +126,7 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 			if (m1 && m2 && !skip){
 
 				resources::StrResourcePair physpair(m1, m2);
-				const game::PhysicalMaterialPair* pair= resources::gCache->findResource<game::PhysicalMaterialPair>(physpair);
+				const game::PhysicalMaterialPair* pair= global::g_env.resCache->findResource<game::PhysicalMaterialPair>(physpair);
 
 				if (pair){
 					const audio::Sound* pair_sound= pair->getCollisionSound();

@@ -1,5 +1,6 @@
-#include "cache.hpp"
 #include "animation/bvh_util.hpp"
+#include "cache.hpp"
+#include "global/env.hpp"
 #include "hardware/device.hpp"
 #include "visual/font_mgr.hpp"
 #include "global/file.hpp"
@@ -22,14 +23,12 @@ namespace fs = boost::filesystem;
 namespace clover {
 namespace resources {
 
-Cache* gCache= nullptr;
-
 Cache::Cache()
 	: resourcePath(DEFAULT_RES_PATH)
 {
 	PROFILE_("resources");
-	if (!gCache)
-		gCache= this;
+	if (!global::g_env.resCache)
+		global::g_env.resCache= this;
 
 	/// @todo Use config
 	bool exists= false;
@@ -115,8 +114,8 @@ Cache::~Cache()
 	resourceFilePaths.clear();
 	subCaches.clear();
 
-	if (gCache == this)
-		gCache= nullptr;
+	if (global::g_env.resCache == this)
+		global::g_env.resCache= nullptr;
 }
 
 void Cache::update()

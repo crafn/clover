@@ -1,5 +1,7 @@
 #include "thread.hpp"
 #include "debug/debugprint.hpp"
+
+#include <cstring>
 #include <map>
 
 namespace clover {

@@ -122,8 +122,6 @@ private:
 	void loadFonts();
 };
 
-extern Cache* gCache;
-
 } // resources
 namespace util {
 

@@ -4,6 +4,8 @@
 #include "build.hpp"
 #include "serialization.hpp"
 
+#include <cstring>
+
 namespace clover {
 namespace util {
 

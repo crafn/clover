@@ -1,5 +1,6 @@
 #include "batchpriorities.hpp"
 #include "collision/baseshape_polygon.hpp"
+#include "global/env.hpp"
 #include "game/physics.hpp"
 #include "game/physicalmaterial.hpp"
 #include "nodeinstance_we_physicsobject.hpp"
@@ -168,7 +169,7 @@ void WePhysicsObjectNodeInstance::recreateObject(){
 	object->clearFixtures();
 	physics::RigidFixtureDef fix_def;
 	if (materialInput->get() != "")
-		fix_def.setMaterial(resources::gCache->getResource<game::PhysicalMaterial>(materialInput->get()));
+		fix_def.setMaterial(global::g_env.resCache->getResource<game::PhysicalMaterial>(materialInput->get()));
 	fix_def.setShape(shapeInput->get().get());
 	object->add(fix_def);
 	object->setCustomData(boost::any(this));

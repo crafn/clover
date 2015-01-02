@@ -55,7 +55,7 @@ SoundInstanceHandle AudioSourceHandle::playSound(const Sound& s){
 }
 
 SoundInstanceHandle AudioSourceHandle::playSound(const util::Str8& name){
-	return (playSound(resources::gCache->getResource<Sound>(name)));
+	return (playSound(global::g_env.resCache->getResource<Sound>(name)));
 }
 
 } // audio

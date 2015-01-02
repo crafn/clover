@@ -1,5 +1,6 @@
 #include "entity.hpp"
 #include "entity_mgr.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 #include "visual_mgr.hpp"
 
@@ -50,7 +51,7 @@ void Entity::setDef(const EntityDef& def){
 }
 
 void Entity::setDef(const util::Str8& def_name){
-	setDef(resources::gCache->getResource<visual::EntityDef>(def_name));
+	setDef(global::g_env.resCache->getResource<visual::EntityDef>(def_name));
 }
 
 void Entity::changeDef(const EntityDef& def){
@@ -76,7 +77,7 @@ void Entity::changeDef(const EntityDef& def){
 }
 
 void Entity::changeDef(const util::Str8& def_name){
-	changeDef(resources::gCache->getResource<visual::EntityDef>(def_name));
+	changeDef(global::g_env.resCache->getResource<visual::EntityDef>(def_name));
 }
 
 void Entity::apply(const Entity& other){

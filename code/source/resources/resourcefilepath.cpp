@@ -1,3 +1,4 @@
+#include "global/env.hpp"
 #include "resourcefilepath.hpp"
 #include "cache.hpp"
 
@@ -38,7 +39,7 @@ const util::Str8& ResourceFilePath::directoryFromRoot() const {
 }
 	
 util::Str8 ResourceFilePath::whole() const {
-	return (util::Str8(gCache->getResourceRootPath() + fromRoot()));
+	return (util::Str8(global::g_env.resCache->getResourceRootPath() + fromRoot()));
 }
 	
 bool ResourceFilePath::isValid() const {

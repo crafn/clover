@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 #include "game/world_mgr.hpp"
-#include "localplayer.hpp"
 
 namespace clover {
 namespace game {
@@ -16,13 +15,10 @@ public:
 	void update();
 	void onQuit();
 
-	game::LocalPlayer& getLocalPlayer(){ return localPlayer; }
-
 private:
 	int32 temp;
 
 	game::WorldMgr worldLogic;
-	game::LocalPlayer localPlayer;
 };
 
 } // game

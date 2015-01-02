@@ -11,7 +11,7 @@ util::UniquePtr<nodes::NodeInstanceGroup> NodesEc::instantiateNodeGroup(){
 }
 
 util::DynArray<util::Str8> NodesEc::getNodeTypes(){
-	util::DynArray<nodes::NodeType*> nodetypes= resources::gCache->getSubCache<nodes::NodeType>().getResources();
+	util::DynArray<nodes::NodeType*> nodetypes= global::g_env.resCache->getSubCache<nodes::NodeType>().getResources();
 	util::DynArray<util::Str8> ret;
 	for (auto& m : nodetypes){
 		ret.pushBack(m->getName());
@@ -21,7 +21,7 @@ util::DynArray<util::Str8> NodesEc::getNodeTypes(){
 
 nodes::CompositionNodeLogic& NodesEc::addCompositionNodeLogic(const util::Str8& logic_name){
 	ensure(getSelectedResource());
-	return getSelectedResource()->add(resources::gCache->getResource<nodes::NodeType>(logic_name));
+	return getSelectedResource()->add(global::g_env.resCache->getResource<nodes::NodeType>(logic_name));
 }
 
 void NodesEc::removeCompositionNodeLogic(const nodes::CompositionNodeLogic& node){

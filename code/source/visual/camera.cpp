@@ -1,5 +1,6 @@
 #include "camera.hpp"
 #include "util/time.hpp"
+#include "global/env.hpp"
 #include "global/event.hpp"
 #include "global/cfg_mgr.hpp"
 #include "resources/cache.hpp"
@@ -27,7 +28,7 @@ Camera::Camera():
 	shadowCasterBuf.create(fbo_cfg);
 
 	// Entity is only to trigger fluid rendering at correct time
-	fluidModel.setMesh(resources::gCache->getResource<TriMesh>("unitRect"));
+	fluidModel.setMesh(global::g_env.resCache->getResource<TriMesh>("unitRect"));
 	fluidEntityDef.setModel(fluidModel);
 	fluidEntityDef.setShadingType(ModelEntityDef::Shading_Fluid);
 	fluidEntity.setDef(fluidEntityDef);

@@ -1,6 +1,7 @@
-#include "subcache_entity.hpp"
-#include "resources/cache.hpp"
 #include "entity_def_model.hpp"
+#include "global/env.hpp"
+#include "resources/cache.hpp"
+#include "subcache_entity.hpp"
 
 namespace clover {
 namespace resources {
@@ -17,7 +18,7 @@ visual::EntityDef* VisualEntityDefSubCache::findResource(const util::Str8& ident
 }
 
 const visual::EntityDef& VisualEntityDefSubCache::getErrorResource(){
-	return resources::gCache->getErrorResource<visual::ModelEntityDef>();
+	return global::g_env.resCache->getErrorResource<visual::ModelEntityDef>();
 }
 
 void VisualEntityDefSubCache::addEntityDef(const util::Str8& identifier, visual::EntityDef& entitydef){

@@ -2,6 +2,7 @@
 #define CLOVER_GAME_WORLD_GEN_CHUNK_GEN_HPP
 
 #include "build.hpp"
+#include "game/worldgrid.hpp"
 #include "util/linkedlist.hpp"
 #include "util/slicedtask.hpp"
 #include "worker.hpp"

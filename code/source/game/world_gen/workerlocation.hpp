@@ -2,6 +2,7 @@
 #define CLOVER_GAME_WORLD_GEN_WORKERLOCATION_HPP
 
 #include "build.hpp"
+#include "game/worldgrid.hpp"
 #include "util/vector.hpp"
 
 namespace clover {

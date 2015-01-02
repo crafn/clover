@@ -4,6 +4,7 @@
 #include <array>
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 #include <thread>
 #include <mutex>
 

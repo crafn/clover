@@ -1,5 +1,6 @@
 #include "compositionnodelogicgroup.hpp"
 #include "baseoutputslot.hpp"
+#include "global/env.hpp"
 #include "nodetype.hpp"
 #include "nodeinstancegroup.hpp"
 #include "resources/cache.hpp"
@@ -601,7 +602,7 @@ void CompositionNodeLogicGroup::applySerializationGraph(const SerializationGraph
 	// Create nodes
 	for (auto& graph_node : graph.nodes){
 		try {
-			add(resources::gCache->getResource<nodes::NodeType>(graph_node.typeName))
+			add(global::g_env.resCache->getResource<nodes::NodeType>(graph_node.typeName))
 				.setPosition(graph_node.position);
 		}
 		catch (global::Exception& e){

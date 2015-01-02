@@ -41,7 +41,7 @@ bool WeToolsEc::isChunksLocked() const {
 util::DynArray<util::Str8> WeToolsEc::getWeNames() const {
 	util::DynArray<util::Str8> ret;
 
-	for (auto& m : resources::gCache->getSubCache<game::WeType>().getResources()){
+	for (auto& m : global::g_env.resCache->getSubCache<game::WeType>().getResources()){
 		ret.pushBack(m->getName());
 	}
 	

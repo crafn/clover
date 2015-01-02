@@ -5,9 +5,10 @@
 #include "dyn_array.hpp"
 #include "math_constants.hpp"
 #include "math_utils.hpp"
-#include "vector.hpp"
 #include "matrix.hpp"
 #include "quaternion.hpp"
+#include "transform.hpp"
+#include "vector.hpp"
 
 #include <random>
 

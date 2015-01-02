@@ -102,7 +102,7 @@ void RigidFixtureDef::setMaterial(const physics::Material& mat){
 }
 
 void RigidFixtureDef::setMaterial(const util::Str8& name){
-	setMaterial(resources::gCache->getResource<game::PhysicalMaterial>(name));
+	setMaterial(global::g_env.resCache->getResource<game::PhysicalMaterial>(name));
 }
 
 void RigidFixtureDef::setAsSensor(bool b){

@@ -3,6 +3,7 @@
 
 #include "../editorcomponent.hpp"
 #include "build.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 #include "resources/resource.hpp"
 

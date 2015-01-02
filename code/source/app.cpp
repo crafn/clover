@@ -67,7 +67,7 @@ App::App(const util::Str8& executablePath){
 	util::gGameClock= new util::Clock();
 
 	new resources::Cache();
-	resources::gCache->update();
+	global::g_env.resCache->update();
 
 	new audio::AudioMgr();
 	new visual::VisualMgr();
@@ -86,7 +86,7 @@ App::~App(){
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
 	delete visual::gVisualMgr;
 	delete global::g_env.audioMgr;
-	delete resources::gCache; resources::gCache= nullptr;
+	delete global::g_env.resCache; global::g_env.resCache= nullptr;
 	delete util::gGameClock; util::gGameClock= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;
@@ -151,7 +151,7 @@ void App::run(){
 			global::g_env.physMgr->fluidUpdate();
 		}
 
-		resources::gCache->update();
+		global::g_env.resCache->update();
 
 		gui::gGuiMgr->update();
 

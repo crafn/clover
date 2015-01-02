@@ -1,6 +1,7 @@
 #include "file_impl_default.hpp"
 #include "file.hpp"
 
+#include <cstring>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

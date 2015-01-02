@@ -54,7 +54,7 @@ static constexpr SizeType particleDrawId= 1;
 static constexpr SizeType distFieldDrawId= 2;
 
 FluidST::FluidST(){
-	quad= &resources::gCache->getResource<visual::TriMesh>("unitRect");
+	quad= &global::g_env.resCache->getResource<visual::TriMesh>("unitRect");
 }
 
 void FluidST::render(Camera& cam){

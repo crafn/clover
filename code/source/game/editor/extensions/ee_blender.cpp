@@ -1,5 +1,6 @@
-#include "ee_blender.hpp"
 #include "collision/shape.hpp"
+#include "ee_blender.hpp"
+#include "global/env.hpp"
 #include "hardware/device.hpp"
 #include "resources/cache.hpp"
 
@@ -34,13 +35,13 @@ BlenderEE::BlenderEE()
 	server.registerReceivable<ResourceMsgTraits>([=] (const resources::SerializedResource& res){
 		print(debug::Ch::Net, debug::Vb::Trivial, "Resource received from Blender: %s", res.getTypeName().cStr());
 		
-		resources::gCache->parseResource(res);
+		global::g_env.resCache->parseResource(res);
 	});
 	
 	server.registerReceivable<ResourceRequestMsgTraits>([=] (const resources::ResourceId& res_id){
 		print(debug::Ch::Net, debug::Vb::Trivial, "Resource request from Blender: %s - %s", res_id.getTypeName().cStr(), res_id.getIdentifier().generateText().cStr());
 		
-		server.send<ResourceMsgTraits>(resources::gCache->getResource(res_id).getSerializedResource());
+		server.send<ResourceMsgTraits>(global::g_env.resCache->getResource(res_id).getSerializedResource());
 	});
 	
 	server.setOnConnectCallback([=] (){
@@ -48,7 +49,7 @@ BlenderEE::BlenderEE()
 		server.send<CloverPathMsgTraits>(hardware::gDevice->getWorkingDirectory());
 		
 		// Tell where resources are
-		server.send<ResourceRootMsgTraits>(resources::gCache->getResourceRootPath());
+		server.send<ResourceRootMsgTraits>(global::g_env.resCache->getResourceRootPath());
 	});
 	
 	listenForEvent(global::Event::OnEditorResourceSelect);

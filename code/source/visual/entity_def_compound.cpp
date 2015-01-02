@@ -1,5 +1,6 @@
 #include "entity_def_compound.hpp"
 #include "entitylogic_compound.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 
 namespace clover {
@@ -17,7 +18,7 @@ CompoundEntityDef::CompoundEntityDef()
 }
 
 const animation::Armature& CompoundEntityDef::getArmature() const {
-	return resources::gCache->getResource<animation::Armature>(armatureAttribute.get());
+	return global::g_env.resCache->getResource<animation::Armature>(armatureAttribute.get());
 }
 
 const util::DynArray<ArmatureAttachmentDef>& CompoundEntityDef::getAttachmentDefs() const {

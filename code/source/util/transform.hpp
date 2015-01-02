@@ -4,6 +4,8 @@
 #include "build.hpp"
 #include "hash.hpp"
 #include "math_utils.hpp"
+#include "quaternion.hpp"
+#include "vector.hpp"
 
 #include <utility>
 
@@ -139,6 +141,15 @@ struct SrtTransform : public RtTransform<R, T> {
 	
 	S scale;
 };
+
+typedef RtTransform<real32, Vec2f> RtTransform2f;
+typedef SrtTransform<Vec2f, real32, Vec2f> SrtTransform2f;
+typedef SrtTransform<Vec3f, Quatf, Vec3f> SrtTransform3f;
+
+typedef RtTransform<real64, Vec2d> RtTransform2d;
+typedef RtTransform<Quatd, Vec3d> RtTransform3d;
+typedef SrtTransform<Vec2d, real64, Vec2d> SrtTransform2d;
+typedef SrtTransform<Vec3d, Quatd, Vec3d> SrtTransform3d;
 
 /// Transforming of a vector
 template <typename R, typename T>

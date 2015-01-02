@@ -4,6 +4,7 @@
 #include "game/worldgrid.hpp"
 #include "game/world_gen/chunk_gen.hpp"
 #include "game/world_gen/world_gen.hpp"
+#include "global/env.hpp"
 #include "hardware/dll.hpp"
 #include "physics/grid.hpp"
 #include "util/dynamic.hpp"
@@ -72,6 +73,7 @@ real64 forestness(real64 x)
 DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 {
 	debug::print("Global world init");
+	ensure_msg(global::g_env.resCache, "resCache not initialized");
 	
 	gen.createWorker(	"playerSpawn",
 						util::Vec2d{1.0, groundSurfaceY(0.0) + 5.0},

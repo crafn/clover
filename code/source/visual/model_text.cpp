@@ -1,5 +1,6 @@
 #include "model_text.hpp"
 #include "debug/debugprint.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 
 namespace clover {
@@ -51,7 +52,7 @@ void TextModel::setActiveFont(const util::Str8& name){
 }
 
 void TextModel::setActiveFont(const util::Str8& fontname, Font::Size size){
-	activeFont= &resources::gCache->getFont(fontname);
+	activeFont= &global::g_env.resCache->getFont(fontname);
 	activeSize= size;
 
 	setMaterial(activeFont->getMaterial());

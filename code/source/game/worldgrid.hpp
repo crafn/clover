@@ -7,6 +7,11 @@
 namespace clover {
 namespace game {
 
+typedef util::Vec2d WorldVec;
+typedef util::Vec2i BlockVec;
+typedef util::Vec2i ChunkVec;
+typedef util::Vec2i RegionVec;
+
 /// All chunk/region coordinate transforms
 /// @todo Reconsider more dynamic solution
 class WorldGrid {

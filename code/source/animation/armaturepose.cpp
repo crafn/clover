@@ -1,5 +1,6 @@
 #include "armaturepose.hpp"
 #include "armature.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 
 namespace clover {
@@ -84,7 +85,7 @@ ArmaturePose ArmaturePose::byLocalPose(const Armature& armature, Pose local_pose
 }
 
 ArmaturePose::ArmaturePose()
-		: armature(&resources::gCache->getErrorResource<Armature>())
+		: armature(&global::g_env.resCache->getErrorResource<Armature>())
 		, localInBindPose(defaultPose()){
 }
 
@@ -105,7 +106,7 @@ ArmaturePose::Pose ArmaturePose::getGlobalPose() const {
 }
 
 void ArmaturePose::setArmature(const util::Str8& name){
-	armature= &resources::gCache->getResource<Armature>(name);
+	armature= &global::g_env.resCache->getResource<Armature>(name);
 	localInBindPose= defaultPose();
 }
 

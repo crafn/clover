@@ -1,6 +1,7 @@
 #include "clip.hpp"
 #include "armature.hpp"
 #include "bvh_util.hpp"
+#include "global/env.hpp"
 #include "global/file.hpp"
 #include "resources/cache.hpp"
 
@@ -52,7 +53,7 @@ ArmaturePose Clip::getPose(real32 phase, bool interpolate) const {
 }
 
 const Armature& Clip::getArmature() const {
-	return resources::gCache->getResource<Armature>(armatureAttribute.get());
+	return global::g_env.resCache->getResource<Armature>(armatureAttribute.get());
 }
 
 void Clip::resourceUpdate(bool load, bool force){

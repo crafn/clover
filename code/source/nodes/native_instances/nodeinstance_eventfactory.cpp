@@ -1,3 +1,4 @@
+#include "global/env.hpp"
 #include "nodeinstance_eventfactory.hpp"
 #include "resources/cache.hpp"
 
@@ -35,7 +36,7 @@ public:
 			return;
 
 		util::DynArray<SignalArgument> args=
-			resources::gCache->getResource<NodeEventType>(
+			global::g_env.resCache->getResource<NodeEventType>(
 					eventTypeSlot->getDefaultValue<SignalType::EventType>()
 			).getArguments();
 			
@@ -75,9 +76,9 @@ void EventFactoryNodeInstance::create(){
 	eventOutput= addOutputSlot<SignalType::Event>("event");
 	
 	if (!eventTypeInput->get().empty())
-		eventType= &resources::gCache->getResource<NodeEventType>(eventTypeInput->get());
+		eventType= &global::g_env.resCache->getResource<NodeEventType>(eventTypeInput->get());
 	else
-		eventType= &resources::gCache->getErrorResource<NodeEventType>();
+		eventType= &global::g_env.resCache->getErrorResource<NodeEventType>();
 	
 	for (auto& m : eventType->getArguments()){
 		argumentInputs[m.name]= addInputSlot(m.name, "arg", m.signalType);

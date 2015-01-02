@@ -1,5 +1,6 @@
 #include "entitylogic_compound.hpp"
 #include "entity_def_compound.hpp"
+#include "global/env.hpp"
 #include "resources/cache.hpp"
 #include "util/math.hpp"
 
@@ -76,7 +77,7 @@ util::DynArray<Entity*> CompoundEntityLogic::getEntities() const {
 
 auto CompoundEntityLogic::createAttachedEntity(const ArmatureAttachmentDef& def, const animation::Armature& armature) -> AttachedEntity {
 	AttachedEntity e;
-	e.entity= EntityPtr(new Entity(resources::gCache->getResource<visual::EntityDef>(def.entityName)));
+	e.entity= EntityPtr(new Entity(global::g_env.resCache->getResource<visual::EntityDef>(def.entityName)));
 	e.jointId= armature.getJointId(def.jointName);
 	if (def.offset)
 		e.offset= *def.offset;

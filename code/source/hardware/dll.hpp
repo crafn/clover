@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 
-
 namespace clover {
 namespace hardware {
 

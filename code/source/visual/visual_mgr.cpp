@@ -1,13 +1,14 @@
-#include "visual_mgr.hpp"
 #include "camera_mgr.hpp"
 #include "debug/debugdraw.hpp"
 #include "entity_mgr.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "hardware/device.hpp"
 #include "particle_mgr.hpp"
 #include "resources/cache.hpp"
 #include "shader_mgr.hpp"
 #include "util/profiling.hpp"
+#include "visual_mgr.hpp"
 
 // Resources
 #include "shadertemplate.hpp"
@@ -41,15 +42,15 @@ VisualMgr::VisualMgr()
 	ModelEntityDef::setPoolMem(&modelDefMem);
 	ModelEntityLogic::setPoolMem(&modelLogicMem);
 
-	resources::gCache->preLoad<ShaderTemplate>();
-	resources::gCache->preLoad<Texture>();
-	resources::gCache->preLoad<Material>();
-	resources::gCache->preLoad<TriMesh>();
-	resources::gCache->preLoad<Model>();
-	resources::gCache->preLoad<EntityDef>();
-	resources::gCache->preLoad<ModelEntityDef>();
-	resources::gCache->preLoad<LightEntityDef>();
-	resources::gCache->preLoad<CompoundEntityDef>();
+	global::g_env.resCache->preLoad<ShaderTemplate>();
+	global::g_env.resCache->preLoad<Texture>();
+	global::g_env.resCache->preLoad<Material>();
+	global::g_env.resCache->preLoad<TriMesh>();
+	global::g_env.resCache->preLoad<Model>();
+	global::g_env.resCache->preLoad<EntityDef>();
+	global::g_env.resCache->preLoad<ModelEntityDef>();
+	global::g_env.resCache->preLoad<LightEntityDef>();
+	global::g_env.resCache->preLoad<CompoundEntityDef>();
 
 	shaderMgr= new ShaderMgr;
 	entityMgr= new EntityMgr(*shaderMgr);
@@ -63,15 +64,15 @@ VisualMgr::~VisualMgr(){
 	delete entityMgr; entityMgr= nullptr;
 	delete shaderMgr; shaderMgr= nullptr;
 
-	resources::gCache->unload<CompoundEntityDef>();
-	resources::gCache->unload<LightEntityDef>();
-	resources::gCache->unload<ModelEntityDef>();
-	resources::gCache->unload<EntityDef>();
-	resources::gCache->unload<Model>();
-	resources::gCache->unload<TriMesh>();
-	resources::gCache->unload<Material>();
-	resources::gCache->unload<Texture>();
-	resources::gCache->unload<ShaderTemplate>();
+	global::g_env.resCache->unload<CompoundEntityDef>();
+	global::g_env.resCache->unload<LightEntityDef>();
+	global::g_env.resCache->unload<ModelEntityDef>();
+	global::g_env.resCache->unload<EntityDef>();
+	global::g_env.resCache->unload<Model>();
+	global::g_env.resCache->unload<TriMesh>();
+	global::g_env.resCache->unload<Material>();
+	global::g_env.resCache->unload<Texture>();
+	global::g_env.resCache->unload<ShaderTemplate>();
 
 	ModelEntityLogic::setPoolMem(nullptr);
 	ModelEntityDef::setPoolMem(nullptr);

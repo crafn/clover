@@ -8,6 +8,7 @@
 #include "util/dyn_array.hpp"
 #include "util/ensure.hpp"
 #include "util/unique_ptr.hpp"
+#include "util/vector.hpp"
 
 namespace clover {
 namespace physics {
@@ -18,6 +19,8 @@ class PhysMgr;
 
 struct OnAttachCb : public util::SingleCallbacker<>{};
 struct OnDetachCb : public util::SingleCallbacker<>{};
+
+using WorldVec= util::Vec2d;
 
 template <typename, JointType>
 struct JointTypeCrtp;
