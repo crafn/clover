@@ -1,5 +1,7 @@
 #include "world_gen.hpp"
 #include "../world_mgr.hpp"
+#include "../worldchunk.hpp"
+#include "../worldentity_mgr.hpp"
 #include "util/containeralgorithms.hpp"
 #include "util/profiling.hpp"
 #include "workertype.hpp"

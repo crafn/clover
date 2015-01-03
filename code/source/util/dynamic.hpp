@@ -16,12 +16,10 @@ namespace util {
 template <typename T>
 class Dynamic {
 public:
-
-	/// @todo Add variadic constructor
-
-	Dynamic()
-			: value(util::makeUniquePtr<T>()){
-	}
+	template <typename... Args>
+	Dynamic(Args&&... args)
+		: value(util::makeUniquePtr<T>(std::forward<Args>(args)...))
+	{ }
 
 	template<	typename U= T,
 				class= typename std::enable_if<std::is_copy_constructible<U>::value>::type>

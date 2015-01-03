@@ -1,5 +1,6 @@
 #include "chunk_gen.hpp"
 #include "../world_mgr.hpp"
+#include "../worldentity_mgr.hpp"
 #include "../worldchunk.hpp"
 #include "util/profiling.hpp"
 #include "world_gen.hpp"

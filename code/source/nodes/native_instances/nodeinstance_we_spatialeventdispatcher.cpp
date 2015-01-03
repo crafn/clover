@@ -1,5 +1,6 @@
 #include "nodeinstance_we_spatialeventdispatcher.hpp"
 #include "game/world_mgr.hpp"
+#include "game/worldentity_set.hpp"
 #include "game/worldquery.hpp"
 
 namespace clover {

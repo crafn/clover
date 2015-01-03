@@ -3,6 +3,7 @@
 #include "util/profiling.hpp"
 #include "worldentity_table.hpp"
 #include "worldchunk.hpp"
+#include "worldchunk_mgr.hpp"
 #include "worldentity_handle.hpp"
 #include "worldquery.hpp"
 #include "world_mgr.hpp"

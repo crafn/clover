@@ -81,7 +81,7 @@ public:
 			case Type::Int32: return sizeof(int32);
 			case Type::Uint32: return sizeof(uint32);
 			case Type::Real32: return sizeof(real32);
-			default: release_ensure_msg(0, "Not implemented");
+			default: release_ensure_msg(0, "Not implemented"); return 0;
 		}
 	}
 	
@@ -94,7 +94,7 @@ public:
 			case Type::Uint16: return std::numeric_limits<uint16>::max();
 			case Type::Int32: return std::numeric_limits<int32>::max();
 			case Type::Uint32: return std::numeric_limits<uint32>::max();
-			default: release_ensure_msg(0, "Not implemented");
+			default: release_ensure_msg(0, "Not implemented"); return 0;
 		}
 	}
 

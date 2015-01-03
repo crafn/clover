@@ -3,6 +3,9 @@
 #include "ensure.hpp"
 #include "util/string.hpp"
 
+/// For test
+#include "util/exception.hpp"
+
 namespace clover {
 namespace util {
 

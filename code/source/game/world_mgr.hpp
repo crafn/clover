@@ -2,48 +2,39 @@
 #define CLOVER_GAME_WORLD_MGR_HPP
 
 #include "build.hpp"
-#include "worldchunk.hpp"
-#include "worldentity_mgr.hpp"
-#include "worldquery.hpp"
-#include "save_mgr.hpp"
-#include "worldcontactlistener.hpp"
-#include "worldaudio_env.hpp"
-#include "propertygrid.hpp"
-#include "ui/hid/actionlistener.hpp"
-#include "visual/camera.hpp"
-#include "visual/entity.hpp"
-#include "visual/entity_def_model.hpp"
-#include "world_gen/world_gen.hpp"
-#include "worldchunk_mgr.hpp"
-#include "worldentity_handle.hpp"
+#include "util/dynamic.hpp"
 
 namespace clover {
-namespace nodes {
-
-struct WeEdgeSpawnerNodeInstance;
-
-} // nodes
+namespace nodes { class WeEdgeSpawnerNodeInstance; }
 namespace game {
+namespace world_gen { class WorldGen; }
 
+class PropertyGrid;
+class SaveMgr;
+class WeMgr;
+class WorldAudioEnv;
+class WorldChunk;
+class WorldChunkMgr;
 class WorldEntity;
+class WorldQuery;
 
 class WorldMgr {
 public:
 	WorldMgr();
-	virtual ~WorldMgr();
+	~WorldMgr();
 
 	void update();
 
-	void setChunksLocked(bool b= true){ chunksLocked= b; }
-	bool isChunksLocked() const { return chunksLocked; }
+	void setChunksLocked(bool b= true);
+	bool isChunksLocked() const;
 
-	WorldChunkMgr& getChunkMgr(){ return chunkMgr; }
-	WeMgr& getWeMgr(){ return weMgr; }
-	WorldQuery& getQuery(){ return worldQuery; }
-	PropertyGrid& getPropertyGrid(){ return propertyGrid; }
-	SaveMgr& getSaveMgr(){ return saveMgr; }
-	world_gen::WorldGen& getWorldGen(){ return worldGen; }
-	WorldAudioEnv& getAudioEnv(){ return audioEnv; }
+	WorldChunkMgr& getChunkMgr();
+	WeMgr& getWeMgr();
+	WorldQuery& getQuery();
+	PropertyGrid& getPropertyGrid();
+	SaveMgr& getSaveMgr();
+	world_gen::WorldGen& getWorldGen();
+	WorldAudioEnv& getAudioEnv();
 
 	real64 getTime() const;
 
@@ -54,41 +45,15 @@ public:
 	real64 getDayPhase() const;
 
 	/// game::WorldChunk calls
-	void onChunkStateChange(const game::WorldChunk& ch, WorldChunk::State prev);
+	void onChunkStateChange(const game::WorldChunk& ch, int32 prev_state);
 
 	/// nodes::WeEdgeSpawnerNodeInstance calls
 	void onEdgeSpawnTrigger(const nodes::WeEdgeSpawnerNodeInstance& spawn);
 private:
-
 	void updateWorldIO();
-	util::DynArray<util::Vec2i> loadedChunks;
 
-	real64 dayTime;
-	real64 lastUpdTime;
-	bool chunksLocked;
-
-	/// @todo Should be in script or somewhere else
-	visual::ModelEntityDef bgDefs[3];
-	visual::Entity bg[3]; // Evening, Day, Night
-	visual::ModelEntityDef sunReDef;
-	visual::Entity sunRE;
-	visual::ModelEntityDef lightBackgroundDef;
-	visual::Entity lightBackground;
-
-	util::DynArray<const nodes::WeEdgeSpawnerNodeInstance*> edgeSpawns;
-
-	/// @todo Ptrs so that forward declaring can be used
-	WorldChunkMgr chunkMgr;
-	WeMgr weMgr;
-	WorldQuery worldQuery;
-	PropertyGrid propertyGrid;
-	SaveMgr	saveMgr;
-	WorldAudioEnv audioEnv;
-	WorldContactListener contactListener;
-	world_gen::WorldGen worldGen;
-
-	ui::hid::ActionListener<> worldTimeForwardListener;
-	ui::hid::ActionListener<> worldTimeRewindListener;
+	struct M;
+	util::Dynamic<M> m;
 };
 
 extern WorldMgr* gWorldMgr;

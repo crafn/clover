@@ -200,7 +200,7 @@ void FluidMgr::postUpdate(){
 					pforce.chunkId == chunkIdNone)
 				continue;
 
-			ensure(pforce.objectId < pool.size())
+			ensure(pforce.objectId < pool.size());
 			RigidObject* obj= pool[pforce.objectId];
 
 			if (!obj)

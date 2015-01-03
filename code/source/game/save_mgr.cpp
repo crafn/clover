@@ -6,6 +6,7 @@
 #include "util/slicedtask.hpp"
 #include "util/thread.hpp"
 #include "world_mgr.hpp"
+#include "worldchunk_mgr.hpp"
 #include "worldentity_table.hpp"
 
 #include <fstream>

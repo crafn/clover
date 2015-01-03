@@ -3,6 +3,9 @@
 #include "util/profiling.hpp"
 #include <polypartition.h>
 
+/// For test
+#include <iostream>
+
 namespace clover {
 namespace util {
 
@@ -465,6 +468,7 @@ Polygon Polygon::splitConvex(SizeType max_vert_count){
 
 	dump();
 	release_ensure_msg(0, "Polygon::splitConvex algorithm failed");
+	return Polygon{};
 }
 
 Polygon Polygon::simplified(real64 min_edge_length_sqr) const {

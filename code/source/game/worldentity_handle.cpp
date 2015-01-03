@@ -130,7 +130,7 @@ WeHandle::operator bool() const {
 }
 
 game::WorldEntity* WeHandle::operator->() const {
-	ensure_msg(isGood(), "WEHandle::operator->(): invalid handle for id: %lld", entityId)
+	ensure_msg(isGood(), "WEHandle::operator->(): invalid handle for id: %lld", entityId);
 	return get();
 }
 

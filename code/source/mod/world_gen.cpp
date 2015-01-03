@@ -1,5 +1,6 @@
 #include "collision/baseshape_polygon.hpp"
 #include "game/physics.hpp"
+#include "game/propertygrid.hpp"
 #include "game/world_mgr.hpp"
 #include "game/worldgrid.hpp"
 #include "game/world_gen/chunk_gen.hpp"

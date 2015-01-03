@@ -1,5 +1,6 @@
 #include "worldchunk.hpp"
 #include "game/world_mgr.hpp" // Only for callbacks
+#include "game/worldentity_mgr.hpp"
 #include "game/worldgrid.hpp"
 
 namespace clover {
@@ -95,7 +96,7 @@ void WorldChunk::setState(State s){
 		entities[i]->setActive(state == State::Active);
 	}
 
-	game::gWorldMgr->onChunkStateChange(*this, prev);
+	game::gWorldMgr->onChunkStateChange(*this, static_cast<int32>(prev));
 }
 
 void WorldChunk::setPosition(ChunkVec pos){

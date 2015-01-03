@@ -2,6 +2,7 @@
 #define CLOVER_UTIL_UNIQUEPTR_HPP
 
 #include "build.hpp"
+#include "ensure.hpp"
 
 #include <memory>
 

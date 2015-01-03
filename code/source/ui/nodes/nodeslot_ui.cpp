@@ -374,7 +374,7 @@ void NodeSlotGui::removeArrivingLineSlot(NodeSlotGui& slot){
 	//print(debug::Ch::General, debug::Vb::Trivial, "Slot: %p removing from %p", &slot, this);
 	
 	auto it= arrivingLineSlots.find(&slot);
-	ensure(it != arrivingLineSlots.end())
+	ensure(it != arrivingLineSlots.end());
 	arrivingLineSlots.erase(it);
 }
 

@@ -131,6 +131,7 @@ WorldVec B2Joint<DefType, JointType>::getAnchor(SizeType i) const {
 	if (i == 1)
 		return fromB2(joint->GetAnchorB());
 	release_ensure(0);
+	std::abort();
 }
 
 template <typename DefType, typename JointType>

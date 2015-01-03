@@ -3,6 +3,7 @@
 #include "devlogic.hpp"
 #include "global/cfg_mgr.hpp"
 #include "util/profiling.hpp"
+#include "util/time.hpp"
 
 namespace clover {
 namespace game {

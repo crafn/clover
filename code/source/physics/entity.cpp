@@ -338,6 +338,7 @@ T Entity::getExactTransform(
 	}
 
 	release_ensure_msg(0, "this should not happen");
+	return T{};
 }
 
 template util::RtTransform2d Entity::getExactTransform(

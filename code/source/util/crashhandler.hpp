@@ -17,11 +17,11 @@ class CrashHandler {
 public:
 	CrashHandler();
 	~CrashHandler();
-	
+
 	void onUnhandledException(const std::exception& e);
-	
-	static std::string getBacktrace();
-	
+
+	static std::string getBacktrace(uint32 frames_to_skip= 0);
+
 private:
 	static std::string getOutputFilePath();
 

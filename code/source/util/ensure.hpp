@@ -1,28 +1,19 @@
 #ifndef CLOVER_UTIL_ENSURE_HPP
 #define CLOVER_UTIL_ENSURE_HPP
 
-#include "crashhandler.hpp"
-#include "exception.hpp"
-#include "misc.hpp"
+#include "build.hpp"
 
-#define ensure_impl(x) if (! (x)) { \
-				throw util::FatalException("	in file %s\n	in method %s\n	  at line %i\n	  %s failed\nBacktrace:\n%s",\
-								util::getFilenameFromPath(__FILE__).c_str(),\
-								util::getReducedFunctionName(__PRETTY_FUNCTION__).c_str(),\
-								__LINE__, #x, util::CrashHandler::getBacktrace().c_str()); }
-								
-#define ensure_msg_impl(x, a, ...) if (!(x)){\
-				throw util::FatalException("	in file %s\n	in method %s:\n	   at line %i\n	   " a "\nBacktrace:\n%s",\
-								util::getFilenameFromPath(__FILE__).c_str(),\
-								util::getReducedFunctionName(__PRETTY_FUNCTION__).c_str(),\
-								__LINE__, ##__VA_ARGS__, util::CrashHandler::getBacktrace().c_str()); }
+#define ensure_impl(x) \
+	util::ensureImpl(!!(x), __FILE__, __PRETTY_FUNCTION__, __LINE__, #x)
+
+#define ensure_msg_impl(x, a, ...) \
+	util::ensureMsgImpl(!!(x), __FILE__, __PRETTY_FUNCTION__, __LINE__, a, ##__VA_ARGS__)
 
 #define		release_ensure(x) ensure_impl(x)
 #define		release_ensure_msg(x, a, ...) ensure_msg_impl(x, a, ##__VA_ARGS__)
 
 
 #ifndef RELEASE
-	// Development assertti
 	#define		ensure(x) ensure_impl(x)
 	#define		ensure_msg(x, a, ...) ensure_msg_impl(x, a, ##__VA_ARGS__)
 
@@ -43,6 +34,11 @@
 
 namespace clover {
 namespace util {
+
+void ensureImpl(bool cond, const char* file, const char* func, int line,
+		const char* cond_str);
+void ensureMsgImpl(bool cond, const char* file, const char* func, int line,
+		const char* msg, ...);
 
 template <typename T>
 T* noNullFlowsThrough(T* ptr){

@@ -49,7 +49,8 @@ std::string CrashHandler::getOutputFilePath(){
 
 #if OS == OS_WINDOWS
 
-	std::string CrashHandler::getBacktrace(){
+	std::string CrashHandler::getBacktrace(uint32 frames_to_skip)
+	{
 		util::Str8 ret;
 
 
@@ -62,10 +63,9 @@ std::string CrashHandler::getOutputFilePath(){
 		typedef USHORT (WINAPI *CaptureStackBackTraceType)(ULONG, ULONG, PVOID*, PULONG);
 		CaptureStackBackTraceType backtrace= (CaptureStackBackTraceType)(GetProcAddress(LoadLibrary("kernel32.dll"), "RtlCaptureStackBackTrace"));
 
-
 		if (backtrace){
 			// Use -fno-omit-frame-pointer flag to get more than one trace
-			int trace_size= backtrace(0, max_count, trace, &hash_code);
+			int trace_size= backtrace(frames_to_skip, max_count, trace, &hash_code);
 			for (int i=0; i<trace_size; ++i){
 				ret += util::Str8::format("%i: %p\n", i, trace[i]);
 			}
@@ -73,34 +73,7 @@ std::string CrashHandler::getOutputFilePath(){
 		else {
 			ret += "Couldn't find CaptureStackBackTrace\n";
 		}
-
-		/*
-		const uint32 max_count= 32;
-		for (uint32 i=0; i<max_count; ++i){
-
-			void* addr= nullptr;
-
-			switch (i){
-				#define CASE(x) case x: addr= __builtin_return_address(x); break;
-
-				CASE(0) CASE(1) CASE(2) CASE(3)
-				CASE(4) CASE(5) CASE(6) CASE(7)
-				CASE(8) CASE(9) CASE(10) CASE(11)
-				CASE(12) CASE(13) CASE(14) CASE(15)
-				CASE(16) CASE(17) CASE(18) CASE(19)
-				CASE(20) CASE(21) CASE(22) CASE(23)
-				CASE(24) CASE(25) CASE(26) CASE(27)
-				CASE(28) CASE(29) CASE(30) CASE(31)
-				#undef CASE
-				default:;
-			}
-
-			if (!addr) break;
-
-			ret += util::Str8("%i: 0x%0x\n", i, addr);
-		}
-*/
-		return (std::string(ret.cStr()));
+		return std::string(ret.cStr());
 	}
 
 	void CrashHandler::registerSignalHandler(){
@@ -129,7 +102,8 @@ std::string CrashHandler::getOutputFilePath(){
 
 #elif OS == OS_LINUX
 
-	std::string CrashHandler::getBacktrace(){
+	std::string CrashHandler::getBacktrace(uint32 frames_to_skip)
+	{
 		const int max_count= 128;
 		void* trace[max_count];
 		int trace_size= backtrace(trace, max_count);
@@ -137,7 +111,7 @@ std::string CrashHandler::getOutputFilePath(){
 		char** messages= backtrace_symbols(trace, trace_size);
 
 		util::Str8 ret;
-		for (int i=0; i<trace_size; ++i){
+		for (int i= frames_to_skip; i < trace_size; ++i){
 			ret += util::Str8::format("#%i %s\n", i, messages[i]);
 		}
 

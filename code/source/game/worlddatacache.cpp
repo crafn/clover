@@ -25,6 +25,7 @@ WorldDataCache::RegionId WorldDataCache::getRegionId(RegionVec pos) const {
 		++id;
 	}
 	release_ensure_msg(0, "Region not found: (%i, %i)", (int)pos.x, (int)pos.y);
+	return 0;
 }
 
 void WorldDataCache::removeRegionData(RegionVec pos){

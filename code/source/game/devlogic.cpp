@@ -4,6 +4,7 @@
 #include "global/env.hpp"
 #include "global/event.hpp"
 #include "game/worldchunk.hpp"
+#include "game/worldchunk_mgr.hpp"
 #include "game/worldentity_mgr.hpp"
 #include "game/worldentity_handleconnection.hpp"
 #include "audio/audio_mgr.hpp"

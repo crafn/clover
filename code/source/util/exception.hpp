@@ -4,9 +4,7 @@
 #include "build.hpp"
 
 #include <stdexcept>
-#include <iostream>
-#include <string>
-#include <stdarg.h>
+#include <cstdarg>
 #include <boost/exception/exception.hpp>
 
 namespace clover {

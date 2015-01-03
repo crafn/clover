@@ -53,6 +53,7 @@ const util::Str8& FileMgr::getDefaultOutputPath() const {
 	}
 
 	release_ensure_msg(false, "Couldn't find default output path");
+	std::abort();
 }
 
 FileImplPtr FileMgr::create(const util::Str8& path) const {

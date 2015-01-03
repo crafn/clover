@@ -85,6 +85,7 @@ static ThreadUid getThreadUid(std::thread::id id){
 			return g_threads[i].uid;
 	}
 	ensure_msg(false, "Thread UID not found");
+	std::abort();
 }
 
 static Profiler::ThreadLocalInfo& getThreadLocalInfo(ThreadUid uid){
@@ -94,6 +95,7 @@ static Profiler::ThreadLocalInfo& getThreadLocalInfo(ThreadUid uid){
 			return *NONULL(g_threads[i].info);
 	}
 	ensure_msg(false, "Thread LocalInfo not found");
+	std::abort();
 }
 
 static void staticThreadLocalInfoInit(){

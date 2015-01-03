@@ -1,4 +1,10 @@
 #include "ingamelogic.hpp"
+#include "save_mgr.hpp"
+#include "world_gen/world_gen.hpp"
+#include "worldaudio_env.hpp"
+#include "worldchunk.hpp"
+#include "worldchunk_mgr.hpp"
+#include "worldentity_mgr.hpp"
 
 namespace clover {
 namespace game {
