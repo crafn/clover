@@ -1,3 +1,5 @@
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_clipplayer.hpp"
 #include "animation/clip.hpp"
 #include "resources/cache.hpp"
@@ -61,7 +63,7 @@ void ClipPlayerNodeInstance::update(){
 		time_scale= 0.0;
 	}
 	
-	time += util::gGameClock->getDeltaTime()*time_scale;
+	time += global::g_env.worldMgr->getDeltaTime()*time_scale;
 	
 	const real32 max_time= clip->getTime();
 	while (time > max_time){

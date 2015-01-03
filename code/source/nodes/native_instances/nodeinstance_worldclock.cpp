@@ -1,4 +1,5 @@
 #include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_worldclock.hpp"
 
 namespace clover {
@@ -24,7 +25,7 @@ void WorldClockNodeInstance::create()
 
 void WorldClockNodeInstance::update()
 {
-	real64 day_phase= game::gWorldMgr->getDayPhase();
+	real64 day_phase= global::g_env.worldMgr->getDayPhase();
 	dayPhaseOut->send(day_phase);
 
 	real64 dayness= day_phase*2.0;

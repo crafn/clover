@@ -9,6 +9,10 @@
 #include "visual/camera.hpp"
 #include "visual/mesh.hpp"
 
+/// @todo Remove
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
+
 namespace clover {
 namespace visual {
 
@@ -149,7 +153,7 @@ void FluidST::use(Shader& shd){
 
 		particleDraw.shader.setUniform(
 				"u_hueCycle",
-				util::gGameClock->getTime());
+				global::g_env.worldMgr->getTime());
 
 	}
 	else if (&shd == &distFieldDraw.shader) {

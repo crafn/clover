@@ -70,22 +70,8 @@ bool BaseUi::update(){
 	
 	cursorOnWorld= hardware::gMouse->getPosition().converted(util::Coord::World).getValue();
 
-	//audioRecv2.setPosition(util::Vec2d(0));
-
 	if (quit || glfwWindowShouldClose(&hardware::gDevice->getWindow())){
 		return false;
-	}
-
-	if (hardware::gKeyboard->isPressed(GLFW_KEY_KP_0)){
-		util::gGameClock->toggle();
-	}
-
-	if (hardware::gKeyboard->isDown(GLFW_KEY_KP_ADD)){
-		util::gGameClock->setTimeScale(util::gGameClock->getTimeScale() + 0.2*util::gRealClock->getDeltaTime());
-	}
-	
-	if (hardware::gKeyboard->isDown(GLFW_KEY_KP_SUBTRACT)){
-		util::gGameClock->setTimeScale(util::gGameClock->getTimeScale() - 0.2*util::gRealClock->getDeltaTime());
 	}
 
 	if (editorUi){

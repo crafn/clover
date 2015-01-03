@@ -9,12 +9,16 @@
 #include "game/physics.hpp"
 #include "game/worldentity.hpp"
 
+/// @todo Remove
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
+
 namespace clover {
 namespace physics {
 namespace detail {
 
 real64 timestamp()
-{ return util::gGameClock->getTime(); }
+{ return global::g_env.worldMgr->getTime(); }
 
 SizeType cellIndex(Grid::CellVec cell, Grid::CellVec origin, Grid::CellVec size)
 {

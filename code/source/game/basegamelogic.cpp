@@ -22,13 +22,7 @@ BaseGameLogic::~BaseGameLogic(){
 
 void BaseGameLogic::update(){
 	PROFILE();
-	if (global::gCfgMgr->get<bool>("game::useFixedTimeStep", false)){
-		util::gGameClock->setFixedDeltaTime(global::gCfgMgr->get<real64>("game::fixedTimeStep", 1.0/60.0));
-	}
-	else {
-		util::gGameClock->unsetFixedDeltaTime();
-	}
-	
+
 	devLogic->update();
 
 	if (inGameLogic)

@@ -1,3 +1,5 @@
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_exp_release_real.hpp"
 
 namespace clover {
@@ -24,7 +26,7 @@ void RealExpReleaseNodeInstance::create()
 
 	accumIn->setOnReceiveCallback([&] ()
 	{
-		value += accumIn->get()*util::gGameClock->getDeltaTime();
+		value += accumIn->get()*global::g_env.worldMgr->getDeltaTime();
 		setUpdateNeeded(true);
 	});
 
@@ -33,7 +35,7 @@ void RealExpReleaseNodeInstance::create()
 
 void RealExpReleaseNodeInstance::update()
 {
-	real64 dt= util::gGameClock->getDeltaTime();
+	real64 dt= global::g_env.worldMgr->getDeltaTime();
 	value= std::min(value, realLimitIn->get());
 
 	real64 target_value= targetIn->get();

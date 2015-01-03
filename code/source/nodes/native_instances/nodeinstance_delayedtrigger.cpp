@@ -1,3 +1,5 @@
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_delayedtrigger.hpp"
 
 namespace clover {
@@ -30,7 +32,7 @@ void DelayedTriggerNodeInstance::create()
 
 void DelayedTriggerNodeInstance::update()
 {
-	timer -= util::gGameClock->getDeltaTime();
+	timer -= global::g_env.worldMgr->getDeltaTime();
 
 	if (timer <= 0.0){
 		timer= 0.0;

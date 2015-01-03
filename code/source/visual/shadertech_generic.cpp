@@ -60,12 +60,6 @@ void GenericST::use()
 
 	shader.setUniform("u_colorMul", colorMul);
 
-	if (sway){
-		real32 phase= util::gGameClock->getTime()*swayPhaseMul;
-		shader.setUniform("u_swayPhase", phase);
-		shader.setUniform("u_swayScale", swayScale);
-	}
-
 	// Lights
 	if (lightCount > 0){
 		SizeType count= lightCount;

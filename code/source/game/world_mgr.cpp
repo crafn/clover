@@ -130,7 +130,7 @@ void createEdges(
 				{ // Create entity
 					PROFILE();
 					game::WeHandle edge=
-						game::gWorldMgr->getWeMgr().createEntity(
+						global::g_env.worldMgr->getWeMgr().createEntity(
 								NONULL(spawners[s_i]->getEdgeType())->getName(),
 								edge_t.translation);
 					edge->setAttribute("transform", edge_t);
@@ -158,12 +158,13 @@ struct WorldMgr::M {
 		, propertyGrid(global::g_env.physMgr->getWorld().getGrid())
 		, worldGen(mgr, global::g_env.resCache->getSubCache<world_gen::WorkerType>().getResources())
 		, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
-			dayTime += util::gGameClock->getDeltaTime()*300;
+			dayTime += clock.getDeltaTime()*300;
 		})
 		, worldTimeRewindListener("host", "dev", "worldTimeRewind", [this] (){
-			dayTime -= util::gGameClock->getDeltaTime()*300;
+			dayTime -= clock.getDeltaTime()*300;
 		}) { }
 
+	util::Clock clock;
 	util::DynArray<util::Vec2i> loadedChunks;
 
 	real64 dayTime;
@@ -192,8 +193,6 @@ struct WorldMgr::M {
 	ui::hid::ActionListener<> worldTimeForwardListener;
 	ui::hid::ActionListener<> worldTimeRewindListener;
 };
-
-WorldMgr* gWorldMgr;
 
 WorldMgr::WorldMgr()
 	: m(*this)
@@ -238,6 +237,12 @@ WorldMgr::~WorldMgr()
 
 void WorldMgr::update()
 {
+	if (global::gCfgMgr->get<bool>("game::useFixedTimeStep", false)) {
+		m->clock.setFixedDeltaTime(global::gCfgMgr->get<real64>("game::fixedTimeStep", 1.0/60.0));
+	} else {
+		m->clock.unsetFixedDeltaTime();
+	}
+
 	PROFILE();
 	{ // Inform grid changes to WorldEntities
 		PROFILE();
@@ -339,8 +344,8 @@ void WorldMgr::update()
 		visual::gVisualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
 	}
 	
-	m->dayTime += util::gGameClock->getDeltaTime();
-	m->lastUpdTime= util::gGameClock->getTime();
+	m->dayTime += m->clock.getDeltaTime();
+	m->lastUpdTime= m->clock.getTime();
 }
 
 void WorldMgr::setChunksLocked(bool b)
@@ -371,7 +376,13 @@ WorldAudioEnv& WorldMgr::getAudioEnv()
 { return m->audioEnv; }
 
 real64 WorldMgr::getTime() const
-{ return util::gGameClock->getTime(); }
+{ return m->clock.getTime(); }
+
+real64 WorldMgr::getDeltaTime() const
+{ return m->clock.getDeltaTime(); }
+
+real64 WorldMgr::getTimeScale() const
+{ return m->clock.getTimeScale(); }
 
 real64 WorldMgr::getDayDuration() const
 {

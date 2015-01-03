@@ -2,6 +2,8 @@
 #include "collision/query.hpp"
 #include "game/physics.hpp"
 #include "game/physicalmaterial.hpp"
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_playerlogic.hpp"
 
 namespace clover {
@@ -114,7 +116,7 @@ void PlayerPhysicsEntity::reset(util::RtTransform2d transform,
 
 void PlayerPhysicsEntity::update(util::Vec2d movement, const animation::ArmaturePose& anim_pose)
 {
-	real64 dt= util::gGameClock->getDeltaTime();
+	real64 dt= global::g_env.worldMgr->getDeltaTime();
 	// Smooth changing of direction
 	real64 blend_factor= std::pow(util::euler, -14.0*dt);
 	smoothFacingDir= smoothFacingDir*blend_factor + facingDir*(1.0 - blend_factor);
@@ -406,7 +408,7 @@ void PlayerLogicNodeInstance::create()
 
 void PlayerLogicNodeInstance::update()
 {
-	real64 dt= util::gGameClock->getDeltaTime();
+	real64 dt= global::g_env.worldMgr->getDeltaTime();
 
 	physEntity.update(movementIn->get(), poseIn->get());
 	transform= physEntity.getTransform();

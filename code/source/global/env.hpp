@@ -6,6 +6,7 @@
 
 namespace clover {
 namespace audio { class AudioMgr; }
+namespace game { class WorldMgr; }
 namespace physics { class PhysMgr; }
 namespace resources { class Cache; }
 namespace global {
@@ -15,6 +16,7 @@ namespace global {
 struct Env {
 	/// @todo Add rest
 	audio::AudioMgr* audioMgr;
+	game::WorldMgr* worldMgr;
 	physics::PhysMgr* physMgr;
 	resources::Cache* resCache;
 };

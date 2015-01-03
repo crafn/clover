@@ -1,6 +1,10 @@
 #include "particlemanifold.hpp"
 #include "util/time.hpp"
 
+/// @todo Remove
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
+
 namespace clover {
 namespace visual {
 
@@ -70,7 +74,7 @@ void ParticleManifold::spawn(util::DynArray<ParticleSpawnData>& particles){
 	if (real_amount > type->maxParticleCount)
 		real_amount= type->maxParticleCount;
 
-	real64 cur_time= util::gGameClock->getTime();
+	real64 cur_time= global::g_env.worldMgr->getTime();
 	for (uint32 i=offset; i<offset + real_amount; ++i){
 		times[i%type->maxParticleCount]= cur_time;
 	}
@@ -113,7 +117,7 @@ void ParticleManifold::update(){
 	return; // Not in use currently
 	ensure(created);
 /*
-	real32 dt= util::gGameClock->getDeltaTime();
+	real32 dt= global::g_env.worldMgr->getDeltaTime();
 
 	hardware::gGlState->finish();
 
@@ -130,7 +134,7 @@ void ParticleManifold::update(){
 	queue.finish();
 */
 	// Update active range
-	real64 cur_time= util::gGameClock->getTime();
+	real64 cur_time= global::g_env.worldMgr->getTime();
 
 	while(activeParticleCount > 0){
 		if (cur_time - times[activeParticleOffset] >= type->maxParticleLifeTime){

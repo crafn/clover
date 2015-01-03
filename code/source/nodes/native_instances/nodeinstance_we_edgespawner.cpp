@@ -1,5 +1,6 @@
 #include "game/world_mgr.hpp"
 #include "game/worldentity.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_we_edgespawner.hpp"
 #include "resources/cache.hpp"
 
@@ -30,7 +31,7 @@ void WeEdgeSpawnerNodeInstance::create()
 	spawnIn->setOnReceiveCallback([&] ()
 	{
 		spawnerType= &NONULL(weIn->get().get())->getType();
-		game::gWorldMgr->onEdgeSpawnTrigger(*this);
+		global::g_env.worldMgr->onEdgeSpawnTrigger(*this);
 	});
 
 	setUpdateNeeded(false);

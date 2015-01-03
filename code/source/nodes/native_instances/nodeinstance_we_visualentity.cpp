@@ -1,4 +1,6 @@
 #include "batchpriorities.hpp"
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_we_visualentity.hpp"
 #include "resources/cache.hpp"
 #include "visual/entity_def.hpp"
@@ -82,10 +84,11 @@ void WeVisualEntityNodeInstance::create(){
 	});
 }
 
-void WeVisualEntityNodeInstance::update(){
+void WeVisualEntityNodeInstance::update()
+{
 	updateHighlight(entity, getInputColorMul(), highlightLerp);
 
-	highlightLerp -= util::gGameClock->getDeltaTime()*10.0;
+	highlightLerp -= global::g_env.worldMgr->getDeltaTime()*10.0;
 	if (highlightLerp <= 0.0){
 		setUpdateNeeded(false);
 		updateHighlight(entity, getInputColorMul(), 0.0);

@@ -1,7 +1,8 @@
-#include "nodeinstance_we_spatialeventdispatcher.hpp"
 #include "game/world_mgr.hpp"
 #include "game/worldentity_set.hpp"
 #include "game/worldquery.hpp"
+#include "global/env.hpp"
+#include "nodeinstance_we_spatialeventdispatcher.hpp"
 
 namespace clover {
 namespace nodes {
@@ -28,7 +29,9 @@ void WeSpatialEventDispatcherNodeInstance::create(){
 	eventInput->setOnReceiveCallback([&] () {
 		NodeEvent event= eventInput->get();
 		
-		game::WESet set= game::gWorldMgr->getQuery().getEntitiesInRadius(transformInput->get().translation, radiusInput->get());
+		game::WESet set=
+			global::g_env.worldMgr->getQuery().getEntitiesInRadius(
+				transformInput->get().translation, radiusInput->get());
 		
 		event.addReceiver(set);
 		

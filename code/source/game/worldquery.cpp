@@ -1,3 +1,4 @@
+#include "global/env.hpp"
 #include "util/math.hpp"
 #include "world_mgr.hpp"
 #include "worldchunk.hpp"
@@ -15,7 +16,7 @@ WorldQuery::WorldQuery(){
 game::WESet WorldQuery::getEntitiesInRadius(util::Vec2d pos, real32 radius, const util::Str8& type_name){
 	game::WESet ret;
 
-	util::Set<game::WorldChunk*> chunks= game::gWorldMgr->getChunkMgr().getChunksInRadius(pos, radius);
+	util::Set<game::WorldChunk*> chunks= global::g_env.worldMgr->getChunkMgr().getChunksInRadius(pos, radius);
 
 	for (auto chunk : chunks){
 		util::PtrTable<game::WorldEntity>& entities= chunk->getEntityTable();

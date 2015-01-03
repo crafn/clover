@@ -21,7 +21,7 @@ WeToolsEc::WeToolsEc(){
 }
 
 void WeToolsEc::spawn(uint32 name_id){
-	game::WeHandle h= game::gWorldMgr->getWeMgr().createEntity(	
+	game::WeHandle h= global::g_env.worldMgr->getWeMgr().createEntity(	
 					getWeNames()[name_id],
 					visual::gVisualMgr->getCameraMgr().getSelectedCamera().getPosition() + util::Vec2d{0,3});
 }
@@ -35,10 +35,10 @@ bool WeToolsEc::isDebugDrawActive() const {
 }
 
 void WeToolsEc::setChunksLocked(bool b){
-	game::gWorldMgr->setChunksLocked(b);
+	global::g_env.worldMgr->setChunksLocked(b);
 }
 bool WeToolsEc::isChunksLocked() const {
-	return game::gWorldMgr->isChunksLocked();
+	return global::g_env.worldMgr->isChunksLocked();
 }
 
 util::DynArray<util::Str8> WeToolsEc::getWeNames() const {
@@ -56,7 +56,7 @@ void WeToolsEc::eraseTerrain(util::Vec2d pos){
 }
 
 void WeToolsEc::deleteWe(util::Vec2d pos){
-	game::WESet w= game::gWorldMgr->getQuery().getEntitiesInRadius(pos,0.4);
+	game::WESet w= global::g_env.worldMgr->getQuery().getEntitiesInRadius(pos,0.4);
 	for (auto it= w.begin(); it!= w.end(); ++it){
 		if ((*it)){
 			(*it)->setRemoveFlag();

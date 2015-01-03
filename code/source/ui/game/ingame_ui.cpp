@@ -1,13 +1,16 @@
+#include "base_ui.hpp"
+#include "editor/editor_ui.hpp"
 #include "ingame_ui.hpp"
 #include "hardware/keyboard.hpp"
 #include "game/basegamelogic.hpp"
 #include "game/ingamelogic.hpp"
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodes/native_instances/nodeinstance_cameratarget.hpp"
 #include "visual/visual_mgr.hpp"
 #include "visual/camera_mgr.hpp"
 #include "ui/userinput.hpp"
-#include "base_ui.hpp"
-#include "editor/editor_ui.hpp"
+#include "util/math.hpp"
 
 namespace clover {
 namespace ui { namespace game {
@@ -39,7 +42,7 @@ util::DynArray<util::Str8> InGameUi::getPlayerStrings() const {
 }
 
 void InGameUi::updateCamera(){
-	real64 dt= util::limited(util::gGameClock->getDeltaTime(), 0.0f, 0.05f);
+	real64 dt= util::limited(global::g_env.worldMgr->getDeltaTime(), 0.0, 0.05);
 
 	if (gUserInput->isTriggered(UserInput::DevCamZoomIn)){
 		camera.setTargetScale( camera.getScale()+0.2*camera.getScale() );

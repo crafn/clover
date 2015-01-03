@@ -1,6 +1,8 @@
 #include "collision/query.hpp"
 #include "game/physics.hpp"
+#include "game/world_mgr.hpp"
 #include "game/worldentity.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_minionlogic.hpp"
 
 namespace clover {
@@ -160,7 +162,7 @@ void MinionLogicNodeInstance::create()
 
 void MinionLogicNodeInstance::update()
 {
-	real64 dt= util::gGameClock->getDeltaTime();
+	real64 dt= global::g_env.worldMgr->getDeltaTime();
 	phase += dt;
 
 	if (targetWe.get()) {

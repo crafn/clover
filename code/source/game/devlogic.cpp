@@ -81,8 +81,10 @@ void DevLogic::update(){
 		if (fpsPrintFilter == 0){
 			print(debug::Ch::General, debug::Vb::Moderate, "--- Tick ---");
 			print(debug::Ch::General, debug::Vb::Moderate, "FPS: %f", fpsFrameCount/fpsTimer);
-			print(debug::Ch::General, debug::Vb::Moderate, "Chunk count:		%i", game::gWorldMgr->getChunkMgr().getChunkCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "WorldEntity count:	%i", (int)game::gWorldMgr->getWeMgr().getEntityCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "Chunk count:		%i",
+					(int)global::g_env.worldMgr->getChunkMgr().getChunkCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "WorldEntity count:	%i",
+					(int)global::g_env.worldMgr->getWeMgr().getEntityCount());
 			print(debug::Ch::General, debug::Vb::Moderate,
 					"visual::ModelEntity count: %i,	  shader count: %i",
 					(int)visual::gVisualMgr->getEntityMgr().getModelEntityCount(),

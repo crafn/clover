@@ -27,11 +27,11 @@ public:
 	void reset();
 	void update();
 
-	real32 getDeltaTime();
-	real64 getTime();
+	real32 getDeltaTime() const;
+	real64 getTime() const;
 
 	void setTimeScale(real32 scale);
-	real32 getTimeScale();
+	real32 getTimeScale() const;
 	
 	/// Sets return value of getDeltaTime
 	void setFixedDeltaTime(real32 dt){ fixedDeltaTime= dt; }
@@ -42,7 +42,7 @@ public:
 	void setPaused(bool b);
 	void toggle();
 
-	bool isPaused();
+	bool isPaused() const;
 	
 private:
 	static const int32 clockRes= 10000;
@@ -94,12 +94,8 @@ private:
 	int32 tableIndex;
 };
 
-/// @todo These really shouldn't be globals.
+/// @todo This really shouldn't be global.
 extern Clock *gRealClock;
-extern Clock *gGameClock;
-
-extern PtrTable<Clock> gClockTable;
-extern PtrTable<Timer> gTimerTable;
 
 } // util
 } // clover

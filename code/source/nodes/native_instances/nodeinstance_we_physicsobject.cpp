@@ -3,6 +3,7 @@
 #include "global/env.hpp"
 #include "game/physics.hpp"
 #include "game/physicalmaterial.hpp"
+#include "game/world_mgr.hpp"
 #include "nodeinstance_we_physicsobject.hpp"
 #include "physics/fixture_rigid.hpp"
 #include "resources/cache.hpp"
@@ -145,8 +146,9 @@ void WePhysicsObjectNodeInstance::update(){
 		if (d_v.translation.lengthSqr() > util::epsilon || util::abs(d_v.rotation) > util::epsilon){
 			if (accelerationOutput->isAttached()){
 				util::RtTransform2d a= d_v;
-				a.translation /= util::gGameClock->getDeltaTime();
-				a.rotation /= util::gGameClock->getDeltaTime();
+				real64 dt= global::g_env.worldMgr->getDeltaTime();
+				a.translation /= dt;
+				a.rotation /= dt;
 				accelerationOutput->send(a);
 			}
 

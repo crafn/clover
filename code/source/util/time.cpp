@@ -9,8 +9,8 @@ using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
 
 Clock *gRealClock;
-Clock *gGameClock;
 
+/// @todo Remove
 PtrTable<Clock> gClockTable;
 PtrTable<Timer> gTimerTable;
 
@@ -31,14 +31,9 @@ std::chrono::nanoseconds asNanoseconds(double seconds){
 ///
 
 void Clock::updateAll(){
-
 	for (uint32 i=0; i<gClockTable.size(); i++){
-
 		if (gClockTable[i] == 0) continue;
-
-
 		gClockTable[i]->update();
-
 	}
 }
 
@@ -76,25 +71,23 @@ void Clock::update(){
 	}
 }
 
-real32 Clock::getDeltaTime(){
+real32 Clock::getDeltaTime() const {
 	if (fixedDeltaTime > 0.0)
 		return fixedDeltaTime;
 		
 	return deltaTime;
 }
 
-real64 Clock::getTime(){
-
+real64 Clock::getTime() const {
 	return (real64)timeFromStart/clockRes;
 }
 
 void Clock::setTimeScale(real32 scale){
 	timeScale= scale;
 }
-real32 Clock::getTimeScale(){
+real32 Clock::getTimeScale() const {
 	return timeScale;
 }
-
 
 void Clock::setPaused(bool b){
 	paused= b;
@@ -104,7 +97,7 @@ void Clock::toggle(){
 	setPaused(!paused);
 }
 
-bool Clock::isPaused(){
+bool Clock::isPaused() const {
 	return paused;
 }
 

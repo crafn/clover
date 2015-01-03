@@ -1,3 +1,4 @@
+#include "game/world_mgr.hpp"
 #include "global/env.hpp"
 #include "nodeinstance_we_gridgrowing.hpp"
 #include "physics/grid.hpp"
@@ -48,7 +49,7 @@ void WeGridGrowingNodeInstance::create()
 
 void WeGridGrowingNodeInstance::update()
 {
-	real64 dt= util::gGameClock->getDeltaTime(); 
+	real64 dt= global::g_env.worldMgr->getDeltaTime(); 
 
 	real64 accel= 10.0;
 	stateDeriv += grow ? accel*dt : -accel*dt;

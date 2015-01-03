@@ -9,6 +9,10 @@
 #include "util/profiling.hpp"
 #include "world.hpp"
 
+/// @todo Remove
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
+
 namespace clover {
 namespace physics {
 
@@ -194,7 +198,7 @@ void PhysMgr::updateFrameTime(){
 	if (frameTimer.isRunning()){
 		frameTimer.pause();
 
-		real64 dt= frameTimer.getTime()*util::gGameClock->getTimeScale();
+		real64 dt= frameTimer.getTime()*global::g_env.worldMgr->getTimeScale();
 		accumWorldTime += dt;
 		accumFluidTime += dt;
 

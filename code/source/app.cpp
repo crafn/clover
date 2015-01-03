@@ -65,7 +65,6 @@ App::App(const util::Str8& executablePath){
 	hardware::gDevice->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
 
 	util::gRealClock= new util::Clock();
-	util::gGameClock= new util::Clock();
 
 	new resources::Cache();
 	global::g_env.resCache->update();
@@ -88,7 +87,6 @@ App::~App(){
 	delete visual::gVisualMgr;
 	delete global::g_env.audioMgr;
 	delete global::g_env.resCache; global::g_env.resCache= nullptr;
-	delete util::gGameClock; util::gGameClock= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;
 	delete global::gEventMgr; global::gEventMgr= nullptr;
@@ -138,19 +136,17 @@ void App::run(){
 		if (!ui::game::gBaseUi->update())
 			break;
 
-		if (!util::gGameClock->isPaused()){
-			global::g_env.physMgr->update();
+		global::g_env.physMgr->update();
 
-			global::gEventMgr->dispatch();
-			nodes::gNodeEventMgr->dispatch();
+		global::gEventMgr->dispatch();
+		nodes::gNodeEventMgr->dispatch();
 
-			// Update world logic
-			game::gBaseGameLogic->update();
-			global::g_env.audioMgr->update();
+		// Update world logic
+		game::gBaseGameLogic->update();
+		global::g_env.audioMgr->update();
 
-			/// @todo Call just after gpu has finished with fluid preupdate
-			global::g_env.physMgr->fluidUpdate();
-		}
+		/// @todo Call just after gpu has finished with fluid preupdate
+		global::g_env.physMgr->fluidUpdate();
 
 		global::g_env.resCache->update();
 

@@ -1,4 +1,5 @@
 #include "save_mgr.hpp"
+#include "global/env.hpp"
 #include "global/file.hpp"
 #include "global/file_stream.hpp"
 #include "util/objectnode.hpp"
@@ -308,7 +309,7 @@ void SaveMgr::safeStartSavingChunks(ChunkSet chunks, ChunkSetCb on_finish){
 	if (chunks.empty())
 		return;
 
-	util::Set<ChunkSet> clusters= game::gWorldMgr->getChunkMgr().getCommonClusters(chunks);
+	util::Set<ChunkSet> clusters= global::g_env.worldMgr->getChunkMgr().getCommonClusters(chunks);
 
 	// Make sure that clusters and regions (= header info) are up-to-date in cache
 	for (const auto& cluster : clusters){
@@ -338,7 +339,7 @@ SaveMgr::ChunkSet SaveMgr::safeStartLoadingChunks(ChunkSet chunks, ChunkSetCb on
 	auto clusters=
 		util::convertContained(clusters_pos, [](util::Set<ChunkVec> cluster){
 			return util::convertContained(cluster, [](ChunkVec v){
-				return game::gWorldMgr->getChunkMgr().getChunk(game::GridPoint::Chunk(v));
+				return global::g_env.worldMgr->getChunkMgr().getChunk(game::GridPoint::Chunk(v));
 			});
 		});
 	
@@ -447,7 +448,7 @@ void SaveMgr::saveGlobalEntities(util::ArrayView<const WorldEntity* const> entit
 void SaveMgr::tidyCache(){
 	PROFILE_("worldIo");
 	const auto& cached_regions_pos= dataCache->getCachedRegionPositions();
-	const auto& inhabited_regions_pos= game::gWorldMgr->getChunkMgr().getInhabitedRegionPositions();
+	const auto& inhabited_regions_pos= global::g_env.worldMgr->getChunkMgr().getInhabitedRegionPositions();
 	
 	//print(debug::Ch::General, debug::Vb::Trivial, "cached %i, inhabited %i", (int)cached_regions_pos.size(), (int)inhabited_regions_pos.size());
 	for (RegionVec pos : util::removed(cached_regions_pos, inhabited_regions_pos)){

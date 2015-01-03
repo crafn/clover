@@ -37,6 +37,8 @@ public:
 	WorldAudioEnv& getAudioEnv();
 
 	real64 getTime() const;
+	real64 getDeltaTime() const;
+	real64 getTimeScale() const;
 
 	/// @return Day + night duration in seconds
 	real64 getDayDuration() const;
@@ -55,8 +57,6 @@ private:
 	struct M;
 	util::Dynamic<M> m;
 };
-
-extern WorldMgr* gWorldMgr;
 
 } // game
 } // clover

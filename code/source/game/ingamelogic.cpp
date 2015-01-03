@@ -1,6 +1,7 @@
 #include "ingamelogic.hpp"
 #include "save_mgr.hpp"
 #include "world_gen/world_gen.hpp"
+#include "world_mgr.hpp"
 #include "worldaudio_env.hpp"
 #include "worldchunk.hpp"
 #include "worldchunk_mgr.hpp"
@@ -11,7 +12,7 @@ namespace game {
 
 InGameLogic::InGameLogic()
 {
-	game::gWorldMgr= &worldLogic;
+	global::g_env.worldMgr= &worldLogic;
 	temp= 0;
 }
 
@@ -30,19 +31,19 @@ void InGameLogic::update()
 void InGameLogic::onQuit()
 {
 	// Ignore chunks not fully generated
-	game::gWorldMgr->getWorldGen().stopGeneration();
+	worldLogic.getWorldGen().stopGeneration();
 
-	util::Set<game::WorldChunk*> chunks= game::gWorldMgr->getChunkMgr().getChunks();
+	util::Set<game::WorldChunk*> chunks= worldLogic.getChunkMgr().getChunks();
 	util::Set<game::WorldChunk*> living_chunks;
 	for (auto m : chunks){
 		if (m->getState() == game::WorldChunk::State::Active)
 			living_chunks.insert(m);
 	}
 
-	game::gWorldMgr->getSaveMgr().safeStartSavingChunks(living_chunks);
-	game::gWorldMgr->getSaveMgr().finishSave(
-			util::asArrayView(game::gWorldMgr->getWeMgr().getGlobalEntities()));
-	game::gWorldMgr->getChunkMgr().removeAll();
+	worldLogic.getSaveMgr().safeStartSavingChunks(living_chunks);
+	worldLogic.getSaveMgr().finishSave(
+			util::asArrayView(worldLogic.getWeMgr().getGlobalEntities()));
+	worldLogic.getChunkMgr().removeAll();
 	print(debug::Ch::Save, debug::Vb::Trivial, "Chunks saved on quit: %lu", (unsigned long)living_chunks.size());
 }
 

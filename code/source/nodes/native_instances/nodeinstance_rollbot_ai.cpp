@@ -1,3 +1,5 @@
+#include "game/world_mgr.hpp"
+#include "global/env.hpp"
 #include "nodeinstance_rollbot_ai.hpp"
 #include "util/time.hpp"
 
@@ -56,7 +58,7 @@ void RollBotAiNodeInstance::create()
 
 void RollBotAiNodeInstance::update()
 {
-	real32 dt= util::gGameClock->getDeltaTime();
+	real32 dt= global::g_env.worldMgr->getDeltaTime();
 
 	if ( abs(escapeIn->get().x - positionIn->get().x) < 20 ) { // Escape if too close
 		if (escapeIn->get().x > positionIn->get().x)
