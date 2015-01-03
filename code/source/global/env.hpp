@@ -2,6 +2,7 @@
 #define CLOVER_GLOBAL_ENV_HPP
 
 #include "build.hpp"
+#include "hardware/dll.hpp"
 
 namespace clover {
 namespace audio { class AudioMgr; }
@@ -13,14 +14,12 @@ namespace global {
 /// This is the global data for dll's
 struct Env {
 	/// @todo Add rest
-	audio::AudioMgr* audioMgr= nullptr;
-	physics::PhysMgr* physMgr= nullptr;
-	resources::Cache* resCache= nullptr;
+	audio::AudioMgr* audioMgr;
+	physics::PhysMgr* physMgr;
+	resources::Cache* resCache;
 };
 
-extern "C" {
-extern Env g_env;
-}
+C_DLL_EXPORT Env g_env;
 
 } // global
 } // clover

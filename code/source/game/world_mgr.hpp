@@ -77,6 +77,7 @@ private:
 
 	util::DynArray<const nodes::WeEdgeSpawnerNodeInstance*> edgeSpawns;
 
+	/// @todo Ptrs so that forward declaring can be used
 	WorldChunkMgr chunkMgr;
 	WeMgr weMgr;
 	WorldQuery worldQuery;

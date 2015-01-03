@@ -70,7 +70,7 @@ real64 forestness(real64 x)
 }
 
 /// Global initialization of world generation
-DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
+C_DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 {
 	debug::print("Global world init");
 	ensure_msg(global::g_env.resCache, "resCache not initialized");
@@ -83,7 +83,7 @@ DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 	debug::print("Global world init end");
 }
 
-DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
+C_DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
 {
 	return;
 	util::Vec2d corner_pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d{0.5, 0.5};
@@ -109,14 +109,14 @@ DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
 	}
 }
 
-DLL_EXPORT void createGrowWorkers(world_gen::ChunkGen& gen)
+C_DLL_EXPORT void createGrowWorkers(world_gen::ChunkGen& gen)
 {
 	return;
 	util::Vec2d pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d(1);
 	gen.createWorker("grow", pos, 0.0, randReal(0.0, 1.0));
 }
 
-DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
+C_DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 {
 	return;
 	const real64 check_interval= 5.0;
@@ -193,7 +193,7 @@ DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 }
 
 // Create ground block
-DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+C_DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 	return;
 	util::Vec2d pos= w.getLocation().getPosition();
 	
@@ -239,7 +239,7 @@ DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 }
 
 // Spawn player
-DLL_EXPORT void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+C_DLL_EXPORT void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 	return;
 	gen.createEntity("playerMgr");
 
@@ -252,7 +252,7 @@ DLL_EXPORT void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worke
 	//we.ref().setAttribute("player", "player1");
 }
 
-DLL_EXPORT void createBg(world_gen::WorldGen& gen){
+C_DLL_EXPORT void createBg(world_gen::WorldGen& gen){
 	// Bg test
 	
 	// Limits of test background
@@ -410,7 +410,7 @@ DLL_EXPORT void createBg(world_gen::WorldGen& gen){
 }
 
 // For prototyping and testing purposes
-DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
+C_DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
 	return;
 	if (gen.getPosition() == util::Vec2i{0, 0})
 		createBg(gen.getWorldGen());
@@ -431,7 +431,7 @@ DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
 	
 }
 
-DLL_EXPORT void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+C_DLL_EXPORT void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 	return;
 	// Create some stones
 	util::Vec2d pos= w.getLocation().getPosition();

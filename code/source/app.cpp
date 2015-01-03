@@ -1,6 +1,7 @@
 #include "app.hpp"
 #include "audio/audio_mgr.hpp"
 #include "debug/debugdraw.hpp"
+#include "global/env.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/event_mgr.hpp"
 #include "global/memory.hpp"

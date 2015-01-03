@@ -67,7 +67,12 @@ void WorkerType::updateFromAttributes(){
 
 	/// TEMPTEST
 	auto h= hardware::loadDll("./mod");
-	ensure_msg(h, "dll not loaded: %s", hardware::dllError());
+	ensure_msg(h, "dll couldn't be loaded: %s", hardware::dllError());
+
+	auto dll_g_env= (global::Env*)hardware::queryDllSym(h, "g_env");
+	ensure_msg(dll_g_env, "Couldn't find g_env in dll");
+	*dll_g_env= global::g_env;
+
 	if (!globalInitFuncAttribute.get().empty()){
 		auto func= (WorkerGlobalInitFuncDecl*)
 			hardware::queryDllSym(h, globalInitFuncAttribute.get().cStr());
