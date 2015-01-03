@@ -6,7 +6,7 @@
 
 namespace clover {
 namespace audio { class AudioMgr; }
-namespace game { class WorldMgr; }
+namespace game { class BaseGameLogic; class WorldMgr; }
 namespace physics { class PhysMgr; }
 namespace resources { class Cache; }
 namespace global {
@@ -16,12 +16,13 @@ namespace global {
 struct Env {
 	/// @todo Add rest
 	audio::AudioMgr* audioMgr;
+	game::BaseGameLogic* gameLogic;
 	game::WorldMgr* worldMgr;
 	physics::PhysMgr* physMgr;
 	resources::Cache* resCache;
 };
 
-C_DLL_EXPORT Env g_env;
+C_DLL_EXPORT Env* g_env;
 
 } // global
 } // clover

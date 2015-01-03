@@ -75,11 +75,11 @@ App::App(const util::Str8& executablePath){
 	new physics::PhysMgr();
 	gui::gGuiMgr= new gui::GuiMgr();
 	ui::game::gBaseUi= new ui::game::BaseUi();
-	game::gBaseGameLogic= new game::BaseGameLogic();	
+	new game::BaseGameLogic();	
 }
 
 App::~App(){
-	delete game::gBaseGameLogic; game::gBaseGameLogic= nullptr;
+	delete global::g_env.gameLogic;
 	delete ui::game::gBaseUi; ui::game::gBaseUi= nullptr;
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
 	delete global::g_env.physMgr;
@@ -142,7 +142,8 @@ void App::run(){
 		nodes::gNodeEventMgr->dispatch();
 
 		// Update world logic
-		game::gBaseGameLogic->update();
+		ensure(global::g_env.worldMgr);
+		global::g_env.gameLogic->update();
 		global::g_env.audioMgr->update();
 
 		/// @todo Call just after gpu has finished with fluid preupdate
@@ -156,7 +157,7 @@ void App::run(){
 		visual::gVisualMgr->renderFrame();
 	}
 
-	game::gBaseGameLogic->onQuit();
+	global::g_env.gameLogic->onQuit();
 }
 
 } // clover

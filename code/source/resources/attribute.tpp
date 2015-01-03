@@ -17,7 +17,7 @@ Attribute<T>::Attribute(const AttributeInitializer<AttributeType>& init):
 		
 		// Overrides other's pointer in container
 		auto it= initializer.getContainer()->find(initializer.getKey());
-		ensure_msg(it == initializer.getContainer()->end(), "Duplicate attribute: %s, same object: %i", initializer.getKey().cStr(), it->second == this);
+		ensure_msg(it == initializer.getContainer()->end(), "Duplicate attribute: %s", initializer.getKey().cStr());
 		
 		//print(debug::Ch::Resources, debug::Vb::Trivial, "Container size: %i", initializer.getContainer()->size());
 		

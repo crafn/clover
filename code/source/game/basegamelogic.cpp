@@ -2,15 +2,17 @@
 #include "ingamelogic.hpp"
 #include "devlogic.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "util/profiling.hpp"
 #include "util/time.hpp"
 
 namespace clover {
 namespace game {
 
-BaseGameLogic* gBaseGameLogic= 0;
-
 BaseGameLogic::BaseGameLogic(){
+	if (!global::g_env.gameLogic)
+		global::g_env.gameLogic= this;
+
 	inGameLogic= new InGameLogic();
 	devLogic= new DevLogic();
 }
@@ -18,6 +20,9 @@ BaseGameLogic::BaseGameLogic(){
 BaseGameLogic::~BaseGameLogic(){
 	delete inGameLogic;
 	delete devLogic;
+
+	if (global::g_env.gameLogic == this)
+		global::g_env.gameLogic= nullptr;
 }
 
 void BaseGameLogic::update(){

@@ -1,5 +1,6 @@
 #include "ec_ui_performance.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "game/basegamelogic.hpp"
 #include "game/devlogic.hpp"
 #include "util/time.hpp"
@@ -21,7 +22,7 @@ PerformanceEcUi::PerformanceEcUi(PerformanceEc& comp):
 void PerformanceEcUi::onEvent(global::Event& e){
 	switch(e.getType()){
 		case global::Event::OnPerformanceTimersUpdate: {
-			auto results= game::gBaseGameLogic->getDevLogic()->getLastPerformanceTimerResults();
+			auto results= global::g_env.gameLogic->getDevLogic()->getLastPerformanceTimerResults();
 
 			for (auto& m : results)
 				addToPerformanceGraph(m.name, m.percentage);

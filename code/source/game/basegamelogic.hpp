@@ -26,8 +26,6 @@ private:
 	DevLogic* devLogic;
 };
 
-extern BaseGameLogic* gBaseGameLogic;
-
 } // game
 } // clover
 
