@@ -30,7 +30,7 @@ void WeSpatialEventDispatcherNodeInstance::create(){
 		NodeEvent event= eventInput->get();
 		
 		game::WESet set=
-			global::g_env.worldMgr->getQuery().getEntitiesInRadius(
+			global::g_env->worldMgr->getQuery().getEntitiesInRadius(
 				transformInput->get().translation, radiusInput->get());
 		
 		event.addReceiver(set);

@@ -12,6 +12,9 @@ public:
 	App(const util::Str8& executablePath);
 	~App();
 	void run();
+
+private:
+	global::Env env;
 };
 
 } // clover

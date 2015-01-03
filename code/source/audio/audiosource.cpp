@@ -67,7 +67,7 @@ void AudioSource::onEvent(global::Event& e){
 }
 
 SoundInstanceHandle AudioSource::playSound(const Sound& s){
-	return global::g_env.audioMgr->playSound(s, *this);
+	return global::g_env->audioMgr->playSound(s, *this);
 }
 
 void AudioSource::addSoundInstance(SoundInstance& h){

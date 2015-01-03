@@ -40,8 +40,8 @@ AudioMgr::AudioMgr()
 		: quitFeedThread(false)
 		, outputStream(gAudioDevice->getOutputStream())
 {
-	if (global::g_env.audioMgr == nullptr)
-		global::g_env.audioMgr= this;
+	if (global::g_env->audioMgr == nullptr)
+		global::g_env->audioMgr= this;
 
 	feedThread= std::thread(std::bind(&AudioMgr::feedLoop, this));
 }
@@ -60,8 +60,8 @@ AudioMgr::~AudioMgr()
 	for (auto& m : audioReceivers)
 		m.destroy();
 
-	if (global::g_env.audioMgr == this)
-		global::g_env.audioMgr= nullptr;
+	if (global::g_env->audioMgr == this)
+		global::g_env->audioMgr= nullptr;
 }
 
 SizeType AudioMgr::getSoundInstanceCount() const {

@@ -32,7 +32,7 @@ void DelayedTriggerNodeInstance::create()
 
 void DelayedTriggerNodeInstance::update()
 {
-	timer -= global::g_env.worldMgr->getDeltaTime();
+	timer -= global::g_env->worldMgr->getDeltaTime();
 
 	if (timer <= 0.0){
 		timer= 0.0;

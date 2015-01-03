@@ -42,7 +42,7 @@ util::DynArray<util::Str8> InGameUi::getPlayerStrings() const {
 }
 
 void InGameUi::updateCamera(){
-	real64 dt= util::limited(global::g_env.worldMgr->getDeltaTime(), 0.0, 0.05);
+	real64 dt= util::limited(global::g_env->worldMgr->getDeltaTime(), 0.0, 0.05);
 
 	if (gUserInput->isTriggered(UserInput::DevCamZoomIn)){
 		camera.setTargetScale( camera.getScale()+0.2*camera.getScale() );

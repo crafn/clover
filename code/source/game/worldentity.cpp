@@ -178,7 +178,7 @@ void WorldEntity::saveFieldDeserialize(WEPack& p){
 
 void WorldEntity::setType(const util::Str8& name){
 	PROFILE();
-	type= &global::g_env.resCache->getResource<game::WeType>(name);
+	type= &global::g_env->resCache->getResource<game::WeType>(name);
 	
 	// Reset type if it has changed
 	typeChangeListener.clear();

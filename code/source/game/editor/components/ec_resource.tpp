@@ -24,12 +24,12 @@ void ResourceEc<T>::onEvent(global::Event& e){
 
 template <typename T>
 util::DynArray<resources::ResourceFilePath> ResourceEc<T>::getResourceFilePaths() const {
-	return global::g_env.resCache->getResourceFilePaths();
+	return global::g_env->resCache->getResourceFilePaths();
 }
 
 template <typename T>
 auto ResourceEc<T>::createResource(const ResourceIdentifierValue& id, const resources::ResourceFilePath& group) const -> ResourceType& {
-	return global::g_env.resCache->createResource<ResourceType>(id, group);
+	return global::g_env->resCache->createResource<ResourceType>(id, group);
 }
 
 template <typename T>

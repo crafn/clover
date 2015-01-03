@@ -54,8 +54,8 @@ PhysMgr::PhysMgr()
 		, fluidTimeOffset(0.0){
 	
 	// staticRigidObject needs this
-	if (!global::g_env.physMgr)
-		global::g_env.physMgr= this;
+	if (!global::g_env->physMgr)
+		global::g_env->physMgr= this;
 
 	RigidObject::setPoolMem(&rigidObjectPoolMem);
 
@@ -96,8 +96,8 @@ PhysMgr::~PhysMgr(){
 
 	RigidObject::setPoolMem(nullptr);
 
-	if (global::g_env.physMgr == this)
-		global::g_env.physMgr= nullptr;
+	if (global::g_env->physMgr == this)
+		global::g_env->physMgr= nullptr;
 }
 
 void PhysMgr::preFrameUpdate(){
@@ -198,7 +198,7 @@ void PhysMgr::updateFrameTime(){
 	if (frameTimer.isRunning()){
 		frameTimer.pause();
 
-		real64 dt= frameTimer.getTime()*global::g_env.worldMgr->getTimeScale();
+		real64 dt= frameTimer.getTime()*global::g_env->worldMgr->getTimeScale();
 		accumWorldTime += dt;
 		accumFluidTime += dt;
 

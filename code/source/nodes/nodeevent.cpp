@@ -15,7 +15,7 @@ NodeEvent::NodeEvent()
 }
 
 NodeEvent::NodeEvent(const util::Str8& type_name)
-		: NodeEvent(global::g_env.resCache->getResource<NodeEventType>(type_name)){
+		: NodeEvent(global::g_env->resCache->getResource<NodeEventType>(type_name)){
 }
 
 NodeEvent::NodeEvent(const NodeEventType& t)

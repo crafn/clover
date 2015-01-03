@@ -82,17 +82,17 @@ void DevLogic::update(){
 			print(debug::Ch::General, debug::Vb::Moderate, "--- Tick ---");
 			print(debug::Ch::General, debug::Vb::Moderate, "FPS: %f", fpsFrameCount/fpsTimer);
 			print(debug::Ch::General, debug::Vb::Moderate, "Chunk count:		%i",
-					(int)global::g_env.worldMgr->getChunkMgr().getChunkCount());
+					(int)global::g_env->worldMgr->getChunkMgr().getChunkCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "WorldEntity count:	%i",
-					(int)global::g_env.worldMgr->getWeMgr().getEntityCount());
+					(int)global::g_env->worldMgr->getWeMgr().getEntityCount());
 			print(debug::Ch::General, debug::Vb::Moderate,
 					"visual::ModelEntity count: %i,	  shader count: %i",
 					(int)visual::gVisualMgr->getEntityMgr().getModelEntityCount(),
 					(int)visual::gVisualMgr->getShaderMgr().getShaderCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", global::g_env.physMgr->calcObjectCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env.audioMgr->getSoundInstanceCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env.audioMgr->getAudioSourceCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env.audioMgr->getFreeChannelCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", global::g_env->physMgr->calcObjectCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env->audioMgr->getSoundInstanceCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env->audioMgr->getAudioSourceCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env->audioMgr->getFreeChannelCount());
 			print(debug::Ch::General, debug::Vb::Trivial, "Viewport: %i, %i", hardware::gDevice->getViewportSize().x, hardware::gDevice->getViewportSize().y);
 
 			print(debug::Ch::General, debug::Vb::Trivial, "Timers");

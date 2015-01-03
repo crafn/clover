@@ -88,7 +88,7 @@ void WeVisualEntityNodeInstance::update()
 {
 	updateHighlight(entity, getInputColorMul(), highlightLerp);
 
-	highlightLerp -= global::g_env.worldMgr->getDeltaTime()*10.0;
+	highlightLerp -= global::g_env->worldMgr->getDeltaTime()*10.0;
 	if (highlightLerp <= 0.0){
 		setUpdateNeeded(false);
 		updateHighlight(entity, getInputColorMul(), 0.0);

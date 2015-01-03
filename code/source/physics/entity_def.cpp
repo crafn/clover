@@ -28,7 +28,7 @@ void EntityDef::createErrorResource(){
 }
 
 const animation::Armature& EntityDef::getArmature() const {
-	return global::g_env.resCache->getResource<animation::Armature>(armatureAttribute.get());
+	return global::g_env->resCache->getResource<animation::Armature>(armatureAttribute.get());
 }
 
 const util::DynArray<EntityObjectDef>& EntityDef::getObjectDefs() const {

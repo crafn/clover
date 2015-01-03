@@ -74,7 +74,7 @@ real64 forestness(real64 x)
 C_DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 {
 	debug::print("Global world init");
-	ensure_msg(global::g_env.resCache, "resCache not initialized");
+	ensure_msg(global::g_env->resCache, "resCache not initialized");
 	
 	gen.createWorker(	"playerSpawn",
 						util::Vec2d{1.0, groundSurfaceY(0.0) + 5.0},
@@ -86,7 +86,6 @@ C_DLL_EXPORT void initWorld(world_gen::WorldGen& gen)
 
 C_DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
 {
-	return;
 	util::Vec2d corner_pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d{0.5, 0.5};
 
 	for (uint32 x= 0; x < chunkWidthInBlocks; ++x){
@@ -195,7 +194,6 @@ C_DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 
 // Create ground block
 C_DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
-	return;
 	util::Vec2d pos= w.getLocation().getPosition();
 	
 	real64 left_g_y= groundSurfaceY(pos.x - 0.5);

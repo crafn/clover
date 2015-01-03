@@ -35,13 +35,13 @@ BlenderEE::BlenderEE()
 	server.registerReceivable<ResourceMsgTraits>([=] (const resources::SerializedResource& res){
 		print(debug::Ch::Net, debug::Vb::Trivial, "Resource received from Blender: %s", res.getTypeName().cStr());
 		
-		global::g_env.resCache->parseResource(res);
+		global::g_env->resCache->parseResource(res);
 	});
 	
 	server.registerReceivable<ResourceRequestMsgTraits>([=] (const resources::ResourceId& res_id){
 		print(debug::Ch::Net, debug::Vb::Trivial, "Resource request from Blender: %s - %s", res_id.getTypeName().cStr(), res_id.getIdentifier().generateText().cStr());
 		
-		server.send<ResourceMsgTraits>(global::g_env.resCache->getResource(res_id).getSerializedResource());
+		server.send<ResourceMsgTraits>(global::g_env->resCache->getResource(res_id).getSerializedResource());
 	});
 	
 	server.setOnConnectCallback([=] (){
@@ -49,7 +49,7 @@ BlenderEE::BlenderEE()
 		server.send<CloverPathMsgTraits>(hardware::gDevice->getWorkingDirectory());
 		
 		// Tell where resources are
-		server.send<ResourceRootMsgTraits>(global::g_env.resCache->getResourceRootPath());
+		server.send<ResourceRootMsgTraits>(global::g_env->resCache->getResourceRootPath());
 	});
 	
 	listenForEvent(global::Event::OnEditorResourceSelect);

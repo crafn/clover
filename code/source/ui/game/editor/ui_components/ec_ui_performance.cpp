@@ -22,7 +22,7 @@ PerformanceEcUi::PerformanceEcUi(PerformanceEc& comp):
 void PerformanceEcUi::onEvent(global::Event& e){
 	switch(e.getType()){
 		case global::Event::OnPerformanceTimersUpdate: {
-			auto results= global::g_env.gameLogic->getDevLogic()->getLastPerformanceTimerResults();
+			auto results= global::g_env->gameLogic->getDevLogic()->getLastPerformanceTimerResults();
 
 			for (auto& m : results)
 				addToPerformanceGraph(m.name, m.percentage);

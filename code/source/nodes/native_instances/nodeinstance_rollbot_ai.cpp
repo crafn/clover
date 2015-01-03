@@ -58,7 +58,7 @@ void RollBotAiNodeInstance::create()
 
 void RollBotAiNodeInstance::update()
 {
-	real32 dt= global::g_env.worldMgr->getDeltaTime();
+	real32 dt= global::g_env->worldMgr->getDeltaTime();
 
 	if ( abs(escapeIn->get().x - positionIn->get().x) < 20 ) { // Escape if too close
 		if (escapeIn->get().x > positionIn->get().x)

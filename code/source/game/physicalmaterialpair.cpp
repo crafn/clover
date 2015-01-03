@@ -14,7 +14,7 @@ PhysicalMaterialPair::PhysicalMaterialPair()
 
 	collisionSoundAttribute.setOnChangeCallback([&] (){
 		if (!collisionSoundAttribute.get().empty())
-			collisionSound= &global::g_env.resCache->getResource<audio::Sound>(collisionSoundAttribute.get());
+			collisionSound= &global::g_env->resCache->getResource<audio::Sound>(collisionSoundAttribute.get());
 		else
 			collisionSound= 0;
 	});
@@ -37,13 +37,13 @@ void PhysicalMaterialPair::resourceUpdate(bool load, bool force){
 
 		const auto& physmaterials_key= pairAttribute.get();
 
-		pair= PairType(	&global::g_env.resCache->getResource<game::PhysicalMaterial>(physmaterials_key.first),
-						&global::g_env.resCache->getResource<game::PhysicalMaterial>(physmaterials_key.second));
+		pair= PairType(	&global::g_env->resCache->getResource<game::PhysicalMaterial>(physmaterials_key.first),
+						&global::g_env->resCache->getResource<game::PhysicalMaterial>(physmaterials_key.second));
 
 		util::Str8 sound_str= collisionSoundAttribute.get();
 
 		if (!sound_str.empty())
-			collisionSound= &global::g_env.resCache->getResource<audio::Sound>(sound_str);
+			collisionSound= &global::g_env->resCache->getResource<audio::Sound>(sound_str);
 		else
 			collisionSound= 0;
 
@@ -57,9 +57,9 @@ void PhysicalMaterialPair::resourceUpdate(bool load, bool force){
 void PhysicalMaterialPair::createErrorResource(){
 	setResourceState(State::Error);
 
-	auto mat= global::g_env.resCache->getErrorResource<game::PhysicalMaterial>();
+	auto mat= global::g_env->resCache->getErrorResource<game::PhysicalMaterial>();
 	pair= PairType(&mat, &mat);
-	collisionSound= &global::g_env.resCache->getErrorResource<audio::Sound>();
+	collisionSound= &global::g_env->resCache->getErrorResource<audio::Sound>();
 }
 
 } // game

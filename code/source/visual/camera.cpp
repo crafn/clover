@@ -28,7 +28,7 @@ Camera::Camera():
 	shadowCasterBuf.create(fbo_cfg);
 
 	// Entity is only to trigger fluid rendering at correct time
-	fluidModel.setMesh(global::g_env.resCache->getResource<TriMesh>("unitRect"));
+	fluidModel.setMesh(global::g_env->resCache->getResource<TriMesh>("unitRect"));
 	fluidEntityDef.setModel(fluidModel);
 	fluidEntityDef.setShadingType(ModelEntityDef::Shading_Fluid);
 	fluidEntity.setDef(fluidEntityDef);

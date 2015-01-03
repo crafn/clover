@@ -12,7 +12,7 @@ namespace game {
 
 InGameLogic::InGameLogic()
 {
-	global::g_env.worldMgr= &worldLogic;
+	global::g_env->worldMgr= &worldLogic;
 	temp= 0;
 }
 

@@ -162,7 +162,7 @@ void MinionLogicNodeInstance::create()
 
 void MinionLogicNodeInstance::update()
 {
-	real64 dt= global::g_env.worldMgr->getDeltaTime();
+	real64 dt= global::g_env->worldMgr->getDeltaTime();
 	phase += dt;
 
 	if (targetWe.get()) {

@@ -602,7 +602,7 @@ void CompositionNodeLogicGroup::applySerializationGraph(const SerializationGraph
 	// Create nodes
 	for (auto& graph_node : graph.nodes){
 		try {
-			add(global::g_env.resCache->getResource<nodes::NodeType>(graph_node.typeName))
+			add(global::g_env->resCache->getResource<nodes::NodeType>(graph_node.typeName))
 				.setPosition(graph_node.position);
 		}
 		catch (global::Exception& e){

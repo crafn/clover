@@ -58,12 +58,12 @@ static constexpr SizeType particleDrawId= 1;
 static constexpr SizeType distFieldDrawId= 2;
 
 FluidST::FluidST(){
-	quad= &global::g_env.resCache->getResource<visual::TriMesh>("unitRect");
+	quad= &global::g_env->resCache->getResource<visual::TriMesh>("unitRect");
 }
 
 void FluidST::render(Camera& cam){
 	physics::FluidMgr* fluid_mgr=
-		global::g_env.physMgr->getFluidMgr();
+		global::g_env->physMgr->getFluidMgr();
 	if (!fluid_mgr)
 		return;
 
@@ -130,7 +130,7 @@ void FluidST::render(Camera& cam){
 
 /// @todo Distribute to render(..) and remove
 void FluidST::use(Shader& shd){
-	physics::FluidMgr* fluid_mgr= global::g_env.physMgr->getFluidMgr();
+	physics::FluidMgr* fluid_mgr= global::g_env->physMgr->getFluidMgr();
 	if (!fluid_mgr)
 		return;
 
@@ -149,11 +149,11 @@ void FluidST::use(Shader& shd){
 
 		particleDraw.shader.setUniform(
 				"u_timeOffset",
-				global::g_env.physMgr->getFluidTimeOffset());
+				global::g_env->physMgr->getFluidTimeOffset());
 
 		particleDraw.shader.setUniform(
 				"u_hueCycle",
-				global::g_env.worldMgr->getTime());
+				global::g_env->worldMgr->getTime());
 
 	}
 	else if (&shd == &distFieldDraw.shader) {

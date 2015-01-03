@@ -88,7 +88,7 @@ public: // Copypasted from former BaseCompositionNodeScriptLogic
 	
 	template <typename T>
 	void addResourceChangeListener(const typename resources::ResourceTraits<T>::IdentifierValue& identifier){
-		const auto& res= global::g_env.resCache->getResource<T>(identifier);
+		const auto& res= global::g_env->resCache->getResource<T>(identifier);
 		addOnResourceChangeCallback(res);
 	}
 	void clearResourceChangeListeners(){ resourceChangeListener.clear(); }

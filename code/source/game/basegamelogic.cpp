@@ -10,8 +10,8 @@ namespace clover {
 namespace game {
 
 BaseGameLogic::BaseGameLogic(){
-	if (!global::g_env.gameLogic)
-		global::g_env.gameLogic= this;
+	if (!global::g_env->gameLogic)
+		global::g_env->gameLogic= this;
 
 	inGameLogic= new InGameLogic();
 	devLogic= new DevLogic();
@@ -21,8 +21,8 @@ BaseGameLogic::~BaseGameLogic(){
 	delete inGameLogic;
 	delete devLogic;
 
-	if (global::g_env.gameLogic == this)
-		global::g_env.gameLogic= nullptr;
+	if (global::g_env->gameLogic == this)
+		global::g_env->gameLogic= nullptr;
 }
 
 void BaseGameLogic::update(){

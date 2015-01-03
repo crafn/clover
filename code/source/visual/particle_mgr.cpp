@@ -13,7 +13,7 @@ ParticleMgr::ParticleMgr(){
 	ParticleType& smoke_type= typeMap["Smoke"];
 	smoke_type.name= "Smoke";
 	smoke_type.programPath= "shaders/opencl/smoke.cl";
-	smoke_type.material= &global::g_env.resCache->getResource<visual::Material>("smoke");
+	smoke_type.material= &global::g_env->resCache->getResource<visual::Material>("smoke");
 	manifoldMap["Smoke"].create(smoke_type);
 }
 

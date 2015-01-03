@@ -36,7 +36,7 @@ public:
 			return;
 
 		util::DynArray<SignalArgument> args=
-			global::g_env.resCache->getResource<NodeEventType>(
+			global::g_env->resCache->getResource<NodeEventType>(
 					eventTypeSlot->getDefaultValue<SignalType::EventType>()
 			).getArguments();
 			
@@ -76,9 +76,9 @@ void EventFactoryNodeInstance::create(){
 	eventOutput= addOutputSlot<SignalType::Event>("event");
 	
 	if (!eventTypeInput->get().empty())
-		eventType= &global::g_env.resCache->getResource<NodeEventType>(eventTypeInput->get());
+		eventType= &global::g_env->resCache->getResource<NodeEventType>(eventTypeInput->get());
 	else
-		eventType= &global::g_env.resCache->getErrorResource<NodeEventType>();
+		eventType= &global::g_env->resCache->getErrorResource<NodeEventType>();
 	
 	for (auto& m : eventType->getArguments()){
 		argumentInputs[m.name]= addInputSlot(m.name, "arg", m.signalType);

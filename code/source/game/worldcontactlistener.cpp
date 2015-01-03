@@ -126,7 +126,7 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 			if (m1 && m2 && !skip){
 
 				resources::StrResourcePair physpair(m1, m2);
-				const game::PhysicalMaterialPair* pair= global::g_env.resCache->findResource<game::PhysicalMaterialPair>(physpair);
+				const game::PhysicalMaterialPair* pair= global::g_env->resCache->findResource<game::PhysicalMaterialPair>(physpair);
 
 				if (pair){
 					const audio::Sound* pair_sound= pair->getCollisionSound();

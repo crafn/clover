@@ -125,7 +125,7 @@ void GenericST::use()
 		for (int32 i=cur_map; i<maxShadowLights; i++){
 			hardware::gGlState->bindTex(
 					hardware::GlState::TexTarget::Tex2d,
-					global::g_env.resCache->getResource<visual::Texture>("Texture_Empty").getDId(),
+					global::g_env->resCache->getResource<visual::Texture>("Texture_Empty").getDId(),
 					cur_map + 3);
 			shadow_maps[i]=0;
 		}

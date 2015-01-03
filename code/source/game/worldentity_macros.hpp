@@ -45,7 +45,7 @@ public:											\
 		WEInfo info= BaseClass::generateWEInfo();
 
 #define DEF_WE_DEFAULT_ICON(model)								\
-	info.icon.defaultModel= &global::g_env.resCache->getResource<visual::Model>(model);
+	info.icon.defaultModel= &global::g_env->resCache->getResource<visual::Model>(model);
 
 #define DEF_WE_PICKABLE(is_pickable)							\
 	info.pickable= is_pickable;

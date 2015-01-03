@@ -25,7 +25,7 @@ void WorldClockNodeInstance::create()
 
 void WorldClockNodeInstance::update()
 {
-	real64 day_phase= global::g_env.worldMgr->getDayPhase();
+	real64 day_phase= global::g_env->worldMgr->getDayPhase();
 	dayPhaseOut->send(day_phase);
 
 	real64 dayness= day_phase*2.0;

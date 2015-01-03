@@ -53,7 +53,7 @@ ArmaturePose Clip::getPose(real32 phase, bool interpolate) const {
 }
 
 const Armature& Clip::getArmature() const {
-	return global::g_env.resCache->getResource<Armature>(armatureAttribute.get());
+	return global::g_env->resCache->getResource<Armature>(armatureAttribute.get());
 }
 
 void Clip::resourceUpdate(bool load, bool force){

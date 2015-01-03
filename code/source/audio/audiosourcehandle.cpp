@@ -34,7 +34,7 @@ void AudioSourceHandle::assignNewSource(AudioSource::Type type){
 	if (!audioSource)
 		listenForEvent(global::Event::OnAudioSourceDestroy);
 	
-	operator=(global::g_env.audioMgr->createAudioSource(type));
+	operator=(global::g_env->audioMgr->createAudioSource(type));
 	
 	ensure(audioSource);
 }
@@ -55,7 +55,7 @@ SoundInstanceHandle AudioSourceHandle::playSound(const Sound& s){
 }
 
 SoundInstanceHandle AudioSourceHandle::playSound(const util::Str8& name){
-	return (playSound(global::g_env.resCache->getResource<Sound>(name)));
+	return (playSound(global::g_env->resCache->getResource<Sound>(name)));
 }
 
 } // audio

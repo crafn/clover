@@ -56,7 +56,7 @@ void createEdges(
 	used_spawners.resize(spawners.size()); // Larger than usually needed
 
 	// Scan through the whole grid
-	auto& grid= global::g_env.physMgr->getWorld().getGrid();
+	auto& grid= global::g_env->physMgr->getWorld().getGrid();
 	auto&& chunk_positions= grid.getChunkPositions();
 	uint32 width= grid.getChunkWidth();
 	uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
@@ -130,7 +130,7 @@ void createEdges(
 				{ // Create entity
 					PROFILE();
 					game::WeHandle edge=
-						global::g_env.worldMgr->getWeMgr().createEntity(
+						global::g_env->worldMgr->getWeMgr().createEntity(
 								NONULL(spawners[s_i]->getEdgeType())->getName(),
 								edge_t.translation);
 					edge->setAttribute("transform", edge_t);
@@ -155,8 +155,8 @@ struct WorldMgr::M {
 	M(WorldMgr& mgr)
 		: lastUpdTime(-std::numeric_limits<real64>::infinity())
 		, chunksLocked(false)
-		, propertyGrid(global::g_env.physMgr->getWorld().getGrid())
-		, worldGen(mgr, global::g_env.resCache->getSubCache<world_gen::WorkerType>().getResources())
+		, propertyGrid(global::g_env->physMgr->getWorld().getGrid())
+		, worldGen(mgr, global::g_env->resCache->getSubCache<world_gen::WorkerType>().getResources())
 		, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
 			dayTime += clock.getDeltaTime()*300;
 		})
@@ -248,7 +248,7 @@ void WorldMgr::update()
 		PROFILE();
 		m->weMgr.removeFlagged(); // Removes phys objects flagged by ui
 
-		auto& grid= global::g_env.physMgr->getWorld().getGrid();
+		auto& grid= global::g_env->physMgr->getWorld().getGrid();
 		auto&& chunk_positions= grid.getChunkPositions();
 		uint32 width= grid.getChunkWidth();
 		uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
@@ -290,7 +290,7 @@ void WorldMgr::update()
 	///       Possible solution could be that spawnNewEntities runs node init,
 	///       and this extra chunk update would be done before weMgr.update
 	for (auto p : m->loadedChunks)
-		global::g_env.physMgr->getWorld().getGrid().touchCells(p, -1.0);
+		global::g_env->physMgr->getWorld().getGrid().touchCells(p, -1.0);
 	m->loadedChunks.clear();
 
 	detail::createEdges(m->edgeSpawns, m->lastUpdTime);

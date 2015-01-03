@@ -34,7 +34,7 @@ void AudioReceiverHandle::assignNewReceiver(){
 	if (!audioReceiver)
 		listenForEvent(global::Event::OnAudioReceiverDestroy);
 	
-	operator=(global::g_env.audioMgr->createAudioReceiver());
+	operator=(global::g_env->audioMgr->createAudioReceiver());
 	
 	ensure(audioReceiver);
 }

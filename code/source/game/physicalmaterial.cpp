@@ -85,7 +85,7 @@ void PhysicalMaterial::createErrorResource(){
 
 void PhysicalMaterial::setDefaultCollisionSound(const util::Str8& sound_name){
 		if (!sound_name.empty()){
-			defaultCollisionSound= &global::g_env.resCache->getResource<audio::Sound>(sound_name);
+			defaultCollisionSound= &global::g_env->resCache->getResource<audio::Sound>(sound_name);
 		}
 		else
 			defaultCollisionSound= 0;

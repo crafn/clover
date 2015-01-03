@@ -35,7 +35,10 @@
 
 namespace clover {
 
-App::App(const util::Str8& executablePath){
+App::App(const util::Str8& executablePath)
+	: env({}) // Zero-initialize
+{
+	global::g_env= &env;
 	print(debug::Ch::General, debug::Vb::Trivial, getBuildStr());
 
 	// Initial cfg loading should be as early as possible, 
@@ -67,7 +70,7 @@ App::App(const util::Str8& executablePath){
 	util::gRealClock= new util::Clock();
 
 	new resources::Cache();
-	global::g_env.resCache->update();
+	global::g_env->resCache->update();
 
 	new audio::AudioMgr();
 	new visual::VisualMgr();
@@ -79,14 +82,14 @@ App::App(const util::Str8& executablePath){
 }
 
 App::~App(){
-	delete global::g_env.gameLogic;
+	delete global::g_env->gameLogic;
 	delete ui::game::gBaseUi; ui::game::gBaseUi= nullptr;
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
-	delete global::g_env.physMgr;
+	delete global::g_env->physMgr;
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
 	delete visual::gVisualMgr;
-	delete global::g_env.audioMgr;
-	delete global::g_env.resCache; global::g_env.resCache= nullptr;
+	delete global::g_env->audioMgr;
+	delete global::g_env->resCache; global::g_env->resCache= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;
 	delete global::gEventMgr; global::gEventMgr= nullptr;
@@ -108,7 +111,7 @@ void App::run(){
 	while (1){
 		global::SingleFrameStorage::value.clear();
 
-		global::g_env.physMgr->preFrameUpdate();
+		global::g_env->physMgr->preFrameUpdate();
 
 		{ PROFILE_("sleep");
 			// FPS limiter
@@ -136,28 +139,28 @@ void App::run(){
 		if (!ui::game::gBaseUi->update())
 			break;
 
-		global::g_env.physMgr->update();
+		global::g_env->physMgr->update();
 
 		global::gEventMgr->dispatch();
 		nodes::gNodeEventMgr->dispatch();
 
 		// Update world logic
-		ensure(global::g_env.worldMgr);
-		global::g_env.gameLogic->update();
-		global::g_env.audioMgr->update();
+		ensure(global::g_env->worldMgr);
+		global::g_env->gameLogic->update();
+		global::g_env->audioMgr->update();
 
 		/// @todo Call just after gpu has finished with fluid preupdate
-		global::g_env.physMgr->fluidUpdate();
+		global::g_env->physMgr->fluidUpdate();
 
-		global::g_env.resCache->update();
+		global::g_env->resCache->update();
 
 		gui::gGuiMgr->update();
 
-		global::g_env.physMgr->postFrameUpdate();
+		global::g_env->physMgr->postFrameUpdate();
 		visual::gVisualMgr->renderFrame();
 	}
 
-	global::g_env.gameLogic->onQuit();
+	global::g_env->gameLogic->onQuit();
 }
 
 } // clover

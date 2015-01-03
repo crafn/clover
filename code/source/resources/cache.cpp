@@ -27,8 +27,8 @@ Cache::Cache()
 	: resourcePath(DEFAULT_RES_PATH)
 {
 	PROFILE_("resources");
-	if (!global::g_env.resCache)
-		global::g_env.resCache= this;
+	if (!global::g_env->resCache)
+		global::g_env->resCache= this;
 
 	/// @todo Use config
 	bool exists= false;
@@ -114,8 +114,8 @@ Cache::~Cache()
 	resourceFilePaths.clear();
 	subCaches.clear();
 
-	if (global::g_env.resCache == this)
-		global::g_env.resCache= nullptr;
+	if (global::g_env->resCache == this)
+		global::g_env->resCache= nullptr;
 }
 
 void Cache::update()

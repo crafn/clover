@@ -97,7 +97,7 @@ void WorldChunk::setState(State s){
 		entities[i]->setActive(state == State::Active);
 	}
 
-	global::g_env.worldMgr->onChunkStateChange(*this, static_cast<int32>(prev));
+	global::g_env->worldMgr->onChunkStateChange(*this, static_cast<int32>(prev));
 }
 
 void WorldChunk::setPosition(ChunkVec pos){
@@ -307,7 +307,7 @@ void WorldChunk::createNextEntity(util::RawPack& data_pack, WorldChunk* chunk){
 	}
 
 	{ PROFILE();
-		game::WeHandle h= global::g_env.worldMgr->getWeMgr().minimalCreateEntity(pack.getId());
+		game::WeHandle h= global::g_env->worldMgr->getWeMgr().minimalCreateEntity(pack.getId());
 		// Spawning is allowed when every entity in chunk cluster
 		// have been created
 		h->allowSpawning(chunk == nullptr);
