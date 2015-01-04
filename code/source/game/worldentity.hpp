@@ -71,17 +71,17 @@ public:
 		ensure(!spawned);
 		spawningAllowed= s;
 	}
-	
+
 	bool isSpawningAllowed(){
 		ensure(!spawned);
 		return spawningAllowed;
 	}
-	
+
 private:
 
 	WorldEntity* thisAsWe(){ return static_cast<WorldEntity*>(this); }
 	const WorldEntity* thisAsWe() const { return static_cast<const WorldEntity*>(this); }
-	
+
 	/// Entity exists and interacts in game world
 	/// False when chunk is inactive
 	bool active;

@@ -132,19 +132,19 @@ void Entity::informActivation(bool a){
 	if (!getLogic() || !getDef())
 		return;
 
-	ensure(gVisualMgr);
-	gVisualMgr->getEntityMgr().onEntityActivationChange(*this, a);
+	ensure(global::g_env->visualMgr);
+	global::g_env->visualMgr->getEntityMgr().onEntityActivationChange(*this, a);
 }
 
 void Entity::onSpatialChange(const Transform& prev_t){
 	if (isActive() && prev_t != getTransform()){
-		gVisualMgr->getEntityMgr().onEntitySpatialChange(*this, prev_t);
+		global::g_env->visualMgr->getEntityMgr().onEntitySpatialChange(*this, prev_t);
 	}	
 }
 
 void Entity::onCoordSpaceChange(util::Coord::Type p, util::Coord::Type s){
 	if (isActive() && (p != getCoordinateSpace() || s != getScaleCoordinateSpace())){
-		gVisualMgr->getEntityMgr().onEntityCoordSpaceChange(*this, p, s);
+		global::g_env->visualMgr->getEntityMgr().onEntityCoordSpaceChange(*this, p, s);
 	}
 }
 

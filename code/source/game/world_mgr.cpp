@@ -300,7 +300,7 @@ void WorldMgr::update()
 	m->weMgr.removeFlagged();
 	
 	{ // Stuff that should be in data
-		visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
+		visual::Camera& camera= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
 		m->lightBackground.setPosition(util::Vec3d(0));
 
 		real32 phase= getDayPhase() + 0.75;
@@ -341,7 +341,7 @@ void WorldMgr::update()
 		real32 mul= (real32)pow((0.5*(sin(phase*util::tau*2 - util::pi*0.5) + 1)), 0.5);
 		m->sunReDef.setColorMul(util::Color{1.f, 1.0f*mul, 1.0f*mul, 1.0f} * (1+ (1-mul)*0.2));
 
-		visual::gVisualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
+		global::g_env->visualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
 	}
 	
 	m->dayTime += m->clock.getDeltaTime();
@@ -420,7 +420,7 @@ void WorldMgr::updateWorldIO(){
 		return;
 	}
 
-	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
+	visual::Camera& camera= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
 	
 	WorldVec priority_pos= camera.getPosition();
 	m->saveMgr.setPriorityPosition(priority_pos);

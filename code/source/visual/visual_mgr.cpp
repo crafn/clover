@@ -24,8 +24,6 @@
 namespace clover {
 namespace visual {
 
-VisualMgr* gVisualMgr= nullptr;
-
 VisualMgr::VisualMgr()
 	/// @todo Enable pooling - disabled to get dll working
 	/*: modelDefMem(sizeof(ModelEntityDef)*
@@ -37,8 +35,8 @@ VisualMgr::VisualMgr()
 				"visual::maxModelEntityCount"),
 			"visual::modelEntityMem")*/
 {
-	if (!gVisualMgr)
-		gVisualMgr= this;
+	if (!global::g_env->visualMgr)
+		global::g_env->visualMgr= this;
 
 	//ModelEntityDef::setPoolMem(&modelDefMem);
 	//ModelEntityLogic::setPoolMem(&modelLogicMem);
@@ -78,8 +76,8 @@ VisualMgr::~VisualMgr(){
 	//ModelEntityLogic::setPoolMem(nullptr);
 	//ModelEntityDef::setPoolMem(nullptr);
 
-	if (gVisualMgr == this)
-		gVisualMgr= nullptr;
+	if (global::g_env->visualMgr == this)
+		global::g_env->visualMgr= nullptr;
 }
 
 void VisualMgr::renderFrame(){

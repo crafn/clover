@@ -1,4 +1,5 @@
 #include "coord.hpp"
+#include "global/env.hpp"
 #include "hardware/device.hpp"
 #include "util/profiling.hpp"
 #include "visual/camera.hpp"
@@ -131,7 +132,7 @@ void Coord::convertTo(Type t){
 	util::Vec2d view_world_rad;
 	
 	if (type == World || t == World){
-		 visual::Camera& cam= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
+		 visual::Camera& cam= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
 		 campos= cam.getPosition();
 		 camscale= cam.getScale();
 		 ensure(camscale > 0);

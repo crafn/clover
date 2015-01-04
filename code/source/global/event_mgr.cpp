@@ -1,7 +1,7 @@
-#include "event_mgr.hpp"
 #include "debug/debugprint.hpp"
+#include "env.hpp"
 #include "event.hpp"
-#include "eventqueue.hpp"
+#include "event_mgr.hpp"
 #include "eventreceiver.hpp"
 #include "util/profiling.hpp"
 #include "game/worldentity_mgr.hpp"
@@ -9,9 +9,16 @@
 namespace clover {
 namespace global {
 
-EventMgr* gEventMgr= 0;
+EventMgr::EventMgr()
+{
+	if (!global::g_env->eventMgr)
+		global::g_env->eventMgr= this;
+}
 
-EventMgr::EventMgr(){
+EventMgr::~EventMgr()
+{
+	if (global::g_env->eventMgr == this)
+		global::g_env->eventMgr= nullptr;
 }
 
 void EventMgr::registerReceiver(global::EventReceiver& recv, global::Event::EType event_type){
@@ -67,12 +74,15 @@ util::DynArray<global::EventReceiver*> EventMgr::getRegisteredReceivers(global::
 
 void EventMgr::dispatch(){
 	PROFILE_("events");
-	while(global::gEventQueue.size()){
-		global::Event& e= global::gEventQueue.getLast();
+	while(queue.size()){
+		global::Event& e= queue.getLast();
 		e.send();
-		global::gEventQueue.popLast();
+		queue.popLast();
 	}
 }
+
+void EventMgr::queueEvent(global::Event e)
+{ queue.queue(e); }
 
 } // global
 } // clover

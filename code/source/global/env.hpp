@@ -7,8 +7,10 @@
 namespace clover {
 namespace audio { class AudioMgr; }
 namespace game { class BaseGameLogic; class WorldMgr; }
+namespace global { class EventMgr; }
 namespace physics { class PhysMgr; }
 namespace resources { class Cache; }
+namespace visual { class VisualMgr; }
 namespace global {
 
 /// Top level accessors for each subsystem
@@ -18,8 +20,10 @@ struct Env {
 	audio::AudioMgr* audioMgr;
 	game::BaseGameLogic* gameLogic;
 	game::WorldMgr* worldMgr;
+	global::EventMgr* eventMgr;
 	physics::PhysMgr* physMgr;
 	resources::Cache* resCache;
+	visual::VisualMgr* visualMgr;
 };
 
 C_DLL_EXPORT Env* g_env;

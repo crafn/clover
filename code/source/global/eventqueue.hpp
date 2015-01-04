@@ -6,6 +6,7 @@
 namespace clover {
 namespace global {
 
+/// @todo Remove this worthless class
 class EventQueue {
 public:
 	/// Sends last and removes from queue
@@ -22,8 +23,6 @@ public:
 private:
 	util::DynArray<global::Event> events;
 };
-
-extern EventQueue gEventQueue;
 
 } // global
 } // clover

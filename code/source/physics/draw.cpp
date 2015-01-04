@@ -185,7 +185,7 @@ void Draw::DrawTransform(const b2Transform& xf){
 }
 
 bool Draw::isVisible(util::Vec2d pos, real64 radius){
-	return visual::gVisualMgr->getCameraMgr().getSelectedCamera().
+	return global::g_env->visualMgr->getCameraMgr().getSelectedCamera().
 		isWorldBBInViewport(pos, util::Vec2d(radius));
 }
 

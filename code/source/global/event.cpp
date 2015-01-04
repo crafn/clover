@@ -1,9 +1,9 @@
+#include "env.hpp"
 #include "event.hpp"
-#include "eventqueue.hpp"
-#include "global/exception.hpp"
-#include "eventreceiver.hpp"
 #include "event_mgr.hpp"
+#include "eventreceiver.hpp"
 #include "game/worldentity.hpp"
+#include "global/exception.hpp"
 
 namespace clover {
 namespace global {
@@ -94,13 +94,13 @@ int32 Event::getReceiverCount(){
 
 void Event::queue(){
 	queued= true;
-	global::gEventQueue.queue(*this);
+	global::g_env->eventMgr->queueEvent(*this);
 }
 
 void Event::send(){
 	queued= true;
 	
-	auto registered_receivers= global::gEventMgr->getRegisteredReceivers(type);
+	auto registered_receivers= global::g_env->eventMgr->getRegisteredReceivers(type);
 	for (auto &m : registered_receivers){
 		m->onEvent(*this);
 	}

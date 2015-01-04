@@ -3,8 +3,6 @@
 namespace clover {
 namespace global {
 
-EventQueue gEventQueue;
-
 bool EventQueue::sendLast(){
 	if (events.size() == 0)
 		throw global::Exception("EventQueue::sendLast(): zero events in queue");

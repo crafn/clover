@@ -4,8 +4,8 @@
 #include "build.hpp"
 #include "global/eventreceiver.hpp"
 #include "util/map.hpp"
-#include "util/time.hpp"
 #include "worldentity.hpp"
+#include "worldentity_table.hpp"
 
 namespace clover {
 namespace game {
@@ -31,18 +31,23 @@ public:
 	void removeAll();
 
 	void onEvent(global::Event& e);
-	
+
 	/// Create global entity
 	game::WeHandle createEntity(const util::Str8& type_name);
 	/// Creates entity to a chunk
 	game::WeHandle createEntity(const util::Str8& type_name, util::Vec2d pos, game::WorldChunk* c= nullptr);
 	game::WeHandle minimalCreateEntity(game::WorldEntityId id= 0);
-	
+
 	void corruptionCheck() const;
-	
+
+	WETable& getWeTable() { return weTable; }
+
 private:
 	// Perfoms shallow update for entities and takes care of chunk changes
 	void shallowUpdate(const util::DynArray<game::WorldEntity*> update_needing);
+
+	WETable weTable;	
+
 };
 
 } // util

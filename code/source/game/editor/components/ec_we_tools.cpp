@@ -23,7 +23,7 @@ WeToolsEc::WeToolsEc(){
 void WeToolsEc::spawn(uint32 name_id){
 	game::WeHandle h= global::g_env->worldMgr->getWeMgr().createEntity(	
 					getWeNames()[name_id],
-					visual::gVisualMgr->getCameraMgr().getSelectedCamera().getPosition() + util::Vec2d{0,3});
+					global::g_env->visualMgr->getCameraMgr().getSelectedCamera().getPosition() + util::Vec2d{0,3});
 }
 
 void WeToolsEc::setDebugDrawActive(bool b){

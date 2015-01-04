@@ -27,8 +27,8 @@ void WeMgr::update(){
 
 	{ PROFILE();
 		// Find entities and nodes which need an update
-		for(SizeType i= 0; i < gWETable.size(); ++i){
-			game::WorldEntity* we= gWETable[i];
+		for(SizeType i= 0; i < weTable.size(); ++i){
+			game::WorldEntity* we= weTable[i];
 			if (!we || !we->spawned || we->remove)
 				continue;
 
@@ -112,7 +112,7 @@ void WeMgr::spawnNewEntities(){
 	bool something_to_spawn= false;
 	util::DynArray<game::WorldEntity*>::Iter it;
 
-	for (it= gWETable.begin(); it!= gWETable.end(); it++){
+	for (it= weTable.begin(); it!= weTable.end(); it++){
 		if ((*it) && !(*it)->spawned && (*it)->spawningAllowed && !(*it)->remove){
 			something_to_spawn= true;
 			break;
@@ -124,7 +124,7 @@ void WeMgr::spawnNewEntities(){
 		game::WeHandle::fixLostHandles();
 
 		if (something_to_spawn){
-		for (it= gWETable.begin(); it!= gWETable.end(); it++){
+		for (it= weTable.begin(); it!= weTable.end(); it++){
 			if ((*it) && !(*it)->spawned && (*it)->spawningAllowed && !(*it)->remove){
 				(*it)->spawn();
 				if (!(*it)->hasSpawned())
@@ -138,7 +138,7 @@ void WeMgr::removeFlagged(){
 	PROFILE_("worldEntity");
 
 	util::DynArray<game::WorldEntity*>::Iter it;
-	for(it= gWETable.begin(); it != gWETable.end(); it++){
+	for(it= weTable.begin(); it != weTable.end(); it++){
 		game::WorldEntity* entity= *it;
 		if (!entity) continue;
 
@@ -155,23 +155,15 @@ void WeMgr::removeFlagged(){
 
 SizeType WeMgr::getEntityCount() const {
 	PROFILE_("worldEntity");
-
-	util::DynArray<game::WorldEntity*>::Iter it;
-	int32 count=0;
-	for(it=gWETable.begin(); it!=gWETable.end(); it++){
-		if ((*it) == 0)
-			continue;
-		count ++;
-	}
-	return count;
+	return weTable.getUsedCount();
 }
 
 util::DynArray<WorldEntity*> WeMgr::getGlobalEntities() const {
 	PROFILE_("worldEntity");
 
 	util::DynArray<WorldEntity*> globals;
-	for (SizeType i= 0; i < gWETable.size(); ++i){
-		WorldEntity* we= gWETable[i];
+	for (SizeType i= 0; i < weTable.size(); ++i){
+		WorldEntity* we= weTable[i];
 		if (!we || !we->isGlobal())
 			continue;
 		globals.pushBack(we);
@@ -185,7 +177,7 @@ void WeMgr::removeAll(){
 	global::g_env->worldMgr->getChunkMgr().removeAll();
 
 	util::DynArray<game::WorldEntity*>::Iter it;
-	for(it=gWETable.begin(); it!=gWETable.end(); it++){
+	for(it=weTable.begin(); it!=weTable.end(); it++){
 		if ((*it) == 0)
 			continue;
 	
@@ -251,14 +243,14 @@ game::WeHandle WeMgr::createEntity(const util::Str8& type_name, util::Vec2d posi
 void WeMgr::corruptionCheck() const {
 	// Check that every id is unique and within allowed boundaries
 	util::Map<game::WorldEntityId, int> id_map;
-	for (auto& entity : gWETable){
+	for (auto& entity : weTable){
 		if (!entity) continue;
 		
 		game::WorldEntityId id= entity->getId();
 		if (id == 0 && entity->getRemoveFlag()) continue;
 		
 		release_ensure(id > 0);
-		release_ensure(id < gWETable.getNextUniqueId());
+		release_ensure(id < weTable.getNextUniqueId());
 		
 		auto it= id_map.find(id);
 		release_ensure_msg(it == id_map.end(), "Duplicate game::WorldEntity id: %lld, name: %s", id, entity->getTypeName().cStr());

@@ -6,7 +6,7 @@
 #include "physics/object.hpp"
 #include "resources/cache.hpp"
 #include "util/profiling.hpp"
-#include "worldentity_mgr.hpp"
+#include "world_mgr.hpp"
 #include "worldentity.hpp"
 
 namespace clover {
@@ -23,17 +23,17 @@ BaseWorldEntity<WorldEntity>::BaseWorldEntity():
 			spawned(false),
 			remove(false),
 			inChunk(nullptr),
-			uniqueId(gWETable.assignUniqueId()), /// @todo This probably shouldn't be here (loaded entities will increment)
-			tableIndex(gWETable.findFreeIndex()){
+			uniqueId(getWeTable().assignUniqueId()), /// @todo This probably shouldn't be here (loaded entities will increment)
+			tableIndex(getWeTable().findFreeIndex()){
 
-	gWETable[tableIndex]= thisAsWe();
+	getWeTable()[tableIndex]= thisAsWe();
 
 	weMapIt= weMap.insert(std::make_pair(uniqueId, thisAsWe())).first;
 }
 
 template <typename WorldEntity>
 BaseWorldEntity<WorldEntity>::~BaseWorldEntity(){
-	gWETable[tableIndex]= 0;
+	getWeTable()[tableIndex]= 0;
 
 	weMap.erase(weMapIt);
 }
@@ -43,7 +43,7 @@ game::WeHandle BaseWorldEntity<WorldEntity>::assignId(game::WorldEntityId id){
 	uniqueId= id;
 	weMap.erase(weMapIt);
 	weMapIt= weMap.insert(std::make_pair(uniqueId, thisAsWe())).first;
-	if (id > gWETable.getNextUniqueId()) gWETable.setNextUniqueId(id + 1);
+	if (id > getWeTable().getNextUniqueId()) getWeTable().setNextUniqueId(id + 1);
 	return game::WeHandle(thisAsWe());
 }
 

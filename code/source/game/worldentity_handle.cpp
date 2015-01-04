@@ -66,7 +66,7 @@ bool WeHandle::isGood() const {
 	if (entityId == 0)
 		return false;
 	
-	game::WorldEntity* e= gWETable[tableIndex];
+	game::WorldEntity* e= getWeTable()[tableIndex];
 	if (e != 0 && e->uniqueId == entityId)
 		return true;
 	
@@ -112,7 +112,7 @@ bool WeHandle::isAssigned(){
 
 game::WorldEntity *WeHandle::get() const {
 	if (!isGood()) return 0;
-	return gWETable[tableIndex];
+	return getWeTable()[tableIndex];
 }
 
 game::WorldEntity& WeHandle::ref() const {

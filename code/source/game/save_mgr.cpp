@@ -274,8 +274,8 @@ void SaveMgr::setCurrentSavedGame(){
 		ob.parseText(header_data);
 
 		auto next_id= ob.get("nextWeId").getValue<game::WorldEntityId>();
-		if (next_id > gWETable.getNextUniqueId()){
-			gWETable.setNextUniqueId(next_id);
+		if (next_id > getWeTable().getNextUniqueId()){
+			getWeTable().setNextUniqueId(next_id);
 		}
 
 		dataCache->setRegionPositions(ob.get("regions").getValue<util::DynArray<RegionVec>>());
@@ -394,7 +394,7 @@ void SaveMgr::writeHeaderFile(){
 	util::ObjectNode ob;
 	util::Str8 file_contents;
 	{ PROFILE();	
-		ob["nextWeId"].setValue(gWETable.getNextUniqueId());
+		ob["nextWeId"].setValue(getWeTable().getNextUniqueId());
 		ob["regions"].setValue(dataCache->getRegionPositions());
 		ob["clusters"].setValue(dataCache->getClusters());
 		file_contents= ob.generateText();

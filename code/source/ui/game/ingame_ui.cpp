@@ -32,7 +32,7 @@ void InGameUi::onEvent(global::Event& e){
 void InGameUi::update(){
 	updateCamera();
 	
-	visual::Camera& camera= visual::gVisualMgr->getCameraMgr().getSelectedCamera();
+	visual::Camera& camera= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
 	audioRecv.setPosition(camera.getPosition());
 }
 

@@ -87,8 +87,8 @@ void DevLogic::update(){
 					(int)global::g_env->worldMgr->getWeMgr().getEntityCount());
 			print(debug::Ch::General, debug::Vb::Moderate,
 					"visual::ModelEntity count: %i,	  shader count: %i",
-					(int)visual::gVisualMgr->getEntityMgr().getModelEntityCount(),
-					(int)visual::gVisualMgr->getShaderMgr().getShaderCount());
+					(int)global::g_env->visualMgr->getEntityMgr().getModelEntityCount(),
+					(int)global::g_env->visualMgr->getShaderMgr().getShaderCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", global::g_env->physMgr->calcObjectCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env->audioMgr->getSoundInstanceCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env->audioMgr->getAudioSourceCount());

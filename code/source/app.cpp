@@ -62,7 +62,7 @@ App::App(const util::Str8& executablePath)
 	/// @todo Add this when multiple cfg files are supported
 	//global::gCfgMgr->loadAdditionalCfgs();
 
-	global::gEventMgr= new global::EventMgr();
+	new global::EventMgr();
 
 	hardware::gDevice= new hardware::Device();
 	hardware::gDevice->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
@@ -81,18 +81,19 @@ App::App(const util::Str8& executablePath)
 	new game::BaseGameLogic();	
 }
 
-App::~App(){
+App::~App()
+{
 	delete global::g_env->gameLogic;
 	delete ui::game::gBaseUi; ui::game::gBaseUi= nullptr;
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
 	delete global::g_env->physMgr;
 	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
-	delete visual::gVisualMgr;
+	delete global::g_env->visualMgr;
 	delete global::g_env->audioMgr;
 	delete global::g_env->resCache; global::g_env->resCache= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete hardware::gDevice; hardware::gDevice= nullptr;
-	delete global::gEventMgr; global::gEventMgr= nullptr;
+	delete global::g_env->eventMgr;
 	delete global::gFileMgr;
 
 	global::destroyMemoryPools();
@@ -100,12 +101,13 @@ App::~App(){
 	delete global::gCfgMgr; global::gCfgMgr= nullptr;
 }
 
-void App::run(){
+void App::run()
+{
 	PROFILE();
 
 	hardware::gDevice->updateFrameTime();
 	util::Clock::updateAll();
-	
+
 	util::Timer sleepTimer;
 
 	while (1){
@@ -130,7 +132,7 @@ void App::run(){
 
 		util::Clock::updateAll();
 
-		visual::gVisualMgr->getCameraMgr().update();
+		global::g_env->visualMgr->getCameraMgr().update();
 
 		// User's input update
 		// Could be after game logic, but does some debug-drawing and updating debug draw in the same frame is nice
@@ -141,7 +143,7 @@ void App::run(){
 
 		global::g_env->physMgr->update();
 
-		global::gEventMgr->dispatch();
+		global::g_env->eventMgr->dispatch();
 		nodes::gNodeEventMgr->dispatch();
 
 		// Update world logic
@@ -157,7 +159,7 @@ void App::run(){
 		gui::gGuiMgr->update();
 
 		global::g_env->physMgr->postFrameUpdate();
-		visual::gVisualMgr->renderFrame();
+		global::g_env->visualMgr->renderFrame();
 	}
 
 	global::g_env->gameLogic->onQuit();

@@ -15,6 +15,7 @@ template <typename T>
 class PtrTable {
 public:
 	typedef typename util::DynArray<T*>::Iter Iter;
+	typedef typename util::DynArray<T*>::cIter cIter;
 
 	PtrTable(int32 size=1024){
 		table.resize(size);
@@ -83,13 +84,11 @@ public:
 		table[index]= 0;
 	}
 
-	Iter begin(){
-		return table.begin();
-	}
+	Iter begin() { return table.begin(); }
+	Iter end() { return table.end(); }
 
-	Iter end(){
-		return table.end();
-	}
+	cIter begin() const { return table.begin(); }
+	cIter end() const { return table.end(); }
 
 	T* const * data() const { return table.data(); }
 	T** data() { return table.data(); }

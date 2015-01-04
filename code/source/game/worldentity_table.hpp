@@ -26,7 +26,8 @@ private:
 	game::WorldEntityId nextUniqueEntityId;
 };
 
-extern WETable gWETable;
+/// @return WETable of global::g_env->worldMgr->weMgr
+WETable& getWeTable();
 
 } // game
 } // clover

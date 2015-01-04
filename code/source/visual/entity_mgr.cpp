@@ -8,6 +8,7 @@
 #include "entitylogic_compound.hpp"
 #include "entitylogic_light.hpp"
 #include "entitylogic_model.hpp"
+#include "global/env.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/memory.hpp"
 #include "hardware/device.hpp"
@@ -252,10 +253,10 @@ EntityMgr::RenderFrameConfig EntityMgr::createSimpleRenderFrameConfig(){
 	PROFILE();
 	RenderFrameConfig cfg;
 	
-	if (visual::gVisualMgr->getCameraMgr().getActiveCameras().size() == 0)
+	if (global::g_env->visualMgr->getCameraMgr().getActiveCameras().size() == 0)
 		throw global::Exception("REMgr::draw(): No camera specified");
 	
-	Camera* camera= gVisualMgr->getCameraMgr().getActiveCameras()[0];
+	Camera* camera= global::g_env->visualMgr->getCameraMgr().getActiveCameras()[0];
 	ensure(camera);
 	camera->setPerspectiveMul(global::gCfgMgr->get("visual::perspectiveMul", 1.0f));
 	

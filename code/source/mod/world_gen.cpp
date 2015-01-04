@@ -111,14 +111,12 @@ C_DLL_EXPORT void createGroundWorkers(world_gen::ChunkGen& gen)
 
 C_DLL_EXPORT void createGrowWorkers(world_gen::ChunkGen& gen)
 {
-	return;
 	util::Vec2d pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d(1);
 	gen.createWorker("grow", pos, 0.0, randReal(0.0, 1.0));
 }
 
 C_DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 {
-	return;
 	const real64 check_interval= 5.0;
 	gen.createWorker("grow", w.getLocation().getPosition(), 0.0, gen.getWorldMgr().getTime() + check_interval);
 
@@ -193,7 +191,8 @@ C_DLL_EXPORT void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 }
 
 // Create ground block
-C_DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+C_DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
+{
 	util::Vec2d pos= w.getLocation().getPosition();
 	
 	real64 left_g_y= groundSurfaceY(pos.x - 0.5);
@@ -205,11 +204,10 @@ C_DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& 
 
 	if (pos.y + 0.5 < left_g_y &&
 		pos.y + 0.5 < middle_g_y &&
-		pos.y + 0.5 < right_g_y){
+		pos.y + 0.5 < right_g_y) {
 		// Under surface
 		shape= resources::ResourceRef<collision::Shape>("block");
-	}
-	else {
+	} else {
 		// Near surface, extend block
 		real64 left_y= left_g_y - pos.y;
 		real64 middle_y= middle_g_y - pos.y;
@@ -233,13 +231,12 @@ C_DLL_EXPORT void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& 
 		poly.get().setVertices(vertices);
 		shape.ref().add(poly.get());
 	}
-	
+
 	we.ref().setAttribute("shape", shape);
 }
 
 // Spawn player
 C_DLL_EXPORT void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
-	return;
 	gen.createEntity("playerMgr");
 
 	game::WeHandle we;
@@ -410,7 +407,6 @@ C_DLL_EXPORT void createBg(world_gen::WorldGen& gen){
 
 // For prototyping and testing purposes
 C_DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
-	return;
 	if (gen.getPosition() == util::Vec2i{0, 0})
 		createBg(gen.getWorldGen());
 
@@ -431,7 +427,6 @@ C_DLL_EXPORT void protoChunkInit(world_gen::ChunkGen& gen){
 }
 
 C_DLL_EXPORT void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
-	return;
 	// Create some stones
 	util::Vec2d pos= w.getLocation().getPosition();
 	for (SizeType i= 0; i < 2; ++i){

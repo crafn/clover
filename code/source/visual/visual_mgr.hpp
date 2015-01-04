@@ -38,8 +38,6 @@ private:
 	//util::MemChunk modelLogicMem;
 };
 
-extern VisualMgr* gVisualMgr;
-
 } // visual
 } // clover
 
