@@ -1,6 +1,7 @@
 #include "box2d.hpp"
 #include "joint_weld.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {
@@ -29,7 +30,7 @@ void WeldJoint::attach(Object& a, Object& b){
 }
 
 void WeldJoint::attach(Object& a){
-	attach(a, gWorld->getStaticRigidObject());
+	attach(a, global::g_env->physMgr->getWorld().getStaticRigidObject());
 }
 
 void WeldJoint::setFrequency(real64 f){

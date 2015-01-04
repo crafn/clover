@@ -1,6 +1,7 @@
 #include "box2d.hpp"
 #include "joint_distance.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {
@@ -28,7 +29,7 @@ void DistanceJoint::attach(	Object& a, Object& b,
 
 void DistanceJoint::attach(Object& a,
 						   const WorldVec& anchor_a, const WorldVec& anchor_b){
-	attach(a, gWorld->getStaticRigidObject(), anchor_a, anchor_b);
+	attach(a, global::g_env->physMgr->getWorld().getStaticRigidObject(), anchor_a, anchor_b);
 }
 
 void DistanceJoint::setDistance(real64 d){

@@ -1,6 +1,7 @@
 #include "box2d.hpp"
 #include "joint_friction.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {

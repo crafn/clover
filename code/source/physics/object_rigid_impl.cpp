@@ -1,8 +1,9 @@
 #include "box2d.hpp"
 #include "debug/debugprint.hpp"
 #include "object_rigid.hpp"
-#include "physics/fixture_rigid.hpp"
-#include "physics/joint.hpp"
+#include "fixture_rigid.hpp"
+#include "phys_mgr.hpp"
+#include "joint.hpp"
 #include "util/dyn_array.hpp"
 #include "util/polygon.hpp"
 #include "util/profiling.hpp"
@@ -62,7 +63,6 @@ bool RigidObjectDef::isStatic() const {
 void RigidObjectDef::setFixedRotation(bool s){
 	def.fixedRotation= s;
 }
-
 
 util::LinkedList<RigidObject*> RigidObject::nonStaticRigidObjects;
 
@@ -723,7 +723,7 @@ void RigidObject::createB2Body(bool use_cached_values){
 		bodyDef.def.linearVelocity= toB2(getVelocity());
 	}
 
-	body= gWorld->getB2World().CreateBody(&bodyDef.def);
+	body= global::g_env->physMgr->getWorld().getB2World().CreateBody(&bodyDef.def);
 
 	onStaticnessChange();
 }
@@ -732,7 +732,7 @@ void RigidObject::destroyB2Body(){
 	PROFILE_("physics");
 	ensure(body);
 	ensure(getJoints().empty() || isProxy());
-	gWorld->getB2World().DestroyBody(body);
+	global::g_env->physMgr->getWorld().getB2World().DestroyBody(body);
 	body= nullptr;
 
 	onStaticnessChange();
@@ -858,10 +858,10 @@ void RigidObject::removeFromGrid(){
 		return;
 
 	if (fixtures.empty()) {
-		physics::remove(gWorld->getGrid().getCell(getPosition()), *this);
+		physics::remove(global::g_env->physMgr->getWorld().getGrid().getCell(getPosition()), *this);
 	} else {
 		for (auto&& fix : fixtures) {
-			gWorld->getGrid().remove(fix.ref(), getTransform());
+			global::g_env->physMgr->getWorld().getGrid().remove(fix.ref(), getTransform());
 		}
 	}
 	inGrid= false;
@@ -872,10 +872,10 @@ void RigidObject::addToGrid(){
 		return;
 
 	if (fixtures.empty()) {
-		physics::add(gWorld->getGrid().getCell(getPosition()), *this);
+		physics::add(global::g_env->physMgr->getWorld().getGrid().getCell(getPosition()), *this);
 	} else {
 		for (auto&& fix : fixtures) {
-			gWorld->getGrid().add(fix.ref(), getTransform());
+			global::g_env->physMgr->getWorld().getGrid().add(fix.ref(), getTransform());
 		}
 	}
 	inGrid= true;

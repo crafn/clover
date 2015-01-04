@@ -74,10 +74,13 @@ class RigidFixture;
 
 struct OnBreakCb : public util::SingleCallbacker<>{};
 
+/// Defined in phys_mgr.cpp
+util::ChunkMemPool& getRigidObjectPool();
+
 /// Should be only dynamically allocated because of pooling!
 class RigidObject	: public Object
 					, public util::Callbacker<OnBreakCb>
-					, public util::PooledCrtp<RigidObject> {
+					, public util::PooledCrtp<RigidObject, getRigidObjectPool> {
 public:
 
 	typedef Object::Transform Transform;

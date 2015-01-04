@@ -41,8 +41,6 @@ static util::DynArray<RigidObject*> objectsByRadialField(
 	return util::duplicatesRemoved(objects);
 }
 
-World* gWorld= 0;
-
 World::World(GridDef grid_def, util::Vec2d gravity, FluidMgr* fluid_mgr)
 		: grid(grid_def)
 		, gravity(gravity)

@@ -403,10 +403,10 @@ void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, int32 prev_state)
 	}
 
 	if (ch.getState() == game::WorldChunk::State::Active){
-		physics::gWorld->addChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
+		global::g_env->physMgr->getWorld().addChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
 	}
 	else if (ch.getState() == game::WorldChunk::State::Destroying){
-		physics::gWorld->removeChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
+		global::g_env->physMgr->getWorld().removeChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
 	}
 }
 

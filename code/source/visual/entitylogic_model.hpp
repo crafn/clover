@@ -11,7 +11,7 @@ namespace visual {
 
 /// Renderable instance of a model
 class ModelEntityLogic	: public EntityLogic
-						, public util::PooledCrtp<ModelEntityLogic> {
+						/*, public util::PooledCrtp<ModelEntityLogic>*/ {
 public:
 	using Base= EntityLogic;
 	using BoundingBox= util::BoundingBox<util::Vec3d>;

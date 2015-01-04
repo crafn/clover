@@ -27,20 +27,21 @@ namespace visual {
 VisualMgr* gVisualMgr= nullptr;
 
 VisualMgr::VisualMgr()
-	: modelDefMem(sizeof(ModelEntityDef)*
+	/// @todo Enable pooling - disabled to get dll working
+	/*: modelDefMem(sizeof(ModelEntityDef)*
 			global::gCfgMgr->get<SizeType>(
 				"visual::maxModelDefCount"),
 			"visual::modelDefMem")
 	, modelLogicMem(sizeof(ModelEntityLogic)*
 			global::gCfgMgr->get<SizeType>(
 				"visual::maxModelEntityCount"),
-			"visual::modelEntityMem")
+			"visual::modelEntityMem")*/
 {
 	if (!gVisualMgr)
 		gVisualMgr= this;
 
-	ModelEntityDef::setPoolMem(&modelDefMem);
-	ModelEntityLogic::setPoolMem(&modelLogicMem);
+	//ModelEntityDef::setPoolMem(&modelDefMem);
+	//ModelEntityLogic::setPoolMem(&modelLogicMem);
 
 	global::g_env->resCache->preLoad<ShaderTemplate>();
 	global::g_env->resCache->preLoad<Texture>();
@@ -74,8 +75,8 @@ VisualMgr::~VisualMgr(){
 	global::g_env->resCache->unload<Texture>();
 	global::g_env->resCache->unload<ShaderTemplate>();
 
-	ModelEntityLogic::setPoolMem(nullptr);
-	ModelEntityDef::setPoolMem(nullptr);
+	//ModelEntityLogic::setPoolMem(nullptr);
+	//ModelEntityDef::setPoolMem(nullptr);
 
 	if (gVisualMgr == this)
 		gVisualMgr= nullptr;

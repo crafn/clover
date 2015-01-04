@@ -1,6 +1,8 @@
 #include "b2_joint.hpp"
 #include "box2d.hpp"
+#include "global/env.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {
@@ -12,13 +14,13 @@ namespace physics {
 template <typename T>
 void createB2Joint(b2JointDef& def, T*& joint){
 	ensure(!joint);
-	joint= static_cast<T*>(gWorld->getB2World().CreateJoint(&def));
+	joint= static_cast<T*>(global::g_env->physMgr->getWorld().getB2World().CreateJoint(&def));
 }
 
 template <typename T>
 void destroyB2Joint(T*& joint){
 	ensure(joint);
-	gWorld->getB2World().DestroyJoint(joint);
+	global::g_env->physMgr->getWorld().getB2World().DestroyJoint(joint);
 	joint= nullptr;
 }
 

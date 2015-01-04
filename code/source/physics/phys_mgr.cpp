@@ -1,11 +1,12 @@
-#include "phys_mgr.hpp"
 #include "armaturesuit.hpp"
 #include "draw.hpp"
+#include "fluid_mgr.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/env.hpp"
 #include "joint.hpp"
 #include "object_rigid.hpp"
 #include "object.hpp"
+#include "phys_mgr.hpp"
 #include "util/profiling.hpp"
 #include "world.hpp"
 
@@ -15,6 +16,9 @@
 
 namespace clover {
 namespace physics {
+
+util::ChunkMemPool& getRigidObjectPool()
+{ return global::g_env->physMgr->getRigidObjectPool(); }
 
 struct SimulationParams {
 	real64 timeStep;
@@ -41,23 +45,23 @@ SimulationParams getSimulationParamsFromCfg(){
 	return (s);
 }
 
-
 PhysMgr::PhysMgr()
-		: rigidObjectPoolMem(
+		: rigidObjectMem(
 				sizeof(RigidObject)*
 				global::gCfgMgr->get<SizeType>(
 					"physics::maxRigidObjectCount"),
 				"rigidObjectMem")
+		, rigidObjectPool(sizeof(RigidObject))
 		, accumWorldTime(0.0)
 		, accumFluidTime(0.0)
 		, fluidSteps(0)
 		, fluidTimeOffset(0.0){
-	
+
 	// staticRigidObject needs this
 	if (!global::g_env->physMgr)
 		global::g_env->physMgr= this;
 
-	RigidObject::setPoolMem(&rigidObjectPoolMem);
+	rigidObjectPool.setMemory(&rigidObjectMem);
 
 	listenForEvent(global::Event::OnPhysObjectCreate);
 	listenForEvent(global::Event::OnPhysObjectDestroy);
@@ -73,14 +77,12 @@ PhysMgr::PhysMgr()
 	GridDef grid_def;
 	grid_def.cellsInUnit= global::gCfgMgr->get("physics::gridCellsInUnit", 1);
 	grid_def.chunkWidth= global::gCfgMgr->get("physics::gridChunkWidth", 16);
-	gWorld= new World(grid_def, g, fluidMgr.get());
-	gWorld->init();
+
+	world= util::makeUniquePtr<World>(grid_def, g, fluidMgr.get());
+	world->init();
 }
 
-
 PhysMgr::~PhysMgr(){
-	delete gWorld; gWorld= nullptr;
-
 	int32 not_deleted= 0;
 
 	for (int32 i=0; i<(int)objectTable.size(); i++){
@@ -94,7 +96,7 @@ PhysMgr::~PhysMgr(){
 	if (not_deleted)
 		print(debug::Ch::Phys, debug::Vb::Moderate, "PhysMgr::~PhysMgr(): objectTable contained %i PhysObjects", not_deleted);
 
-	RigidObject::setPoolMem(nullptr);
+	rigidObjectPool.setMemory(nullptr);
 
 	if (global::g_env->physMgr == this)
 		global::g_env->physMgr= nullptr;
@@ -190,9 +192,8 @@ int32 PhysMgr::calcObjectCount(){
 	return count;
 }
 
-World& PhysMgr::getWorld(){
-	return *gWorld;
-}
+World& PhysMgr::getWorld()
+{ return world.ref(); }
 
 void PhysMgr::updateFrameTime(){
 	if (frameTimer.isRunning()){
@@ -230,9 +231,9 @@ void PhysMgr::step(const SimulationParams& s){
 		
 		for (int32 i= 0; i < steps; ++i){
 			Joint::simulateFrictions(s.timeStep);
-			gWorld->step(s.timeStep, s.velocityIterations, s.positionIterations);
+			world->step(s.timeStep, s.velocityIterations, s.positionIterations);
 		}
-		gWorld->getB2World().ClearForces();
+		world->getB2World().ClearForces();
 	}
 }
 

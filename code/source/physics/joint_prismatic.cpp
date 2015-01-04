@@ -1,6 +1,7 @@
 #include "box2d.hpp"
 #include "joint_prismatic.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {
@@ -26,7 +27,7 @@ void PrismaticJoint::attach(Object& a, Object& b, const WorldVec& axis){
 }
 
 void PrismaticJoint::attach(Object& o, const WorldVec& axis){
-	attach(o, gWorld->getStaticRigidObject(), axis);
+	attach(o, global::g_env->physMgr->getWorld().getStaticRigidObject(), axis);
 }	
 
 void PrismaticJoint::enableMotor(bool m){

@@ -4,7 +4,6 @@
 #include "build.hpp"
 #include "collision/traceable.hpp"
 #include "collision/ray.hpp"
-#include "physics/world.hpp"
 #include "physics/b2_fixtureuserdata.hpp"
 #include "physics/fixture_rigid.hpp"
 #include "util/vector.hpp"

@@ -1,6 +1,7 @@
 #include "box2d.hpp"
 #include "joint_wheel.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {
@@ -32,7 +33,7 @@ void WheelJoint::attach(Object& a, Object& b, const WorldVec& axis){
 }
 
 void WheelJoint::attach(Object& o, const WorldVec& axis){
-	attach(o, gWorld->getStaticRigidObject(), axis);
+	attach(o, global::g_env->physMgr->getWorld().getStaticRigidObject(), axis);
 }
 
 void WheelJoint::setSpringFrequency(real64 f){

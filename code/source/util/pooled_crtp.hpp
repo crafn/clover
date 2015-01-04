@@ -8,23 +8,18 @@
 namespace clover {
 namespace util {
 
-template <typename T>
+/// Requires function `pool` to avoid static state
+//// Requires function `pool` to avoid static state
+template <typename T, util::ChunkMemPool& (*pool)()>
 class PooledCrtp {
 public:
 	using View= PoolView<T>;
 
-	/// Remember to call before creating instances :p
-	static void setPoolMem(MemChunk* mem){ pool.setMemory(mem); }
-	static SizeType pooledCount(){ return pool.getAllocatedCount(); }
-	static View poolView(){ return View(pool); }
+	static SizeType pooledCount() { return pool().getAllocatedCount(); }
+	static View poolView() { return View(pool()); }
 
-	static void* operator new(size_t size){
-		return allocate(size);
-	}
-
-	static void operator delete(void* mem){
-		deallocate(mem);
-	}
+	static void* operator new(size_t size) { return allocate(size); }
+	static void operator delete(void* mem) { deallocate(mem); }
 
 	/// Placement versions
 
@@ -36,20 +31,12 @@ private:
 	static void* operator new[](size_t size);
 	static void operator delete[](void* mem);
 
-	static void* allocate(SizeType size){
-		return pool.allocate(size, std::alignment_of<T>::value);
-	}
+	static void* allocate(SizeType size)
+	{ return pool().allocate(size, std::alignment_of<T>::value); }
 
-	static void deallocate(void* mem){
-		pool.deallocate(mem);
-	}
-
-	using Pool= util::ChunkMemPool;
-	static Pool pool;
+	static void deallocate(void* mem)
+	{ pool().deallocate(mem); }
 };
-
-template <typename T>
-typename PooledCrtp<T>::Pool PooledCrtp<T>::pool{sizeof(T)};
 
 } // util
 } // clover

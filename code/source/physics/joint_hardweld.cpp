@@ -1,5 +1,6 @@
 #include "joint_hardweld.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 #include "util/graph.hpp"
 
 namespace clover {

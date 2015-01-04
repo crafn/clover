@@ -2,6 +2,7 @@
 #include "debug/debugdraw.hpp"
 #include "global/env.hpp"
 #include "physics/draw.hpp"
+#include "physics/fluid_mgr.hpp"
 #include "physics/phys_mgr.hpp"
 #include "resources/cache.hpp"
 #include "shader.hpp"

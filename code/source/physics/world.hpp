@@ -78,10 +78,6 @@ private:
 	util::Map<util::Vec2i, int32> fluidChunkCounters;
 };
 
-/// PhysMgr creates
-/// @todo Remove, query from manager
-extern World* gWorld;
-
 } // physics
 } // clover
 

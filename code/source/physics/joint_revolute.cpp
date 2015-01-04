@@ -1,6 +1,7 @@
 #include "box2d.hpp"
 #include "joint_revolute.hpp"
 #include "object_rigid.hpp"
+#include "phys_mgr.hpp"
 
 namespace clover {
 namespace physics {
@@ -29,7 +30,7 @@ void RevoluteJoint::attach(Object& a, Object& b, const WorldVec& anchor_pos){
 }
 
 void RevoluteJoint::attach(Object& o, const WorldVec& anchor_pos){
-	attach(o, gWorld->getStaticRigidObject(), anchor_pos);
+	attach(o, global::g_env->physMgr->getWorld().getStaticRigidObject(), anchor_pos);
 }	
 
 void RevoluteJoint::enableMotor(bool m){

@@ -57,7 +57,7 @@ class TextModel;
 /// @class ModelEntity Model instance
 /// @todo Move stuff to Material
 class ModelEntityDef	: public EntityDef
-						, public util::PooledCrtp<ModelEntityDef> {
+						/*, public util::PooledCrtp<ModelEntityDef>*/ {
 public:
 	DECLARE_RESOURCE(ModelEntityDef)
 	

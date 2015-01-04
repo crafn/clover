@@ -1,5 +1,8 @@
 #include "box2d.hpp"
 #include "draw.hpp"
+#include "global/env.hpp"
+#include "phys_mgr.hpp"
+#include "physics/world.hpp"
 #include "visual/entity.hpp"
 #include "visual/mesh.hpp"
 #include "visual/model.hpp"
@@ -7,7 +10,6 @@
 #include "visual/visual_mgr.hpp"
 #include "visual/camera_mgr.hpp"
 #include "visual/camera.hpp"
-#include "physics/world.hpp"
 
 namespace clover {
 namespace physics {
@@ -98,10 +100,10 @@ void Draw::draw(){
 	for (int32 i=0; i<2; ++i)
 		mesh[i]->clear();
 
-	physics::gWorld->getB2World().DrawDebugData();
+	global::g_env->physMgr->getWorld().getB2World().DrawDebugData();
 
 	if (gridFlag){
-		Grid& grid= gWorld->getGrid();
+		Grid& grid= global::g_env->physMgr->getWorld().getGrid();
 		uint32 chunk_width= grid.getChunkWidth();
 		real64 radius= chunk_width/std::sqrt(2.0);
 		for (auto&& vec : grid.getChunkPositions()){
