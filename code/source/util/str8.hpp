@@ -15,7 +15,7 @@ namespace clover {
 namespace util {
 
 /// UTF-8 string
-class Str8 {
+class ENGINE_API Str8 {
 public:
 	Str8();
 

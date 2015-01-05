@@ -119,7 +119,7 @@ private:
 
 /// Implements the actual game logic of world entities
 /// WorldEntity and BaseWorldEntity were kept separate because it's probably cleaner that way
-class WorldEntity : public BaseWorldEntity<WorldEntity> {
+class ENGINE_API WorldEntity : public BaseWorldEntity<WorldEntity> {
 public:
 	using Base= BaseWorldEntity;
 	using ThisClass= WorldEntity;

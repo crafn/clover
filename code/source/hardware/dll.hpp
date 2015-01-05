@@ -6,14 +6,7 @@
 namespace clover {
 namespace hardware {
 
-#if OS == OS_LINUX
-#define PUBLIC_API __attribute__((visibility ("default")))
-#define C_PUBLIC_API extern "C" __attribute__((visibility ("default")))
 using DllHandle= void*;
-#else
-#error @todo Implement
-#endif
-
 const DllHandle mainProgramHandle= nullptr;
 
 DllHandle loadDll(const char* path);

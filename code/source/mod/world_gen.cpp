@@ -71,7 +71,7 @@ real64 forestness(real64 x)
 }
 
 /// Global initialization of world generation
-C_PUBLIC_API void initWorld(world_gen::WorldGen& gen)
+MOD_API void initWorld(world_gen::WorldGen& gen)
 {
 	debug::print("Global world init");
 	ensure_msg(global::g_env->resCache, "resCache not initialized");
@@ -84,7 +84,7 @@ C_PUBLIC_API void initWorld(world_gen::WorldGen& gen)
 	debug::print("Global world init end");
 }
 
-C_PUBLIC_API void createGroundWorkers(world_gen::ChunkGen& gen)
+MOD_API void createGroundWorkers(world_gen::ChunkGen& gen)
 {
 	util::Vec2d corner_pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d{0.5, 0.5};
 
@@ -109,13 +109,13 @@ C_PUBLIC_API void createGroundWorkers(world_gen::ChunkGen& gen)
 	}
 }
 
-C_PUBLIC_API void createGrowWorkers(world_gen::ChunkGen& gen)
+MOD_API void createGrowWorkers(world_gen::ChunkGen& gen)
 {
 	util::Vec2d pos= game::WorldGrid::chunkCornerToWorldVec(gen.getPosition()) + util::Vec2d(1);
 	gen.createWorker("grow", pos, 0.0, randReal(0.0, 1.0));
 }
 
-C_PUBLIC_API void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
+MOD_API void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 {
 	const real64 check_interval= 5.0;
 	gen.createWorker("grow", w.getLocation().getPosition(), 0.0, gen.getWorldMgr().getTime() + check_interval);
@@ -191,7 +191,7 @@ C_PUBLIC_API void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 }
 
 // Create ground block
-C_PUBLIC_API void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
+MOD_API void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 {
 	util::Vec2d pos= w.getLocation().getPosition();
 	
@@ -236,7 +236,7 @@ C_PUBLIC_API void groundWork(world_gen::WorldGen& gen, const world_gen::Worker& 
 }
 
 // Spawn player
-C_PUBLIC_API void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+MOD_API void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 	gen.createEntity("playerMgr");
 
 	game::WeHandle we;
@@ -248,7 +248,7 @@ C_PUBLIC_API void playerSpawnWork(world_gen::WorldGen& gen, const world_gen::Wor
 	//we.ref().setAttribute("player", "player1");
 }
 
-C_PUBLIC_API void createBg(world_gen::WorldGen& gen){
+MOD_API void createBg(world_gen::WorldGen& gen){
 	// Bg test
 	
 	// Limits of test background
@@ -406,7 +406,7 @@ C_PUBLIC_API void createBg(world_gen::WorldGen& gen){
 }
 
 // For prototyping and testing purposes
-C_PUBLIC_API void protoChunkInit(world_gen::ChunkGen& gen){
+MOD_API void protoChunkInit(world_gen::ChunkGen& gen){
 	if (gen.getPosition() == util::Vec2i{0, 0})
 		createBg(gen.getWorldGen());
 
@@ -426,7 +426,7 @@ C_PUBLIC_API void protoChunkInit(world_gen::ChunkGen& gen){
 	
 }
 
-C_PUBLIC_API void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
+MOD_API void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 	// Create some stones
 	util::Vec2d pos= w.getLocation().getPosition();
 	for (SizeType i= 0; i < 2; ++i){

@@ -1,15 +1,15 @@
 #include "dll.hpp"
 
-#if OS == OS_LINUX
+#if PLATFORM == PLATFORM_UNIX
 #	include <dlfcn.h>
-#else
-#	error @todo Implement
+#elif PLATFORM == PLATFORM_WINDOWS
+#	include <windows.h>
 #endif
 
 namespace clover {
 namespace hardware {
 
-#if OS == OS_LINUX
+#if PLATFORM == PLATFORM_UNIX
 
 DllHandle loadDll(const char* path)
 { return dlopen(path, RTLD_LAZY | RTLD_GLOBAL); }
@@ -23,8 +23,20 @@ void* queryDllSym(DllHandle dll, const char* sym)
 const char* dllError()
 { return dlerror(); }
 
-#else
-#	error @todo Implement
+#elif PLATFORM == PLATFORM_WINDOWS
+
+DllHandle loadDll(const char* path)
+{ return static_cast<DllHandle>(LoadLibrary(path)); }
+
+void unloadDll(DllHandle dll)
+{ FreeLibrary(static_cast<HMODULE>(dll)); }
+
+void* queryDllSym(DllHandle dll, const char* sym)
+{ return (void*)GetProcAddress(static_cast<HMODULE>(dll), sym); }
+
+const char* dllError()
+{ return "@todo dllError on windows"; }
+
 #endif
 
 } // hardware

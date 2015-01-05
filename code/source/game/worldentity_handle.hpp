@@ -13,7 +13,7 @@ class WorldEntity;
 class StrictHandleConnection;
 
 /// Smart WorldEntity handle
-class WeHandle {
+class ENGINE_API WeHandle {
 public:
 	WeHandle(const game::WorldEntity* e=0);
 	virtual ~WeHandle();

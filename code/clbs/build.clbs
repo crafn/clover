@@ -10,9 +10,13 @@ def buildInfo(env, target):
 
 	c_compiler= "gcc"
 	cpp_compiler= "g++"
+	export_dyn_symbols_cmd= ""
 	linker= "ld"
 	if env.os == "linux":
 		linker= "gold" # Required for -gsplit-dwarf
+		export_dyn_symbols_cmd= "--export-dynamic"
+	else:
+		export_dyn_symbols_cmd= "-shared"
 	lib_dir= "./lib"
 	dep_include_paths= []
 	dep_lib_paths= []
@@ -401,9 +405,11 @@ def buildInfo(env, target):
 	clover.deps += subsystem_projs + [ all_deps_proj ]
 	## @todo Remove link group when circular refs are removed from subs
 	# export-dynamic and whole-archive is needed for dynamic symbol table to be present in exe
-	clover.links += [ "--export-dynamic", "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_proj.name ]
+	clover.links += [ export_dyn_symbols_cmd, "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_proj.name ]
 	clover.links += system_links
-	
+	if env.os == "windows": # Create importlib to engine for dll's
+		clover.links += [ "--out-implib," + lib_dir + "/libclover_stubs.a" ]
+
 	if env.os == "windows":
 		# win-builds mingw is broken.
 		win_builds_bin_paths= \
@@ -420,10 +426,14 @@ def buildInfo(env, target):
 	mod.libDirs= clover.libDirs
 	mod.headers= findFiles(clover_src_dir + "/mod", [ "*.hpp" ])
 	mod.src= findFiles(clover_src_dir + "/mod", [ "*.cpp" ])
-	mod.flags= clover.flags + [ "fPIC", "fvisibility=hidden" ]
-	mod.defines= clover.defines
+	mod.flags= clover.flags + [ "fvisibility=hidden" ]
+	mod.defines= clover.defines + [ "MOD_DLL_BUILD" ]
 	mod.compiler= clover.compiler
 	mod.linker= clover.linker
 	mod.deps= [ clover ]
-	#mod.links= clover.links # Linked at runtime
+	if env.os == "linux":
+		pass # Linked at runtime
+	elif env.os == "windows":
+		# Undefined references not allowed in windows DLL
+		mod.links= [ "clover_stubs" ]
 	return mod
