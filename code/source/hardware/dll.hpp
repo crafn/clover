@@ -7,8 +7,8 @@ namespace clover {
 namespace hardware {
 
 #if OS == OS_LINUX
-#define DLL_EXPORT __attribute__((visibility ("default")))
-#define C_DLL_EXPORT extern "C" __attribute__((visibility ("default")))
+#define PUBLIC_API __attribute__((visibility ("default")))
+#define C_PUBLIC_API extern "C" __attribute__((visibility ("default")))
 using DllHandle= void*;
 #else
 #error @todo Implement

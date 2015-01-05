@@ -14,7 +14,6 @@ namespace visual { class VisualMgr; }
 namespace global {
 
 /// Top level accessors for each subsystem
-/// This is the global data for dll's
 struct Env {
 	/// @todo Add rest
 	audio::AudioMgr* audioMgr;
@@ -26,7 +25,7 @@ struct Env {
 	visual::VisualMgr* visualMgr;
 };
 
-C_DLL_EXPORT Env* g_env;
+C_PUBLIC_API Env* g_env;
 
 } // global
 } // clover

@@ -12,7 +12,7 @@ namespace hardware {
 #if OS == OS_LINUX
 
 DllHandle loadDll(const char* path)
-{ return dlopen(path, RTLD_LAZY); }
+{ return dlopen(path, RTLD_LAZY | RTLD_GLOBAL); }
 
 void unloadDll(DllHandle dll)
 { dlclose(dll); }

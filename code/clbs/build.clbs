@@ -20,7 +20,7 @@ def buildInfo(env, target):
 	dep_defines= []
 
 	target_defines= []
-	target_flags= [ "pipe", "fPIC", "fvisibility=hidden" ]
+	target_flags= [ "pipe" ]
 	funsafe_flags= [ "ffast-math" ] 
 	if linker == "gold":
 		target_flags += [ "gsplit-dwarf" ] # Fast linking with separate debug info
@@ -400,7 +400,8 @@ def buildInfo(env, target):
 	clover.linker= linker
 	clover.deps += subsystem_projs + [ all_deps_proj ]
 	## @todo Remove link group when circular refs are removed from subs
-	clover.links += [ subsystem_names ] + [ all_deps_proj.name ] 
+	# export-dynamic and whole-archive is needed for dynamic symbol table to be present in exe
+	clover.links += [ "--export-dynamic", "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_proj.name ]
 	clover.links += system_links
 	
 	if env.os == "windows":
@@ -419,10 +420,10 @@ def buildInfo(env, target):
 	mod.libDirs= clover.libDirs
 	mod.headers= findFiles(clover_src_dir + "/mod", [ "*.hpp" ])
 	mod.src= findFiles(clover_src_dir + "/mod", [ "*.cpp" ])
-	mod.flags= clover.flags
+	mod.flags= clover.flags + [ "fPIC", "fvisibility=hidden" ]
 	mod.defines= clover.defines
 	mod.compiler= clover.compiler
 	mod.linker= clover.linker
 	mod.deps= [ clover ]
-	mod.links= clover.links
+	#mod.links= clover.links # Linked at runtime
 	return mod
