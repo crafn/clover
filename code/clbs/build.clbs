@@ -10,13 +10,9 @@ def buildInfo(env, target):
 
 	c_compiler= "gcc"
 	cpp_compiler= "g++"
-	export_dyn_symbols_cmd= ""
 	linker= "ld"
 	if env.os == "linux":
 		linker= "gold" # Required for -gsplit-dwarf
-		export_dyn_symbols_cmd= "--export-dynamic"
-	else:
-		export_dyn_symbols_cmd= "-shared"
 	lib_dir= "./lib"
 	dep_include_paths= []
 	dep_lib_paths= []
@@ -405,7 +401,9 @@ def buildInfo(env, target):
 	clover.deps += subsystem_projs + [ all_deps_proj ]
 	## @todo Remove link group when circular refs are removed from subs
 	# export-dynamic and whole-archive is needed for dynamic symbol table to be present in exe
-	clover.links += [ export_dyn_symbols_cmd, "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_proj.name ]
+	if env.os == "linux":
+		clover.links += [ "--export-dynamic" ]
+	clover.links += [ "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_proj.name ]
 	clover.links += system_links
 	if env.os == "windows": # Create importlib to engine for dll's
 		clover.links += [ "--out-implib," + lib_dir + "/libclover_stubs.a" ]

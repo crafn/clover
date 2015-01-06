@@ -18,7 +18,7 @@ class WorldChunkMgr;
 class WorldEntity;
 class WorldQuery;
 
-class WorldMgr {
+class ENGINE_API WorldMgr {
 public:
 	WorldMgr();
 	~WorldMgr();

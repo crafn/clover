@@ -11,7 +11,7 @@ namespace clover {
 namespace collision {
 
 /// A simple polygon
-class PolygonBaseShape : public BaseShape {
+class ENGINE_API PolygonBaseShape : public BaseShape {
 public:
 	/// Box2d doesn't like too small polygons
 	static constexpr real64 minArea= 0.0001;

@@ -14,6 +14,7 @@
 #include "save_mgr.hpp"
 #include "ui/hid/actionlistener.hpp"
 #include "util/containeralgorithms.hpp"
+#include "util/profiling.hpp"
 #include "visual/camera.hpp"
 #include "visual/camera_mgr.hpp"
 #include "visual/entity.hpp"

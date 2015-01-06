@@ -37,7 +37,7 @@ T pointOnCatmull(real64 t, T p0, T p1, T p2, T p3);
 } // geom
 
 /// @todo Shouldn't be a class
-class Rand {
+class ENGINE_API Rand {
 public:
 	template<typename T>
 	static T continuous(T min, T max){

@@ -20,7 +20,7 @@ namespace game { namespace world_gen {
 class WorkerType;
 
 /// Supervisor of world generation
-class WorldGen {
+class ENGINE_API WorldGen {
 public:
 	using ChunkSet= util::Set<game::WorldChunk*>;
 	static constexpr real64 eternity= util::SlicedTask::eternity;

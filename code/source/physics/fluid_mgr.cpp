@@ -5,6 +5,8 @@
 #include "object_rigid.hpp"
 #include "global/file.hpp"
 #include "visual/camera.hpp"
+#include "util/profiling.hpp"
+
 // Proto
 #include "gui/cursor.hpp"
 #include "gui/gui_mgr.hpp"

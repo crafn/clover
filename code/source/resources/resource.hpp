@@ -47,7 +47,7 @@ namespace resources {
 ///		- when obsoletion status changes
 /// If attribute change triggers resource state change, onChange is called only once, and that is when resource state changes
 /// (if resource state is changed back and forth then onChange is called three times)
-class Resource : public util::Callbacker<util::OnChangeCb> {
+class ENGINE_API Resource : public util::Callbacker<util::OnChangeCb> {
 public:
 	typedef uint32 Staleness;
 	static constexpr Staleness Staleness_Never= -1;

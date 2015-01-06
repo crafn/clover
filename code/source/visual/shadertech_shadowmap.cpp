@@ -7,6 +7,7 @@
 #include "shader_mgr.hpp"
 #include "shadertech_shadowmap.hpp"
 #include "shadertemplate.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace visual {

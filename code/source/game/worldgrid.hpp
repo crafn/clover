@@ -14,7 +14,7 @@ typedef util::Vec2i RegionVec;
 
 /// All chunk/region coordinate transforms
 /// @todo Reconsider more dynamic solution
-class WorldGrid {
+class ENGINE_API WorldGrid {
 public:
 	static constexpr uint32 chunkWidthInBlocks= 8;
 	static constexpr uint32 regionWidthInChunks= 16;
@@ -33,7 +33,7 @@ public:
 	static WorldVec regionCenterToWorldVec(const RegionVec& p);
 };
 
-class GridPoint {
+class ENGINE_API GridPoint {
 public:
 	GridPoint()= default;
 

@@ -46,14 +46,12 @@ private:
 
 template <typename T, SizeType N, typename CompT>
 void FiniteGridContainer<T, N, CompT>::add(T value, Vec origin, Vec size){
-	PROFILE();
 	ensure(size.x > 0 && size.y > 0);
 	valueToElementIndex[value]= elements.add(Element({value, origin, size}));
 }
 
 template <typename T, SizeType N, typename CompT>
 void FiniteGridContainer<T, N, CompT>::remove(const T& value, Vec pos){
-	PROFILE();
 	auto it= valueToElementIndex.find(value);
 	if (it != valueToElementIndex.end()){
 		SizeType i= it->second;
@@ -81,7 +79,6 @@ util::DynArray<T> FiniteGridContainer<T, N, CompT>::coneQuery(
 		Vec origin,
 		Vec2 size,
 		real64 z_slope) const {
-	PROFILE();
 
 	CompT max_height= (CompT)(-(size.x/2.0)/z_slope + 0.5);
 	if (z_slope == 0.0)

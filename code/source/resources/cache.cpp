@@ -1,9 +1,11 @@
 #include "animation/bvh_util.hpp"
 #include "cache.hpp"
 #include "global/env.hpp"
-#include "hardware/device.hpp"
-#include "visual/font_mgr.hpp"
 #include "global/file.hpp"
+#include "hardware/device.hpp"
+#include "util/profiling.hpp"
+#include "visual/font_mgr.hpp"
+
 #define RESOURCE_HEADERS
 #include "resourcetypes.def"
 #undef RESOURCE_HEADERS

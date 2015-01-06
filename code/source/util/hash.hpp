@@ -17,7 +17,7 @@ uint32 hash32(const T& t){
 }
 
 /// Actual hashing function
-uint32 byteHash32(const uint8* buf, SizeType size);
+ENGINE_API uint32 byteHash32(const uint8* buf, SizeType size);
 
 /// To prevent copy-pasting in similar but not same array-like types
 template <typename T>

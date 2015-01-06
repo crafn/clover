@@ -48,7 +48,7 @@ enum class Vb {
 };
 
 /// Handles all debug printing
-class DebugPrint {
+class ENGINE_API DebugPrint {
 public:
 	static constexpr SizeType channelCount= static_cast<SizeType>(Ch::Last);
 	static constexpr SizeType verbosityCount= static_cast<SizeType>(Vb::Last);
@@ -84,7 +84,8 @@ private:
 	Buffer buffer;
 };
 
-extern DebugPrint gDebugPrint;
+/// @todo Move to global::g_env
+extern ENGINE_API DebugPrint gDebugPrint;
 
 /// Convenience function for debug printing
 /// @example print(debug::Ch::Audio, debug::Vb::Trivial, "test %i", 5);

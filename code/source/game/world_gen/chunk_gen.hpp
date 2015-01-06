@@ -18,7 +18,7 @@ namespace game { namespace world_gen {
 class WorldGen;
 
 /// Controls world generation of one chunk
-class ChunkGen {
+class ENGINE_API ChunkGen {
 public:
 	static constexpr real64 inf= std::numeric_limits<real64>::infinity();
 

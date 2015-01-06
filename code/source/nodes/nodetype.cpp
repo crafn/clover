@@ -5,6 +5,7 @@
 #include "resources/cache.hpp"
 #include "signaltypetraits.hpp"
 #include "slotidentifier.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace nodes {

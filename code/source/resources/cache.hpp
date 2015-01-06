@@ -7,7 +7,6 @@
 #include "util/hashmap.hpp"
 #include "util/map.hpp"
 #include "util/math.hpp"
-#include "util/profiling.hpp"
 #include "util/time.hpp"
 #include "util/string.hpp"
 #include "resources/resource.hpp"
@@ -29,7 +28,7 @@ class Font;
 namespace resources {
 
 /// Owner of resources
-class Cache {
+class ENGINE_API Cache {
 public:
 	static const util::Str8 shaderPath;
 
@@ -85,7 +84,6 @@ public:
 
 	template <typename T>
 	typename ResourceTraits<T>::SubCacheType& getSubCache(){
-		PROFILE_("resources");
 		auto it= subCaches.find(ResourceTraits<T>::typeName());
 		ensure_msg(it != subCaches.end(), "SubCache not found");
 		typename ResourceTraits<T>::SubCacheType& sub_cache= static_cast<typename ResourceTraits<T>::SubCacheType&>(*it->second);

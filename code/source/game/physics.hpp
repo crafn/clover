@@ -14,11 +14,11 @@ namespace game {
 
 class WorldEntity;
 
-void setOwnerWe(physics::Object& phys_obj, WorldEntity* entity);
-void setOwnerWe(physics::Entity& phys_entity, WorldEntity* entity);
+ENGINE_API void setOwnerWe(physics::Object& phys_obj, WorldEntity* entity);
+ENGINE_API void setOwnerWe(physics::Entity& phys_entity, WorldEntity* entity);
 
-WorldEntity* getOwnerWe(const physics::Object& phys_obj);
-WorldEntity* getOwnerWe(const physics::Entity& phys_entity);
+ENGINE_API WorldEntity* getOwnerWe(const physics::Object& phys_obj);
+ENGINE_API WorldEntity* getOwnerWe(const physics::Entity& phys_entity);
 
 } // game
 } // clover

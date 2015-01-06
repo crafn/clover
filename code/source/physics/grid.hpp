@@ -27,7 +27,7 @@ struct GridDef {
 
 /// Spatial grid mirroring properties of physical entities 
 /// Makes spatial queries cheap
-class Grid {
+class ENGINE_API Grid {
 public:
 	using ChunkVec= util::Vec2i;
 	using CellVec= util::Vec2i;

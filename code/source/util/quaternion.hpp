@@ -10,7 +10,7 @@ namespace clover {
 namespace util {
 
 template <typename T>
-class Quaternion {
+class ENGINE_API Quaternion {
 public:
 	using Value= T;
 	using Vec= RealVector<T, 3>;

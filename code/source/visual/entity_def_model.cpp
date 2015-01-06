@@ -2,6 +2,7 @@
 #include "entitylogic_model.hpp"
 #include "global/env.hpp"
 #include "resources/cache.hpp"
+#include "util/profiling.hpp"
 #include "visual/model.hpp"
 #include "visual/mesh.hpp"
 

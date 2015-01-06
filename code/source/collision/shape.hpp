@@ -33,7 +33,7 @@ struct ResourceTraits<collision::Shape> {
 } // resources
 namespace collision {
 
-class Shape : public resources::Resource {
+class ENGINE_API Shape : public resources::Resource {
 public:
 	typedef uint32 SubShapeId;
 	typedef util::GenericMesh<util::Vec2d, uint16> MeshType;

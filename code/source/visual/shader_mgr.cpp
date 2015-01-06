@@ -4,6 +4,7 @@
 #include "shader_mgr.hpp"
 #include "shadertemplate.hpp"
 #include "util/pair.hpp"
+#include "util/profiling.hpp"
 #include "util/tuple.hpp"
 #include "vertex.hpp"
 

@@ -7,9 +7,10 @@
 namespace clover {
 namespace collision {
 
-util::DynArray<util::Vec2d> circleVertices(util::Vec2d center, real64 radius, int32 vcount);
+ENGINE_API util::DynArray<util::Vec2d>
+circleVertices(util::Vec2d center, real64 radius, int32 vcount);
 
-class CircleBaseShape : public BaseShape {
+class ENGINE_API CircleBaseShape : public BaseShape {
 public:
 	CircleBaseShape(const util::Vec2d& center= util::Vec2d(0), real64 r=1.0);
 	virtual ~CircleBaseShape();

@@ -9,6 +9,7 @@
 #include "shader.hpp"
 #include "shader_mgr.hpp"
 #include "shadertemplate.hpp"
+#include "util/profiling.hpp"
 #include "util/time.hpp"
 
 namespace clover {

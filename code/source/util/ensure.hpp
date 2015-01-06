@@ -35,9 +35,11 @@
 namespace clover {
 namespace util {
 
-void ensureImpl(bool cond, const char* file, const char* func, int line,
+ENGINE_API void
+ensureImpl(bool cond, const char* file, const char* func, int line,
 		const char* cond_str);
-void ensureMsgImpl(bool cond, const char* file, const char* func, int line,
+ENGINE_API void
+ensureMsgImpl(bool cond, const char* file, const char* func, int line,
 		const char* msg, ...);
 
 template <typename T>

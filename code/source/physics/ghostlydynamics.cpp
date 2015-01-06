@@ -4,6 +4,7 @@
 #include "friction.hpp"
 #include "object.hpp"
 #include "util/ensure.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace physics {

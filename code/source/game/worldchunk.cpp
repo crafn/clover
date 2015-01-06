@@ -3,6 +3,7 @@
 #include "game/worldentity_mgr.hpp"
 #include "game/worldgrid.hpp"
 #include "global/env.hpp"
+#include "util/profiling.hpp"
 
 namespace clover {
 namespace game {
