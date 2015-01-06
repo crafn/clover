@@ -1,5 +1,5 @@
+#include "build.hpp"
 #if OS == OS_WINDOWS
-
 #include "filewatcher_impl_windows.hpp"
 #include "global/env.hpp"
 #include "util/string.hpp"

@@ -66,7 +66,7 @@ void WorkerType::updateFromAttributes(){
 	clear();
 
 	/// TEMPTEST
-	auto h= hardware::loadDll("./mod");
+	auto h= hardware::loadDll("./mod"); // .so on linux and .dll on windows
 	ensure_msg(h, "dll couldn't be loaded: %s", hardware::dllError());
 
 	//auto dll_g_env= (global::Env**)hardware::queryDllSym(h, "g_env");

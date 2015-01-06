@@ -1,4 +1,5 @@
 #include "dll.hpp"
+#include "util/string.hpp"
 
 #if PLATFORM == PLATFORM_UNIX
 #	include <dlfcn.h>
@@ -11,8 +12,11 @@ namespace hardware {
 
 #if PLATFORM == PLATFORM_UNIX
 
-DllHandle loadDll(const char* path)
-{ return dlopen(path, RTLD_LAZY | RTLD_GLOBAL); }
+DllHandle loadDll(const char* path_without_ext)
+{
+	auto path= util::Str8::format("%s.so", path_without_ext);
+	return dlopen(path.cStr(), RTLD_LAZY | RTLD_GLOBAL);
+}
 
 void unloadDll(DllHandle dll)
 { dlclose(dll); }
