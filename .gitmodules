@@ -1,6 +1,3 @@
-[submodule "code/deps/common/angelscript"]
-	path = code/deps/common/angelscript
-	url = https://github.com/crafn/clover-angelscript.git
 [submodule "code/deps/common/box2d"]
 	path = code/deps/common/box2d
 	url = https://github.com/crafn/clover-box2d.git
