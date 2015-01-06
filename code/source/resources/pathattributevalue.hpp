@@ -26,8 +26,10 @@ public:
 	
 	
 	/// Returns path relative from resource-file (that one which is put in the resource-file)
-	const util::Str8& value() const;
+	util::Str8 value() const;
 	void setValue(const util::Str8& v);
+
+	void setExt(const util::Str8& str);
 	
 	typedef util::FileWatcher::FileEvent FileEvent;
 	typedef std::function<void (FileEvent)> OnFileChangeCallbackType;

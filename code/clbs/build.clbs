@@ -333,6 +333,7 @@ def buildInfo(env, target):
 	### Clover ###
 
 	build_dest_dir= "../../builds/" + env.os + env.arch[1:]
+	resource_dir= "../../resources/gamedata"
 	clover_src_dir= "../source"
 	clover_flags= target_flags + funsafe_flags +  [
 		"Wall", "Werror",
@@ -419,7 +420,7 @@ def buildInfo(env, target):
 	mod= Project()
 	mod.name= "mod"
 	mod.type= "dll"
-	mod.targetDir= clover.targetDir
+	mod.targetDir= resource_dir
 	mod.includeDirs= clover.includeDirs
 	mod.libDirs= clover.libDirs
 	mod.headers= findFiles(clover_src_dir + "/mod", [ "*.hpp" ])

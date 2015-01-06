@@ -18,7 +18,7 @@ public:
 	bool operator==(const ResourceFilePath& other) const;
 	
 	/// Returns path relative from resource-file directory
-	const util::Str8& relative() const;
+	util::Str8 relative() const;
 	void setRelative(const util::Str8& r);
 	
 	/// Returns path from resource root
@@ -32,6 +32,8 @@ public:
 	util::Str8 whole() const;
 	
 	bool isValid() const;
+
+	void setExt(const util::Str8& str);
 	
 	template <typename Archive>
 	void serialize(Archive& ar, uint32 ver){
@@ -40,7 +42,10 @@ public:
 	}
 	
 private:
+	util::Str8 extPart() const;
+
 	util::Str8 directoryPath, relativePath;
+	util::Str8 ext;
 };
 
 } // resources

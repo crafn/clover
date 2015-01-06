@@ -9,10 +9,11 @@ namespace hardware {
 using DllHandle= void*;
 const DllHandle mainProgramHandle= nullptr;
 
-DllHandle loadDll(const char* path_without_ext);
+DllHandle loadDll(const char* path);
 void unloadDll(DllHandle dll);
 void* queryDllSym(DllHandle dll, const char* sym);
 const char* dllError();
+const char* dllExt();
 
 } // hardware
 } // clover

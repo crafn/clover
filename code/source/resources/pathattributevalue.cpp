@@ -50,10 +50,16 @@ PathAttributeValue& PathAttributeValue::operator=(PathAttributeValue&& other){
 	return *this;
 }
 
-const util::Str8& PathAttributeValue::value() const { return relative(); }
+util::Str8 PathAttributeValue::value() const { return relative(); }
 
 void PathAttributeValue::setValue(const util::Str8& v){
 	setRelative(v);
+}
+
+void PathAttributeValue::setExt(const util::Str8& str)
+{
+	ResourceFilePath::setExt(str);
+	updateWatcher();
 }
 
 void PathAttributeValue::setOnFileChangeCallback(const OnFileChangeCallbackType& callback){

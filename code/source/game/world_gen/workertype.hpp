@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "resources/resource.hpp"
+#include "util/cb_listener.hpp"
 
 namespace clover {
 namespace game { namespace world_gen {
@@ -62,15 +63,16 @@ private:
 	void updateFromAttributes();
 	void clear();
 
-	std::function<WorkerGlobalInitFuncDecl> globalInitFunc;
-	std::function<WorkerChunkInitFuncDecl> chunkInitFunc;
-	std::function<WorkFuncDecl> workFunc;
-
 	RESOURCE_ATTRIBUTE(String, nameAttribute);
 	RESOURCE_ATTRIBUTE(Resource, moduleAttribute);
 	RESOURCE_ATTRIBUTE(String, globalInitFuncAttribute);
 	RESOURCE_ATTRIBUTE(String, chunkInitFuncAttribute);
 	RESOURCE_ATTRIBUTE(String, workFuncAttribute);
+
+	std::function<WorkerGlobalInitFuncDecl> globalInitFunc;
+	std::function<WorkerChunkInitFuncDecl> chunkInitFunc;
+	std::function<WorkFuncDecl> workFunc;
+	util::CbListener<util::OnChangeCb> moduleChangeListener;
 };
 
 }} // game::world_gen

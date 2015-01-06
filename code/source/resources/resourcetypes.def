@@ -6,11 +6,12 @@
 #include "collision/shape.hpp"
 #include "game/physicalmaterial.hpp"
 #include "game/physicalmaterialpair.hpp"
-#include "nodes//compositionnodelogicgroup.hpp"
-#include "nodes//nodeeventtype.hpp"
-#include "nodes//nodetype.hpp"
+#include "nodes/compositionnodelogicgroup.hpp"
+#include "nodes/nodeeventtype.hpp"
+#include "nodes/nodetype.hpp"
 #include "game/world_gen/workertype.hpp"
 #include "game/worldentity.hpp"
+#include "global/module.hpp"
 #include "physics/entity_def.hpp"
 #include "physics/material.hpp"
 #include "visual/shadertemplate.hpp"
@@ -28,6 +29,7 @@
 // Determines also loading order
 
 // RESOURCE(type_name, auto_preload)
+RESOURCE(global::Module, true)
 RESOURCE(animation::Armature, true)
 RESOURCE(animation::Clip, true)
 RESOURCE(visual::ShaderTemplate, false)

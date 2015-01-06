@@ -12,11 +12,8 @@ namespace hardware {
 
 #if PLATFORM == PLATFORM_UNIX
 
-DllHandle loadDll(const char* path_without_ext)
-{
-	auto path= util::Str8::format("%s.so", path_without_ext);
-	return dlopen(path.cStr(), RTLD_LAZY | RTLD_GLOBAL);
-}
+DllHandle loadDll(const char* path)
+{ return dlopen(path, RTLD_LAZY | RTLD_GLOBAL); }
 
 void unloadDll(DllHandle dll)
 { dlclose(dll); }
@@ -26,6 +23,9 @@ void* queryDllSym(DllHandle dll, const char* sym)
 
 const char* dllError()
 { return dlerror(); }
+
+const char* dllExt()
+{ return "so"; }
 
 #elif PLATFORM == PLATFORM_WINDOWS
 
@@ -41,6 +41,8 @@ void* queryDllSym(DllHandle dll, const char* sym)
 const char* dllError()
 { return "@todo dllError on windows"; }
 
+const char* dllExt()
+{ return "dll"; }
 #endif
 
 } // hardware

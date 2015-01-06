@@ -1,9 +1,10 @@
-#include "workertype.hpp"
 #include "chunk_gen.hpp"
+#include "global/module.hpp"
 #include "hardware/dll.hpp"
 #include "resources/cache.hpp"
 #include "world_gen.hpp"
 #include "workerlocation.hpp"
+#include "workertype.hpp"
 
 namespace clover {
 namespace game { namespace world_gen {
@@ -13,95 +14,100 @@ WorkerType::WorkerType()
 		, INIT_RESOURCE_ATTRIBUTE(moduleAttribute, "module", "")
 		, INIT_RESOURCE_ATTRIBUTE(globalInitFuncAttribute, "globalInitFunc", "")
 		, INIT_RESOURCE_ATTRIBUTE(chunkInitFuncAttribute, "chunkInitFunc", "")
-		, INIT_RESOURCE_ATTRIBUTE(workFuncAttribute, "workFunc", ""){
-	
-	auto try_refresh= [this] (){
+		, INIT_RESOURCE_ATTRIBUTE(workFuncAttribute, "workFunc", "")
+{
+
+	auto try_refresh= [this] ()
+	{
 		if (getResourceState() != State::Uninit)
 			resourceUpdate(false);
 	};
-	
+
 	moduleAttribute.setOnChangeCallback(try_refresh);
 	globalInitFuncAttribute.setOnChangeCallback(try_refresh);
 	chunkInitFuncAttribute.setOnChangeCallback(try_refresh);
 	workFuncAttribute.setOnChangeCallback(try_refresh);
 }
 
-void WorkerType::callGlobalInit(WorldGen& gen) const {
+void WorkerType::callGlobalInit(WorldGen& gen) const
+{
 	if (globalInitFunc)
 		globalInitFunc(gen);
 }
 
-void WorkerType::callChunkInit(ChunkGen& gen) const {
+void WorkerType::callChunkInit(ChunkGen& gen) const
+{
 	if (chunkInitFunc)
 		chunkInitFunc(gen);
 }
 
-void WorkerType::callWork(WorldGen& gen, const Worker& w) const {
+void WorkerType::callWork(WorldGen& gen, const Worker& w) const
+{
 	if (workFunc)
 		workFunc(gen, &w);
 }
 
-void WorkerType::resourceUpdate(bool load, bool force){
-	if (getResourceState() == State::Uninit || load){
+void WorkerType::resourceUpdate(bool load, bool force)
+{
+	if (getResourceState() == State::Uninit || load) {
 		try {
 			updateFromAttributes();
 			setResourceState(State::Loaded);	
 		}
-		catch (resources::ResourceException&){
+		catch (resources::ResourceException&) {
 			createErrorResource();
 		}
-	}
-	else {
+	} else {
 		clear();
 		setResourceState(State::Unloaded);
 	}
 }
 
-void WorkerType::createErrorResource(){
+void WorkerType::createErrorResource()
+{
 	clear();
 	setResourceState(State::Error);
 }
 
-void WorkerType::updateFromAttributes(){
+void WorkerType::updateFromAttributes()
+{
 	clear();
 
-	/// TEMPTEST
-	auto h= hardware::loadDll("./mod"); // .so on linux and .dll on windows
-	ensure_msg(h, "dll couldn't be loaded: %s", hardware::dllError());
+	auto& mod=
+		global::g_env->resCache->getResource<global::Module>(
+				moduleAttribute.get());
 
-	//auto dll_g_env= (global::Env**)hardware::queryDllSym(h, "g_env");
-	//ensure_msg(dll_g_env, "Couldn't find g_env in dll");
-	//*dll_g_env= global::g_env;
+	moduleChangeListener.clear();
+	moduleChangeListener.listen(mod, [this] ()
+	{ setResourceState(State::Unloaded); }); // Reload on change
 
-	if (!globalInitFuncAttribute.get().empty()){
-		auto func= (WorkerGlobalInitFuncDecl*)
-			hardware::queryDllSym(h, globalInitFuncAttribute.get().cStr());
-		ensure(func);
-		globalInitFunc= [this, func] (WorldGen& g){
-			func(g);
-		};
+	if (!globalInitFuncAttribute.get().empty()) {
+		auto fname= globalInitFuncAttribute.get().cStr();
+		auto func= (WorkerGlobalInitFuncDecl*)mod.getSym(fname);
+		if (!func)
+			throw resources::ResourceException("Func not found: %s", fname);
+		globalInitFunc= [this, func] (WorldGen& g){ func(g); };
 	}
 
-	if (!chunkInitFuncAttribute.get().empty()){
-		auto func= (WorkerChunkInitFuncDecl*)
-			hardware::queryDllSym(h, chunkInitFuncAttribute.get().cStr());
-		ensure_msg(func, "Chunk func not found: %s", chunkInitFuncAttribute.get().cStr());
-		chunkInitFunc= [this, func] (ChunkGen& c){
-			func(c);
-		};
+	if (!chunkInitFuncAttribute.get().empty()) {
+		auto fname= chunkInitFuncAttribute.get().cStr();
+		auto func= (WorkerChunkInitFuncDecl*)mod.getSym(fname);
+		if (!func)
+			throw resources::ResourceException("Func not found: %s", fname);
+		chunkInitFunc= [this, func] (ChunkGen& c){ func(c); };
 	}
 
-	if (!workFuncAttribute.get().empty()){
-		auto func= (WorkFuncDecl*)
-			hardware::queryDllSym(h, workFuncAttribute.get().cStr());
-		ensure(func);
-		workFunc= [this, func] (WorldGen& g, const Worker* w){
-			func(g, w);
-		};
+	if (!workFuncAttribute.get().empty()) {
+		auto fname= workFuncAttribute.get().cStr();
+		auto func= (WorkFuncDecl*)mod.getSym(fname);
+		if (!func)
+			throw resources::ResourceException("Func not found: %s", fname);
+		workFunc= [this, func] (WorldGen& g, const Worker* w){ func(g, w); };
 	}
 }
 
-void WorkerType::clear(){
+void WorkerType::clear()
+{
 	globalInitFunc= nullptr;
 	chunkInitFunc= nullptr;
 	workFunc= nullptr;
