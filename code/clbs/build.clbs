@@ -407,6 +407,7 @@ def buildInfo(env, tags):
 			p.headers= findFiles(dir, ["*.hpp", "*.tpp", "*.def"])
 			p.src= findFiles(dir, ["*.cpp"])
 			p.flags= clover_flags
+			p.defines= clover_defines
 			p.compiler= cpp_compiler
 			p.linker= linker
 			subsystem_names.append(p.name)
