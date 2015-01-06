@@ -1,12 +1,20 @@
 # Build instructions
-# `clbs -j4` - build clover_dev in 4 threads
-# `clbs debug`, `clbs dev` or `clbs release` - build respective targets
-# `clbs <target> clean` - removes all objects, libraries and executables
+
+# `clbs -j4` - build with development configuration in 4 threads
+# `clbs debug`, `clbs dev` or `clbs release` - build everything with respective configuration
+# `clbs engine` or `clbs mod` - build certain parts of the codebase
+# `clbs <cfg> clean` - removes all objects, libraries and executables
 # Flag `-v` can be used to see actual compilation and linking commands
 
-def buildInfo(env, target):
-	if target == "default":
-		target= "dev"
+# When working with engine, desired command usually is
+# `clbs -j8 dev clover`
+
+# When working with game, desired command usually is
+# `clbs -j8 dev mod`
+
+def buildInfo(env, tags):
+	if len(tags) == 0:
+		tags= [ "dev" ]
 
 	c_compiler= "gcc"
 	cpp_compiler= "g++"
@@ -18,22 +26,30 @@ def buildInfo(env, target):
 	dep_lib_paths= []
 	dep_libs= []
 	dep_defines= []
+	only_clover= "clover" in tags
+	only_mod= "mod" in tags
+	build_deps= not only_clover and not only_mod
+	build_clover= only_clover or not only_mod
 
+	cfg= "" # debug, dev or release
 	target_defines= []
 	target_flags= [ "pipe" ]
 	funsafe_flags= [ "ffast-math" ] 
 	if linker == "gold":
 		target_flags += [ "gsplit-dwarf" ] # Fast linking with separate debug info
-	if target == "debug":
+	if "debug" in tags:
+		cfg= "debug"
 		target_defines += [ "DEBUG" ]
 		target_flags += [ "g", "Og", "mtune=native", "march=native" ]
-	elif target == "dev":
+	elif "dev" in tags:
+		cfg= "dev"
 		target_flags += [ "g", "O2", "mtune=native", "march=native" ]
-	elif target == "release":
+	elif "release" in tags:
+		cfg= "release"
 		target_defines += [ "RELEASE", "NDEBUG" ]
 		target_flags += [ "O3" ]
 	else:
-		fail("Invalid target: " + target)
+		fail("Invalid tags: " + tags)
 
 	system_links= [ "OpenCL", "pthread" ]
 	if env.os == "linux":
@@ -48,292 +64,304 @@ def buildInfo(env, target):
 		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/Win32")
 		dep_lib_paths.append(os.environ["CUDA_PATH"] + "/lib/x64")
 
-	### Dependencies ###
+	### In-repo dependencies ###
 
 	# Boost
 	boost_dir= "../deps/common/boost"
-	boost= Project()
-	boost.name= "boost_" + target
-	boost.type= "obj"
-	boost.targetDir= lib_dir
-	boost.includeDirs= [ boost_dir ]
-	boost.headers= findFiles(boost_dir, "*.hpp")
-	boost.src= findFiles(boost_dir, "*.cpp")
-	boost.flags= target_flags + funsafe_flags + [ "fno-strict-aliasing" ]
-	boost.defines= target_defines
-	boost.compiler= cpp_compiler
-	boost.linker= linker
+	if build_deps:
+		boost= Project()
+		boost.name= "boost_" + cfg
+		boost.type= "obj"
+		boost.targetDir= lib_dir
+		boost.includeDirs= [ boost_dir ]
+		boost.headers= findFiles(boost_dir, "*.hpp")
+		boost.src= findFiles(boost_dir, "*.cpp")
+		boost.flags= target_flags + funsafe_flags + [ "fno-strict-aliasing" ]
+		boost.defines= target_defines
+		boost.compiler= cpp_compiler
+		boost.linker= linker
+		dep_libs.append(boost)
 	dep_include_paths += [ boost_dir ]
-	dep_libs.append(boost)
 
 	# Box2D
 	b2d_dir= "../deps/common/box2d"
-	b2d= Project()
-	b2d.name= "box2d_" + target
-	b2d.type= "obj"
-	b2d.targetDir= lib_dir
-	b2d.includeDirs= [ b2d_dir ]
-	b2d.headers= findFiles(b2d_dir, "*.h")
-	b2d.src= findFiles(b2d_dir, "*.cpp")
-	b2d.flags= target_flags + funsafe_flags
-	b2d.defines= target_defines
-	b2d.compiler= cpp_compiler
-	b2d.linker= linker
+	if build_deps:
+		b2d= Project()
+		b2d.name= "box2d_" + cfg
+		b2d.type= "obj"
+		b2d.targetDir= lib_dir
+		b2d.includeDirs= [ b2d_dir ]
+		b2d.headers= findFiles(b2d_dir, "*.h")
+		b2d.src= findFiles(b2d_dir, "*.cpp")
+		b2d.flags= target_flags + funsafe_flags
+		b2d.defines= target_defines
+		b2d.compiler= cpp_compiler
+		b2d.linker= linker
+		dep_libs.append(b2d)
 	dep_include_paths.append(b2d_dir)
-	dep_libs.append(b2d)
 
 	# ClipperLib
 	clipper_dir= "../deps/common/clipper-4.8.0"
-	clipper= Project()
-	clipper.name= "clipper_" + target
-	clipper.type= "obj"
-	clipper.targetDir= lib_dir
-	clipper.includeDirs= [ clipper_dir ]
-	clipper.headers= [ clipper_dir + "/clipper/clipper.hpp" ]
-	clipper.src= [ clipper_dir + "/clipper/clipper.cpp" ]
-	clipper.flags= target_flags
-	clipper.defines= target_defines
-	clipper.compiler= cpp_compiler
-	clipper.linker= linker
+	if build_deps:
+		clipper= Project()
+		clipper.name= "clipper_" + cfg
+		clipper.type= "obj"
+		clipper.targetDir= lib_dir
+		clipper.includeDirs= [ clipper_dir ]
+		clipper.headers= [ clipper_dir + "/clipper/clipper.hpp" ]
+		clipper.src= [ clipper_dir + "/clipper/clipper.cpp" ]
+		clipper.flags= target_flags
+		clipper.defines= target_defines
+		clipper.compiler= cpp_compiler
+		clipper.linker= linker
+		dep_libs.append(clipper)
 	dep_include_paths.append(clipper_dir)
-	dep_libs.append(clipper)
 
 	# Freetype
 	ft_dir= "../deps/common/freetype-2.5.3"
-	ft= Project()
-	ft.name= "freetype_" + target
-	ft.type= "obj"
-	ft.targetDir= lib_dir
-	ft.includeDirs= [ ft_dir + "/include" ]
-	ft.headers= findFiles(ft_dir, "*.h")
-	ft.src= findNotMatching(
-				findFiles(ft_dir + "/src/base", "*.c"),
-				"*mac*") + [
-		ft_dir + "/src/autofit/autofit.c",
-		ft_dir + "/src/bdf/bdf.c",
-		ft_dir + "/src/bzip2/ftbzip2.c",
-		ft_dir + "/src/cache/ftcache.c",
-		ft_dir + "/src/cff/cff.c",
-		ft_dir + "/src/cid/type1cid.c",
-		ft_dir + "/src/gxvalid/gxvalid.c",
-		ft_dir + "/src/gzip/ftgzip.c",
-		ft_dir + "/src/lzw/ftlzw.c",
-		ft_dir + "/src/pcf/pcf.c",
-		ft_dir + "/src/pfr/pfr.c",
-		ft_dir + "/src/psaux/psaux.c",
-		ft_dir + "/src/pshinter/pshinter.c",
-		ft_dir + "/src/psnames/psnames.c",
-		ft_dir + "/src/raster/raster.c",
-		ft_dir + "/src/sfnt/sfnt.c",
-		ft_dir + "/src/smooth/smooth.c",
-		ft_dir + "/src/truetype/truetype.c",
-		ft_dir + "/src/type1/type1.c",
-		ft_dir + "/src/type42/type42.c",
-		ft_dir + "/src/winfonts/winfnt.c" ]
-	ft.flags= target_flags + funsafe_flags
-	ft.defines= target_defines + [ "FT2_BUILD_LIBRARY" ]
-	ft.compiler= c_compiler
-	ft.linker= linker
+	if build_deps:
+		ft= Project()
+		ft.name= "freetype_" + cfg
+		ft.type= "obj"
+		ft.targetDir= lib_dir
+		ft.includeDirs= [ ft_dir + "/include" ]
+		ft.headers= findFiles(ft_dir, "*.h")
+		ft.src= findNotMatching(
+					findFiles(ft_dir + "/src/base", "*.c"),
+					"*mac*") + [
+			ft_dir + "/src/autofit/autofit.c",
+			ft_dir + "/src/bdf/bdf.c",
+			ft_dir + "/src/bzip2/ftbzip2.c",
+			ft_dir + "/src/cache/ftcache.c",
+			ft_dir + "/src/cff/cff.c",
+			ft_dir + "/src/cid/type1cid.c",
+			ft_dir + "/src/gxvalid/gxvalid.c",
+			ft_dir + "/src/gzip/ftgzip.c",
+			ft_dir + "/src/lzw/ftlzw.c",
+			ft_dir + "/src/pcf/pcf.c",
+			ft_dir + "/src/pfr/pfr.c",
+			ft_dir + "/src/psaux/psaux.c",
+			ft_dir + "/src/pshinter/pshinter.c",
+			ft_dir + "/src/psnames/psnames.c",
+			ft_dir + "/src/raster/raster.c",
+			ft_dir + "/src/sfnt/sfnt.c",
+			ft_dir + "/src/smooth/smooth.c",
+			ft_dir + "/src/truetype/truetype.c",
+			ft_dir + "/src/type1/type1.c",
+			ft_dir + "/src/type42/type42.c",
+			ft_dir + "/src/winfonts/winfnt.c" ]
+		ft.flags= target_flags + funsafe_flags
+		ft.defines= target_defines + [ "FT2_BUILD_LIBRARY" ]
+		ft.compiler= c_compiler
+		ft.linker= linker
+		dep_libs.append(ft)
 	dep_include_paths.append(ft_dir + "/include")
-	dep_libs.append(ft)
 
 	# GLEW
 	glew_dir= "../deps/common/glew-1.7.0"
-	glew_defines= [ "GLEW_STATIC" ]
-	if env.os == "linux":
-		glew_defines += [ "GLEW_APPLE_GLX" ]
-	glew= Project()
-	glew.name= "glew_" + target
-	glew.type= "obj"
-	glew.targetDir= lib_dir
-	glew.includeDirs= [ glew_dir + "/include" ]
-	glew.headers= [ glew_dir + "/include/glew.h" ]
-	glew.src= [ glew_dir + "/src/glew.c" ]
-	glew.flags= target_flags
-	glew.defines= target_defines + glew_defines
-	glew.compiler= c_compiler
-	glew.linker= linker
+	if build_deps:
+		glew_defines= [ "GLEW_STATIC" ]
+		if env.os == "linux":
+			glew_defines += [ "GLEW_APPLE_GLX" ]
+		glew= Project()
+		glew.name= "glew_" + cfg
+		glew.type= "obj"
+		glew.targetDir= lib_dir
+		glew.includeDirs= [ glew_dir + "/include" ]
+		glew.headers= [ glew_dir + "/include/glew.h" ]
+		glew.src= [ glew_dir + "/src/glew.c" ]
+		glew.flags= target_flags
+		glew.defines= target_defines + glew_defines
+		glew.compiler= c_compiler
+		glew.linker= linker
+		dep_libs.append(glew)
 	dep_include_paths.append(glew_dir + "/include")
-	dep_libs.append(glew)
 	dep_defines.append("GLEW_STATIC")
 
 	# GLFW
 	glfw_dir= "../deps/common/glfw-3.0.3"
-	glfw_exclude= [ "*cocoa*", "*egl*", "*nsgl*" ]
-	glfw_defines= [
-		"_GLFW_USE_OPENGL",
-		"_GLFW_VERSION_FULL=\\\"glfw-fork\\\"" ]
-	if env.os == "windows":
-		glfw_exclude += [ "*glx*", "*x11*" ]
-		glfw_defines += [ "_GLFW_WIN32", "_GLFW_WGL" ]
-	if env.os == "linux":
-		glfw_exclude += [ "*wgl*", "*win32*" ]
-		glfw_defines += [
-			"_GLFW_X11",
-			"_GLFW_GLX",
-			"_GLFW_HAS_GLXGETPROCADDRESS",
-			"_GLFW_HAS_GLXGETPROCADDRESSARB" ]
-
-	glfw= Project()
-	glfw.name= "glfw3_" + target
-	glfw.type= "obj"
-	glfw.targetDir= lib_dir
-	glfw.includeDirs= [ glfw_dir, glfw_dir + "/src" ]
-	glfw.headers= findFiles(glfw_dir + "/src", "*.h")
-	glfw.src= findNotMatching(
-		findFiles(glfw_dir + "/src", "*.c"),
-		glfw_exclude)
-	glfw.flags= target_flags
-	glfw.defines= target_defines + glfw_defines
-	glfw.compiler= c_compiler
-	glfw.linker= linker
+	if build_deps:
+		glfw_exclude= [ "*cocoa*", "*egl*", "*nsgl*" ]
+		glfw_defines= [
+			"_GLFW_USE_OPENGL",
+			"_GLFW_VERSION_FULL=\\\"glfw-fork\\\"" ]
+		if env.os == "windows":
+			glfw_exclude += [ "*glx*", "*x11*" ]
+			glfw_defines += [ "_GLFW_WIN32", "_GLFW_WGL" ]
+		if env.os == "linux":
+			glfw_exclude += [ "*wgl*", "*win32*" ]
+			glfw_defines += [
+				"_GLFW_X11",
+				"_GLFW_GLX",
+				"_GLFW_HAS_GLXGETPROCADDRESS",
+				"_GLFW_HAS_GLXGETPROCADDRESSARB" ]
+		glfw= Project()
+		glfw.name= "glfw3_" + cfg
+		glfw.type= "obj"
+		glfw.targetDir= lib_dir
+		glfw.includeDirs= [ glfw_dir, glfw_dir + "/src" ]
+		glfw.headers= findFiles(glfw_dir + "/src", "*.h")
+		glfw.src= findNotMatching(
+			findFiles(glfw_dir + "/src", "*.c"),
+			glfw_exclude)
+		glfw.flags= target_flags
+		glfw.defines= target_defines + glfw_defines
+		glfw.compiler= c_compiler
+		glfw.linker= linker
+		dep_libs.append(glfw)
 	dep_include_paths.append(glfw_dir + "/include")
-	dep_libs.append(glfw)
 
 	# JsonCpp
 	json_dir= "../deps/common/jsoncpp"
-	json= Project()
-	json.name= "jsoncpp_" + target
-	json.type= "obj"
-	json.targetDir= lib_dir
-	json.includeDirs= [ json_dir + "/include" ]
-	json.headers += findFiles(json_dir + "/include", "*.h")
-	json.headers += findFiles(json_dir + "/src/lib_json", "*.h")
-	json.src= findFiles(json_dir + "/src/lib_json", "*.cpp")
-	json.flags= target_flags + funsafe_flags
-	json.defines= target_defines
-	json.compiler= cpp_compiler
-	json.linker= linker
+	if build_deps:
+		json= Project()
+		json.name= "jsoncpp_" + cfg
+		json.type= "obj"
+		json.targetDir= lib_dir
+		json.includeDirs= [ json_dir + "/include" ]
+		json.headers += findFiles(json_dir + "/include", "*.h")
+		json.headers += findFiles(json_dir + "/src/lib_json", "*.h")
+		json.src= findFiles(json_dir + "/src/lib_json", "*.cpp")
+		json.flags= target_flags + funsafe_flags
+		json.defines= target_defines
+		json.compiler= cpp_compiler
+		json.linker= linker
+		dep_libs.append(json)
 	dep_include_paths.append(json_dir + "/include")
-	dep_libs.append(json)
 
 	# Ogg
 	ogg_dir= "../deps/common/libogg-1.3.2"
-	ogg= Project()
-	ogg.name= "ogg_" + target
-	ogg.type= "obj"
-	ogg.targetDir= lib_dir
-	ogg.includeDirs= [ ogg_dir + "/include" ]
-	ogg.headers= findFiles(ogg_dir, "*.h")
-	ogg.src= findFiles(ogg_dir, "*.c")
-	ogg.flags= target_flags + funsafe_flags
-	ogg.defines= target_defines
-	ogg.compiler= c_compiler
-	ogg.linker= linker
+	if build_deps:
+		ogg= Project()
+		ogg.name= "ogg_" + cfg
+		ogg.type= "obj"
+		ogg.targetDir= lib_dir
+		ogg.includeDirs= [ ogg_dir + "/include" ]
+		ogg.headers= findFiles(ogg_dir, "*.h")
+		ogg.src= findFiles(ogg_dir, "*.c")
+		ogg.flags= target_flags + funsafe_flags
+		ogg.defines= target_defines
+		ogg.compiler= c_compiler
+		ogg.linker= linker
+		dep_libs.append(ogg)
 	dep_include_paths.append(ogg_dir + "/include")
-	dep_libs.append(ogg)
 
 	# Zlib
 	z_dir= "../deps/common/zlib-1.2.8"
-	z= Project()
-	z.name= "zlib_" + target
-	z.type= "obj"
-	z.targetDir= lib_dir
-	z.includeDirs= [ z_dir ]
-	z.src= findFiles(z_dir, "*.c")
-	z.flags= target_flags + funsafe_flags
-	z.defines= target_defines
-	z.compiler= c_compiler
-	z.linker= linker
+	if build_deps:
+		z= Project()
+		z.name= "zlib_" + cfg
+		z.type= "obj"
+		z.targetDir= lib_dir
+		z.includeDirs= [ z_dir ]
+		z.src= findFiles(z_dir, "*.c")
+		z.flags= target_flags + funsafe_flags
+		z.defines= target_defines
+		z.compiler= c_compiler
+		z.linker= linker
+		dep_libs.append(z)
 	dep_include_paths.append(z_dir)
-	dep_libs.append(z)
 
 	# PNG
 	png_dir= "../deps/common/lpng1614"
-	png= Project()
-	png.name= "png_" + target
-	png.type= "obj"
-	png.targetDir= lib_dir
-	png.includeDirs= [ png_dir ] + z.includeDirs
-	png.headers= findFiles(png_dir, "*.h")
-	png.src= findFiles(png_dir, "*.c")
-	png.flags= target_flags + funsafe_flags
-	png.defines= target_defines
-	png.compiler= c_compiler
-	png.linker= linker
-	png.deps= [ z ]
+	if build_deps:
+		png= Project()
+		png.name= "png_" + cfg
+		png.type= "obj"
+		png.targetDir= lib_dir
+		png.includeDirs= [ png_dir ] + z.includeDirs
+		png.headers= findFiles(png_dir, "*.h")
+		png.src= findFiles(png_dir, "*.c")
+		png.flags= target_flags + funsafe_flags
+		png.defines= target_defines
+		png.compiler= c_compiler
+		png.linker= linker
+		png.deps= [ z ]
+		dep_libs.append(png)
 	dep_include_paths.append(png_dir)
-	dep_libs.append(png)
-	
+
 	# PortAudio
 	if env.os == "windows":
 		pa_dir= "../deps/common/portaudio-19"
 		pa= Project()
-		pa.name= "portaudio_" + target
-		pa.type= "obj"
-		pa.targetDir= lib_dir
-		pa.includeDirs= [
-			pa_dir + "/include",
-			pa_dir + "/src/common",
-			pa_dir + "/src/os/win" ]
-		pa.headers= findFiles(pa_dir, "*.h")
-		pa.src= findFiles(pa_dir + "/src/common", "*.c") +\
-				findFiles(pa_dir + "/src/os/win", "*.c") +\
-				findFiles(pa_dir + "/src/hostapi/dsound", "*.c") # Not sure
-		pa.flags= target_flags + funsafe_flags
-		pa.defines= target_defines + [ "PA_USE_DS" ]
-		pa.compiler= c_compiler
-		pa.linker= linker
+		if build_deps:
+			pa.name= "portaudio_" + cfg
+			pa.type= "obj"
+			pa.targetDir= lib_dir
+			pa.includeDirs= [
+				pa_dir + "/include",
+				pa_dir + "/src/common",
+				pa_dir + "/src/os/win" ]
+			pa.headers= findFiles(pa_dir, "*.h")
+			pa.src= findFiles(pa_dir + "/src/common", "*.c") +\
+					findFiles(pa_dir + "/src/os/win", "*.c") +\
+					findFiles(pa_dir + "/src/hostapi/dsound", "*.c") # Not sure
+			pa.flags= target_flags + funsafe_flags
+			pa.defines= target_defines + [ "PA_USE_DS" ]
+			pa.compiler= c_compiler
+			pa.linker= linker
+			dep_libs.append(pa)
 		dep_include_paths.append(pa_dir + "/include")
-		dep_libs.append(pa)
 	elif env.os == "linux":
 		system_links += [ "portaudio" ]
 
 	# polypartition
 	pp_dir= "../deps/common/polypartition"
-	pp= Project()
-	pp.name= "polypartition_" + target
-	pp.type= "obj"
-	pp.targetDir= lib_dir
-	pp.includeDirs= pp_dir
-	pp.headers= [ pp_dir + "/polypartition.h" ]
-	pp.src= [ pp_dir + "/polypartition.cpp" ]
-	pp.flags= target_flags
-	pp.defines= target_defines
-	pp.compiler= cpp_compiler
-	pp.linker= linker
+	if build_deps:
+		pp= Project()
+		pp.name= "polypartition_" + cfg
+		pp.type= "obj"
+		pp.targetDir= lib_dir
+		pp.includeDirs= pp_dir
+		pp.headers= [ pp_dir + "/polypartition.h" ]
+		pp.src= [ pp_dir + "/polypartition.cpp" ]
+		pp.flags= target_flags
+		pp.defines= target_defines
+		pp.compiler= cpp_compiler
+		pp.linker= linker
+		dep_libs.append(pp)
 	dep_include_paths.append(pp_dir)
-	dep_libs.append(pp)
 
 	# UtfCpp
 	dep_include_paths.append("../deps/common/utfcpp-2.3.2/source")
 
 	# Vorbis
 	vorbis_dir= "../deps/common/libvorbis-1.3.4"
-	vorbis= Project()
-	vorbis.name= "vorbis_" + target
-	vorbis.type= "obj"
-	vorbis.targetDir= lib_dir
-	vorbis.includeDirs= [
-		vorbis_dir + "/include",
-		vorbis_dir + "/lib",
-		ogg_dir + "/include" ]
-	vorbis.headers= findFiles(vorbis_dir, "*.h")
-	vorbis.src= findFiles(vorbis_dir, "*.c")
-	vorbis.flags= target_flags + funsafe_flags
-	vorbis.defines= target_defines
-	vorbis.compiler= c_compiler
-	vorbis.linker= linker
+	if build_deps:
+		vorbis= Project()
+		vorbis.name= "vorbis_" + cfg
+		vorbis.type= "obj"
+		vorbis.targetDir= lib_dir
+		vorbis.includeDirs= [
+			vorbis_dir + "/include",
+			vorbis_dir + "/lib",
+			ogg_dir + "/include" ]
+		vorbis.headers= findFiles(vorbis_dir, "*.h")
+		vorbis.src= findFiles(vorbis_dir, "*.c")
+		vorbis.flags= target_flags + funsafe_flags
+		vorbis.defines= target_defines
+		vorbis.compiler= c_compiler
+		vorbis.linker= linker
+		dep_libs.append(vorbis)
 	dep_include_paths.append(vorbis_dir + "/include")
-	dep_libs.append(vorbis)
 
 	### Combined deps ###
 
-	all_deps_proj= Project()
-	all_deps_proj.name= "all_deps_" + target
-	all_deps_proj.type= "lib"
-	all_deps_proj.targetDir= lib_dir
-	all_deps_proj.compiler= cpp_compiler
-	all_deps_proj.linker= linker
-	for d in dep_libs:
-		all_deps_proj.deps.append(d)
-		all_deps_proj.links.append(d)
+	all_deps_libname= "all_deps_" + cfg
+	if build_deps:
+		all_deps_proj= Project()
+		all_deps_proj.name= all_deps_libname
+		all_deps_proj.type= "lib"
+		all_deps_proj.targetDir= lib_dir
+		all_deps_proj.compiler= cpp_compiler
+		all_deps_proj.linker= linker
+		for d in dep_libs:
+			all_deps_proj.deps.append(d)
+			all_deps_proj.links.append(d)
 	dep_lib_paths.append(lib_dir)
 
-	### Clover ###
+	### Clover engine ###
 
-	build_dest_dir= "../../builds/" + env.os + env.arch[1:]
-	resource_dir= "../../resources/gamedata"
 	clover_src_dir= "../source"
 	clover_flags= target_flags + funsafe_flags +  [
 		"Wall", "Werror",
@@ -344,92 +372,100 @@ def buildInfo(env, target):
 	if env.os == "windows":
 		# boost.
 		clover_flags += [ "fno-strict-aliasing" ]
-	clover_defines= target_defines
+	clover_defines= target_defines + dep_defines
+	clover_includedirs= [ clover_src_dir ] + dep_include_paths
+	clover_libdirs= dep_lib_paths
 
-	subsystem_dirs= [
-		"animation",
-		"audio",
-		"collision",
-		"debug",
-		"game",
-		"global",
-		"gui",
-		"hardware",
-		"net",
-		"nodes",
-		"physics",
-		"resources",
-		"ui",
-		"util",
-		"visual"
-	]
+	if build_clover:
+		build_dest_dir= "../../builds/" + env.os + env.arch[1:]
+		subsystem_dirs= [
+			"animation",
+			"audio",
+			"collision",
+			"debug",
+			"game",
+			"global",
+			"gui",
+			"hardware",
+			"net",
+			"nodes",
+			"physics",
+			"resources",
+			"ui",
+			"util",
+			"visual"
+		]
+		subsystem_names= []
+		subsystem_projs= []
+		for s_dir in subsystem_dirs:
+			dir= "../source/" + s_dir
+			p= Project()
+			p.name= "clover_" + s_dir + "_" + cfg
+			p.type= "lib"
+			p.targetDir= lib_dir
+			p.includeDirs= [ clover_src_dir ] + dep_include_paths
+			p.headers= findFiles(dir, ["*.hpp", "*.tpp", "*.def"])
+			p.src= findFiles(dir, ["*.cpp"])
+			p.flags= clover_flags
+			p.compiler= cpp_compiler
+			p.linker= linker
+			subsystem_names.append(p.name)
+			subsystem_projs.append(p)
 
-	subsystem_names= []
-	subsystem_projs= []
-	for s_dir in subsystem_dirs:
-		dir= "../source/" + s_dir
-		p= Project()
-		p.name= "clover_" + s_dir + "_" + target
-		p.type= "lib"
-		p.targetDir= lib_dir
-		p.includeDirs= [ clover_src_dir ] + dep_include_paths
-		p.headers= findFiles(dir, ["*.hpp", "*.tpp", "*.def"])
-		p.src= findFiles(dir, ["*.cpp"])
-		p.flags= clover_flags
-		p.defines= clover_defines + dep_defines
-		p.compiler= cpp_compiler
-		p.linker= linker
-		subsystem_names.append(p.name)
-		subsystem_projs.append(p)
+		clover= Project()
+		clover.name= "clover_" + cfg
+		clover.type= "exe"
+		clover.targetDir= build_dest_dir
+		clover.includeDirs= clover_includedirs
+		clover.libDirs= clover_libdirs
+		clover.headers= [
+			clover_src_dir + "/build.hpp",
+			clover_src_dir + "/app.hpp" ]
+		clover.src= [
+			clover_src_dir + "/build.cpp",
+			clover_src_dir + "/main.cpp",
+			clover_src_dir + "/app.cpp" ]
+		clover.flags= clover_flags
+		clover.defines= clover_defines
+		clover.compiler= cpp_compiler
+		clover.linker= linker
+		clover.deps += subsystem_projs
+		if build_deps:
+			clover.deps += [ all_deps_proj ]
 
-	clover= Project()
-	clover.name= "clover_" + target
-	clover.type= "exe"
-	clover.targetDir= build_dest_dir
-	clover.includeDirs= [ clover_src_dir ] + dep_include_paths
-	clover.libDirs= dep_lib_paths
-	clover.headers= [
-		clover_src_dir + "/build.hpp",
-		clover_src_dir + "/app.hpp" ]
-	clover.src= [
-		clover_src_dir + "/build.cpp",
-		clover_src_dir + "/main.cpp",
-		clover_src_dir + "/app.cpp" ]
-	clover.flags= clover_flags
-	clover.defines= clover_defines + dep_defines
-	clover.compiler= cpp_compiler
-	clover.linker= linker
-	clover.deps += subsystem_projs + [ all_deps_proj ]
-	## @todo Remove link group when circular refs are removed from subs
-	# export-dynamic and whole-archive is needed for dynamic symbol table to be present in exe
-	if env.os == "linux":
-		clover.links += [ "--export-dynamic" ]
-	clover.links += [ "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_proj.name ]
-	clover.links += system_links
-	if env.os == "windows": # Create importlib to engine for dll's
-		clover.links += [ "--out-implib," + lib_dir + "/libclover_stubs.a" ]
+		## @todo Remove link group when circular refs are removed from subs
+		# export-dynamic and whole-archive are needed for dynamic symbol table to be present in exe
+		if env.os == "linux":
+			clover.links += [ "--export-dynamic" ]
+		clover.links += [ "--whole-archive" ] + [ subsystem_names ] + [ "--no-whole-archive" ] + [ all_deps_libname ]
+		clover.links += system_links
+		if env.os == "windows": # Create importlib to engine for dll's
+			clover.links += [ "--out-implib," + lib_dir + "/libclover_stubs.a" ]
 
-	if env.os == "windows":
-		# win-builds mingw is broken.
-		win_builds_bin_paths= \
-			[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
-		if len(win_builds_bin_paths) > 0:
-			clover.libDirs += [ win_builds_bin_paths[0] + "/../lib" ] 
+		if env.os == "windows":
+			# win-builds mingw is broken.
+			win_builds_bin_paths= \
+				[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
+			if len(win_builds_bin_paths) > 0:
+				clover.libDirs += [ win_builds_bin_paths[0] + "/../lib" ] 
 
-	# Game DLL
+	### Game DLL ###
+
+	resource_dir= "../../resources/gamedata"
 	mod= Project()
 	mod.name= "mod"
 	mod.type= "dll"
 	mod.targetDir= resource_dir
-	mod.includeDirs= clover.includeDirs
-	mod.libDirs= clover.libDirs
+	mod.includeDirs= clover_includedirs
+	mod.libDirs= clover_libdirs
 	mod.headers= findFiles(clover_src_dir + "/mod", [ "*.hpp" ])
 	mod.src= findFiles(clover_src_dir + "/mod", [ "*.cpp" ])
-	mod.flags= clover.flags + [ "fvisibility=hidden" ]
-	mod.defines= clover.defines + [ "MOD_DLL_BUILD" ]
-	mod.compiler= clover.compiler
-	mod.linker= clover.linker
-	mod.deps= [ clover ]
+	mod.flags= clover_flags + [ "fvisibility=hidden" ]
+	mod.defines= clover_defines + [ "MOD_DLL_BUILD" ]
+	mod.compiler= cpp_compiler
+	mod.linker= linker
+	if build_clover:
+		mod.deps += [ clover ]
 	if env.os == "linux":
 		pass # Linked at runtime
 	elif env.os == "windows":

@@ -180,6 +180,7 @@ MOD_API void growWork(world_gen::WorldGen& gen, const world_gen::Worker& w)
 				util::Vec4d color{1.0 - forestness(anchor_p.x)*0.3 + randReal(-0.2, 0.2),
 							1.0 - forestness(anchor_p.x)*0.1 + randReal(-0.1, 0.2),
 							1.0, 1.0};
+				//color.z= 2.0;
 
 				game::WeHandle grass= gen.createEntity("grassClump", grass_t.translation);
 				grass.ref().setAttribute("transform", grass_t);
