@@ -375,6 +375,12 @@ def buildInfo(env, tags):
 	clover_defines= target_defines + dep_defines
 	clover_includedirs= [ clover_src_dir ] + dep_include_paths
 	clover_libdirs= dep_lib_paths
+	if env.os == "windows":
+		# win-builds mingw is broken.
+		win_builds_bin_paths= \
+			[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
+		if len(win_builds_bin_paths) > 0:
+			clover_libdirs += [ win_builds_bin_paths[0] + "/../lib" ]
 
 	if build_clover:
 		build_dest_dir= "../../builds/" + env.os + env.arch[1:]
@@ -442,13 +448,6 @@ def buildInfo(env, tags):
 		clover.links += system_links
 		if env.os == "windows": # Create importlib to engine for dll's
 			clover.links += [ "--out-implib," + lib_dir + "/libclover_stubs.a" ]
-
-		if env.os == "windows":
-			# win-builds mingw is broken.
-			win_builds_bin_paths= \
-				[s for s in os.environ["PATH"].split(";") if "win-builds" in s]
-			if len(win_builds_bin_paths) > 0:
-				clover.libDirs += [ win_builds_bin_paths[0] + "/../lib" ] 
 
 	### Game DLL ###
 

@@ -30,7 +30,14 @@ const char* dllExt()
 #elif PLATFORM == PLATFORM_WINDOWS
 
 DllHandle loadDll(const char* path)
-{ return static_cast<DllHandle>(LoadLibrary(path)); }
+{
+	auto real_path= util::Str8::format("%s__temp.dll", path);
+	if (!CopyFile(path, real_path.cStr(), FALSE)) {
+		print(	debug::Ch::General, debug::Vb::Critical,
+				"Couldn't CopyFile %s to %s: %i", path, real_path.cStr(), GetLastError());
+	}
+	return static_cast<DllHandle>(LoadLibrary(real_path.cStr()));
+}
 
 void unloadDll(DllHandle dll)
 { FreeLibrary(static_cast<HMODULE>(dll)); }

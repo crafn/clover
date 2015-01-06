@@ -58,6 +58,7 @@ void PathAttributeValue::setValue(const util::Str8& v){
 
 void PathAttributeValue::setExt(const util::Str8& str)
 {
+	fileWatcher.stopWatching();
 	ResourceFilePath::setExt(str);
 	updateWatcher();
 }

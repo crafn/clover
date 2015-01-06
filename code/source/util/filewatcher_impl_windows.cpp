@@ -42,6 +42,7 @@ FileWatcherWindowsImpl::~FileWatcherWindowsImpl(){
 }
 
 void FileWatcherWindowsImpl::startWatching(){
+	ensure(!watching);
 	addWatch();
 }
 
@@ -169,7 +170,7 @@ void FileWatcherWindowsImpl::directoryChangeDetectionLoop(const util::Str8& dir_
 
 	while (1){
 		// Wait for notification.
-		print(debug::Ch::General, debug::Vb::Trivial, "FileWatcherWindowsImpl::directoryChangeDetectionLoop(..): Waiting for notification...");
+		//print(debug::Ch::General, debug::Vb::Trivial, "FileWatcherWindowsImpl::directoryChangeDetectionLoop(..): Waiting for notification...");
 		DWORD buf_len=0;
 		BOOL ret= ReadDirectoryChangesW(	dir_handle,
 											buf,
@@ -211,7 +212,7 @@ void FileWatcherWindowsImpl::directoryChangeDetectionLoop(const util::Str8& dir_
 				}
 				
 				util::Str8 complete_file_path= boost_path.string();
-				//print(debug::Ch::General, debug::Vb::Trivial, "File modified: %s", complete_file_path.cStr());
+				print(debug::Ch::General, debug::Vb::Trivial, "File modified: %s", complete_file_path.cStr());
 
 				{
 					util::LockGuard<util::Mutex> lock(implMapMutex);
