@@ -7,9 +7,7 @@
 #include "gui/element_combobox.hpp"
 #include "gui/element_checkbox.hpp"
 #include "ui/hid/actionlistener.hpp"
-
-/// @todo Replace with util
-#include <boost/optional.hpp>
+#include "util/optional.hpp"
 
 namespace clover {
 namespace ui { namespace game { namespace editor {
@@ -47,8 +45,8 @@ private:
 		gui::CheckBoxElement debugDrawCheck;
 		gui::CheckBoxElement chunksLockedCheck;
 	
-	boost::optional<ui::hid::ActionListener<>> terrainEraseListener;
-	boost::optional<ui::hid::ActionListener<>> weDeleteListener;
+	util::Optional<ui::hid::ActionListener<>> terrainEraseListener;
+	util::Optional<ui::hid::ActionListener<>> weDeleteListener;
 };
 
 }}} // ui::game::editor

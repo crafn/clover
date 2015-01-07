@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "util/objectnode.hpp"
+#include "util/optional.hpp"
 #include "util/transform.hpp"
 
 namespace clover {
@@ -13,7 +14,7 @@ struct ArmatureAttachmentDef {
 	
 	util::Str8 entityName;
 	util::Str8 jointName;
-	boost::optional<Transform> offset;
+	util::Optional<Transform> offset;
 };
 	
 } // visual

@@ -81,7 +81,7 @@ void ComboBoxElement::postUpdate(){
 		curY += mdif.y/listElement.getNodeListHeight().converted(radtype).y;
 
 		if (gUserInput->isTriggered(UserInput::GuiCause)){
-			hoveringListSelectionTagEntry= boost::none;
+			hoveringListSelectionTagEntry.reset();
 			stopY= listElement.getScroll();
 			
 			auto selected_list= listElement.getSelected();
@@ -169,7 +169,7 @@ void ComboBoxElement::cancelList(){
 		
 	guiCursor->touchUnlock();
 
-	hoveringListSelectionTagEntry= boost::none;
+	hoveringListSelectionTagEntry.reset();
 }
 
 } // gui

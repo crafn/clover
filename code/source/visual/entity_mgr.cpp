@@ -627,7 +627,7 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 
 				for (SizeType i= 0; i < a_batch.modelLogics.size(); ++i) {
 					SizeType entity_index= a_batch.firstEntityDrawIndex + i;
-					assert(entity_index < entityToBatch.size());
+					ensure(entity_index < entityToBatch.size());
 					entityToBatch[entity_index]= &preserved_batch_it->second;
 				}
 
@@ -698,7 +698,7 @@ void EntityMgr::processAnalysis(const RenderingAnalyzer::Analysis& a, const Rend
 
 			SizeType i= a_batch.firstEntityDrawIndex;
 			for (const auto& logic : a_batch.modelLogics){
-				assert(i < entityToBatch.size());
+				ensure(i < entityToBatch.size());
 				entityToBatch[i]= batch_ptr;
 				++i;
 			}

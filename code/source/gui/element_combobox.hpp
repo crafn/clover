@@ -6,9 +6,7 @@
 #include "element_button.hpp"
 #include "element_listview.hpp"
 #include "ui/hid/taglistentry.hpp"
-
-/// @todo Replace with util
-#include <boost/optional.hpp>
+#include "util/optional.hpp"
 
 namespace clover {
 namespace gui {
@@ -65,7 +63,7 @@ private:
 	bool autoRadius;
 	
 	ui::hid::ActionListener<nodes::SignalType::Vec2> scrollListener;
-	boost::optional<ui::hid::TagListEntry> hoveringListSelectionTagEntry;
+	util::Optional<ui::hid::TagListEntry> hoveringListSelectionTagEntry;
 };
 
 } // gui

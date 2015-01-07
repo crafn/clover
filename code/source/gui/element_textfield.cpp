@@ -61,7 +61,7 @@ void TextFieldElement::setActive(bool b){
 	
 	if (!b && editing){
 		editing= false;
-		textInputTagEntry= boost::none;
+		textInputTagEntry.reset();
 	}
 }
 
@@ -213,7 +213,7 @@ void TextFieldElement::setEditing(bool b){
 	}
 	else {
 		editing= false;
-		textInputTagEntry= boost::none;
+		textInputTagEntry.reset();
 		
 		OnEditingStateChange(*this);
 	}

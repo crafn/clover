@@ -5,8 +5,8 @@
 #include "element.hpp"
 #include "element_textlabel.hpp"
 #include "ui/hid/taglistentry.hpp"
+#include "util/optional.hpp"
 
-#include <boost/optional.hpp>
 #include <sstream>
 
 namespace clover {
@@ -86,7 +86,7 @@ private:
 	util::DynArray<HistoryEntry> history; // Index 0 is currently written text by default
 	SizeType currentHistoryEntryIndex;
 	
-	boost::optional<ui::hid::TagListEntry> textInputTagEntry;
+	util::Optional<ui::hid::TagListEntry> textInputTagEntry;
 };
 
 template <typename T>

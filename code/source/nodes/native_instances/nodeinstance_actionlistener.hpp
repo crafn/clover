@@ -6,9 +6,6 @@
 #include "ui/hid/actionlistener.hpp"
 #include "util/map.hpp"
 
-/// @todo Replace with util
-#include <boost/optional.hpp>
-
 namespace clover {
 namespace nodes {
 
@@ -26,7 +23,7 @@ private:
 	OutputSlot<SignalType::Trigger>* onActionOut;
 	util::Map<SignalType, BaseOutputSlot*> valueOutputs;
 	
-	boost::optional<ui::hid::ActionListener<>> actionListener; 
+	util::Optional<ui::hid::ActionListener<>> actionListener; 
 };
 
 } // nodes

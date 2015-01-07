@@ -3,8 +3,6 @@
 
 #include "build.hpp"
 
-#include <type_traits>
-
 namespace clover {
 namespace util {
 
