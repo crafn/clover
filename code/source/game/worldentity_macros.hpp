@@ -65,7 +65,7 @@ public:											\
 
 #define DEF_WE_SET_FUNC( variable_name, method )			\
 		saveFields.getFieldByName( util::Str8(#variable_name) )->	\
-			setChangeFunc<decltype(variable_name)>(boost::bind(&ThisClass::method, this, _1));
+			setChangeFunc<decltype(variable_name)>(std::bind(&ThisClass::method, this, std::placeholders::_1));
 
 #define DEF_WE_STRICT_DEPENDENCY_DYNARRAY( handle, array_max_size )	\
 		for (auto &m : handle) m.setStrict(*this);					\

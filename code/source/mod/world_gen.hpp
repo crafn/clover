@@ -1,4 +1,0 @@
-#ifndef MOD_WORLD_GEN_HPP
-#define MOD_WORLD_GEN_HPP
-
-#endif // MOD_WORLD_GEN_HPP

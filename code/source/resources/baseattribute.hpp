@@ -9,7 +9,6 @@
 
 /// @todo Replace with util::Any
 #include <boost/any.hpp>
-#include <boost/variant.hpp>
 #include <functional>
 
 namespace clover {

@@ -3,7 +3,6 @@
 
 #include "build.hpp"
 #include "util/arrayview.hpp"
-#include "util/containeralgorithms.hpp"
 #include "util/dyn_array.hpp"
 #include "util/map.hpp"
 #include "util/string.hpp"

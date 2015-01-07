@@ -7,8 +7,7 @@
 #include "util/string.hpp"
 #include "game/worldentity_handle.hpp"
 
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
+#include <functional>
 
 namespace clover {
 namespace util {
@@ -56,11 +55,11 @@ public:
 		}
 
 		template<typename T>
-		void setChangeFunc(const boost::function<void (T val)> &t){
+		void setChangeFunc(const std::function<void (T val)> &t){
 			switch (type){
 #define TYPE(name_, type_)													\
 					case name_: name_ ## ChangeFunc=						\
-						*(boost::function<void (type_ val)>*)(&t); break;
+						*(std::function<void (type_ val)>*)(&t); break;
 
 				#include "fh_types.def"
 #undef TYPE
@@ -71,11 +70,11 @@ public:
 		}
 
 		template<typename T>
-		void setArrayChangeFunc(const boost::function<void (T val)> &t){
+		void setArrayChangeFunc(const std::function<void (T val)> &t){
 			switch (type){
 #define TYPE(name_, type_)														\
 					case name_: name_ ## ChangeFunc=							\
-						*(boost::function<void (util::DynArray<type_>& val)>*)(&t);\
+						*(std::function<void (util::DynArray<type_>& val)>*)(&t);\
 					break;
 				#include "fh_types.def"
 #undef TYPE
@@ -93,8 +92,8 @@ public:
 
 
 #define TYPE(name_, type_)										\
-			boost::function<void (type_ val)> name_ ## ChangeFunc;										\
-			boost::function<void (util::DynArray<type_>& val)> name_ ## ArrayChangeFunc;
+			std::function<void (type_ val)> name_ ## ChangeFunc;										\
+			std::function<void (util::DynArray<type_>& val)> name_ ## ArrayChangeFunc;
 		#include "fh_types.def"
 #undef TYPE
 /*
