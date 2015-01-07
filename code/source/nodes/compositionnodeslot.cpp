@@ -35,6 +35,7 @@ CompositionNodeSlot::~CompositionNodeSlot(){
 
 void CompositionNodeSlot::setOwner(CompositionNodeLogic* owner_){
 	owner= owner_;
+	ensure(owner);
 }
 
 const CompositionNodeLogic& CompositionNodeSlot::getOwner() const {
@@ -68,7 +69,7 @@ void CompositionNodeSlot::detach(CompositionNodeSlot& other, SubSignalType from,
 
 void CompositionNodeSlot::detach(){
 	while (!attachedSlotInfos.empty()){
-		detach(*attachedSlotInfos.back().slot.get(), attachedSlotInfos.back().mySub, attachedSlotInfos.back().slotSub);
+		detach(*NONULL(attachedSlotInfos.back().slot.get()), attachedSlotInfos.back().mySub, attachedSlotInfos.back().slotSub);
 	}
 }
 
@@ -169,6 +170,7 @@ void CompositionNodeSlot::attachImpl(SubSignalType from, SubSignalType to, Compo
 	ensure_msg(it == attachedSlotInfos.end(), "Routing multiple outputs to a single (sub)slot is not supported");
 	
 	attachedSlotInfos.pushBack(AttachedSlotInfo{CompositionNodeSlotHandle(other), from, to});
+	ensure(attachedSlotInfos.back().slot.get());
 	
 	getOwner().onRoutingChange(*this);
 	

@@ -196,8 +196,15 @@ struct WorldMgr::M {
 };
 
 WorldMgr::WorldMgr()
-	: m(*this)
 {
+	if (!global::g_env->worldMgr)
+		global::g_env->worldMgr= this;
+
+	// Must use placement new, because stuff in M::M() use worldMgr->m
+	char* buf= new char[sizeof(M)]; /// @todo Explicit alignment
+	m= reinterpret_cast<M*>(buf); 
+	new (m) M{*this};
+
 	m->dayTime= getDayDuration()*0.45; // Start from day
 
 	m->bgDefs[0].setModel("background_sky_evening");
@@ -234,7 +241,12 @@ WorldMgr::WorldMgr()
 }
 
 WorldMgr::~WorldMgr()
-{ }
+{
+	delete m; m= nullptr;
+
+	if (global::g_env->worldMgr == this)
+		global::g_env->worldMgr= nullptr;
+}
 
 void WorldMgr::update()
 {

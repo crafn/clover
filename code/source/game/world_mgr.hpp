@@ -2,7 +2,7 @@
 #define CLOVER_GAME_WORLD_MGR_HPP
 
 #include "build.hpp"
-#include "util/dynamic.hpp"
+#include "util/class_preproc.hpp"
 
 namespace clover {
 namespace nodes { class WeEdgeSpawnerNodeInstance; }
@@ -22,6 +22,9 @@ class ENGINE_API WorldMgr {
 public:
 	WorldMgr();
 	~WorldMgr();
+
+	DELETE_COPY(WorldMgr);
+	DELETE_MOVE(WorldMgr);
 
 	void update();
 
@@ -55,7 +58,7 @@ private:
 	void updateWorldIO();
 
 	struct M;
-	util::Dynamic<M> m;
+	M* m;
 };
 
 } // game

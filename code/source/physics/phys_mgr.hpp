@@ -3,10 +3,10 @@
 
 #include "build.hpp"
 #include "global/eventreceiver.hpp"
+#include "util/class_preproc.hpp"
 #include "util/math.hpp"
 #include "util/mem_pool_chunk.hpp"
 #include "util/time.hpp"
-#include "util/unique_ptr.hpp"
 
 namespace clover {
 namespace physics {
@@ -25,6 +25,9 @@ public:
 	PhysMgr();
 	virtual ~PhysMgr();
 
+	DELETE_COPY(PhysMgr);
+	DELETE_MOVE(PhysMgr);
+
 	void preFrameUpdate();
 	void update();
 	void fluidUpdate();
@@ -35,7 +38,7 @@ public:
 	int32 calcObjectCount();
 	World& getWorld();
 
-	FluidMgr* getFluidMgr() { return fluidMgr.get(); }
+	FluidMgr* getFluidMgr() { return fluidMgr; }
 
 	/// Offset from current state to match world time
 	real64 getFluidTimeOffset() const { return fluidTimeOffset; }
@@ -64,8 +67,8 @@ private:
 	int32 fluidSteps;
 	real64 fluidTimeOffset;
 
-	util::UniquePtr<FluidMgr> fluidMgr;
-	util::UniquePtr<World> world;
+	FluidMgr* fluidMgr;
+	World* world;
 };
 
 } // physics

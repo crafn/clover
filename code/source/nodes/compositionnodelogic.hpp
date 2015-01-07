@@ -119,6 +119,9 @@ private:
 	
 	void addOnResourceChangeCallback(const resources::Resource& res);
 
+	const NodeType* type;
+	const CompositionNodeLogicGroup* owner;
+
 	bool batched;
 	int32 batchPriority;
 
@@ -135,6 +138,7 @@ private:
 
 public: // Original CompositionNodeLogic
 	CompositionNodeLogic();
+	~CompositionNodeLogic();
 	void setType(const NodeType& type_);
 	CompositionNodeLogic(CompositionNodeLogic&&)= delete;
 	
@@ -161,8 +165,6 @@ public: // Original CompositionNodeLogic
 private:
 	void recreate();
 	
-	const NodeType* type;
-	const CompositionNodeLogicGroup* owner;
 
 	util::Vec2d position;
 	util::CbListener<util::OnChangeCb> typeChangeListener;

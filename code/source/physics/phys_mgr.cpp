@@ -55,8 +55,10 @@ PhysMgr::PhysMgr()
 		, accumWorldTime(0.0)
 		, accumFluidTime(0.0)
 		, fluidSteps(0)
-		, fluidTimeOffset(0.0){
-
+		, fluidTimeOffset(0.0)
+		, fluidMgr(nullptr)
+		, world(nullptr)
+{
 	// staticRigidObject needs this
 	if (!global::g_env->physMgr)
 		global::g_env->physMgr= this;
@@ -72,13 +74,13 @@ PhysMgr::PhysMgr()
 	util::Vec2d g= global::gCfgMgr->get<util::Vec2d>("physics::gravity");
 
 	if (global::gCfgMgr->get("physics::enableFluids", true))
-		fluidMgr.emplace(g);
+		fluidMgr= new FluidMgr{g};
 
 	GridDef grid_def;
 	grid_def.cellsInUnit= global::gCfgMgr->get("physics::gridCellsInUnit", 1);
 	grid_def.chunkWidth= global::gCfgMgr->get("physics::gridChunkWidth", 16);
 
-	world= util::makeUniquePtr<World>(grid_def, g, fluidMgr.get());
+	world= new World{grid_def, g, fluidMgr};
 	world->init();
 }
 
@@ -92,14 +94,14 @@ PhysMgr::~PhysMgr(){
 			objectTable[i]= nullptr;
 		}
 	}
-	
+
 	if (not_deleted)
 		print(debug::Ch::Phys, debug::Vb::Moderate, "PhysMgr::~PhysMgr(): objectTable contained %i PhysObjects", not_deleted);
 
-	world.reset();
+	delete world;
 	rigidObjectPool.setMemory(nullptr);
 
-	fluidMgr.reset();
+	delete fluidMgr;
 
 	if (global::g_env->physMgr == this)
 		global::g_env->physMgr= nullptr;
@@ -196,7 +198,7 @@ int32 PhysMgr::calcObjectCount(){
 }
 
 World& PhysMgr::getWorld()
-{ return world.ref(); }
+{ return *NONULL(world); }
 
 void PhysMgr::updateFrameTime(){
 	if (frameTimer.isRunning()){

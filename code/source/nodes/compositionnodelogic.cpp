@@ -164,14 +164,16 @@ void CompositionNodeLogic::addOnResourceChangeCallback(const resources::Resource
 //
 
 CompositionNodeLogic::CompositionNodeLogic()
-	: batched(false)
+	: type(nullptr)
+	, owner(nullptr)
+	, batched(false)
 	, batchPriority(0)
 	, updateRouteStart(false)
 	, silent(false)
-	, type(nullptr)
-	, owner(nullptr) {
+{ }
 
-}
+CompositionNodeLogic::~CompositionNodeLogic()
+{ clear(); }
 
 void CompositionNodeLogic::setType(const NodeType& type_)
 {
