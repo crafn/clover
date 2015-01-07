@@ -26,8 +26,8 @@ public:
 	virtual void showEditControls(bool b);
 	virtual bool isEditControlsShowing() const { return floatingElement.isActive(); }
 	
-	virtual void setValue(const boost::any& v, bool only_edit= false);
-	virtual boost::any getValue() const { return SignalValueUiTraits<S>::valueFromEdit(editElement); }
+	virtual void setValue(const util::Any& v, bool only_edit= false);
+	virtual util::Any getValue() const { return SignalValueUiTraits<S>::valueFromEdit(editElement); }
 
 private:
 	typename SignalValueUiTraits<S>::ViewElement viewElement;

@@ -14,9 +14,6 @@
 #include "util/transform.hpp"
 #include "util/vector.hpp"
 
-/// @todo Replace with util::Any
-#include <boost/any.hpp>
-
 namespace clover {
 namespace nodes {
 

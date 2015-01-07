@@ -3,14 +3,13 @@
 
 #include "build.hpp"
 #include "physics/object.hpp"
+#include "util/any.hpp"
 #include "util/dyn_array.hpp"
 #include "util/pooled_crtp.hpp"
 #include "util/transform.hpp"
 #include "util/unique_ptr.hpp"
 #include "util/vector.hpp"
 
-/// @todo Replace with util::Any
-#include <boost/any.hpp>
 #include <Box2D/Box2D.h>
 
 namespace clover {
@@ -66,7 +65,7 @@ private:
 ///User-defined data in Box2D body
 struct b2BodyData {
 	Object* owner;
-	boost::any data;
+	util::Any data;
 };
 
 class RigidFixtureDef;
@@ -152,7 +151,7 @@ public:
 	void setCustomData(const T& data){ bodyData.data= data; }
 
 	template <typename T>
-	const T& getCustomData() const { return boost::any_cast<const T&>(bodyData.data); }
+	const T& getCustomData() const { return util::anyCast<const T&>(bodyData.data); }
 
 	/// @todo Convert return value to b2Body&
 	b2Body* getB2Body() const;

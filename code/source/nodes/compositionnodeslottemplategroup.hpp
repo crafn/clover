@@ -26,7 +26,7 @@ public:
 	SignalType getSignalType() const { return signalType; }
 	SlotIdentifier getIdentifier() const;
 	bool isInput() const { return input; }
-	boost::any getInitValue() const { return RuntimeSignalTypeTraits::defaultInitValue(signalType); }
+	util::Any getInitValue() const { return RuntimeSignalTypeTraits::defaultInitValue(signalType); }
 	SlotTemplate mirrored() const { SlotTemplate s(*this); s.input= !s.input; return s; }
 	
 private:

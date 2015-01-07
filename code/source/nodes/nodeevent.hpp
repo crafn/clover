@@ -29,17 +29,17 @@ public:
 	
 	virtual ~NodeEvent();
 	
-	const boost::any& get(const util::Str8& name) const;
-	void set(const util::Str8& name, const boost::any& value);
+	const util::Any& get(const util::Str8& name) const;
+	void set(const util::Str8& name, const util::Any& value);
 
 	template <SignalType S>
 	const typename SignalTypeTraits<S>::Value& get(const util::Str8& name) const {
-		return *boost::any_cast<typename SignalTypeTraits<S>::Value>(&get(name));
+		return *util::anyCast<typename SignalTypeTraits<S>::Value>(&get(name));
 	}
 	
 	template <SignalType S>
 	void set(const util::Str8& name, const typename SignalTypeTraits<S>::Value& value){
-		set(name, boost::any(value));
+		set(name, util::Any(value));
 	}
 
 	void addReceiver(const game::WorldEntity& recv);
@@ -63,7 +63,7 @@ private:
 	static const util::Str8& getNullName(){ static util::Str8 ret("Null"); return ret; }
 
 	const NodeEventType* type;
-	util::HashMap<util::Str8, boost::any> arguments;
+	util::HashMap<util::Str8, util::Any> arguments;
 	
 	bool queued;
 	util::DynArray<std::unique_ptr<NodeEventReceiverProxy>> receivers;

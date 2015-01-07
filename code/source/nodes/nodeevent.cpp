@@ -43,13 +43,13 @@ NodeEvent::~NodeEvent(){
 }
 
 
-const boost::any& NodeEvent::get(const util::Str8& name) const {
+const util::Any& NodeEvent::get(const util::Str8& name) const {
 	auto it= arguments.find(name);
 	ensure(it != arguments.end());
 	return it->second;
 }
 
-void NodeEvent::set(const util::Str8& name, const boost::any& value){
+void NodeEvent::set(const util::Str8& name, const util::Any& value){
 	arguments[name]= value;
 }
 

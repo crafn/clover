@@ -146,9 +146,9 @@ public:
 	util::Vec2d getPosition() const { return position; }
 
 	bool hasAttribute(const util::Str8& name) const;
-	void setAttribute(const util::Str8& name, const boost::any& value);
+	void setAttribute(const util::Str8& name, const util::Any& value);
 	template <typename T>
-	void setAttribute(const util::Str8& name, const T& value){ setAttribute(name, boost::any(value)); }
+	void setAttribute(const util::Str8& name, const T& value){ setAttribute(name, util::Any(value)); }
 	void setAttribute(const util::Str8& name, const char* str){ setAttribute(name, util::Str8(str)); }
 	
 	void saveFieldSerialize(WEPack& p) const;

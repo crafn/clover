@@ -25,7 +25,7 @@ public:
 		auto it= map.find(key);
 		if (it == map.end())
 			return nullptr;
-		return anyCast<const T>(&it->second);
+		return &anyCast<const T&>(it->second);
 	}
 
 	template <typename T>

@@ -174,7 +174,7 @@ void WePhysicsObjectNodeInstance::recreateObject(){
 		fix_def.setMaterial(global::g_env.resCache->getResource<game::PhysicalMaterial>(materialInput->get()));
 	fix_def.setShape(shapeInput->get().get());
 	object->add(fix_def);
-	object->setCustomData(boost::any(this));
+	object->setCustomData(util::Any(this));
 }
 
 void WePhysicsObjectNodeInstance::sendShape(){

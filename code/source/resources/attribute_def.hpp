@@ -97,7 +97,7 @@ struct AttributeDefImpl<ResourceAttributeType> : public AttributeDefImplWrap<Res
 	virtual ~AttributeDefImpl(){}
 
 	// If an arbitary identifier-type is needed,
-	// implement something like a "class ResourceIdentity", which holds boost::any, and use it as Value
+	// implement something like a "class ResourceIdentity", which holds util::Any, and use it as Value
 	typedef util::Str8 Value;
 	static Value deserialized(const AttributeParseInfo& a){ return a.object.getValue<Value>(); }
 	static util::ObjectNode serialized(const Value& v){ return (util::ObjectNode::create<Value>(v)); }

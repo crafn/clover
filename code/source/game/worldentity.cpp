@@ -283,7 +283,7 @@ bool WorldEntity::hasAttribute(const util::Str8& name) const {
 	return false;
 }
 
-void WorldEntity::setAttribute(const util::Str8& name, const boost::any& value){
+void WorldEntity::setAttribute(const util::Str8& name, const util::Any& value){
 	if (weInterface){
 		weInterface->setAttribute(name, value);
 	}

@@ -129,7 +129,7 @@ bool WeInterfaceNodeInstance::hasAttribute(const util::Str8& name) const {
 	return attributeInputs.find(hash32(name)) != attributeInputs.end();
 }
 
-void WeInterfaceNodeInstance::setAttribute(const util::Str8& name, const boost::any& value){
+void WeInterfaceNodeInstance::setAttribute(const util::Str8& name, const util::Any& value){
 	setAttribute(hash32(name), value, name);
 }
 
@@ -148,7 +148,7 @@ WeInterfaceNodeInstance::AttributeInfos WeInterfaceNodeInstance::getAttributeInf
 	return attribs;
 }
 
-void WeInterfaceNodeInstance::setAttribute(uint32 name_hash, const boost::any& value, const util::Str8& disp_name){
+void WeInterfaceNodeInstance::setAttribute(uint32 name_hash, const util::Any& value, const util::Str8& disp_name){
 	auto i_it= attributeInputs.find(name_hash);
 	
 	if (i_it == attributeInputs.end()){

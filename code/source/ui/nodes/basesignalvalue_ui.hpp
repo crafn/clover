@@ -15,8 +15,8 @@ public:
 	virtual void showEditControls(bool b)= 0;
 	virtual bool isEditControlsShowing() const = 0;
 	
-	virtual void setValue(const boost::any& v, bool only_edit= false) = 0;
-	virtual boost::any getValue() const = 0;
+	virtual void setValue(const util::Any& v, bool only_edit= false) = 0;
+	virtual util::Any getValue() const = 0;
 	
 	typedef std::function<void()> Callback;
 	void setOnValueModifyCallback(const Callback& c){ onValueModify= c; }

@@ -3,10 +3,9 @@
 
 #include "build.hpp"
 #include "baseslot.hpp"
+#include "util/any.hpp"
 
 #include <functional>
-/// @todo Replace with util::Any
-#include <boost/any.hpp>
 
 namespace clover {
 namespace nodes {
@@ -21,13 +20,13 @@ public:
 	BaseInputSlot(SignalType t);
 	virtual ~BaseInputSlot();
 	
-	virtual void setDefaultValue(const boost::any& value) = 0;
+	virtual void setDefaultValue(const util::Any& value) = 0;
 	
 	/// Doesn't trigger callbacks
-	virtual void set(const boost::any& value)= 0;
-	virtual void subSet(SubSignalType sub_from, const boost::any& sub_value, SubSignalType sub_to)= 0;
+	virtual void set(const util::Any& value)= 0;
+	virtual void subSet(SubSignalType sub_from, const util::Any& sub_value, SubSignalType sub_to)= 0;
 	
-	virtual boost::any getAny() const = 0;
+	virtual util::Any getAny() const = 0;
 	template <SubSignalType S>
 	typename SignalTypeTraits<SubSignalTypeTraits<S>::signalType>::Value subGet() const;
 	

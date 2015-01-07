@@ -6,7 +6,7 @@
 namespace clover {
 namespace nodes {
 
-CompositionNodeSlot& CompositionNodeLogic::addInputSlot(const SlotIdentifier& id, const boost::any& init_value){
+CompositionNodeSlot& CompositionNodeLogic::addInputSlot(const SlotIdentifier& id, const util::Any& init_value){
 	ensure(!slots.count(id));
 	
 	auto& slot= addSlotMinimal(id);
@@ -53,7 +53,7 @@ void CompositionNodeLogic::removeSlot(const SlotIdentifier& id){
 	slots.erase(it);
 }
 
-CompositionNodeSlot& CompositionNodeLogic::addSlot(const SlotIdentifier& id, boost::any init_value){
+CompositionNodeSlot& CompositionNodeLogic::addSlot(const SlotIdentifier& id, util::Any init_value){
 	if (id.input)
 		return addInputSlot(id, init_value);
 	return addOutputSlot(id);

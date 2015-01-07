@@ -1,14 +1,13 @@
 #ifndef CLOVER_RESOURCES_BASEATTRIBUTE_HPP
 #define CLOVER_RESOURCES_BASEATTRIBUTE_HPP
 
-#include "build.hpp"
-#include "util/vector.hpp"
-#include "resources/exception.hpp"
 #include "attribute_def.hpp"
 #include "attributetype.hpp"
+#include "build.hpp"
+#include "resources/exception.hpp"
+#include "util/any.hpp"
+#include "util/vector.hpp"
 
-/// @todo Replace with util::Any
-#include <boost/any.hpp>
 #include <functional>
 
 namespace clover {

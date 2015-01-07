@@ -498,7 +498,7 @@ struct CompositionNodeLogicGroup::SerializationGraph {
 		
 		struct DefaultValue {
 			SlotIdentifier slot;
-			boost::any defaultValue;
+			util::Any defaultValue;
 			
 			template <typename Archive>
 			void serialize(Archive& ar, const uint32 version){

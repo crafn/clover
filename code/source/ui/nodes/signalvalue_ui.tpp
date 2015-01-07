@@ -34,8 +34,8 @@ void SignalValueUi<S>::showEditControls(bool b){
 }
 
 template <SignalType S>
-void SignalValueUi<S>::setValue(const boost::any& v, bool only_edit){
-	Value value= boost::any_cast<typename SignalValueUiTraits<S>::Value>(v);
+void SignalValueUi<S>::setValue(const util::Any& v, bool only_edit){
+	Value value= util::anyCast<typename SignalValueUiTraits<S>::Value>(v);
 
 	SignalValueUiTraits<S>::valueToEdit(value, editElement);
 	if (!only_edit)

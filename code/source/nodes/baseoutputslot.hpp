@@ -21,7 +21,7 @@ public:
 	void attach(SubSignalType from, SubSignalType to, BaseInputSlot& input);
 	bool isAttached() const { return !inputs.empty(); }
 
-	virtual void send(const boost::any& value) const = 0;
+	virtual void send(const util::Any& value) const = 0;
 
 	template <SignalType S>
 	OutputSlot<S>& casted(){

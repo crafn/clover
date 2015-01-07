@@ -126,7 +126,7 @@ bool CompositionNodeSlot::hasSubSignalType(SubSignalType type) const {
 	return false;
 }
 
-void CompositionNodeSlot::setInitValue(const boost::any& v){
+void CompositionNodeSlot::setInitValue(const util::Any& v){
 	ensure(isInput());
 	ensure(!v.empty());
 	RuntimeSignalTypeTraits::checkValue(identifier.signalType, v);
@@ -134,7 +134,7 @@ void CompositionNodeSlot::setInitValue(const boost::any& v){
 	ensure(!initValue.empty());
 }
 
-void CompositionNodeSlot::setDefaultValue(const boost::any& v){
+void CompositionNodeSlot::setDefaultValue(const util::Any& v){
 	ensure(isInput());
 	defaultValue= v;
 	RuntimeSignalTypeTraits::checkValue(identifier.signalType, defaultValue);
@@ -143,11 +143,11 @@ void CompositionNodeSlot::setDefaultValue(const boost::any& v){
 }
 
 void CompositionNodeSlot::unsetDefaultValue(){
-	defaultValue= boost::any();
+	defaultValue= util::Any();
 	getOwner().onDefaultValueChange(*this);
 }
 
-const boost::any& CompositionNodeSlot::getDefaultValue() const {
+const util::Any& CompositionNodeSlot::getDefaultValue() const {
 	ensure(isInput());
 	ensure(!initValue.empty());
 	

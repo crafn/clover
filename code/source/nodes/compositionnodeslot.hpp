@@ -6,12 +6,12 @@
 #include "signaltypetraits.hpp"
 #include "compositionnodeslothandle.hpp"
 #include "compositionnodeslottemplategrouphandle.hpp"
+#include "util/any.hpp"
 #include "util/dyn_array.hpp"
 #include "util/string.hpp"
 
 #include <initializer_list>
 #include <memory>
-#include <boost/any.hpp>
 
 namespace clover {
 namespace nodes {
@@ -60,17 +60,17 @@ public:
 	bool isCompatible(SubSignalType from_type, SubSignalType to_type, CompositionNodeSlot& other) const;
 	bool hasSubSignalType(SubSignalType type) const;
 
-	void setInitValue(const boost::any& v);
+	void setInitValue(const util::Any& v);
 
-	void setDefaultValue(const boost::any& v);
+	void setDefaultValue(const util::Any& v);
 	void unsetDefaultValue();
 
 	/// If default value is unset, returns the initialization value of the signal type
-	const boost::any& getDefaultValue() const;
+	const util::Any& getDefaultValue() const;
 
 	template <SignalType S>
 	typename SignalTypeTraits<S>::Value getDefaultValue() const {
-		return boost::any_cast<typename SignalTypeTraits<S>::Value>(getDefaultValue());
+		return util::anyCast<typename SignalTypeTraits<S>::Value>(getDefaultValue());
 	}
 
 	bool isDefaultValueSet() const { return !defaultValue.empty(); }
@@ -92,10 +92,10 @@ private:
 	util::DynArray<AttachedSlotInfo> attachedSlotInfos;
 
 	// Value set in node code
-	boost::any initValue;
+	util::Any initValue;
 
 	// Value set in editor
-	boost::any defaultValue;
+	util::Any defaultValue;
 
 	CompositionNodeSlotTemplateGroupHandle templateGroup;
 

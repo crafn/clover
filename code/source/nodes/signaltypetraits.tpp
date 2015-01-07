@@ -6,7 +6,7 @@ void RuntimeSignalTypeTraits::serializeValue(SignalType S, Archive& ar, const ui
 				SignalTypeTraits<SignalType::x>::Value v= SignalTypeTraits<SignalType::x>::defaultInitValue(); \
 				if (value.empty()) \
 					value= v; \
-				ar & *util::anyCast<typename SignalTypeTraits<SignalType::x>::Value>(&value); \
+				ar & util::anyCast<typename SignalTypeTraits<SignalType::x>::Value&>(value); \
 				return; \
 			}
 		#include "signaltypes.def"

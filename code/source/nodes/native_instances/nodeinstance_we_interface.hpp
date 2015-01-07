@@ -39,13 +39,13 @@ public:
 
 	/// Sets initial values of WeInterface node attributes
 	/// Doesn't throw Exceptions, prints on error
-	void setAttribute(const util::Str8& name, const boost::any& value);
+	void setAttribute(const util::Str8& name, const util::Any& value);
 	
 	/// Used for serializing and deserializing
 	struct AttributeInfo {
 		uint32 nameHash;
 		SignalType signalType;
-		boost::any value;
+		util::Any value;
 		
 		template <typename Archive>
 		void serialize(Archive& ar, uint32 ver){
@@ -64,7 +64,7 @@ public:
 	void setOnDestroyCallback(OnDestroy cb){ onDestroy= cb; }
 	
 private:
-	void setAttribute(uint32 name_hash, const boost::any& value, const util::Str8& disp_name= "");
+	void setAttribute(uint32 name_hash, const util::Any& value, const util::Str8& disp_name= "");
 	/// Forward values from attributeInputs to attributeOutputs
 	void sendAttributes();
 	

@@ -25,7 +25,7 @@ public: // Copypasted from former BaseCompositionNodeScriptLogic
 	typedef std::unique_ptr<CompositionNodeSlot> CompositionNodeSlotPtr;
 	typedef std::unique_ptr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
 	
-	CompositionNodeSlot& addInputSlot(const SlotIdentifier& identifier, const boost::any& init_value);
+	CompositionNodeSlot& addInputSlot(const SlotIdentifier& identifier, const util::Any& init_value);
 	
 	template <typename T>
 	CompositionNodeSlot& addInputSlot(const util::Str8& name, const SignalType& signal_type, const T& init_value){
@@ -34,7 +34,7 @@ public: // Copypasted from former BaseCompositionNodeScriptLogic
 	
 	template <typename T>
 	CompositionNodeSlot& addInputSlot(const util::Str8& name, const util::Str8& group, const SignalType& signal_type, const T& init_value){
-		return addInputSlot(SlotIdentifier{name, group, signal_type, true}, boost::any(init_value));
+		return addInputSlot(SlotIdentifier{name, group, signal_type, true}, util::Any(init_value));
 	}
 	
 	CompositionNodeSlot& addInputSlot(const util::Str8& name, const SignalType& signal_type){
@@ -59,7 +59,7 @@ public: // Copypasted from former BaseCompositionNodeScriptLogic
 		return addOutputSlot(SlotIdentifier{name, group, signal_type, false});
 	}
 
-	CompositionNodeSlot& addSlot(const SlotIdentifier& id, boost::any init_value);
+	CompositionNodeSlot& addSlot(const SlotIdentifier& id, util::Any init_value);
 	CompositionNodeSlot& addSlot(const SlotIdentifier& id);
 	
 	void removeSlot(const SlotIdentifier& id);

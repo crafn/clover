@@ -10,59 +10,54 @@ OutputSlot<S>::~OutputSlot(){
 
 template <SignalType S>
 void OutputSlot<S>::send(const Value& value) const {
-	try {
-		for (auto& m : inputs){
-			debug_ensure(m.slot);
+	for (auto& m : inputs){
+		debug_ensure(m.slot);
 
-			if (m.fromSub == SubSignalType::None && m.toSub == SubSignalType::None){
-				// Normal routing between two slots
+		if (m.fromSub == SubSignalType::None && m.toSub == SubSignalType::None){
+			// Normal routing between two slots
 
-				debug_ensure(m.slot->getType() == S);
+			debug_ensure(m.slot->getType() == S);
+			
+			sendImpl<S>(*m.slot, value); 
+		}
+		else {
+			// SubSlot routing
+			
+			SignalValue v;
+			
+			if (m.fromSub != SubSignalType::None)
+				v= std::move(RuntimeSignalTypeTraits::extract(type, m.fromSub, value)); // Extract component
+			else
+				v= std::move(SignalValue(type, value)); // From ordinary slot
+			
+			// Send to receiver slot
+			
+			if (m.toSub != SubSignalType::None){
+				// Modify a certain component, requires last value of input slot
 				
-				sendImpl<S>(*m.slot, value); 
+				#define SIGNAL(x,n) \
+					if (SignalType::x == m.slot->getType()){ \
+						auto value= SignalTypeTraits<SignalType::x>::defaultInitValue(); \
+						value= getInputValue<SignalType::x>(*m.slot); \
+						RuntimeSignalTypeTraits::combine(m.slot->getType(), v, m.toSub, &value); \
+						sendImpl<SignalType::x>(*m.slot, value); \
+					}
+				#include "signaltypes.def"
+				#undef SIGNAL
+				
 			}
 			else {
-				// SubSlot routing
+				// Ordinary slot, just forward the value
 				
-				SignalValue v;
-				
-				if (m.fromSub != SubSignalType::None)
-					v= std::move(RuntimeSignalTypeTraits::extract(type, m.fromSub, value)); // Extract component
-				else
-					v= std::move(SignalValue(type, value)); // From ordinary slot
-				
-				// Send to receiver slot
-				
-				if (m.toSub != SubSignalType::None){
-					// Modify a certain component, requires last value of input slot
-					
-					#define SIGNAL(x,n) \
-						if (SignalType::x == m.slot->getType()){ \
-							auto value= SignalTypeTraits<SignalType::x>::defaultInitValue(); \
-							value= getInputValue<SignalType::x>(*m.slot); \
-							RuntimeSignalTypeTraits::combine(m.slot->getType(), v, m.toSub, &value); \
-							sendImpl<SignalType::x>(*m.slot, value); \
-						}
-					#include "signaltypes.def"
-					#undef SIGNAL
-					
-				}
-				else {
-					// Ordinary slot, just forward the value
-					
-					#define SIGNAL(x,n) \
-						if (SignalType::x == m.slot->getType()) \
-							sendImpl<SignalType::x>(*m.slot, v.get<SignalType::x>());
-					#include "signaltypes.def"
-					#undef SIGNAL
+				#define SIGNAL(x,n) \
+					if (SignalType::x == m.slot->getType()) \
+						sendImpl<SignalType::x>(*m.slot, v.get<SignalType::x>());
+				#include "signaltypes.def"
+				#undef SIGNAL
 
-				}
-					
 			}
+				
 		}
-	}	
-	catch (const util::BadAnyCast& e){
-		throw global::Exception("Bad any cast in OutputSlot::send(): %s", e.what());
 	}
 }
 
