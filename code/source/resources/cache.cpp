@@ -29,8 +29,8 @@ Cache::Cache()
 	: resourcePath(DEFAULT_RES_PATH)
 {
 	PROFILE_("resources");
-	if (!global::g_env->resCache)
-		global::g_env->resCache= this;
+	if (!global::g_env.resCache)
+		global::g_env.resCache= this;
 
 	/// @todo Use config
 	bool exists= false;
@@ -116,8 +116,8 @@ Cache::~Cache()
 	resourceFilePaths.clear();
 	subCaches.clear();
 
-	if (global::g_env->resCache == this)
-		global::g_env->resCache= nullptr;
+	if (global::g_env.resCache == this)
+		global::g_env.resCache= nullptr;
 }
 
 void Cache::update()
@@ -141,7 +141,7 @@ void Cache::writeAllResources()
 		m->stopWatching();
 
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Writing all resources");
-	global::g_env->device->sleep(0.1); // Safety
+	global::g_env.device->sleep(0.1); // Safety
 
 	for (auto& path : getResourceFilePaths()){
 		util::ObjectNode root(util::ObjectNode::Value::Object);
@@ -164,7 +164,7 @@ void Cache::writeAllResources()
 	}
 
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Writing finished");
-	global::g_env->device->sleep(0.1); // Safety
+	global::g_env.device->sleep(0.1); // Safety
 
 	for (auto& m : resourceFileWatchers)
 		m->startWatching();

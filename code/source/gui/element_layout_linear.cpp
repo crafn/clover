@@ -285,8 +285,8 @@ void LinearLayoutElement::updateNodes(){
 		
 		if (min_rad.x - max_rad.x > util::epsilon || min_rad.y - max_rad.y > util::epsilon){
 			print(debug::Ch::Gui, debug::Vb::Moderate, "Min radius bigger than max %i: min %f, %f max: %f, %f", e.getType(), min_rad.x, min_rad.y, max_rad.x, max_rad.y);
-			global::g_env->debugDraw->addFilledRect(e.getPosition(), e.getRadius(), util::Color{1.0,0,0,0.5}, 0);
-			global::g_env->debugDraw->addCross(e.getPosition(), util::Color{1.0,0,0,0.3});
+			global::g_env.debugDraw->addFilledRect(e.getPosition(), e.getRadius(), util::Color{1.0,0,0,0.5}, 0);
+			global::g_env.debugDraw->addCross(e.getPosition(), util::Color{1.0,0,0,0.3});
 		}
 
 		util::Coord target_rad= (min_rad)*percentage + max_rad*(1-percentage);
@@ -335,10 +335,10 @@ void LinearLayoutElement::spatialUpdate(){
 	
 	if (isActive()){
 		if (nodes.empty() ){
-			global::g_env->debugDraw->addText(position, "Empty LinearLayout", util::Vec2d(0.5), util::Color{0, 0, 1, 0.5});
+			global::g_env.debugDraw->addText(position, "Empty LinearLayout", util::Vec2d(0.5), util::Color{0, 0, 1, 0.5});
 		}
 		else {
-			global::g_env->debugDraw->addText(position, "LinearLayout", util::Vec2d(0.5), util::Color{0, 0, 1, 0.5});
+			global::g_env.debugDraw->addText(position, "LinearLayout", util::Vec2d(0.5), util::Color{0, 0, 1, 0.5});
 		}
 	}
 	

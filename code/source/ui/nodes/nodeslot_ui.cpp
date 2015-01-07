@@ -567,7 +567,7 @@ NodeSlotGui& NodeSlotUi::getSlotGui(SubSignalType s){
 }
 
 void NodeSlotUi::onDragging(gui::Element& e){
-	NodeSlotGui* under= dynamic_cast<NodeSlotGui*>(global::g_env->guiMgr->getCursor().getUnderElement());
+	NodeSlotGui* under= dynamic_cast<NodeSlotGui*>(global::g_env.guiMgr->getCursor().getUnderElement());
 	NodeSlotGui* from= dynamic_cast<NodeSlotGui*>(&e);
 	
 	ensure(from);
@@ -622,9 +622,9 @@ void NodeSlotUi::onDraggingStop(gui::Element& e){
 	NodeSlotGui* dragged_to_gui= nullptr;
 	
 	
-	if (global::g_env->guiMgr->getCursor().getTouchedElement()){
+	if (global::g_env.guiMgr->getCursor().getTouchedElement()){
 		dragged_to_gui= dynamic_cast<NodeSlotGui*>(
-			global::g_env->guiMgr->getCursor().getUnderElement());
+			global::g_env.guiMgr->getCursor().getUnderElement());
 		
 		if (dragged_to_gui)
 			dragged_to= &dragged_to_gui->getOwner();

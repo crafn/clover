@@ -29,7 +29,7 @@ ModelEntityDef::ModelEntityDef()
 
 	modelAttribute.setOnChangeCallback([&] () {
 		if (getResourceState() != State::Uninit)
-			model= &global::g_env->resCache->getResource<visual::Model>(modelAttribute.get());
+			model= &global::g_env.resCache->getResource<visual::Model>(modelAttribute.get());
 	});
 }
 
@@ -41,7 +41,7 @@ void ModelEntityDef::setModel(const Model& m){
 }
 
 void ModelEntityDef::setModel(const util::Str8& str){
-	model= &global::g_env->resCache->getResource<visual::Model>(str);
+	model= &global::g_env.resCache->getResource<visual::Model>(str);
 }
 
 void ModelEntityDef::setShadingType(ShadingType shdtype){
@@ -121,7 +121,7 @@ EntityLogic* ModelEntityDef::createLogic() const {
 void ModelEntityDef::resourceUpdate(bool load, bool force){
 	
 	if (load || getResourceState() == State::Uninit){
-		model= &global::g_env->resCache->getResource<Model>(modelAttribute.get());
+		model= &global::g_env.resCache->getResource<Model>(modelAttribute.get());
 		setResourceState(State::Loaded);
 	}
 	else {
@@ -132,7 +132,7 @@ void ModelEntityDef::resourceUpdate(bool load, bool force){
 void ModelEntityDef::createErrorResource(){
 	setResourceState(State::Error);
 	
-	model= &global::g_env->resCache->getErrorResource<Model>();
+	model= &global::g_env.resCache->getErrorResource<Model>();
 	envLightAttribute.set(1.0);
 	onlyEnvAttribute.set(true);
 }

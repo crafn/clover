@@ -2,7 +2,6 @@
 #define CLOVER_APP_HPP
 
 #include "build.hpp"
-#include "global/env.hpp"
 #include "util/string.hpp"
 
 namespace clover {
@@ -14,7 +13,6 @@ public:
 	void run();
 
 private:
-	global::Env env;
 };
 
 } // clover

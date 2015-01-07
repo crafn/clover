@@ -28,7 +28,7 @@ public:
 	}
 	
 	ResourceRef(const Identifier& id)
-			: cacheRes(&global::g_env->resCache->getResource<Res>(id)){
+			: cacheRes(&global::g_env.resCache->getResource<Res>(id)){
 	}
 	
 	ResourceRef(const ResourceRef& other)
@@ -113,7 +113,7 @@ public:
 		if (in_cache){
 			Identifier id;
 			ar & id;
-			cacheRes= &global::g_env->resCache->getResource<Res>(id);
+			cacheRes= &global::g_env.resCache->getResource<Res>(id);
 		}
 		else {
 			res= newRes();

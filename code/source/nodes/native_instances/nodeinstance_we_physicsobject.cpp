@@ -146,7 +146,7 @@ void WePhysicsObjectNodeInstance::update(){
 		if (d_v.translation.lengthSqr() > util::epsilon || util::abs(d_v.rotation) > util::epsilon){
 			if (accelerationOutput->isAttached()){
 				util::RtTransform2d a= d_v;
-				real64 dt= global::g_env->worldMgr->getDeltaTime();
+				real64 dt= global::g_env.worldMgr->getDeltaTime();
 				a.translation /= dt;
 				a.rotation /= dt;
 				accelerationOutput->send(a);
@@ -171,7 +171,7 @@ void WePhysicsObjectNodeInstance::recreateObject(){
 	object->clearFixtures();
 	physics::RigidFixtureDef fix_def;
 	if (materialInput->get() != "")
-		fix_def.setMaterial(global::g_env->resCache->getResource<game::PhysicalMaterial>(materialInput->get()));
+		fix_def.setMaterial(global::g_env.resCache->getResource<game::PhysicalMaterial>(materialInput->get()));
 	fix_def.setShape(shapeInput->get().get());
 	object->add(fix_def);
 	object->setCustomData(boost::any(this));

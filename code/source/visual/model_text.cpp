@@ -52,7 +52,7 @@ void TextModel::setActiveFont(const util::Str8& name){
 }
 
 void TextModel::setActiveFont(const util::Str8& fontname, Font::Size size){
-	activeFont= &global::g_env->resCache->getFont(fontname);
+	activeFont= &global::g_env.resCache->getFont(fontname);
 	activeSize= size;
 
 	setMaterial(activeFont->getMaterial());

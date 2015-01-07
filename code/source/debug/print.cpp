@@ -46,8 +46,8 @@ util::Str8& Print::getVerbosityString(Vb v){
 }
 
 Print::Print(){
-	if (!global::g_env->debugPrint)
-		global::g_env->debugPrint= this;
+	if (!global::g_env.debugPrint)
+		global::g_env.debugPrint= this;
 
 	verbosity= Vb::Trivial;
 	filter.reset();
@@ -58,8 +58,8 @@ void Print::setVerbosity(Vb v){
 	util::LockGuard<util::Mutex> lock(mutex);
 	verbosity= v;
 
-	if (global::g_env->debugPrint == this)
-		global::g_env->debugPrint= nullptr;
+	if (global::g_env.debugPrint == this)
+		global::g_env.debugPrint= nullptr;
 }
 
 void Print::setChannelActive(Ch c, bool b){

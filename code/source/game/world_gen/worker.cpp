@@ -10,10 +10,10 @@ namespace clover {
 namespace game { namespace world_gen {
 
 Worker::Worker(const util::Str8& type_, WorkerLocation loc_, real64 radius_)
-		: type(&global::g_env->resCache->getResource<WorkerType>(type_))
+		: type(&global::g_env.resCache->getResource<WorkerType>(type_))
 		, location(loc_)
 		, radius(radius_)
-		, creationTime(global::g_env->worldMgr->getTime())
+		, creationTime(global::g_env.worldMgr->getTime())
 { }
 
 void Worker::work() const

@@ -51,7 +51,7 @@ void EditorUi::update(){
 	performanceTimer.run();
 
 	if (gUserInput->isTriggered(UserInput::DevSaveResources)){
-		global::g_env->resCache->writeAllResources();
+		global::g_env.resCache->writeAllResources();
 	}
 
 	int32 toggled_ui= -1;

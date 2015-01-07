@@ -37,7 +37,7 @@ void WeGridGrowingNodeInstance::create()
 	checkIn->setOnReceiveCallback([&] ()
 	{
 		util::Vec2d check_pos= transformIn->get().translation;
-		auto& grid= global::g_env->physMgr->getWorld().getGrid();
+		auto& grid= global::g_env.physMgr->getWorld().getGrid();
 		physics::Grid::Cell& cell= grid.getCell(check_pos);
 		grow= cell.staticPortion + cell.dynamicPortion < 0.5;
 
@@ -49,7 +49,7 @@ void WeGridGrowingNodeInstance::create()
 
 void WeGridGrowingNodeInstance::update()
 {
-	real64 dt= global::g_env->worldMgr->getDeltaTime(); 
+	real64 dt= global::g_env.worldMgr->getDeltaTime(); 
 
 	real64 accel= 10.0;
 	stateDeriv += grow ? accel*dt : -accel*dt;

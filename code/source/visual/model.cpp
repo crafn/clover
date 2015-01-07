@@ -19,19 +19,19 @@ Model::Model():
 		if (materialAttribute.get().empty())
 			material= 0;
 		else
-			material= &global::g_env->resCache->getResource<visual::Material>(materialAttribute.get());
+			material= &global::g_env.resCache->getResource<visual::Material>(materialAttribute.get());
 	});
 	
 	meshAttribute.setOnChangeCallback([=] (){
 		if (meshAttribute.get().empty())
 			mesh= 0;
 		else
-			mesh= &global::g_env->resCache->getResource<visual::TriMesh>(meshAttribute.get());
+			mesh= &global::g_env.resCache->getResource<visual::TriMesh>(meshAttribute.get());
 	});
 }
 
 void Model::setMaterial(const util::Str8& name){
-	material= &global::g_env->resCache->getResource<visual::Material>(name);
+	material= &global::g_env.resCache->getResource<visual::Material>(name);
 }
 
 void Model::setMesh(const BaseMesh& m){
@@ -39,7 +39,7 @@ void Model::setMesh(const BaseMesh& m){
 }
 
 void Model::setMesh(const util::Str8& name){
-	mesh= &global::g_env->resCache->getResource<visual::TriMesh>(name);
+	mesh= &global::g_env.resCache->getResource<visual::TriMesh>(name);
 }
 
 util::BoundingBox<util::Vec3f> Model::getBoundingBox() const {
@@ -53,8 +53,8 @@ void Model::resourceUpdate(bool load, bool force){
 	meshChangeListener.clear();
 	
 	if (load || getResourceState() == State::Uninit){
-		material= &global::g_env->resCache->getResource<Material>(materialAttribute.get());
-		mesh= &global::g_env->resCache->getResource<TriMesh>(meshAttribute.get());
+		material= &global::g_env.resCache->getResource<Material>(materialAttribute.get());
+		mesh= &global::g_env.resCache->getResource<TriMesh>(meshAttribute.get());
 		
 		materialChangeListener.listen(*material, [=] (){ util::OnChangeCb::trigger(); });
 		
@@ -72,8 +72,8 @@ void Model::resourceUpdate(bool load, bool force){
 void Model::createErrorResource(){
 	setResourceState(State::Error);
 
-	material= &global::g_env->resCache->getErrorResource<Material>();
-	mesh= &global::g_env->resCache->getErrorResource<TriMesh>();
+	material= &global::g_env.resCache->getErrorResource<Material>();
+	mesh= &global::g_env.resCache->getErrorResource<TriMesh>();
 }
 
 uint32 Model::getContentHash() const {

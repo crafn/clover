@@ -9,7 +9,7 @@ namespace game { namespace editor {
 util::DynArray<resources::Resource*> ResourceListEc::search(const util::Str8& search_str, uint32 max_results, bool use_tags){
 	util::DynArray<util::Str8> keywords= search_str.splitted(' ');
 	util::DynArray< util::DynArray<resources::Resource*> > hits_by_count(keywords.size());
-	util::DynArray<resources::Resource*> resources= global::g_env->resCache->getResources();
+	util::DynArray<resources::Resource*> resources= global::g_env.resCache->getResources();
 	
 	for (auto& res : resources){
 		

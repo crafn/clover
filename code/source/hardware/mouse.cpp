@@ -26,5 +26,5 @@
 		position= convertRawPos(rawPosition);	dif= position-prevPosition;	// Ä-ä-ää	if (locked){		setRawPosition(prev_raw_pos);	}
 	prevWheelState= curWheelState;
 
-	//curWheelState= glfwGetMouseWheel();}util::Coord Mouse::convertRawPos(const util::Vec2i& p){	util::Vec2i viewport= global::g_env->device->getViewportSize();
+	//curWheelState= glfwGetMouseWheel();}util::Coord Mouse::convertRawPos(const util::Vec2i& p){	util::Vec2i viewport= global::g_env.device->getViewportSize();
 	util::Coord view_stretch(util::Coord::View_Stretch);	view_stretch.setValue(util::Vec2d{	(p.x - (real64)viewport.x/2.0 )/((real64)viewport.x/2.0),									(-p.y + (real64)viewport.y/2.0)/((real64)viewport.y/2.0) });	return view_stretch;}} // hardware} // clover

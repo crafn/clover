@@ -11,7 +11,7 @@ AttributeFieldElement<resources::ColorAttributeType>::AttributeFieldElement(cons
 		, colorPickerFloating(util::Coord::VSt(0))
 		, colorPicker(util::Coord::VSt(0), colorPickerRadius()){
 			
-	colorPreviewEntityDef.setModel(global::g_env->resCache->getResource<visual::Model>("guiColorPreview"));
+	colorPreviewEntityDef.setModel(global::g_env.resCache->getResource<visual::Model>("guiColorPreview"));
 
 	colorPreviewEntityDef.setEnvLight(1.0);
 	previewElementEntity->getVisualEntity().setDef(colorPreviewEntityDef);

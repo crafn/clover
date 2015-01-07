@@ -40,39 +40,39 @@ void PhysicsToolsEc::update(){
 }
 
 void PhysicsToolsEc::setDrawingActive(bool b){
-	global::g_env->debugDraw->setEnabled(debug::Draw::DrawFlag::Physics, b);
+	global::g_env.debugDraw->setEnabled(debug::Draw::DrawFlag::Physics, b);
 }
 
 bool PhysicsToolsEc::isDrawingActive() const {
-	return global::g_env->debugDraw->isEnabled(debug::Draw::DrawFlag::Physics);
+	return global::g_env.debugDraw->isEnabled(debug::Draw::DrawFlag::Physics);
 }
 
 void PhysicsToolsEc::setDrawingFlag(physics::Draw::Flag f, bool b){
-	global::g_env->debugDraw->getPhysicsDraw().setFlag(f, b);
+	global::g_env.debugDraw->getPhysicsDraw().setFlag(f, b);
 }
 
 bool PhysicsToolsEc::getDrawingFlag(physics::Draw::Flag f) const {
-	return global::g_env->debugDraw->getPhysicsDraw().getFlag(f);
+	return global::g_env.debugDraw->getPhysicsDraw().getFlag(f);
 }
 
 void PhysicsToolsEc::setDrawingAlpha(real32 a){
-	global::g_env->debugDraw->getPhysicsDraw().setAlpha(a);
+	global::g_env.debugDraw->getPhysicsDraw().setAlpha(a);
 }
 
 real32 PhysicsToolsEc::getDrawingAlpha() const {
-	return global::g_env->debugDraw->getPhysicsDraw().getAlpha();
+	return global::g_env.debugDraw->getPhysicsDraw().getAlpha();
 }
 
 physics::Draw::Flag PhysicsToolsEc::getFlagEnum(int32 i) const {
-	return global::g_env->debugDraw->getPhysicsDraw().getFlagEnum(i);
+	return global::g_env.debugDraw->getPhysicsDraw().getFlagEnum(i);
 }
 
 void PhysicsToolsEc::onGrabAction(bool start){
-	gui::Cursor& guiCursor= global::g_env->guiMgr->getCursor();
+	gui::Cursor& guiCursor= global::g_env.guiMgr->getCursor();
 
 	if (start){
 		if(		guiCursor.getTouchedElement() ==
-				&global::g_env->ui->getInGameUi()->getWorldElement()){
+				&global::g_env.ui->getInGameUi()->getWorldElement()){
 
 			util::DynArray<physics::Object*> objects;
 
@@ -232,7 +232,7 @@ void PhysicsToolsEc::onChangeJointTypeAction(int32 dir){
 }
 
 util::Vec2d PhysicsToolsEc::cursorOnWorld() const {
-	return	global::g_env->guiMgr->getCursor().getPosition().
+	return	global::g_env.guiMgr->getCursor().getPosition().
 			converted(util::Coord::World).getValue();
 }
 

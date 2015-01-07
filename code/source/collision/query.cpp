@@ -44,7 +44,7 @@ public:
 
 void Query::rayCast(const Ray& ray, std::function<real64 (Traceable&, const RayCastResult&)> report){
 	RayCallback<decltype(report)> callback(report);
-	global::g_env->physMgr->getWorld().getB2World().RayCast(&callback, toB2(ray.start), toB2(util::Vec2d(ray.start+ray.endOffset)));
+	global::g_env.physMgr->getWorld().getB2World().RayCast(&callback, toB2(ray.start), toB2(util::Vec2d(ray.start+ray.endOffset)));
 }
 
 void Query::potentialRect(const util::Vec2d& pos, const util::Vec2d& rad, std::function<bool (Traceable&)> report){
@@ -52,7 +52,7 @@ void Query::potentialRect(const util::Vec2d& pos, const util::Vec2d& rad, std::f
 	b2AABB aabb;
 	aabb.lowerBound= toB2(pos-rad);
 	aabb.upperBound= toB2(pos+rad);
-	global::g_env->physMgr->getWorld().getB2World().QueryAABB(&callback, aabb);
+	global::g_env.physMgr->getWorld().getB2World().QueryAABB(&callback, aabb);
 }
 
 void Query::point(const util::Vec2d& pos, std::function<bool (Traceable&)> report){

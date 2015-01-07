@@ -29,7 +29,7 @@ void DistanceJoint::attach(	Object& a, Object& b,
 
 void DistanceJoint::attach(Object& a,
 						   const WorldVec& anchor_a, const WorldVec& anchor_b){
-	attach(a, global::g_env->physMgr->getWorld().getStaticRigidObject(), anchor_a, anchor_b);
+	attach(a, global::g_env.physMgr->getWorld().getStaticRigidObject(), anchor_a, anchor_b);
 }
 
 void DistanceJoint::setDistance(real64 d){

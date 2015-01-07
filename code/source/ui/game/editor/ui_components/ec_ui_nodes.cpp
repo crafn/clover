@@ -70,7 +70,7 @@ NodesEcUi::~NodesEcUi(){
 void NodesEcUi::update(){
 
 	if (gUserInput->isTriggered(UserInput::GuiStartLeftDragging) || gUserInput->isTriggered(UserInput::GuiStartMiddleDragging)){
-		gui::Element* under_e= global::g_env->guiMgr->getCursor().getUnderElement();
+		gui::Element* under_e= global::g_env.guiMgr->getCursor().getUnderElement();
 		
 		bool node_touched= false;
 		

@@ -67,7 +67,7 @@ void AudioSource::onEvent(global::Event& e){
 }
 
 SoundInstanceHandle AudioSource::playSound(const Sound& s){
-	return global::g_env->audioMgr->playSound(s, *this);
+	return global::g_env.audioMgr->playSound(s, *this);
 }
 
 void AudioSource::addSoundInstance(SoundInstance& h){
@@ -88,11 +88,11 @@ util::Vec2d AudioSource::getPosition() const {
 void AudioSource::update(){
 	util::LockGuard<util::Mutex> lock(accessMutex); 
 	
-	global::g_env->debugDraw->addFilledCircle(position, 0.3,  {0.9, 0.5, 0.3, 0.5});
-	global::g_env->debugDraw->addText(position, "AudioSource", util::Vec2d{0.5f,0.5f});
+	global::g_env.debugDraw->addFilledCircle(position, 0.3,  {0.9, 0.5, 0.3, 0.5});
+	global::g_env.debugDraw->addText(position, "AudioSource", util::Vec2d{0.5f,0.5f});
 
 	//if (!entities.empty()){
-		global::g_env->debugDraw->addCircle(position, 0.4, {0.9f,0.3f,0.2f, 0.3f});
+		global::g_env.debugDraw->addCircle(position, 0.4, {0.9f,0.3f,0.2f, 0.3f});
 	//}
 
 }

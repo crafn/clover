@@ -24,7 +24,7 @@ Shader& ShaderMgr::getShader(const util::Str8& name, const ShaderOptions& option
 
 	// Create shader
 
-	auto& shd_tpl= global::g_env->resCache->getResource<ShaderTemplate>(name);
+	auto& shd_tpl= global::g_env.resCache->getResource<ShaderTemplate>(name);
 	Shader shd;
 	shd.setSources(shd_tpl.getVertSrc(), shd_tpl.getGeomSrc(), shd_tpl.getFragSrc());
 	for (auto& str : options.defines)

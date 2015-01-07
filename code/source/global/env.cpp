@@ -3,7 +3,7 @@
 namespace clover {
 namespace global {
 
-Env* g_env;
+Env g_env;
 
 } // global
 } // clover

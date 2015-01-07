@@ -170,8 +170,8 @@ void Draw::Primitive::updateGeometry(){
 
 Draw::Draw()
 {
-	if (!global::g_env->debugDraw)
-		global::g_env->debugDraw= this;
+	if (!global::g_env.debugDraw)
+		global::g_env.debugDraw= this;
 
 	physicsDraw= new physics::Draw();
 }
@@ -180,8 +180,8 @@ Draw::~Draw(){
 	delete physicsDraw;
 	physicsDraw= nullptr;
 
-	if (global::g_env->debugDraw == this)
-		global::g_env->debugDraw= nullptr;
+	if (global::g_env.debugDraw == this)
+		global::g_env.debugDraw= nullptr;
 }
 
 void Draw::setEnabled(DrawFlag f, bool enable){
@@ -341,7 +341,7 @@ void Draw::update(){
 	for (it= primitives.begin(); it!= primitives.end(); it++){
 		if (it->timeLeft < 0.0){
 			if (it->fade && it->color.a > 0.0){
-				it->color.a = util::limited(it->color.a-2.0*global::g_env->realClock->getDeltaTime(), 0.0, 1.0);
+				it->color.a = util::limited(it->color.a-2.0*global::g_env.realClock->getDeltaTime(), 0.0, 1.0);
 				it->updateGeometry();
 			}
 			else {
@@ -353,7 +353,7 @@ void Draw::update(){
 				continue;
 			}
 		}
-		it->timeLeft -= global::g_env->realClock->getDeltaTime();
+		it->timeLeft -= global::g_env.realClock->getDeltaTime();
 	}
 }
 

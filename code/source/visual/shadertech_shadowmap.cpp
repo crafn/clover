@@ -13,7 +13,7 @@ namespace clover {
 namespace visual {
 
 ShadowMapST::ShadowMapST(){
-	int32 size= global::g_env->cfg->get<int32>("visual::defaultShadowMapSize", 512);
+	int32 size= global::g_env.cfg->get<int32>("visual::defaultShadowMapSize", 512);
 
 	Framebuffer::Cfg fbo_cfg;
 	fbo_cfg.resolution= util::Vec2i(size);

@@ -40,7 +40,7 @@ Cursor::Cursor()
 
 void Cursor::preUpdate(){
 	if (mode == Mode::Analog){
-		const double dt= global::g_env->realClock->getDeltaTime();
+		const double dt= global::g_env.realClock->getDeltaTime();
 		const double sensitivity= 2.0;
 		util::Vec2d dif= drift*dt*sensitivity;
 
@@ -52,7 +52,7 @@ void Cursor::preUpdate(){
 		delta= dif;
 	}
 
-	util::Vec2d pos= getPosition().getValue()*global::g_env->device->getViewportSize()*0.5 + util::Vec2d({19,-19});
+	util::Vec2d pos= getPosition().getValue()*global::g_env.device->getViewportSize()*0.5 + util::Vec2d({19,-19});
 	cursorVisual.setPosition(pos.xyz());
 
 	touchElement= touchLockElement;

@@ -59,7 +59,7 @@ void World::init(){
 	def.setStatic(true);
 	staticRigidObject= new RigidObject(def);
 
-	box2dWorld->SetDebugDraw(&global::g_env->debugDraw->getPhysicsDraw());
+	box2dWorld->SetDebugDraw(&global::g_env.debugDraw->getPhysicsDraw());
 }
 
 void World::step(real64 dt, int32 vel_iterations, int32 pos_iterations){
@@ -158,7 +158,7 @@ util::DynArray<World::BreakingCollision> World::getBreakingCollisions(
 	PROFILE();
 	/// @todo Solution which works when both are partially breaking
 	
-	const SizeType max_collisions_for_object= global::g_env->cfg->get("physics::maxBreakingCollisionsForObject", 1);
+	const SizeType max_collisions_for_object= global::g_env.cfg->get("physics::maxBreakingCollisionsForObject", 1);
 	util::Map<Object*, SizeType> collisions_for_object;
 	
 	util::DynArray<BreakingCollision> breaking_collisions;
@@ -256,7 +256,7 @@ util::DynArray<World::BreakingCollision> World::getBreakingCollisions(
 
 void World::processBreakingContacts(){
 	PROFILE();
-	SizeType max_breaking_collisions= global::g_env->cfg->get<SizeType>("physics::maxBreakingCollisions", 10);
+	SizeType max_breaking_collisions= global::g_env.cfg->get<SizeType>("physics::maxBreakingCollisions", 10);
 	util::DynArray<BreakingCollision> cols=
 			getBreakingCollisions(contactListener.popBreakingContacts());
 	
@@ -373,7 +373,7 @@ void World::breakByCollision(const BreakingCollision& col){
 		real64 smooth_amount= 0.7;
 		real64 simplify_amount= 0.2;
 		real64 smooth_radius= col.obtusionCircleRadius*1.5;
-		global::g_env->debugDraw->addFilledCircle(col.hitPoint, smooth_radius);
+		global::g_env.debugDraw->addFilledCircle(col.hitPoint, smooth_radius);
 
 		util::PolyClipper clipper;
 		for (auto& obj : objects){

@@ -101,7 +101,7 @@ void Object::set3dTransform(const Transform3& t_3d){
 		print(debug::Ch::General, debug::Vb::Trivial, "vec: (%f, %f, %f)",
 			v.x, v.y, v.z);*/
 
-		global::g_env->debugDraw->addLine(t_2d.translation, t_2d.translation + 
+		global::g_env.debugDraw->addLine(t_2d.translation, t_2d.translation + 
 				util::Vec2d{cos(t_2d.rotation), sin(t_2d.rotation)});
 	}
 	setTransform(t_2d);

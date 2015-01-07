@@ -30,7 +30,7 @@ Camera& CameraMgr::getSelectedCamera(){
 
 void CameraMgr::update(){
 	for (auto m : activeCameras){
-		m->setResolution(global::g_env->device->getViewportSize());
+		m->setResolution(global::g_env.device->getViewportSize());
 		m->update();
 	}
 }

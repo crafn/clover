@@ -57,7 +57,7 @@ void createEdges(
 	used_spawners.resize(spawners.size()); // Larger than usually needed
 
 	// Scan through the whole grid
-	auto& grid= global::g_env->physMgr->getWorld().getGrid();
+	auto& grid= global::g_env.physMgr->getWorld().getGrid();
 	auto&& chunk_positions= grid.getChunkPositions();
 	uint32 width= grid.getChunkWidth();
 	uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
@@ -131,7 +131,7 @@ void createEdges(
 				{ // Create entity
 					PROFILE();
 					game::WeHandle edge=
-						global::g_env->worldMgr->getWeMgr().createEntity(
+						global::g_env.worldMgr->getWeMgr().createEntity(
 								NONULL(spawners[s_i]->getEdgeType())->getName(),
 								edge_t.translation);
 					edge->setAttribute("transform", edge_t);
@@ -156,8 +156,8 @@ struct WorldMgr::M {
 	M(WorldMgr& mgr)
 		: lastUpdTime(-std::numeric_limits<real64>::infinity())
 		, chunksLocked(false)
-		, propertyGrid(global::g_env->physMgr->getWorld().getGrid())
-		, worldGen(mgr, global::g_env->resCache->getSubCache<world_gen::WorkerType>().getResources())
+		, propertyGrid(global::g_env.physMgr->getWorld().getGrid())
+		, worldGen(mgr, global::g_env.resCache->getSubCache<world_gen::WorkerType>().getResources())
 		, worldTimeForwardListener("host", "dev", "worldTimeForward", [this] (){
 			dayTime += clock.getDeltaTime()*300;
 		})
@@ -197,8 +197,8 @@ struct WorldMgr::M {
 
 WorldMgr::WorldMgr()
 {
-	if (!global::g_env->worldMgr)
-		global::g_env->worldMgr= this;
+	if (!global::g_env.worldMgr)
+		global::g_env.worldMgr= this;
 
 	// Must use placement new, because stuff in M::M() use worldMgr->m
 	char* buf= new char[sizeof(M)]; /// @todo Explicit alignment
@@ -244,14 +244,14 @@ WorldMgr::~WorldMgr()
 {
 	delete m; m= nullptr;
 
-	if (global::g_env->worldMgr == this)
-		global::g_env->worldMgr= nullptr;
+	if (global::g_env.worldMgr == this)
+		global::g_env.worldMgr= nullptr;
 }
 
 void WorldMgr::update()
 {
-	if (global::g_env->cfg->get<bool>("game::useFixedTimeStep", false)) {
-		m->clock.setFixedDeltaTime(global::g_env->cfg->get<real64>("game::fixedTimeStep", 1.0/60.0));
+	if (global::g_env.cfg->get<bool>("game::useFixedTimeStep", false)) {
+		m->clock.setFixedDeltaTime(global::g_env.cfg->get<real64>("game::fixedTimeStep", 1.0/60.0));
 	} else {
 		m->clock.unsetFixedDeltaTime();
 	}
@@ -261,7 +261,7 @@ void WorldMgr::update()
 		PROFILE();
 		m->weMgr.removeFlagged(); // Removes phys objects flagged by ui
 
-		auto& grid= global::g_env->physMgr->getWorld().getGrid();
+		auto& grid= global::g_env.physMgr->getWorld().getGrid();
 		auto&& chunk_positions= grid.getChunkPositions();
 		uint32 width= grid.getChunkWidth();
 		uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
@@ -303,7 +303,7 @@ void WorldMgr::update()
 	///       Possible solution could be that spawnNewEntities runs node init,
 	///       and this extra chunk update would be done before weMgr.update
 	for (auto p : m->loadedChunks)
-		global::g_env->physMgr->getWorld().getGrid().touchCells(p, -1.0);
+		global::g_env.physMgr->getWorld().getGrid().touchCells(p, -1.0);
 	m->loadedChunks.clear();
 
 	detail::createEdges(m->edgeSpawns, m->lastUpdTime);
@@ -313,7 +313,7 @@ void WorldMgr::update()
 	m->weMgr.removeFlagged();
 	
 	{ // Stuff that should be in data
-		visual::Camera& camera= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
+		visual::Camera& camera= global::g_env.visualMgr->getCameraMgr().getSelectedCamera();
 		m->lightBackground.setPosition(util::Vec3d(0));
 
 		real32 phase= getDayPhase() + 0.75;
@@ -354,7 +354,7 @@ void WorldMgr::update()
 		real32 mul= (real32)pow((0.5*(sin(phase*util::tau*2 - util::pi*0.5) + 1)), 0.5);
 		m->sunReDef.setColorMul(util::Color{1.f, 1.0f*mul, 1.0f*mul, 1.0f} * (1+ (1-mul)*0.2));
 
-		global::g_env->visualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
+		global::g_env.visualMgr->getEntityMgr().setEnvLight(c_cur, -util::Vec2f{(real32)cos(phase*util::tau), (real32)sin(phase*util::tau)});
 	}
 	
 	m->dayTime += m->clock.getDeltaTime();
@@ -416,10 +416,10 @@ void WorldMgr::onChunkStateChange(const game::WorldChunk& ch, int32 prev_state)
 	}
 
 	if (ch.getState() == game::WorldChunk::State::Active){
-		global::g_env->physMgr->getWorld().addChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
+		global::g_env.physMgr->getWorld().addChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
 	}
 	else if (ch.getState() == game::WorldChunk::State::Destroying){
-		global::g_env->physMgr->getWorld().removeChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
+		global::g_env.physMgr->getWorld().removeChunk(ch.getPosition(), WorldGrid::chunkWidthInBlocks);
 	}
 }
 
@@ -433,12 +433,12 @@ void WorldMgr::updateWorldIO(){
 		return;
 	}
 
-	visual::Camera& camera= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
+	visual::Camera& camera= global::g_env.visualMgr->getCameraMgr().getSelectedCamera();
 	
 	WorldVec priority_pos= camera.getPosition();
 	m->saveMgr.setPriorityPosition(priority_pos);
 	
-	util::Set<game::WorldChunk*> new_chunks= m->chunkMgr.inhabitChunksInRadius(camera.getPosition(), global::g_env->cfg->get<int32>("game::worldSimulationRadius", 20));
+	util::Set<game::WorldChunk*> new_chunks= m->chunkMgr.inhabitChunksInRadius(camera.getPosition(), global::g_env.cfg->get<int32>("game::worldSimulationRadius", 20));
 
 	for (auto ch : new_chunks){
 		//print(debug::Ch::WorldChunk, debug::Vb::Trivial, "New chunk (%i, %i)", m->getPosition().x, m->getPosition().y);
@@ -469,8 +469,8 @@ void WorldMgr::updateWorldIO(){
 
 	// Streaming
 
-	m->worldGen.generate(global::g_env->cfg->get<double>("game::maxWorldGeneratingTime"));
-	m->saveMgr.update(global::g_env->cfg->get<double>("game::maxWorldIoTime"));
+	m->worldGen.generate(global::g_env.cfg->get<double>("game::maxWorldGeneratingTime"));
+	m->saveMgr.update(global::g_env.cfg->get<double>("game::maxWorldIoTime"));
 
 	// Saving
 

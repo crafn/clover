@@ -11,14 +11,14 @@ namespace global {
 
 EventMgr::EventMgr()
 {
-	if (!global::g_env->eventMgr)
-		global::g_env->eventMgr= this;
+	if (!global::g_env.eventMgr)
+		global::g_env.eventMgr= this;
 }
 
 EventMgr::~EventMgr()
 {
-	if (global::g_env->eventMgr == this)
-		global::g_env->eventMgr= nullptr;
+	if (global::g_env.eventMgr == this)
+		global::g_env.eventMgr= nullptr;
 }
 
 void EventMgr::registerReceiver(global::EventReceiver& recv, global::Event::EType event_type){

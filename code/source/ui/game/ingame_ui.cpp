@@ -32,7 +32,7 @@ void InGameUi::onEvent(global::Event& e){
 void InGameUi::update(){
 	updateCamera();
 	
-	visual::Camera& camera= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
+	visual::Camera& camera= global::g_env.visualMgr->getCameraMgr().getSelectedCamera();
 	audioRecv.setPosition(camera.getPosition());
 }
 
@@ -42,7 +42,7 @@ util::DynArray<util::Str8> InGameUi::getPlayerStrings() const {
 }
 
 void InGameUi::updateCamera(){
-	real64 dt= util::limited(global::g_env->worldMgr->getDeltaTime(), 0.0, 0.05);
+	real64 dt= util::limited(global::g_env.worldMgr->getDeltaTime(), 0.0, 0.05);
 
 	if (gUserInput->isTriggered(UserInput::DevCamZoomIn)){
 		camera.setTargetScale( camera.getScale()+0.2*camera.getScale() );
@@ -54,7 +54,7 @@ void InGameUi::updateCamera(){
 	/// @todo Remove hardcoded player entity behavior
 	auto camera_target= nodes::CameraTargetNodeInstance::findTarget("player0");
 
-	if (camera_target && !(global::g_env->ui->getEditorUi() && global::g_env->ui->getEditorUi()->hasActiveView())){
+	if (camera_target && !(global::g_env.ui->getEditorUi() && global::g_env.ui->getEditorUi()->hasActiveView())){
 		camera.setTargetPosition(camera_target->getTransform().translation);
 	}
 	else {

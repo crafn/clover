@@ -29,12 +29,12 @@ namespace clover {
 namespace ui { namespace game {
 
 BaseUi::BaseUi()
-	: guiCursor(global::g_env->guiMgr->getCursor())
+	: guiCursor(global::g_env.guiMgr->getCursor())
 	, quit(false)
 	, quitListener("host", "emergency", "quit", [this] (){ quit= true; })
 	, devInputEntry("host", "hostBaseUi"){ // Host channel should be the first to receive input
-	if (!global::g_env->ui)
-		global::g_env->ui= this;
+	if (!global::g_env.ui)
+		global::g_env.ui= this;
 
 	gUserInput= new UserInput;
 
@@ -45,8 +45,8 @@ BaseUi::BaseUi()
 }
 
 BaseUi::~BaseUi(){
-	if (global::g_env->ui == this)
-		global::g_env->ui= nullptr;
+	if (global::g_env.ui == this)
+		global::g_env.ui= nullptr;
 }
 
 void BaseUi::onEvent(global::Event& e){
@@ -72,7 +72,7 @@ bool BaseUi::update(){
 	
 	cursorOnWorld= hardware::gMouse->getPosition().converted(util::Coord::World).getValue();
 
-	if (quit || glfwWindowShouldClose(&global::g_env->device->getWindow())){
+	if (quit || glfwWindowShouldClose(&global::g_env.device->getWindow())){
 		return false;
 	}
 

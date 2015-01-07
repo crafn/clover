@@ -30,7 +30,7 @@ void WeldJoint::attach(Object& a, Object& b){
 }
 
 void WeldJoint::attach(Object& a){
-	attach(a, global::g_env->physMgr->getWorld().getStaticRigidObject());
+	attach(a, global::g_env.physMgr->getWorld().getStaticRigidObject());
 }
 
 void WeldJoint::setFrequency(real64 f){

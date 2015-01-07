@@ -27,7 +27,7 @@ void PrismaticJoint::attach(Object& a, Object& b, const WorldVec& axis){
 }
 
 void PrismaticJoint::attach(Object& o, const WorldVec& axis){
-	attach(o, global::g_env->physMgr->getWorld().getStaticRigidObject(), axis);
+	attach(o, global::g_env.physMgr->getWorld().getStaticRigidObject(), axis);
 }	
 
 void PrismaticJoint::enableMotor(bool m){

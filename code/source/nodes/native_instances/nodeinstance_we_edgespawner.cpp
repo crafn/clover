@@ -25,13 +25,13 @@ void WeEdgeSpawnerNodeInstance::create()
 	edgeEntityIn->setOnReceiveCallback([&] ()
 	{
 		edgeType=
-			&global::g_env->resCache->getResource<game::WeType>(edgeEntityIn->get());
+			&global::g_env.resCache->getResource<game::WeType>(edgeEntityIn->get());
 	});
 
 	spawnIn->setOnReceiveCallback([&] ()
 	{
 		spawnerType= &NONULL(weIn->get().get())->getType();
-		global::g_env->worldMgr->onEdgeSpawnTrigger(*this);
+		global::g_env.worldMgr->onEdgeSpawnTrigger(*this);
 	});
 
 	setUpdateNeeded(false);

@@ -23,7 +23,7 @@ void GuiInputNodeInstance::create()
 void GuiInputNodeInstance::update()
 {
 	cursorPos_world->send(
-		global::g_env->guiMgr->getCursor().getPosition().
+		global::g_env.guiMgr->getCursor().getPosition().
 			converted(util::Coord::World).getValue());
 }
 

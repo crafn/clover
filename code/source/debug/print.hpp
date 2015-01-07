@@ -91,7 +91,7 @@ private:
 /// @example print(debug::Ch::Audio, debug::Vb::Trivial, "test %i", 5);
 template <typename... Args>
 void print(Ch ch, Vb vb, const char* fmt, Args&&... args)
-{ (*global::g_env->debugPrint)(ch, vb, fmt, std::forward<Args>(args)...); }
+{ (*global::g_env.debugPrint)(ch, vb, fmt, std::forward<Args>(args)...); }
 
 /// Less verbose printing command for temp purposes
 template <typename... Args>

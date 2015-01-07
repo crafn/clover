@@ -22,7 +22,7 @@ PerformanceEcUi::PerformanceEcUi(PerformanceEc& comp):
 void PerformanceEcUi::onEvent(global::Event& e){
 	switch(e.getType()){
 		case global::Event::OnPerformanceTimersUpdate: {
-			auto results= global::g_env->gameLogic->getDevLogic()->getLastPerformanceTimerResults();
+			auto results= global::g_env.gameLogic->getDevLogic()->getLastPerformanceTimerResults();
 
 			for (auto& m : results)
 				addToPerformanceGraph(m.name, m.percentage);
@@ -34,8 +34,8 @@ void PerformanceEcUi::onEvent(global::Event& e){
 }
 
 void PerformanceEcUi::update(){
-	performanceGraph.clearBefore(global::g_env->realClock->getTime()-25);
-	performanceGraph.setViewport(global::g_env->realClock->getTime()-20, global::g_env->realClock->getTime());
+	performanceGraph.clearBefore(global::g_env.realClock->getTime()-25);
+	performanceGraph.setViewport(global::g_env.realClock->getTime()-20, global::g_env.realClock->getTime());
 }
 
 void PerformanceEcUi::onResize(){
@@ -73,7 +73,7 @@ void PerformanceEcUi::addToPerformanceGraph(const util::Str8& name, real64 value
 		id= it->second;
 	}
 
-	performanceGraph.appendPoint(id, util::Vec2d{ global::g_env->realClock->getTime(), value });
+	performanceGraph.appendPoint(id, util::Vec2d{ global::g_env.realClock->getTime(), value });
 }
 
 }}} // ui::game::editor

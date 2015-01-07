@@ -80,7 +80,7 @@ void Material::resourceUpdate(bool load, bool force){
 				textures[i]= nullptr;
 			}
 			else {
-				textures[i]= &global::g_env->resCache->getResource<Texture>(tex_names[i]);
+				textures[i]= &global::g_env.resCache->getResource<Texture>(tex_names[i]);
 			}
 		}
 
@@ -98,7 +98,7 @@ void Material::createErrorResource(){
 		m= nullptr;
 	}
 	
-	textures[TexType_Color]= &global::g_env->resCache->getErrorResource<Texture>();
+	textures[TexType_Color]= &global::g_env.resCache->getErrorResource<Texture>();
 }
 
 uint32 Material::getContentHash() const {
@@ -116,7 +116,7 @@ void Material::changeTexture(TexType type, const util::Str8& resname){
 	if (resname.empty())
 		setTexture(type, nullptr);
 	else
-		setTexture(type, &global::g_env->resCache->getResource<Texture>(resname));
+		setTexture(type, &global::g_env.resCache->getResource<Texture>(resname));
 }
 
 void Material::cacheBlendFunc(){

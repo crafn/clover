@@ -15,8 +15,8 @@ KeyboardHidDevice::KeyboardHidDevice(const ConstructInfo& info)
 	
 	textControls.pushBack(&textControl);
 	
-	glfwSetCharCallback(&global::g_env->device->getWindow(), characterCallback);
-	glfwSetKeyCallback(&global::g_env->device->getWindow(), keyCallback);
+	glfwSetCharCallback(&global::g_env.device->getWindow(), characterCallback);
+	glfwSetKeyCallback(&global::g_env.device->getWindow(), keyCallback);
 }
 
 KeyboardHidDevice::~KeyboardHidDevice(){
@@ -27,7 +27,7 @@ void KeyboardHidDevice::update(){
 	ensure(keyControls.size() == keyCount);
 	
 	for (SizeType i= 0; i < keyCount; ++i){
-		int32 key_state= glfwGetKey(&global::g_env->device->getWindow(), keyList[i].glfwCode);
+		int32 key_state= glfwGetKey(&global::g_env.device->getWindow(), keyList[i].glfwCode);
 		keyControls[i]->setValue(key_state == GLFW_PRESS);
 	}
 }

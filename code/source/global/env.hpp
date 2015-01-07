@@ -36,7 +36,7 @@ struct Env {
 	visual::VisualMgr* visualMgr;
 };
 
-extern ENGINE_API Env* g_env;
+extern ENGINE_API Env g_env;
 
 } // global
 } // clover

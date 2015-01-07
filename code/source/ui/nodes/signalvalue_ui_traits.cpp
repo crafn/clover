@@ -24,7 +24,7 @@ void SignalValueUiTraits<SignalType::EventType>::valueToView(const Value& v, Vie
 }
 
 void SignalValueUiTraits<SignalType::EventType>::valueToEdit(const Value& v, EditElement& e){
-	const auto& types= global::g_env->resCache->getSubCache<NodeEventType>().getResources();
+	const auto& types= global::g_env.resCache->getSubCache<NodeEventType>().getResources();
 	
 	for (SizeType i=0; i<types.size(); ++i){
 		if (types[i]->getName() == v){
@@ -55,7 +55,7 @@ void SignalValueUiTraits<SignalType::EventType>::updateList(EditElement& e){
 		selected= e.getSelectedText();
 		
 	e.clear();
-	const auto& types= global::g_env->resCache->getSubCache<NodeEventType>().getResources();
+	const auto& types= global::g_env.resCache->getSubCache<NodeEventType>().getResources();
 	for (auto& m : types){
 		e.append(m->getName());
 	}
@@ -90,7 +90,7 @@ void SignalValueUiTraits<SignalType::ArmaturePose>::valueToEdit(const Value& v, 
 
 auto SignalValueUiTraits<SignalType::ArmaturePose>::valueFromEdit(const EditElement& e)
 -> Value {
-	return global::g_env->resCache->getResource<animation::Armature>(e.getText()).getBindPose();
+	return global::g_env.resCache->getResource<animation::Armature>(e.getText()).getBindPose();
 }
 
 void SignalValueUiTraits<SignalType::ArmaturePose>::onEditActivationChange(EditElement& e){

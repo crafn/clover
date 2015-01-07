@@ -11,8 +11,8 @@ HidMgr::HidMgr(){
 }
 
 void HidMgr::create(){
-	devices= global::g_env->cfg->get<decltype(devices)>("hid::devices");
-	contexts= global::g_env->cfg->get<decltype(contexts)>("hid::contexts");
+	devices= global::g_env.cfg->get<decltype(devices)>("hid::devices");
+	contexts= global::g_env.cfg->get<decltype(contexts)>("hid::contexts");
 	
 	removeTagIndirection();
 }

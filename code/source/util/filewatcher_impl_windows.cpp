@@ -63,7 +63,7 @@ void FileWatcherWindowsImpl::unlockFileThreadMutex(){
 void FileWatcherWindowsImpl::addWatch(){
 	if (!watching){
 		if (watchCount == 0){
-			changeDetectionThread= std::thread(directoryChangeDetectionLoop, global::g_env->resCache->getResourceRootPath());
+			changeDetectionThread= std::thread(directoryChangeDetectionLoop, global::g_env.resCache->getResourceRootPath());
 			setThreadPriority(changeDetectionThread, ThreadPriority::Idle);
 		}
 

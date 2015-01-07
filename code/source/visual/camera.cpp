@@ -23,12 +23,12 @@ Camera::Camera():
 	e.send();
 	
 	Framebuffer::Cfg fbo_cfg;
-	fbo_cfg.resolution= util::Vec2i(global::g_env->cfg->get<int32>("visual::defaultShadowMapSize", 512));
+	fbo_cfg.resolution= util::Vec2i(global::g_env.cfg->get<int32>("visual::defaultShadowMapSize", 512));
 	fbo_cfg.linearInterpolation= true;
 	shadowCasterBuf.create(fbo_cfg);
 
 	// Entity is only to trigger fluid rendering at correct time
-	fluidModel.setMesh(global::g_env->resCache->getResource<TriMesh>("unitRect"));
+	fluidModel.setMesh(global::g_env.resCache->getResource<TriMesh>("unitRect"));
 	fluidEntityDef.setModel(fluidModel);
 	fluidEntityDef.setShadingType(ModelEntityDef::Shading_Fluid);
 	fluidEntity.setDef(fluidEntityDef);
@@ -103,7 +103,7 @@ bool Camera::isWorldBBInViewport(util::Vec2d p, util::Vec2d bb){
 
 void Camera::update(){
 
-	real32 dt= global::g_env->realClock->getDeltaTime();
+	real32 dt= global::g_env.realClock->getDeltaTime();
 	
 	
 	targetPosition += util::Vec2d{panningVelocity.x, panningVelocity.y}*dt;

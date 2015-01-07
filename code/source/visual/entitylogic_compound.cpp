@@ -77,7 +77,7 @@ util::DynArray<Entity*> CompoundEntityLogic::getEntities() const {
 
 auto CompoundEntityLogic::createAttachedEntity(const ArmatureAttachmentDef& def, const animation::Armature& armature) -> AttachedEntity {
 	AttachedEntity e;
-	e.entity= EntityPtr(new Entity(global::g_env->resCache->getResource<visual::EntityDef>(def.entityName)));
+	e.entity= EntityPtr(new Entity(global::g_env.resCache->getResource<visual::EntityDef>(def.entityName)));
 	e.jointId= armature.getJointId(def.jointName);
 	if (def.offset)
 		e.offset= *def.offset;

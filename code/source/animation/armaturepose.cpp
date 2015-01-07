@@ -85,7 +85,7 @@ ArmaturePose ArmaturePose::byLocalPose(const Armature& armature, Pose local_pose
 }
 
 ArmaturePose::ArmaturePose()
-		: armature(&global::g_env->resCache->getErrorResource<Armature>())
+		: armature(&global::g_env.resCache->getErrorResource<Armature>())
 		, localInBindPose(defaultPose()){
 }
 
@@ -106,7 +106,7 @@ ArmaturePose::Pose ArmaturePose::getGlobalPose() const {
 }
 
 void ArmaturePose::setArmature(const util::Str8& name){
-	armature= &global::g_env->resCache->getResource<Armature>(name);
+	armature= &global::g_env.resCache->getResource<Armature>(name);
 	localInBindPose= defaultPose();
 }
 

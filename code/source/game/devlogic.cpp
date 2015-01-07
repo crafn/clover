@@ -45,12 +45,12 @@ util::Str8 stringifyProfilingResult(util::Profiler::Result result, std::thread::
 void profileFor(double time){
 	std::thread::id thread= std::this_thread::get_id();
 	std::thread t([time, thread] (){
-		util::Profiler profiler(global::g_env->cfg->get("dev::profilerSampleRate", 2.0));
+		util::Profiler profiler(global::g_env.cfg->get("dev::profilerSampleRate", 2.0));
 		std::this_thread::sleep_for(
 			std::chrono::milliseconds((int)(time*1000.0)));
 
 		util::Str8 results= stringifyProfilingResult(
-			profiler.popResult(global::g_env->cfg->get("dev::profilerMinShare", 0.01)),
+			profiler.popResult(global::g_env.cfg->get("dev::profilerMinShare", 0.01)),
 			thread);
 
 		print(debug::Ch::Dev, debug::Vb::Trivial, "%s", results.cStr());
@@ -62,7 +62,7 @@ void profileFor(double time){
 }
 
 DevLogic::DevLogic()
-	: profiler(global::g_env->cfg->get("dev::profilerSampleRate", 2.0))
+	: profiler(global::g_env.cfg->get("dev::profilerSampleRate", 2.0))
 	, fpsFrameCount(0)
 	, fpsTimer(0)
 	, fpsPrintFilter(0){
@@ -71,29 +71,29 @@ DevLogic::DevLogic()
 void DevLogic::update(){
 	PROFILE();
 
-	global::g_env->debugPrint->updateBuffer();
+	global::g_env.debugPrint->updateBuffer();
 	
 	// SubSystem info update
 
-	if (fpsTimer > global::g_env->cfg->get<real32>("dev::perfMeasureInterval")) {
+	if (fpsTimer > global::g_env.cfg->get<real32>("dev::perfMeasureInterval")) {
 
 		// Print some statistics about subsystems
 		if (fpsPrintFilter == 0){
 			print(debug::Ch::General, debug::Vb::Moderate, "--- Tick ---");
 			print(debug::Ch::General, debug::Vb::Moderate, "FPS: %f", fpsFrameCount/fpsTimer);
 			print(debug::Ch::General, debug::Vb::Moderate, "Chunk count:		%i",
-					(int)global::g_env->worldMgr->getChunkMgr().getChunkCount());
+					(int)global::g_env.worldMgr->getChunkMgr().getChunkCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "WorldEntity count:	%i",
-					(int)global::g_env->worldMgr->getWeMgr().getEntityCount());
+					(int)global::g_env.worldMgr->getWeMgr().getEntityCount());
 			print(debug::Ch::General, debug::Vb::Moderate,
 					"visual::ModelEntity count: %i,	  shader count: %i",
-					(int)global::g_env->visualMgr->getEntityMgr().getModelEntityCount(),
-					(int)global::g_env->visualMgr->getShaderMgr().getShaderCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", global::g_env->physMgr->calcObjectCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env->audioMgr->getSoundInstanceCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env->audioMgr->getAudioSourceCount());
-			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env->audioMgr->getFreeChannelCount());
-			print(debug::Ch::General, debug::Vb::Trivial, "Viewport: %i, %i", global::g_env->device->getViewportSize().x, global::g_env->device->getViewportSize().y);
+					(int)global::g_env.visualMgr->getEntityMgr().getModelEntityCount(),
+					(int)global::g_env.visualMgr->getShaderMgr().getShaderCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "PhysObject count:	%i", global::g_env.physMgr->calcObjectCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env.audioMgr->getSoundInstanceCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env.audioMgr->getAudioSourceCount());
+			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env.audioMgr->getFreeChannelCount());
+			print(debug::Ch::General, debug::Vb::Trivial, "Viewport: %i, %i", global::g_env.device->getViewportSize().x, global::g_env.device->getViewportSize().y);
 
 			print(debug::Ch::General, debug::Vb::Trivial, "Timers");
 		}
@@ -102,7 +102,7 @@ void DevLogic::update(){
 		uint32 strict_handle_count= StrictHandleConnection::countConnections();
 
 		util::Profiler::Result profiling_result=
-			profiler.popResult(global::g_env->cfg->get("dev::profilerMinShare", 0.01));
+			profiler.popResult(global::g_env.cfg->get("dev::profilerMinShare", 0.01));
 		performanceTimerResults.clear();
 		for (auto& item : profiling_result.getSortedLabels(std::this_thread::get_id())){
 			real32 average_time= (real32)item.share*fpsTimer/fpsFrameCount;
@@ -134,7 +134,7 @@ void DevLogic::update(){
 	}
 
 	++fpsFrameCount;
-	fpsTimer += global::g_env->realClock->getDeltaTime();
+	fpsTimer += global::g_env.realClock->getDeltaTime();
 	
 	editor.update();
 	

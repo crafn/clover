@@ -21,30 +21,30 @@ WeToolsEc::WeToolsEc(){
 }
 
 void WeToolsEc::spawn(uint32 name_id){
-	game::WeHandle h= global::g_env->worldMgr->getWeMgr().createEntity(	
+	game::WeHandle h= global::g_env.worldMgr->getWeMgr().createEntity(	
 					getWeNames()[name_id],
-					global::g_env->visualMgr->getCameraMgr().getSelectedCamera().getPosition() + util::Vec2d{0,3});
+					global::g_env.visualMgr->getCameraMgr().getSelectedCamera().getPosition() + util::Vec2d{0,3});
 }
 
 void WeToolsEc::setDebugDrawActive(bool b){
-	global::g_env->debugDraw->setEnabled(debug::Draw::DrawFlag::Common, b);
+	global::g_env.debugDraw->setEnabled(debug::Draw::DrawFlag::Common, b);
 }
 
 bool WeToolsEc::isDebugDrawActive() const {
-	return global::g_env->debugDraw->isEnabled(debug::Draw::DrawFlag::Common);
+	return global::g_env.debugDraw->isEnabled(debug::Draw::DrawFlag::Common);
 }
 
 void WeToolsEc::setChunksLocked(bool b){
-	global::g_env->worldMgr->setChunksLocked(b);
+	global::g_env.worldMgr->setChunksLocked(b);
 }
 bool WeToolsEc::isChunksLocked() const {
-	return global::g_env->worldMgr->isChunksLocked();
+	return global::g_env.worldMgr->isChunksLocked();
 }
 
 util::DynArray<util::Str8> WeToolsEc::getWeNames() const {
 	util::DynArray<util::Str8> ret;
 
-	for (auto& m : global::g_env->resCache->getSubCache<game::WeType>().getResources()){
+	for (auto& m : global::g_env.resCache->getSubCache<game::WeType>().getResources()){
 		ret.pushBack(m->getName());
 	}
 	
@@ -52,11 +52,11 @@ util::DynArray<util::Str8> WeToolsEc::getWeNames() const {
 }
 
 void WeToolsEc::eraseTerrain(util::Vec2d pos){
-	global::g_env->physMgr->getWorld().applyRadialStressField(pos, 20.0, 1.0);
+	global::g_env.physMgr->getWorld().applyRadialStressField(pos, 20.0, 1.0);
 }
 
 void WeToolsEc::deleteWe(util::Vec2d pos){
-	game::WESet w= global::g_env->worldMgr->getQuery().getEntitiesInRadius(pos,0.4);
+	game::WESet w= global::g_env.worldMgr->getQuery().getEntitiesInRadius(pos,0.4);
 	for (auto it= w.begin(); it!= w.end(); ++it){
 		if ((*it)){
 			(*it)->setRemoveFlag();

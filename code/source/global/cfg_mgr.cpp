@@ -8,16 +8,16 @@ namespace global {
 
 CfgMgr::CfgMgr()
 {
-	if (!global::g_env->cfg)
-		global::g_env->cfg= this;
+	if (!global::g_env.cfg)
+		global::g_env.cfg= this;
 
 	load();
 }
 
 CfgMgr::~CfgMgr()
 {
-	if (global::g_env->cfg == this)
-		global::g_env->cfg= nullptr;
+	if (global::g_env.cfg == this)
+		global::g_env.cfg= nullptr;
 }
 
 void CfgMgr::load(){

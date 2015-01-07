@@ -79,7 +79,7 @@ void WeMgr::shallowUpdate(const util::DynArray<game::WorldEntity*> update_needin
 			if (	!beforechunk_was_correct ||
 					before_chunkpos != afterpos_chunk){
 
-				game::WorldChunk* after= global::g_env->worldMgr->getChunkMgr().getChunk(
+				game::WorldChunk* after= global::g_env.worldMgr->getChunkMgr().getChunk(
 						game::GridPoint::Chunk(afterpos_chunk));
 
 				bool afterchunk_is_correct= true;
@@ -174,7 +174,7 @@ util::DynArray<WorldEntity*> WeMgr::getGlobalEntities() const {
 void WeMgr::removeAll(){
 	PROFILE_("worldEntity");
 
-	global::g_env->worldMgr->getChunkMgr().removeAll();
+	global::g_env.worldMgr->getChunkMgr().removeAll();
 
 	util::DynArray<game::WorldEntity*>::Iter it;
 	for(it=weTable.begin(); it!=weTable.end(); it++){
@@ -224,7 +224,7 @@ game::WeHandle WeMgr::createEntity(const util::Str8& type_name, util::Vec2d posi
 		c->addEntity(*we);
 	}
 	else {
-		game::WorldChunk* ch= global::g_env->worldMgr->getChunkMgr().getChunk(game::GridPoint::World(position));
+		game::WorldChunk* ch= global::g_env.worldMgr->getChunkMgr().getChunk(game::GridPoint::World(position));
 		
 		if (ch)
 			ch->addEntity(*we);

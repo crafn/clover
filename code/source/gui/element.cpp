@@ -180,7 +180,7 @@ Element::~Element(){
 	if (guiCursor->getTouchedElement() == this)
 		guiCursor->stopTouching();
 	
-	global::g_env->guiMgr->onDestroy(*this);
+	global::g_env.guiMgr->onDestroy(*this);
 }
 
 void Element::setOffset(const util::Coord& p){
@@ -367,7 +367,7 @@ void Element::preUpdate(){
 		if (elementType == LinearLayout)
 			c= util::Color{0.0,0.0,0.0,0.8};
 		
-		global::g_env->debugDraw->addRect(position, radius, c);
+		global::g_env.debugDraw->addRect(position, radius, c);
 		
 	}
 	else {

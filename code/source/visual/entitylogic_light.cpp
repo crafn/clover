@@ -67,7 +67,7 @@ void LightEntityLogic::onShadowsStateChange(bool active){
 }
 
 util::Vec2i LightEntityLogic::getShadowMapSize() const {
-	return util::Vec2i(global::g_env->cfg->get<int32>("visual::defaultShadowMapSize", 512));
+	return util::Vec2i(global::g_env.cfg->get<int32>("visual::defaultShadowMapSize", 512));
 }
 
 } // visual

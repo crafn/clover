@@ -33,7 +33,7 @@ util::SrtTransform3d billboarded(util::SrtTransform3d t){
 }
 
 EntityMgr::EntityMgr(ShaderMgr& shader_mgr)
-	: reCache(global::g_env->cfg->get("visual::gridCellSize", 16.0))
+	: reCache(global::g_env.cfg->get("visual::gridCellSize", 16.0))
 {
 	envLight= 0.0;
 
@@ -67,7 +67,7 @@ void EntityMgr::draw(){
 
 		// Actual rendering of visual entities
 		hardware::gGlState->bindFbo(0);
-		hardware::gGlState->setViewport({0,0}, global::g_env->device->getViewportSize());
+		hardware::gGlState->setViewport({0,0}, global::g_env.device->getViewportSize());
 
 		genericST.setCamera(*cfg.camera);
 		genericST.setLights(cfg.lights);
@@ -253,12 +253,12 @@ EntityMgr::RenderFrameConfig EntityMgr::createSimpleRenderFrameConfig(){
 	PROFILE();
 	RenderFrameConfig cfg;
 	
-	if (global::g_env->visualMgr->getCameraMgr().getActiveCameras().size() == 0)
+	if (global::g_env.visualMgr->getCameraMgr().getActiveCameras().size() == 0)
 		throw global::Exception("REMgr::draw(): No camera specified");
 	
-	Camera* camera= global::g_env->visualMgr->getCameraMgr().getActiveCameras()[0];
+	Camera* camera= global::g_env.visualMgr->getCameraMgr().getActiveCameras()[0];
 	ensure(camera);
-	camera->setPerspectiveMul(global::g_env->cfg->get("visual::perspectiveMul", 1.0f));
+	camera->setPerspectiveMul(global::g_env.cfg->get("visual::perspectiveMul", 1.0f));
 	
 	cfg.camera= camera;
 
@@ -279,7 +279,7 @@ EntityMgr::RenderFrameConfig EntityMgr::createSimpleRenderFrameConfig(){
 			}
 		}
 	}
-	cfg.occlusionRadiusAddition += global::g_env->cfg->get<real64>("visual::occlusionRadiusAddition", 0.0);
+	cfg.occlusionRadiusAddition += global::g_env.cfg->get<real64>("visual::occlusionRadiusAddition", 0.0);
 	
 	cfg.entities=
 		sortedByDepth(
@@ -376,26 +376,26 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 		util::Vec2d occlusion_rad_addition){
 	PROFILE();
 		
-	bool show_gui= global::g_env->cfg->get("visual::showGui", true);
+	bool show_gui= global::g_env.cfg->get("visual::showGui", true);
 
 	util::Vec2d campos= camera.getPosition();
 	real32 camscale= camera.getScale();
 
 	// Radius of viewport in world coordinates
 	util::Vec2d rad= util::Vec2d(1.0)/camera.getScale();
-	rad.x /= global::g_env->device->getAspectVector().x;
-	rad.y /= global::g_env->device->getAspectVector().y;
+	rad.x /= global::g_env.device->getAspectVector().x;
+	rad.y /= global::g_env.device->getAspectVector().y;
 
-	util::Vec2d aspectvector= global::g_env->device->getAspectVector();
+	util::Vec2d aspectvector= global::g_env.device->getAspectVector();
 	util::Vec2d inverse_aspectvector= util::Vec2d{1.0/aspectvector.x, 1.0/aspectvector.y};
 	real64 aspect_component_dif= util::abs(aspectvector.x-aspectvector.y);
 
-	util::Vec2d viewport= util::Vec2d{(real32)global::g_env->device->getViewportSize().x*0.5, (real32)global::g_env->device->getViewportSize().y*0.5};
+	util::Vec2d viewport= util::Vec2d{(real32)global::g_env.device->getViewportSize().x*0.5, (real32)global::g_env.device->getViewportSize().y*0.5};
 
 	bool viewport_oddx= false;
 	bool viewport_oddy= false;
-	if (global::g_env->device->getViewportSize().x % 2 == 1) viewport_oddx= true;
-	if (global::g_env->device->getViewportSize().y % 2 == 1) viewport_oddy= true;
+	if (global::g_env.device->getViewportSize().x % 2 == 1) viewport_oddx= true;
+	if (global::g_env.device->getViewportSize().y % 2 == 1) viewport_oddy= true;
 
 	// Multiply by this to get from world size to pixel size
 	util::Vec2d pixelmul= {	1.0/viewport.x/aspectvector.x,

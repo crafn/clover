@@ -121,10 +121,10 @@ PhysicsToolsEcUi::PhysicsToolsEcUi(PhysicsToolsEc& comp):
 
 	if (infoPhysicsDrawCheck.isToggled()){
 		if (infoPhysicsDrawCheck.isChecked()){
-			global::g_env->debugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics);
+			global::g_env.debugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics);
 		}
 		else {
-			global::g_env->debugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics, false);
+			global::g_env.debugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics, false);
 		}
 	}
 
@@ -144,7 +144,7 @@ PhysicsToolsEcUi::PhysicsToolsEcUi(PhysicsToolsEc& comp):
 				default: ensure_msg(0, "Invalid index for enum");
 			}
 
-			global::g_env->debugDraw->getPhysicsDraw().setFlag(f, state);
+			global::g_env.debugDraw->getPhysicsDraw().setFlag(f, state);
 		}
 	}
 

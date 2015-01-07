@@ -7,8 +7,8 @@ namespace clover {
 namespace gui {
 
 GuiMgr::GuiMgr(){
-	if (!global::g_env->guiMgr)
-		global::g_env->guiMgr= this;
+	if (!global::g_env.guiMgr)
+		global::g_env.guiMgr= this;
 
 	Element::guiCursor= &guiCursor;
 	audioSource.assignNewSource(audio::AudioSource::Type::Global);
@@ -26,8 +26,8 @@ GuiMgr::~GuiMgr(){
 	
 	Element::audioSource= audio::AudioSourceHandle();
 
-	if (global::g_env->guiMgr == this)
-		global::g_env->guiMgr= nullptr;
+	if (global::g_env.guiMgr == this)
+		global::g_env.guiMgr= nullptr;
 }
 
 void GuiMgr::onEvent(global::Event& e){

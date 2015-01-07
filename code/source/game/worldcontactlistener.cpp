@@ -126,7 +126,7 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 			if (m1 && m2 && !skip){
 
 				resources::StrResourcePair physpair(m1, m2);
-				const game::PhysicalMaterialPair* pair= global::g_env->resCache->findResource<game::PhysicalMaterialPair>(physpair);
+				const game::PhysicalMaterialPair* pair= global::g_env.resCache->findResource<game::PhysicalMaterialPair>(physpair);
 
 				if (pair){
 					const audio::Sound* pair_sound= pair->getCollisionSound();
@@ -174,12 +174,12 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 bool WorldContactListener::canBePlayed(const audio::Sound& sound, real64 amplitude){
 	auto it= recentSounds.find(&sound);
 	if (it == recentSounds.end()) return true;
-	return	it->second.time < global::g_env->realClock->getTime() - 0.1 ||
+	return	it->second.time < global::g_env.realClock->getTime() - 0.1 ||
 			it->second.amplitude < amplitude*0.5;
 }
 
 void WorldContactListener::notifyPlaying(const audio::Sound& sound, real64 amplitude){
-	recentSounds[&sound].time= global::g_env->realClock->getTime();
+	recentSounds[&sound].time= global::g_env.realClock->getTime();
 	recentSounds[&sound].amplitude= amplitude;
 }
 

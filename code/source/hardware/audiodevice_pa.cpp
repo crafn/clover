@@ -174,7 +174,7 @@ void PaAudioDevice::chooseWiselyAndCreateNicely(){
 		PaStreamParameters output_params= getDefaultStreamParameters();
 
 		util::DynArray<util::Str8> preferred;
-		util::Str8 user_preference= global::g_env->cfg->get<util::Str8>("hardware::audioDevice", "");
+		util::Str8 user_preference= global::g_env.cfg->get<util::Str8>("hardware::audioDevice", "");
 		if (!user_preference.empty())
 			preferred.pushBack(user_preference);
 
@@ -237,7 +237,7 @@ void PaAudioDevice::shutdown(){
 }
 
 SizeType PaAudioDevice::getDefaultBufferSize() const {
-	return global::g_env->cfg->get<SizeType>("audio::audioBufferSize", 2048);
+	return global::g_env.cfg->get<SizeType>("audio::audioBufferSize", 2048);
 }
 
 PaStreamParameters PaAudioDevice::getDefaultStreamParameters() const {

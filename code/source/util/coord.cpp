@@ -132,18 +132,18 @@ void Coord::convertTo(Type t){
 	util::Vec2d view_world_rad;
 	
 	if (type == World || t == World){
-		 visual::Camera& cam= global::g_env->visualMgr->getCameraMgr().getSelectedCamera();
+		 visual::Camera& cam= global::g_env.visualMgr->getCameraMgr().getSelectedCamera();
 		 campos= cam.getPosition();
 		 camscale= cam.getScale();
 		 ensure(camscale > 0);
 		 view_world_rad= util::Vec2d(1.0)/camscale;
 	}
 	
-	view_world_rad *= global::g_env->device->getAspectVector().inversed();
+	view_world_rad *= global::g_env.device->getAspectVector().inversed();
 	
-	util::Vec2d viewport_pixel_rad= (util::Vec2d)global::g_env->device->getViewportSize()*0.5;
+	util::Vec2d viewport_pixel_rad= (util::Vec2d)global::g_env.device->getViewportSize()*0.5;
 
-	util::Vec2d aspect_vector= global::g_env->device->getAspectVector();
+	util::Vec2d aspect_vector= global::g_env.device->getAspectVector();
 	real64 aspect_component_dif= util::abs(aspect_vector.x-aspect_vector.y);
 	
 	util::Vec2d view_stretch_pos= value;

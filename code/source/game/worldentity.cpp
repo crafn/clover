@@ -178,7 +178,7 @@ void WorldEntity::saveFieldDeserialize(WEPack& p){
 
 void WorldEntity::setType(const util::Str8& name){
 	PROFILE();
-	type= &global::g_env->resCache->getResource<game::WeType>(name);
+	type= &global::g_env.resCache->getResource<game::WeType>(name);
 	
 	// Reset type if it has changed
 	typeChangeListener.clear();
@@ -234,7 +234,7 @@ void WorldEntity::update(){
 	shallowUpdate();
 
 	if (errorState){
-		global::g_env->debugDraw->addText(
+		global::g_env.debugDraw->addText(
 				util::Coord::W(position),
 				util::Str8::format("Broken We: %s", type->getName().cStr()),
 				util::Vec2d{0.5, 0.5},

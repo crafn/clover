@@ -7,13 +7,13 @@ namespace clover {
 namespace global {
 
 FileMgr::FileMgr() {
-	if (!global::g_env->fileMgr)
-		global::g_env->fileMgr= this;
+	if (!global::g_env.fileMgr)
+		global::g_env.fileMgr= this;
 }
 
 FileMgr::~FileMgr() {
-	if (global::g_env->fileMgr == this)
-		global::g_env->fileMgr= nullptr;
+	if (global::g_env.fileMgr == this)
+		global::g_env.fileMgr= nullptr;
 }
 
 void FileMgr::add(const util::Str8& path, bool readOnly, int priority) {

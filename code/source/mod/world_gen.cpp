@@ -74,7 +74,7 @@ real64 forestness(real64 x)
 MOD_API void initWorld(world_gen::WorldGen& gen)
 {
 	debug::print("Global world init");
-	ensure_msg(global::g_env->resCache, "resCache not initialized");
+	ensure_msg(global::g_env.resCache, "resCache not initialized");
 	
 	gen.createWorker(	"playerSpawn",
 						util::Vec2d{1.0, groundSurfaceY(0.0) + 5.0},

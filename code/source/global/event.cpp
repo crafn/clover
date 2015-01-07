@@ -94,13 +94,13 @@ int32 Event::getReceiverCount(){
 
 void Event::queue(){
 	queued= true;
-	global::g_env->eventMgr->queueEvent(*this);
+	global::g_env.eventMgr->queueEvent(*this);
 }
 
 void Event::send(){
 	queued= true;
 	
-	auto registered_receivers= global::g_env->eventMgr->getRegisteredReceivers(type);
+	auto registered_receivers= global::g_env.eventMgr->getRegisteredReceivers(type);
 	for (auto &m : registered_receivers){
 		m->onEvent(*this);
 	}

@@ -7,7 +7,7 @@ namespace clover {
 namespace game {
 
 WETable& getWeTable()
-{ return global::g_env->worldMgr->getWeMgr().getWeTable(); }
+{ return global::g_env.worldMgr->getWeMgr().getWeTable(); }
 
 WETable::WETable():util::PtrTable<game::WorldEntity>(100000){
 	nextUniqueEntityId= 1;

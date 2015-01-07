@@ -74,7 +74,7 @@ void WorkerType::updateFromAttributes()
 	clear();
 
 	auto& mod=
-		global::g_env->resCache->getResource<global::Module>(
+		global::g_env.resCache->getResource<global::Module>(
 				moduleAttribute.get());
 
 	moduleChangeListener.clear();

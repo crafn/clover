@@ -12,7 +12,7 @@ namespace visual {
 void WorldShaderTech::use(Shader& shd)
 {
 	shd.use();
-	util::Vec2d aspect= global::g_env->device->getAspectVector();
+	util::Vec2d aspect= global::g_env.device->getAspectVector();
 
 	shd.setUniform("u_aspectRatio", aspect);
 	shd.setUniform("u_envIntensity", envLight);

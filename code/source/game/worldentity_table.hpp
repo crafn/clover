@@ -26,7 +26,7 @@ private:
 	game::WorldEntityId nextUniqueEntityId;
 };
 
-/// @return WETable of global::g_env->worldMgr->weMgr
+/// @return WETable of global::g_env.worldMgr->weMgr
 WETable& getWeTable();
 
 } // game

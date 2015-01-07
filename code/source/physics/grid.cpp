@@ -18,7 +18,7 @@ namespace physics {
 namespace detail {
 
 real64 timestamp()
-{ return global::g_env->worldMgr->getTime(); }
+{ return global::g_env.worldMgr->getTime(); }
 
 SizeType cellIndex(Grid::CellVec cell, Grid::CellVec origin, Grid::CellVec size)
 {

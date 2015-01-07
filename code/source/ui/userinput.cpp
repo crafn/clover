@@ -29,9 +29,9 @@ UserInput::UserInput():
 }
 
 void UserInput::update(){
-	pos= global::g_env->guiMgr->getCursor().getPosition().
+	pos= global::g_env.guiMgr->getCursor().getPosition().
 		converted(util::Coord::View_Stretch).getValue();
-	posChange= global::g_env->guiMgr->getCursor().getDelta().
+	posChange= global::g_env.guiMgr->getCursor().getDelta().
 		converted(util::Coord::View_Stretch).getValue();
 	
 	for (int32 i=0; i<LastTriggerType; ++i){

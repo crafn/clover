@@ -109,14 +109,14 @@ void PlayerPhysicsEntity::reset(util::RtTransform2d transform,
 		ragdoll.emplace();
 		ragdoll->setAsRagdoll(	bodyObject->getTransform(),
 								0.08,
-								global::g_env->resCache->getResource<game::PhysicalMaterial>("player_ragdoll"),
+								global::g_env.resCache->getResource<game::PhysicalMaterial>("player_ragdoll"),
 								ragdoll_pose);
 	}
 }
 
 void PlayerPhysicsEntity::update(util::Vec2d movement, const animation::ArmaturePose& anim_pose)
 {
-	real64 dt= global::g_env->worldMgr->getDeltaTime();
+	real64 dt= global::g_env.worldMgr->getDeltaTime();
 	// Smooth changing of direction
 	real64 blend_factor= std::pow(util::euler, -14.0*dt);
 	smoothFacingDir= smoothFacingDir*blend_factor + facingDir*(1.0 - blend_factor);
@@ -408,7 +408,7 @@ void PlayerLogicNodeInstance::create()
 
 void PlayerLogicNodeInstance::update()
 {
-	real64 dt= global::g_env->worldMgr->getDeltaTime();
+	real64 dt= global::g_env.worldMgr->getDeltaTime();
 
 	physEntity.update(movementIn->get(), poseIn->get());
 	transform= physEntity.getTransform();

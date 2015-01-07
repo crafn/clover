@@ -18,7 +18,7 @@ visual::EntityDef* VisualEntityDefSubCache::findResource(const util::Str8& ident
 }
 
 const visual::EntityDef& VisualEntityDefSubCache::getErrorResource(){
-	return global::g_env->resCache->getErrorResource<visual::ModelEntityDef>();
+	return global::g_env.resCache->getErrorResource<visual::ModelEntityDef>();
 }
 
 void VisualEntityDefSubCache::addEntityDef(const util::Str8& identifier, visual::EntityDef& entitydef){

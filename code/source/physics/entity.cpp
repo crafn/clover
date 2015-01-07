@@ -110,7 +110,7 @@ void Entity::set(const util::SrtTransform3d& transform, const EntityDef& def){
 }
 
 void Entity::set(const util::SrtTransform3d& t, const util::Str8& entity_def_name){
-	set(t, global::g_env->resCache->getResource<EntityDef>(entity_def_name));
+	set(t, global::g_env.resCache->getResource<EntityDef>(entity_def_name));
 }
 
 void Entity::setActive(bool b){

@@ -13,7 +13,7 @@ void TargetJoint::attach(Object& o, util::Vec2d world_anchor_pos){
 	detach();
 
 	addObject(o);
-	def.bodyA= global::g_env->physMgr->getWorld().getStaticRigidObject().getB2Body();
+	def.bodyA= global::g_env.physMgr->getWorld().getStaticRigidObject().getB2Body();
 	def.bodyB= static_cast<RigidObject*>(&o)->getB2Body();
 	def.target= toB2(world_anchor_pos);
 

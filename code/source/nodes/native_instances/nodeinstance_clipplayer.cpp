@@ -38,7 +38,7 @@ void ClipPlayerNodeInstance::create(){
 	
 	clipIn->setValueReceived();
 	clipIn->setOnReceiveCallback([&] (){
-		clip= &global::g_env->resCache->getResource<animation::Clip>(clipIn->get());
+		clip= &global::g_env.resCache->getResource<animation::Clip>(clipIn->get());
 	});
 	
 	playIn->setOnReceiveCallback([&] (){
@@ -63,7 +63,7 @@ void ClipPlayerNodeInstance::update(){
 		time_scale= 0.0;
 	}
 	
-	time += global::g_env->worldMgr->getDeltaTime()*time_scale;
+	time += global::g_env.worldMgr->getDeltaTime()*time_scale;
 	
 	const real32 max_time= clip->getTime();
 	while (time > max_time){

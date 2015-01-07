@@ -30,7 +30,7 @@ void RevoluteJoint::attach(Object& a, Object& b, const WorldVec& anchor_pos){
 }
 
 void RevoluteJoint::attach(Object& o, const WorldVec& anchor_pos){
-	attach(o, global::g_env->physMgr->getWorld().getStaticRigidObject(), anchor_pos);
+	attach(o, global::g_env.physMgr->getWorld().getStaticRigidObject(), anchor_pos);
 }	
 
 void RevoluteJoint::enableMotor(bool m){

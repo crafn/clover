@@ -100,10 +100,10 @@ void Draw::draw(){
 	for (int32 i=0; i<2; ++i)
 		mesh[i]->clear();
 
-	global::g_env->physMgr->getWorld().getB2World().DrawDebugData();
+	global::g_env.physMgr->getWorld().getB2World().DrawDebugData();
 
 	if (gridFlag){
-		Grid& grid= global::g_env->physMgr->getWorld().getGrid();
+		Grid& grid= global::g_env.physMgr->getWorld().getGrid();
 		uint32 chunk_width= grid.getChunkWidth();
 		real64 radius= chunk_width/std::sqrt(2.0);
 		for (auto&& vec : grid.getChunkPositions()){
@@ -185,7 +185,7 @@ void Draw::DrawTransform(const b2Transform& xf){
 }
 
 bool Draw::isVisible(util::Vec2d pos, real64 radius){
-	return global::g_env->visualMgr->getCameraMgr().getSelectedCamera().
+	return global::g_env.visualMgr->getCameraMgr().getSelectedCamera().
 		isWorldBBInViewport(pos, util::Vec2d(radius));
 }
 

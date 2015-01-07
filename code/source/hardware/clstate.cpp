@@ -41,7 +41,7 @@ void ClState::choosePlatformWiselyAndCreateContextNicely(){
 	
 	util::DynArray<util::Str8> preferred;
 	
-	util::Str8 user_preference= global::g_env->cfg->get<util::Str8>("hardware::openCLPlatform", "");
+	util::Str8 user_preference= global::g_env.cfg->get<util::Str8>("hardware::openCLPlatform", "");
 	if (!user_preference.empty())
 		preferred.pushBack(user_preference);
 	

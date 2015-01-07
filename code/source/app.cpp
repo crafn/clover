@@ -36,11 +36,8 @@
 namespace clover {
 
 App::App(const util::Str8& executablePath)
-	: env({}) // Zero-initialize
 {
-	global::g_env= &env;
 	new debug::Print();
-
 	print(debug::Ch::General, debug::Vb::Trivial, getBuildStr());
 
 	// Initial cfg loading should be as early as possible, 
@@ -49,11 +46,11 @@ App::App(const util::Str8& executablePath)
 
 	// Creates custom heap if custom new is enabled in hardware/memory.cpp
 	hardware::createHeap(
-			global::g_env->cfg->get<SizeType>("hardware::heapSize"),
-			global::g_env->cfg->get<SizeType>("hardware::heapBlocks"));
+			global::g_env.cfg->get<SizeType>("hardware::heapSize"),
+			global::g_env.cfg->get<SizeType>("hardware::heapBlocks"));
 
 	global::createMemoryPools(
-			global::g_env->cfg->get<SizeType>("global::singleFrameMemory"));
+			global::g_env.cfg->get<SizeType>("global::singleFrameMemory"));
 
 	auto filemgr= new global::FileMgr();
 	global::File bin(executablePath);
@@ -62,17 +59,17 @@ App::App(const util::Str8& executablePath)
 	filemgr->add(bin.getAbsoluteDirname() + "/data", false, 30);
 
 	/// @todo Add this when multiple cfg files are supported
-	//global::g_env->cfg->loadAdditionalCfgs();
+	//global::g_env.cfg->loadAdditionalCfgs();
 
 	new global::EventMgr();
 
 	new hardware::Device();
-	global::g_env->device->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
+	global::g_env.device->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
 
-	global::g_env->realClock= new util::Clock();
+	global::g_env.realClock= new util::Clock();
 
 	new resources::Cache();
-	global::g_env->resCache->update();
+	global::g_env.resCache->update();
 
 	new audio::AudioMgr();
 	new visual::VisualMgr();
@@ -85,30 +82,30 @@ App::App(const util::Str8& executablePath)
 
 App::~App()
 {
-	delete global::g_env->gameLogic;
-	delete global::g_env->ui;
-	delete global::g_env->guiMgr;
-	delete global::g_env->physMgr;
-	delete global::g_env->debugDraw;
-	delete global::g_env->visualMgr;
-	delete global::g_env->audioMgr;
-	delete global::g_env->resCache;
-	delete global::g_env->realClock; global::g_env->realClock= nullptr;
-	delete global::g_env->device;
-	delete global::g_env->eventMgr;
-	delete global::g_env->fileMgr;
+	delete global::g_env.gameLogic;
+	delete global::g_env.ui;
+	delete global::g_env.guiMgr;
+	delete global::g_env.physMgr;
+	delete global::g_env.debugDraw;
+	delete global::g_env.visualMgr;
+	delete global::g_env.audioMgr;
+	delete global::g_env.resCache;
+	delete global::g_env.realClock; global::g_env.realClock= nullptr;
+	delete global::g_env.device;
+	delete global::g_env.eventMgr;
+	delete global::g_env.fileMgr;
 
 	global::destroyMemoryPools();
 
-	delete global::g_env->cfg;
-	delete global::g_env->debugPrint;
+	delete global::g_env.cfg;
+	delete global::g_env.debugPrint;
 }
 
 void App::run()
 {
 	PROFILE();
 
-	global::g_env->device->updateFrameTime();
+	global::g_env.device->updateFrameTime();
 	util::Clock::updateAll();
 
 	util::Timer sleepTimer;
@@ -116,55 +113,55 @@ void App::run()
 	while (1){
 		global::SingleFrameStorage::value.clear();
 
-		global::g_env->physMgr->preFrameUpdate();
+		global::g_env.physMgr->preFrameUpdate();
 
 		{ PROFILE_("sleep");
 			// FPS limiter
 			sleepTimer.run();
 
-			if (global::g_env->realClock->getDeltaTime() < 0.014)
-				global::g_env->device->sleep(0.013-global::g_env->realClock->getDeltaTime());
+			if (global::g_env.realClock->getDeltaTime() < 0.014)
+				global::g_env.device->sleep(0.013-global::g_env.realClock->getDeltaTime());
 			else
-				global::g_env->device->sleep(0.0001);
+				global::g_env.device->sleep(0.0001);
 			
 			sleepTimer.pause();
 		}
 
-		global::g_env->device->updateEvents();
-		global::g_env->device->updateFrameTime();
+		global::g_env.device->updateEvents();
+		global::g_env.device->updateFrameTime();
 
 		util::Clock::updateAll();
 
-		global::g_env->visualMgr->getCameraMgr().update();
+		global::g_env.visualMgr->getCameraMgr().update();
 
 		// User's input update
 		// Could be after game logic, but does some debug-drawing and updating debug draw in the same frame is nice
 		// (if this is put after debugDraw update things are drawn twice in subsequent frames)
 		// (that problem could be resolved by not drawing debug-things before they're updated once)
-		if (!global::g_env->ui->update())
+		if (!global::g_env.ui->update())
 			break;
 
-		global::g_env->physMgr->update();
+		global::g_env.physMgr->update();
 
-		global::g_env->eventMgr->dispatch();
+		global::g_env.eventMgr->dispatch();
 		nodes::gNodeEventMgr->dispatch();
 
 		// Update world logic
-		global::g_env->gameLogic->update();
-		global::g_env->audioMgr->update();
+		global::g_env.gameLogic->update();
+		global::g_env.audioMgr->update();
 
 		/// @todo Call just after gpu has finished with fluid preupdate
-		global::g_env->physMgr->fluidUpdate();
+		global::g_env.physMgr->fluidUpdate();
 
-		global::g_env->resCache->update();
+		global::g_env.resCache->update();
 
-		global::g_env->guiMgr->update();
+		global::g_env.guiMgr->update();
 
-		global::g_env->physMgr->postFrameUpdate();
-		global::g_env->visualMgr->renderFrame();
+		global::g_env.physMgr->postFrameUpdate();
+		global::g_env.visualMgr->renderFrame();
 	}
 
-	global::g_env->gameLogic->onQuit();
+	global::g_env.gameLogic->onQuit();
 }
 
 } // clover

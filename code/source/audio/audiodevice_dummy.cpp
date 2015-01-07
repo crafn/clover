@@ -6,7 +6,7 @@ namespace clover {
 namespace audio {
 
 DummyAudioDevice::DummyAudioDevice()
-	: outputStream(32, global::g_env->cfg->get<SizeType>("audio::audioBufferSize", 2048))
+	: outputStream(32, global::g_env.cfg->get<SizeType>("audio::audioBufferSize", 2048))
 	, runSimulatorThread(true)
 	, outputSimulatorThread(
 		std::thread(std::bind(&DummyAudioDevice::outputSimulator, this)))
@@ -42,7 +42,7 @@ void DummyAudioDevice::outputSimulator()
 		}
 		
 		// Don't exhaust CPU
-		global::g_env->device->sleep(0.01);
+		global::g_env.device->sleep(0.01);
 	}
 }
 

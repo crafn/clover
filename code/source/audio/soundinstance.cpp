@@ -74,7 +74,7 @@ Sound::ChannelData SoundInstance::getNextSamples(SizeType request_count, SizeTyp
 		
 		streams.clear();
 		
-		global::g_env->resCache->setResourceToErrorState<Sound>(sound->getIdentifierAsString());
+		global::g_env.resCache->setResourceToErrorState<Sound>(sound->getIdentifierAsString());
 
 		// Create streams for error-sound
 		for (SizeType i=0; i<sound->getChannelCount(); ++i){

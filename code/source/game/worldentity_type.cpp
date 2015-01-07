@@ -23,7 +23,7 @@ void WeType::resourceUpdate(bool load, bool force){
 		
 		try {
 			nodeGroupChangeListener.clear();
-			nodeGroup= &global::g_env->resCache->getResource<nodes::CompositionNodeLogicGroup>(nodeGroupAttribute.get());
+			nodeGroup= &global::g_env.resCache->getResource<nodes::CompositionNodeLogicGroup>(nodeGroupAttribute.get());
 			nodeGroupChangeListener.listen(*nodeGroup, [&] (){
 				// Changes of node groups are detected separately in WorldEntities, so no OnChangeCb::trigger();
 				//print(debug::Ch::General, debug::Vb::Trivial, "WeType: NodeGroup changed");

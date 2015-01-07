@@ -24,7 +24,7 @@ void ShadowCasterST::setEntity(const visual::ModelEntityDef& re){
 		texture= 0;
 
 	if (!texture)
-		texture= global::g_env->resCache->getResource<visual::Texture>("Texture_Black").getDId();
+		texture= global::g_env.resCache->getResource<visual::Texture>("Texture_Black").getDId();
 }
 
 void ShadowCasterST::use(){

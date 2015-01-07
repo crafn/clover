@@ -11,7 +11,7 @@ namespace clover {
 namespace global {
 
 /// Manages global configuration variables
-/// @todo Rename to `Cfg` to match `g_env->cfg`
+/// @todo Rename to `Cfg` to match `g_env.cfg`
 class CfgMgr {
 public:
 	CfgMgr();
