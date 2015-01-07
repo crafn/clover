@@ -1,4 +1,5 @@
-#include "debugdraw.hpp"
+#include "draw.hpp"
+#include "global/env.hpp"
 #include "hardware/glstate.hpp"
 #include "util/time.hpp"
 #include "util/polygon.hpp"
@@ -11,9 +12,7 @@
 namespace clover {
 namespace debug {
 
-DebugDraw *gDebugDraw= nullptr;
-
-DebugDraw::Primitive::Primitive():
+Draw::Primitive::Primitive():
 			type(Line),
 			rotation(0),
 			timeLeft(0.0),
@@ -23,7 +22,7 @@ DebugDraw::Primitive::Primitive():
 			filled(false){
 }
 
-DebugDraw::Primitive::Primitive(Primitive&& other)
+Draw::Primitive::Primitive(Primitive&& other)
 		: type(other.type)
 		, rotation(other.rotation)
 		, timeLeft(other.timeLeft)
@@ -35,11 +34,11 @@ DebugDraw::Primitive::Primitive(Primitive&& other)
 	entity.apply(other.entity);
 }
 		
-DebugDraw::Primitive::~Primitive(){
+Draw::Primitive::~Primitive(){
 	delete model;
 }
 
-void DebugDraw::Primitive::updateGeometry(){
+void Draw::Primitive::updateGeometry(){
 	visual::TriMesh m;
 
 	visual::TextModel* text=0;
@@ -169,30 +168,37 @@ void DebugDraw::Primitive::updateGeometry(){
 	}
 }
 
-DebugDraw::DebugDraw()
-		: physicsDraw(new physics::Draw()){
+Draw::Draw()
+{
+	if (!global::g_env->debugDraw)
+		global::g_env->debugDraw= this;
+
+	physicsDraw= new physics::Draw();
 }
 
-DebugDraw::~DebugDraw(){
+Draw::~Draw(){
 	delete physicsDraw;
 	physicsDraw= nullptr;
+
+	if (global::g_env->debugDraw == this)
+		global::g_env->debugDraw= nullptr;
 }
 
-void DebugDraw::setEnabled(DrawFlag f, bool enable){
+void Draw::setEnabled(DrawFlag f, bool enable){
 	drawFlags[flagToIndex(f)]= enable;
 	
 	if (f == DrawFlag::Physics){
 		physicsDraw->setActive(enable);
 	}
 }
-bool DebugDraw::isEnabled(DrawFlag f){
+bool Draw::isEnabled(DrawFlag f){
 	return drawFlags[flagToIndex(f)];
 }
-void DebugDraw::toggle(DrawFlag f){
+void Draw::toggle(DrawFlag f){
 	drawFlags[flagToIndex(f)]= !isEnabled(f);
 }
 
-void DebugDraw::addLine(util::Coord p1, util::Coord p2, util::Color color, real32 time, bool fade){
+void Draw::addLine(util::Coord p1, util::Coord p2, util::Color color, real32 time, bool fade){
 	if (!isEnabled(DrawFlag::Common)) return;
 
 	primitives.pushBack(Primitive());
@@ -208,7 +214,7 @@ void DebugDraw::addLine(util::Coord p1, util::Coord p2, util::Color color, real3
 	p.updateGeometry();
 }
 
-void DebugDraw::addCross(util::Coord p1, util::Color color, real32 size, real32 time, bool fade){
+void Draw::addCross(util::Coord p1, util::Color color, real32 size, real32 time, bool fade){
 	if (!isEnabled(DrawFlag::Common)) return;
 
 	primitives.pushBack(Primitive());
@@ -225,7 +231,7 @@ void DebugDraw::addCross(util::Coord p1, util::Color color, real32 size, real32 
 	p.updateGeometry();
 }
 
-void DebugDraw::addRect(util::Coord center, util::Coord radius, util::Color color, real32 rotation, real32 time, bool fade, bool filled){
+void Draw::addRect(util::Coord center, util::Coord radius, util::Color color, real32 rotation, real32 time, bool fade, bool filled){
 	if (!isEnabled(DrawFlag::Common)) return;
 
 	primitives.pushBack(Primitive());
@@ -245,11 +251,11 @@ void DebugDraw::addRect(util::Coord center, util::Coord radius, util::Color colo
 	p.updateGeometry();
 }
 
-void DebugDraw::addFilledRect(util::Coord center, util::Coord radius, util::Color color, real32 rotation, real32 time, bool fade){
+void Draw::addFilledRect(util::Coord center, util::Coord radius, util::Color color, real32 rotation, real32 time, bool fade){
 	addRect(center,radius,color,rotation,time,fade,true);
 }
 
-void DebugDraw::addCircle(util::Coord center, util::Coord radius, util::Color color, real32 time, bool fade, bool filled){
+void Draw::addCircle(util::Coord center, util::Coord radius, util::Color color, real32 time, bool fade, bool filled){
 	if (!isEnabled(DrawFlag::Common)) return;
 
 	primitives.pushBack(Primitive());
@@ -267,11 +273,11 @@ void DebugDraw::addCircle(util::Coord center, util::Coord radius, util::Color co
 	p.updateGeometry();
 }
 
-void DebugDraw::addFilledCircle(util::Coord center, util::Coord radius,	 util::Color color, real32 time, bool fade){
+void Draw::addFilledCircle(util::Coord center, util::Coord radius,	 util::Color color, real32 time, bool fade){
 	addCircle(center,radius,color,time,fade,true);
 }
 
-void DebugDraw::addText(util::Coord pos, util::Str8 str, util::Vec2d alignment, util::Color color, real32 time, bool fade){
+void Draw::addText(util::Coord pos, util::Str8 str, util::Vec2d alignment, util::Color color, real32 time, bool fade){
 	if (!isEnabled(DrawFlag::Common)) return;
 
 	primitives.pushBack(Primitive());
@@ -288,11 +294,11 @@ void DebugDraw::addText(util::Coord pos, util::Str8 str, util::Vec2d alignment, 
 	p.updateGeometry();
 }
 
-void DebugDraw::addFilledPolygon(util::DynArray<util::Coord>& vertices, util::Color color, real32 time, bool fade){
+void Draw::addFilledPolygon(util::DynArray<util::Coord>& vertices, util::Color color, real32 time, bool fade){
 	addPolygon(vertices, color, time, fade, true);
 }
 
-void DebugDraw::addPolygon(util::DynArray<util::Coord>& vertices,
+void Draw::addPolygon(util::DynArray<util::Coord>& vertices,
 				util::Color color,
 				real32 time,
 				bool fade,
@@ -323,7 +329,7 @@ void DebugDraw::addPolygon(util::DynArray<util::Coord>& vertices,
 	p.updateGeometry();
 }
 
-void DebugDraw::update(){
+void Draw::update(){
 	if (isEnabled(DrawFlag::Physics)){
 		
 		physicsDraw->draw();

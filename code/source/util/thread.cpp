@@ -1,5 +1,5 @@
 #include "thread.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 #include <cstring>
 #include <map>

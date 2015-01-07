@@ -1,5 +1,5 @@
 #include "box2d.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "object_rigid.hpp"
 #include "fixture_rigid.hpp"
 #include "phys_mgr.hpp"

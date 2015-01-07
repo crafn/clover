@@ -27,7 +27,7 @@ class Draw;
 } // physics
 namespace debug {
 
-class DebugDraw {
+class Draw {
 	struct Primitive {
 		enum Type {
 
@@ -74,8 +74,8 @@ public:
 		Last // Flag count
 	};
 
-	DebugDraw();
-	virtual ~DebugDraw();
+	Draw();
+	virtual ~Draw();
 
 	void setEnabled(DrawFlag f, bool enable=true);
 	bool isEnabled(DrawFlag f);
@@ -153,8 +153,6 @@ private:
 	
 	physics::Draw* physicsDraw;
 };
-
-extern DebugDraw *gDebugDraw;
 
 } // debug
 } // clover

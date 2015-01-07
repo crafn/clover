@@ -1,5 +1,5 @@
 #include "devlogic.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/env.hpp"
 #include "global/event.hpp"
@@ -71,7 +71,7 @@ DevLogic::DevLogic()
 void DevLogic::update(){
 	PROFILE();
 
-	debug::gDebugPrint.updateBuffer();
+	global::g_env->debugPrint->updateBuffer();
 	
 	// SubSystem info update
 

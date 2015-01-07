@@ -1,4 +1,4 @@
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "global/event.hpp"
 #include "nodes/compositionnodelogicgroup.hpp"
 #include "nodes/native_instances/nodeinstance_we_interface.hpp"
@@ -234,7 +234,7 @@ void WorldEntity::update(){
 	shallowUpdate();
 
 	if (errorState){
-		debug::gDebugDraw->addText(
+		global::g_env->debugDraw->addText(
 				util::Coord::W(position),
 				util::Str8::format("Broken We: %s", type->getName().cStr()),
 				util::Vec2d{0.5, 0.5},

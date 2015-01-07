@@ -1,6 +1,6 @@
 #include "str8.hpp"
 #include "ensure.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/dyn_array.hpp"
 
 #include <cstring>

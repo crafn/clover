@@ -1,6 +1,6 @@
 #include "box2d.hpp"
 #include "chunk_util.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "draw.hpp"
 #include "fluid_mgr.hpp"
 #include "global/cfg_mgr.hpp"
@@ -59,7 +59,7 @@ void World::init(){
 	def.setStatic(true);
 	staticRigidObject= new RigidObject(def);
 
-	box2dWorld->SetDebugDraw(&debug::gDebugDraw->getPhysicsDraw());
+	box2dWorld->SetDebugDraw(&global::g_env->debugDraw->getPhysicsDraw());
 }
 
 void World::step(real64 dt, int32 vel_iterations, int32 pos_iterations){
@@ -373,7 +373,7 @@ void World::breakByCollision(const BreakingCollision& col){
 		real64 smooth_amount= 0.7;
 		real64 simplify_amount= 0.2;
 		real64 smooth_radius= col.obtusionCircleRadius*1.5;
-		debug::gDebugDraw->addFilledCircle(col.hitPoint, smooth_radius);
+		global::g_env->debugDraw->addFilledCircle(col.hitPoint, smooth_radius);
 
 		util::PolyClipper clipper;
 		for (auto& obj : objects){

@@ -16,7 +16,7 @@ ConsoleEcUi::ConsoleEcUi(ConsoleEc& comp):
 	filterPanelLayout(gui::LinearLayoutElement::Vertical, util::Coord::VF(0), filterPanelRadius()),
 	verbositySliderLabel("Verbosity",	util::Coord::VF(0)),
 	verbositySlider(gui::SliderElement::Horizontal,	util::Coord::VF(0), util::Coord::VF(0.3)),
-	filterLabel("DebugPrint channels", util::Coord::VF(0)),
+	filterLabel("debug::Print channels", util::Coord::VF(0)),
 	filterLayout(util::Coord::VF(0), util::Coord::VF({0.25, 0.3}), {3, filterCheckCount/2+1}){
 
 	contentLayout.setMargin(false);
@@ -63,13 +63,13 @@ ConsoleEcUi::ConsoleEcUi(ConsoleEc& comp):
 	});
 	
 	verbositySlider.setOnValueChangeCallback([&] (gui::SliderElement& e){
-		util::Str8 value_str(debug::DebugPrint::getVerbosityString((debug::Vb)e.getFixedValue()));
-		util::Str8 text= util::Str8("DebugPrint verbosity: ") + value_str;
+		util::Str8 value_str(debug::Print::getVerbosityString((debug::Vb)e.getFixedValue()));
+		util::Str8 text= util::Str8("debug::Print verbosity: ") + value_str;
 
 		verbositySliderLabel.setText(text);
 	});
 
-	// DebugPrint channel filter checkboxes
+	// Channel filter checkboxes
 	filterPanelLayout.addSubElement(filterLabel);
 	filterPanelLayout.addSubElement(filterLayout);
 
@@ -79,7 +79,7 @@ ConsoleEcUi::ConsoleEcUi(ConsoleEc& comp):
 	filterChecks.reserve(filterCheckCount);
 	for (uint32 i=0; i<filterCheckCount; ++i){
 		filterChecks.pushBack(std::move(
-			gui::CheckBoxElement(debug::DebugPrint::getChannelString((debug::Ch)i), util::Coord::VF(0))));
+			gui::CheckBoxElement(debug::Print::getChannelString((debug::Ch)i), util::Coord::VF(0))));
 
 		filterChecks.back().setOnValueModifyCallback([=] (gui::CheckBoxElement& e){
 			getComponent().setChannelActive((debug::Ch)i, e.getValue());
@@ -104,7 +104,7 @@ ConsoleEcUi::~ConsoleEcUi(){
 void ConsoleEcUi::onEvent(global::Event& e){
 	switch(e.getType()){
 		case global::Event::OnConsoleBufferUpdate:
-			append(*e(global::Event::Object).getPtr<debug::DebugPrint::Buffer>());
+			append(*e(global::Event::Object).getPtr<debug::Print::Buffer>());
 		break;
 		
 		default: break;
@@ -135,7 +135,7 @@ void ConsoleEcUi::onResize(){
 	updateLineLabels();
 }
 
-void ConsoleEcUi::append(const debug::DebugPrint::Buffer& buf){
+void ConsoleEcUi::append(const debug::Print::Buffer& buf){
 	for (auto& msg : buf){
 		
 		auto separated_lines= util::Str8(msg.string.c_str()).splitted('\n');

@@ -2,6 +2,8 @@
 #define CLOVER_DEBUGPRINT_HPP
 
 #include "build.hpp"
+#include "global/env.hpp"
+#include "log.hpp"
 #include "util/mutex.hpp"
 #include <bitset>
 #include <vector>
@@ -48,7 +50,7 @@ enum class Vb {
 };
 
 /// Handles all debug printing
-class ENGINE_API DebugPrint {
+class ENGINE_API Print {
 public:
 	static constexpr SizeType channelCount= static_cast<SizeType>(Ch::Last);
 	static constexpr SizeType verbosityCount= static_cast<SizeType>(Vb::Last);
@@ -56,7 +58,7 @@ public:
 	static util::Str8& getChannelString(Ch id);
 	static util::Str8& getVerbosityString(Vb v);
 
-	DebugPrint();
+	Print();
 
 	void setVerbosity(Vb);
 	Vb getVerbosity() const { return verbosity; }
@@ -82,16 +84,14 @@ private:
 	std::bitset<static_cast<SizeType>(Ch::Last)> filter;
 	Vb verbosity;
 	Buffer buffer;
+	Log log;
 };
-
-/// @todo Move to global::g_env
-extern ENGINE_API DebugPrint gDebugPrint;
 
 /// Convenience function for debug printing
 /// @example print(debug::Ch::Audio, debug::Vb::Trivial, "test %i", 5);
 template <typename... Args>
 void print(Ch ch, Vb vb, const char* fmt, Args&&... args)
-{ gDebugPrint(ch, vb, fmt, std::forward<Args>(args)...); }
+{ (*global::g_env->debugPrint)(ch, vb, fmt, std::forward<Args>(args)...); }
 
 /// Less verbose printing command for temp purposes
 template <typename... Args>

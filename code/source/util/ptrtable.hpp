@@ -4,7 +4,7 @@
 #include "arrayview.hpp"
 #include "build.hpp"
 #include "global/exception.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/dyn_array.hpp"
 
 namespace clover {

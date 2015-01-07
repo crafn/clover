@@ -2,7 +2,7 @@
 #include "exception.hpp"
 #include "misc.hpp"
 #include "rawarchive.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "game/worldentity_handle.hpp"
 #include "util/string.hpp"
 

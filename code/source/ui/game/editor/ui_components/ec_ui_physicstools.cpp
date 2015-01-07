@@ -15,7 +15,7 @@ PhysicsToolsEcUi::PhysicsToolsEcUi(PhysicsToolsEc& comp):
 		secondaryActionLabel("-", util::Coord::VF(0)),
 	drawLayout(gui::LinearLayoutElement::Vertical, util::Coord::VF(0), util::Coord::VF({0.25, 0.3})),
 	drawCheckLayout(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.25, 0.03})),
-		drawCheck("Physics debugdraw",				util::Coord::VF(0)),
+		drawCheck("Physics draw",				util::Coord::VF(0)),
 		drawFlagCheckLayout({	gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
 								gui::LinearLayoutElement(gui::LinearLayoutElement::Horizontal, util::Coord::VSt(0), util::Coord::VF({0.2,0.03})),
@@ -121,10 +121,10 @@ PhysicsToolsEcUi::PhysicsToolsEcUi(PhysicsToolsEc& comp):
 
 	if (infoPhysicsDrawCheck.isToggled()){
 		if (infoPhysicsDrawCheck.isChecked()){
-			debug::gDebugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics);
+			global::g_env->debugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics);
 		}
 		else {
-			debug::gDebugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics, false);
+			global::g_env->debugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics, false);
 		}
 	}
 
@@ -144,7 +144,7 @@ PhysicsToolsEcUi::PhysicsToolsEcUi(PhysicsToolsEc& comp):
 				default: ensure_msg(0, "Invalid index for enum");
 			}
 
-			debug::gDebugDraw->getPhysicsDraw().setFlag(f, state);
+			global::g_env->debugDraw->getPhysicsDraw().setFlag(f, state);
 		}
 	}
 

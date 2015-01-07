@@ -1,6 +1,6 @@
 #include "pathattributevalue.hpp"
 #include "util/ensure.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 namespace clover {
 namespace resources {

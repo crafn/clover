@@ -1,7 +1,7 @@
 #include "worldentity_pack.hpp"
 #include "util/misc.hpp"
 #include "global/exception.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 namespace clover {
 namespace game {

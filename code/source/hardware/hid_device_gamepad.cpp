@@ -1,4 +1,4 @@
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "hid_device_gamepad.hpp"
 
 #include <GLFW/glfw3.h>

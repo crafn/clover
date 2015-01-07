@@ -1,5 +1,5 @@
 #include "mem_pool_linear.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/ensure.hpp"
 
 namespace clover {

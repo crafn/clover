@@ -1,6 +1,6 @@
 #include "font.hpp"
 #include "global/exception.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "visual/bitmap.hpp"
 #include "hardware/glstate.hpp"
 #include "util/misc.hpp"

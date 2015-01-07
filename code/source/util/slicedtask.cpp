@@ -1,5 +1,5 @@
 #include "slicedtask.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/ensure.hpp"
 #include "util/profiling.hpp"
 #include "util/time.hpp"

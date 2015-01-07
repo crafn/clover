@@ -1,5 +1,5 @@
 #include "math.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/exception.hpp"
 
 namespace clover {

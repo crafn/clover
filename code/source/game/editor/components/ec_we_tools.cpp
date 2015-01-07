@@ -1,5 +1,5 @@
 #include "ec_we_tools.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "game/world_mgr.hpp"
 #include "game/worldentity.hpp"
 #include "game/worldentity_mgr.hpp"
@@ -27,11 +27,11 @@ void WeToolsEc::spawn(uint32 name_id){
 }
 
 void WeToolsEc::setDebugDrawActive(bool b){
-	debug::gDebugDraw->setEnabled(debug::DebugDraw::DrawFlag::Common, b);
+	global::g_env->debugDraw->setEnabled(debug::Draw::DrawFlag::Common, b);
 }
 
 bool WeToolsEc::isDebugDrawActive() const {
-	return debug::gDebugDraw->isEnabled(debug::DebugDraw::DrawFlag::Common);
+	return global::g_env->debugDraw->isEnabled(debug::Draw::DrawFlag::Common);
 }
 
 void WeToolsEc::setChunksLocked(bool b){

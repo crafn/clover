@@ -9,7 +9,7 @@
 
 #include "hardware/clstate.hpp"
 
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/cfg_mgr.hpp"
 #include "glstate.hpp"
 #include "global/file.hpp"

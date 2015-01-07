@@ -8,7 +8,7 @@
 #include "util/any.hpp"
 #include "util/ensure.hpp"
 // .tpp
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 namespace clover {
 namespace nodes {

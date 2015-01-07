@@ -1,5 +1,5 @@
 #include "nodeslot_ui.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "gui/gui_mgr.hpp"
 #include "signalvalue_ui_factory.hpp"
 

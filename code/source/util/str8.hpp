@@ -5,7 +5,7 @@
 #include "hash.hpp"
 #include "dyn_array.hpp"
 #include "util/traits.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 #include <cstdarg>
 #include <iostream>

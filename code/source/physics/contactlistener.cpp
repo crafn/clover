@@ -1,5 +1,5 @@
 #include "contactlistener.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "ghostlydynamics.hpp"
 #include "physics/b2_fixtureuserdata.hpp"
 #include "physics/fixture.hpp"

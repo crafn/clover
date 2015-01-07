@@ -9,7 +9,7 @@
 #include "util/dyn_array.hpp"
 #include "util/objectnode.hpp"
 // .tpp
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "resources/exception.hpp"
 #include "resources/attributeparseinfo.hpp"
 #include "util/string.hpp"

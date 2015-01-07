@@ -3,7 +3,7 @@
 
 #include "../net.hpp"
 #include "build.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "msg.hpp"
 #include "util/hashmap.hpp"
 #include "util/queue.hpp"

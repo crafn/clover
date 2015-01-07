@@ -1,5 +1,5 @@
 #include "audiodevice_pa.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/cfg_mgr.hpp"
 #include "util/dyn_array.hpp"
 #include "global/exception.hpp"

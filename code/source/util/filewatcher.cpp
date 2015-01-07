@@ -1,6 +1,6 @@
 #include "filewatcher.hpp"
 #include "util/string.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/map.hpp"
 
 #if OS == OS_LINUX

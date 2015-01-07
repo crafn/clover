@@ -1,7 +1,7 @@
 #include "build.hpp"
 #if OS == OS_LINUX
 #include "filewatcher_impl_linux.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/ensure.hpp"
 #include "util/thread.hpp"
 

@@ -1,19 +1,17 @@
-#include "debuglog.hpp"
+#include "log.hpp"
 
 namespace clover {
 namespace debug {
 
-DebugLog gDebugLog;
-
-DebugLog::DebugLog(){
+Log::Log(){
 	file.open("debuglog.txt");
 }
 
-DebugLog::~DebugLog(){
+Log::~Log(){
 	file.close();
 }
 
-void DebugLog::operator()(const char8 * msg){
+void Log::operator()(const char8 * msg){
 	if (file.good()){
 		file << msg << "\n";
 		file.flush();

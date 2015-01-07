@@ -1,5 +1,5 @@
 #include "baseinputslot.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/profiling.hpp"
 
 namespace clover {

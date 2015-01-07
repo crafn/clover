@@ -1,5 +1,5 @@
 #include "model_text.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/env.hpp"
 #include "resources/cache.hpp"
 

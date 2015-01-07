@@ -1,5 +1,5 @@
 #include "hid_mgr.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/event.hpp"
 #include "global/exception.hpp"

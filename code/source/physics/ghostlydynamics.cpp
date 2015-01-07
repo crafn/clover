@@ -1,5 +1,5 @@
 #include "ghostlydynamics.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "fixture_rigid.hpp"
 #include "friction.hpp"
 #include "object.hpp"

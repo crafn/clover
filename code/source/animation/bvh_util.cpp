@@ -1,5 +1,5 @@
 #include "bvh_util.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/exception.hpp"
 #include "util/hashmap.hpp"
 #include "util/linkedlist.hpp"

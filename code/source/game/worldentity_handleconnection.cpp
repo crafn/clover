@@ -1,5 +1,5 @@
 #include "worldentity_handleconnection.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 namespace clover {
 namespace game {

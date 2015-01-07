@@ -1,6 +1,6 @@
 #include "ec_physicstools.hpp"
 #include "collision/query.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "gui/cursor.hpp"
 #include "gui/gui_mgr.hpp"
 #include "hardware/mouse.hpp"
@@ -39,31 +39,31 @@ void PhysicsToolsEc::update(){
 }
 
 void PhysicsToolsEc::setDrawingActive(bool b){
-	debug::gDebugDraw->setEnabled(debug::DebugDraw::DrawFlag::Physics, b);
+	global::g_env->debugDraw->setEnabled(debug::Draw::DrawFlag::Physics, b);
 }
 
 bool PhysicsToolsEc::isDrawingActive() const {
-	return debug::gDebugDraw->isEnabled(debug::DebugDraw::DrawFlag::Physics);
+	return global::g_env->debugDraw->isEnabled(debug::Draw::DrawFlag::Physics);
 }
 
 void PhysicsToolsEc::setDrawingFlag(physics::Draw::Flag f, bool b){
-	debug::gDebugDraw->getPhysicsDraw().setFlag(f, b);
+	global::g_env->debugDraw->getPhysicsDraw().setFlag(f, b);
 }
 
 bool PhysicsToolsEc::getDrawingFlag(physics::Draw::Flag f) const {
-	return debug::gDebugDraw->getPhysicsDraw().getFlag(f);
+	return global::g_env->debugDraw->getPhysicsDraw().getFlag(f);
 }
 
 void PhysicsToolsEc::setDrawingAlpha(real32 a){
-	debug::gDebugDraw->getPhysicsDraw().setAlpha(a);
+	global::g_env->debugDraw->getPhysicsDraw().setAlpha(a);
 }
 
 real32 PhysicsToolsEc::getDrawingAlpha() const {
-	return debug::gDebugDraw->getPhysicsDraw().getAlpha();
+	return global::g_env->debugDraw->getPhysicsDraw().getAlpha();
 }
 
 physics::Draw::Flag PhysicsToolsEc::getFlagEnum(int32 i) const {
-	return debug::gDebugDraw->getPhysicsDraw().getFlagEnum(i);
+	return global::g_env->debugDraw->getPhysicsDraw().getFlagEnum(i);
 }
 
 void PhysicsToolsEc::onGrabAction(bool start){

@@ -1,5 +1,5 @@
 #include "nodeinstance_logicor.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "resources/exception.hpp"
 
 namespace clover {

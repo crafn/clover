@@ -1,6 +1,6 @@
 #include "font_mgr.hpp"
 #include "global/exception.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/string.hpp"
 
 namespace clover {

@@ -4,7 +4,7 @@
 #include "audiosourcehandle.hpp"
 #include "audioreceiver.hpp"
 #include "audioreceiverhandle.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "global/env.hpp"
 #include "global/exception.hpp"
 #include "hardware/device.hpp"

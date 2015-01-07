@@ -1,5 +1,5 @@
 #include "polygon.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/profiling.hpp"
 #include <polypartition.h>
 

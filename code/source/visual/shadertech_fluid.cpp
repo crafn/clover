@@ -1,5 +1,5 @@
 #include "shadertech_fluid.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "global/env.hpp"
 #include "physics/draw.hpp"
 #include "physics/fluid_mgr.hpp"
@@ -18,7 +18,7 @@ namespace clover {
 namespace visual {
 
 static bool useFluidDebugDraw(){
-	return debug::gDebugDraw->getPhysicsDraw().getFlag(
+	return global::g_env->debugDraw->getPhysicsDraw().getFlag(
 				physics::Draw::Flag::FluidParticles);
 }
 

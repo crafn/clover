@@ -3,7 +3,7 @@
 
 #include "../editorcomponent.hpp"
 #include "build.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 namespace clover {
 namespace game { namespace editor {

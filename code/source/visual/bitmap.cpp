@@ -1,5 +1,5 @@
 #include "visual/bitmap.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "hardware/glstate.hpp"
 
 namespace clover {

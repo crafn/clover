@@ -1,6 +1,6 @@
 #include "fh_save.hpp"
 #include "util/dyn_array.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "game/worldentity_handle.hpp"
 
 namespace clover {

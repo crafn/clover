@@ -9,17 +9,17 @@ namespace clover {
 namespace debug {
 
 /// Performs logging to file
-class DebugLog {
-	std::ofstream file;
+class Log {
 public:
-	DebugLog();
-	virtual ~DebugLog();
-	
+	Log();
+	virtual ~Log();
+
 	/// Appends row
 	void operator()(const char8 * msg);
-};
 
-extern DebugLog gDebugLog;
+private:
+	std::ofstream file;
+};
 
 } // debug
 } // clover

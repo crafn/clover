@@ -1,6 +1,6 @@
 #include "app.hpp"
 #include "audio/audio_mgr.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "global/env.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/event_mgr.hpp"
@@ -39,6 +39,8 @@ App::App(const util::Str8& executablePath)
 	: env({}) // Zero-initialize
 {
 	global::g_env= &env;
+	new debug::Print();
+
 	print(debug::Ch::General, debug::Vb::Trivial, getBuildStr());
 
 	// Initial cfg loading should be as early as possible, 
@@ -74,7 +76,7 @@ App::App(const util::Str8& executablePath)
 
 	new audio::AudioMgr();
 	new visual::VisualMgr();
-	debug::gDebugDraw= new debug::DebugDraw();
+	new debug::Draw();
 	new physics::PhysMgr();
 	gui::gGuiMgr= new gui::GuiMgr();
 	ui::game::gBaseUi= new ui::game::BaseUi();
@@ -87,7 +89,7 @@ App::~App()
 	delete ui::game::gBaseUi; ui::game::gBaseUi= nullptr;
 	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
 	delete global::g_env->physMgr;
-	delete debug::gDebugDraw; debug::gDebugDraw= nullptr;
+	delete global::g_env->debugDraw;
 	delete global::g_env->visualMgr;
 	delete global::g_env->audioMgr;
 	delete global::g_env->resCache; global::g_env->resCache= nullptr;

@@ -1,5 +1,5 @@
 #include "element.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "gui_mgr.hpp"
 #include "ui/userinput.hpp"
 #include "visual/entity_def_model.hpp"
@@ -366,7 +366,7 @@ void Element::preUpdate(){
 		if (elementType == LinearLayout)
 			c= util::Color{0.0,0.0,0.0,0.8};
 		
-		debug::gDebugDraw->addRect(position, radius, c);
+		global::g_env->debugDraw->addRect(position, radius, c);
 		
 	}
 	else {

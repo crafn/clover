@@ -1,7 +1,7 @@
 #include "parallel_program.hpp"
 #include "hardware/clstate.hpp"
 #include "parallel_queue.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "hardware/device.hpp"
 #include "visual/vertexarrayobject.hpp"
 #include "string.hpp"

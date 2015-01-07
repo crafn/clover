@@ -1,5 +1,5 @@
 #include "uniform_uv.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 
 namespace clover {
 namespace util {

@@ -1,7 +1,7 @@
 #include "device.hpp"
 #include "audio/audiodevice.hpp"
 #include "audio/audiodevice_dummy.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "hardware/audiodevice_pa.hpp"
 #include "hardware/clstate.hpp"
 #include "hardware/glstate.hpp"

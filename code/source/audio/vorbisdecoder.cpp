@@ -1,5 +1,5 @@
 #include "vorbisdecoder.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "util/ensure.hpp"
 #include "global/exception.hpp"
 #include "resources/exception.hpp"

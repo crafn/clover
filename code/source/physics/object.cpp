@@ -1,5 +1,5 @@
 #include "object.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "fixture.hpp"
 #include "global/event.hpp"
 #include "joint.hpp"
@@ -101,7 +101,7 @@ void Object::set3dTransform(const Transform3& t_3d){
 		print(debug::Ch::General, debug::Vb::Trivial, "vec: (%f, %f, %f)",
 			v.x, v.y, v.z);*/
 
-		debug::gDebugDraw->addLine(t_2d.translation, t_2d.translation + 
+		global::g_env->debugDraw->addLine(t_2d.translation, t_2d.translation + 
 				util::Vec2d{cos(t_2d.rotation), sin(t_2d.rotation)});
 	}
 	setTransform(t_2d);

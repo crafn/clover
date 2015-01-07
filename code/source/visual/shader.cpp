@@ -1,5 +1,5 @@
 #include "shader.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "resources/exception.hpp"
 #include "hardware/device.hpp"
 #include "hardware/glstate.hpp"

@@ -3,7 +3,7 @@
 #include "global/cfg_mgr.hpp"
 #include "global/env.hpp"
 #include "global/memory.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "hardware/device.hpp"
 #include "nodes/native_instances/nodeinstance_we_edgespawner.hpp"
 #include "physics.hpp"

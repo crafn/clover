@@ -1,5 +1,5 @@
 #include "quaternion.hpp"
-#include "debug/debugprint.hpp"
+#include "debug/print.hpp"
 #include "ensure.hpp"
 #include "util/string.hpp"
 

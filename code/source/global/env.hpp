@@ -2,10 +2,10 @@
 #define CLOVER_GLOBAL_ENV_HPP
 
 #include "build.hpp"
-#include "hardware/dll.hpp"
 
 namespace clover {
 namespace audio { class AudioMgr; }
+namespace debug { class Draw; class Print; }
 namespace game { class BaseGameLogic; class WorldMgr; }
 namespace global { class EventMgr; }
 namespace physics { class PhysMgr; }
@@ -17,6 +17,8 @@ namespace global {
 struct Env {
 	/// @todo Add rest
 	audio::AudioMgr* audioMgr;
+	debug::Print* debugPrint;
+	debug::Draw* debugDraw;
 	game::BaseGameLogic* gameLogic;
 	game::WorldMgr* worldMgr;
 	global::EventMgr* eventMgr;

@@ -1,7 +1,7 @@
 #include "entity_mgr.hpp"
 #include "camera.hpp"
 #include "camera_mgr.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "entitylogic_light.hpp"
 #include "entity_def_light.hpp"
 #include "entity_def_model.hpp"

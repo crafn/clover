@@ -1,5 +1,5 @@
 #include "camera_mgr.hpp"
-#include "debug/debugdraw.hpp"
+#include "debug/draw.hpp"
 #include "entity_mgr.hpp"
 #include "global/cfg_mgr.hpp"
 #include "global/env.hpp"
@@ -82,7 +82,7 @@ VisualMgr::~VisualMgr(){
 
 void VisualMgr::renderFrame(){
 	{ PROFILE_("render");
-		debug::gDebugDraw->update();
+		global::g_env->debugDraw->update();
 		particleMgr->update();
 		hardware::gDevice->clearBuffers();
 		entityMgr->draw();

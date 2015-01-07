@@ -35,7 +35,7 @@ protected:
 	virtual void onResize();
 	
 private:
-	void append(const debug::DebugPrint::Buffer& b);
+	void append(const debug::Print::Buffer& b);
 	void updateLineLabels();
 	
 	void readValues();
