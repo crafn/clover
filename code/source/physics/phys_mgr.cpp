@@ -33,14 +33,14 @@ struct SimulationParams {
 SimulationParams getSimulationParamsFromCfg(){
 	SimulationParams s;
 	
-	s.timeStep= global::gCfgMgr->get<real64>("physics::timeStep", 1.0/30.0);
-	s.maxSteps= global::gCfgMgr->get<int32>("physics::maxStepsInFrame", 4);
-	s.velocityIterations= global::gCfgMgr->get<int32>("physics::velocityIterations", 30);
-	s.positionIterations= global::gCfgMgr->get<int32>("physics::positionIterations", 30);
-	s.fluidTimeStep= global::gCfgMgr->get<real64>("physics::fluidTimeStep", 1.0/30.0);
+	s.timeStep= global::g_env->cfg->get<real64>("physics::timeStep", 1.0/30.0);
+	s.maxSteps= global::g_env->cfg->get<int32>("physics::maxStepsInFrame", 4);
+	s.velocityIterations= global::g_env->cfg->get<int32>("physics::velocityIterations", 30);
+	s.positionIterations= global::g_env->cfg->get<int32>("physics::positionIterations", 30);
+	s.fluidTimeStep= global::g_env->cfg->get<real64>("physics::fluidTimeStep", 1.0/30.0);
 	
-	s.useEstimation= global::gCfgMgr->get<bool>("physics::useEstimation", true);
-	s.estimationTimeOffset= global::gCfgMgr->get<real64>("physics::estimationTimeOffset", -0.5);
+	s.useEstimation= global::g_env->cfg->get<bool>("physics::useEstimation", true);
+	s.estimationTimeOffset= global::g_env->cfg->get<real64>("physics::estimationTimeOffset", -0.5);
 
 	return (s);
 }
@@ -48,7 +48,7 @@ SimulationParams getSimulationParamsFromCfg(){
 PhysMgr::PhysMgr()
 		: rigidObjectMem(
 				sizeof(RigidObject)*
-				global::gCfgMgr->get<SizeType>(
+				global::g_env->cfg->get<SizeType>(
 					"physics::maxRigidObjectCount"),
 				"rigidObjectMem")
 		, rigidObjectPool(sizeof(RigidObject))
@@ -71,14 +71,14 @@ PhysMgr::PhysMgr()
 	listenForEvent(global::Event::OnPhysJointDestroy);
 	listenForEvent(global::Event::OnPhysMaterialChange);
 
-	util::Vec2d g= global::gCfgMgr->get<util::Vec2d>("physics::gravity");
+	util::Vec2d g= global::g_env->cfg->get<util::Vec2d>("physics::gravity");
 
-	if (global::gCfgMgr->get("physics::enableFluids", true))
+	if (global::g_env->cfg->get("physics::enableFluids", true))
 		fluidMgr= new FluidMgr{g};
 
 	GridDef grid_def;
-	grid_def.cellsInUnit= global::gCfgMgr->get("physics::gridCellsInUnit", 1);
-	grid_def.chunkWidth= global::gCfgMgr->get("physics::gridChunkWidth", 16);
+	grid_def.cellsInUnit= global::g_env->cfg->get("physics::gridCellsInUnit", 1);
+	grid_def.chunkWidth= global::g_env->cfg->get("physics::gridChunkWidth", 16);
 
 	world= new World{grid_def, g, fluidMgr};
 	world->init();

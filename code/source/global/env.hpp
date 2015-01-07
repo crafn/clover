@@ -7,7 +7,7 @@ namespace clover {
 namespace audio { class AudioMgr; }
 namespace debug { class Draw; class Print; }
 namespace game { class BaseGameLogic; class WorldMgr; }
-namespace global { class EventMgr; }
+namespace global { class CfgMgr; class EventMgr; class FileMgr; }
 namespace gui { class GuiMgr; }
 namespace hardware { class Device; }
 namespace physics { class PhysMgr; }
@@ -24,7 +24,9 @@ struct Env {
 	debug::Draw* debugDraw;
 	game::BaseGameLogic* gameLogic;
 	game::WorldMgr* worldMgr; // Part of gameLogic
+	global::CfgMgr* cfg;
 	global::EventMgr* eventMgr;
+	global::FileMgr* fileMgr;
 	gui::GuiMgr* guiMgr;
 	hardware::Device* device;
 	physics::PhysMgr* physMgr;

@@ -77,9 +77,9 @@ void Device::create(util::Str8 title){
 	initGlfw();
 
 	createWindow(	title,
-					global::gCfgMgr->get<util::Vec2i>("hardware::resolution", util::Vec2i{800, 600}),
-					global::gCfgMgr->get<int32>("hardware::multisamples", 0),
-					global::gCfgMgr->get<bool>("hardware::fullscreen", false));
+					global::g_env->cfg->get<util::Vec2i>("hardware::resolution", util::Vec2i{800, 600}),
+					global::g_env->cfg->get<int32>("hardware::multisamples", 0),
+					global::g_env->cfg->get<bool>("hardware::fullscreen", false));
 
 
 	initGlew();
@@ -91,7 +91,7 @@ void Device::create(util::Str8 title){
 	glEnable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 
-	if (global::gCfgMgr->get("hardware::enableOpenCL", false)) {
+	if (global::g_env->cfg->get("hardware::enableOpenCL", false)) {
 		hardware::gClState= new hardware::ClState();
 		hardware::gClState->choosePlatformWiselyAndCreateContextNicely();
 	}
@@ -104,7 +104,7 @@ void Device::create(util::Str8 title){
 	hidMgr= HidMgrPtr(new ui::hid::HidMgr());
 	hidMgr->create();
 	
-	if (global::gCfgMgr->get<bool>("hardware::enableAudio", true))
+	if (global::g_env->cfg->get<bool>("hardware::enableAudio", true))
 		new hardware::PaAudioDevice();
 	else
 		new audio::DummyAudioDevice();

@@ -53,7 +53,7 @@ GlState::GlState()
 	
 	/// @todo OGL debug messages
 #if 0
-	if (global::gCfgMgr->get("hardware::checkGlErrors", false)){
+	if (global::g_env->cfg->get("hardware::checkGlErrors", false)){
 		print(debug::Ch::General, debug::Vb::Trivial, "CHECK");
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallbackARB(debugCallback, nullptr);	
@@ -310,7 +310,7 @@ void GlState::clear(GLbitfield mask){
 }
 
 void GlState::errorCheck(const util::Str8& where){
-	if (!global::gCfgMgr->get<bool>("hardware::checkGlErrors", true))
+	if (!global::g_env->cfg->get<bool>("hardware::checkGlErrors", true))
 		return;
 
 	uint32 err= glGetError();

@@ -27,11 +27,11 @@ namespace visual {
 VisualMgr::VisualMgr()
 	/// @todo Enable pooling - disabled to get dll working
 	/*: modelDefMem(sizeof(ModelEntityDef)*
-			global::gCfgMgr->get<SizeType>(
+			global::g_env->cfg->get<SizeType>(
 				"visual::maxModelDefCount"),
 			"visual::modelDefMem")
 	, modelLogicMem(sizeof(ModelEntityLogic)*
-			global::gCfgMgr->get<SizeType>(
+			global::g_env->cfg->get<SizeType>(
 				"visual::maxModelEntityCount"),
 			"visual::modelEntityMem")*/
 {

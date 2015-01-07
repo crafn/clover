@@ -33,7 +33,7 @@ util::SrtTransform3d billboarded(util::SrtTransform3d t){
 }
 
 EntityMgr::EntityMgr(ShaderMgr& shader_mgr)
-	: reCache(global::gCfgMgr->get("visual::gridCellSize", 16.0))
+	: reCache(global::g_env->cfg->get("visual::gridCellSize", 16.0))
 {
 	envLight= 0.0;
 
@@ -258,7 +258,7 @@ EntityMgr::RenderFrameConfig EntityMgr::createSimpleRenderFrameConfig(){
 	
 	Camera* camera= global::g_env->visualMgr->getCameraMgr().getActiveCameras()[0];
 	ensure(camera);
-	camera->setPerspectiveMul(global::gCfgMgr->get("visual::perspectiveMul", 1.0f));
+	camera->setPerspectiveMul(global::g_env->cfg->get("visual::perspectiveMul", 1.0f));
 	
 	cfg.camera= camera;
 
@@ -279,7 +279,7 @@ EntityMgr::RenderFrameConfig EntityMgr::createSimpleRenderFrameConfig(){
 			}
 		}
 	}
-	cfg.occlusionRadiusAddition += global::gCfgMgr->get<real64>("visual::occlusionRadiusAddition", 0.0);
+	cfg.occlusionRadiusAddition += global::g_env->cfg->get<real64>("visual::occlusionRadiusAddition", 0.0);
 	
 	cfg.entities=
 		sortedByDepth(
@@ -376,7 +376,7 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 		util::Vec2d occlusion_rad_addition){
 	PROFILE();
 		
-	bool show_gui= global::gCfgMgr->get("visual::showGui", true);
+	bool show_gui= global::g_env->cfg->get("visual::showGui", true);
 
 	util::Vec2d campos= camera.getPosition();
 	real32 camscale= camera.getScale();

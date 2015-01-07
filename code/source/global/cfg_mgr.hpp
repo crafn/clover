@@ -11,6 +11,7 @@ namespace clover {
 namespace global {
 
 /// Manages global configuration variables
+/// @todo Rename to `Cfg` to match `g_env->cfg`
 class CfgMgr {
 public:
 	CfgMgr();
@@ -50,8 +51,6 @@ private:
 	/// Contains values of all CVars. CVars have references to this tree
 	util::ObjectNode root; 
 };
-
-extern CfgMgr* gCfgMgr;
 
 template <typename T>
 T CfgMgr::get(const util::Str8& name) const {

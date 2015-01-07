@@ -23,7 +23,7 @@ Camera::Camera():
 	e.send();
 	
 	Framebuffer::Cfg fbo_cfg;
-	fbo_cfg.resolution= util::Vec2i(global::gCfgMgr->get<int32>("visual::defaultShadowMapSize", 512));
+	fbo_cfg.resolution= util::Vec2i(global::g_env->cfg->get<int32>("visual::defaultShadowMapSize", 512));
 	fbo_cfg.linearInterpolation= true;
 	shadowCasterBuf.create(fbo_cfg);
 

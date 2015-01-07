@@ -94,7 +94,7 @@ void MouseHidDevice::popLock(){
 void MouseHidDevice::updateInputMode(){
 	if (locks == 0){
 		int32 input_mode= GLFW_CURSOR_HIDDEN;
-		if (global::gCfgMgr->get<bool>("hardware::showCursor", true))
+		if (global::g_env->cfg->get<bool>("hardware::showCursor", true))
 			input_mode= GLFW_CURSOR_NORMAL;
 		
 		glfwSetInputMode(&global::g_env->device->getWindow(), GLFW_CURSOR, input_mode);

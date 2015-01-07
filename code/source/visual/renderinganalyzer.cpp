@@ -40,8 +40,8 @@ RenderingAnalyzer::Analysis RenderingAnalyzer::analyze()
 	
 	SizeType group_begin_i= 0;
 	SizeType drawable_count= 0;
-	const int32 min_group_size= global::gCfgMgr->get<int32>("visual::minBatchEntityCount", 10);
-	const int32 max_group_size= global::gCfgMgr->get<int32>("visual::maxBatchEntityCount", 100);
+	const int32 min_group_size= global::g_env->cfg->get<int32>("visual::minBatchEntityCount", 10);
+	const int32 max_group_size= global::g_env->cfg->get<int32>("visual::maxBatchEntityCount", 100);
 	const auto& mesh_infos= frameInfo.meshInfos;
 
 	if (mesh_infos.empty() || min_group_size > max_group_size)

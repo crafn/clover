@@ -1,20 +1,19 @@
 #include "file_mgr.hpp"
 #include "file_impl_default.hpp"
+#include "global/env.hpp"
 #include "util/ensure.hpp"
 
 namespace clover {
 namespace global {
 
-FileMgr* gFileMgr = nullptr;
-
 FileMgr::FileMgr() {
-	if (!gFileMgr)
-		gFileMgr = this;
+	if (!global::g_env->fileMgr)
+		global::g_env->fileMgr= this;
 }
 
 FileMgr::~FileMgr() {
-	if (gFileMgr == this)
-		gFileMgr = nullptr;
+	if (global::g_env->fileMgr == this)
+		global::g_env->fileMgr= nullptr;
 }
 
 void FileMgr::add(const util::Str8& path, bool readOnly, int priority) {

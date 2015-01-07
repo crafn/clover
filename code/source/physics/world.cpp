@@ -158,7 +158,7 @@ util::DynArray<World::BreakingCollision> World::getBreakingCollisions(
 	PROFILE();
 	/// @todo Solution which works when both are partially breaking
 	
-	const SizeType max_collisions_for_object= global::gCfgMgr->get("physics::maxBreakingCollisionsForObject", 1);
+	const SizeType max_collisions_for_object= global::g_env->cfg->get("physics::maxBreakingCollisionsForObject", 1);
 	util::Map<Object*, SizeType> collisions_for_object;
 	
 	util::DynArray<BreakingCollision> breaking_collisions;
@@ -256,7 +256,7 @@ util::DynArray<World::BreakingCollision> World::getBreakingCollisions(
 
 void World::processBreakingContacts(){
 	PROFILE();
-	SizeType max_breaking_collisions= global::gCfgMgr->get<SizeType>("physics::maxBreakingCollisions", 10);
+	SizeType max_breaking_collisions= global::g_env->cfg->get<SizeType>("physics::maxBreakingCollisions", 10);
 	util::DynArray<BreakingCollision> cols=
 			getBreakingCollisions(contactListener.popBreakingContacts());
 	

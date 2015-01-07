@@ -1,17 +1,23 @@
 #include "cfg_mgr.hpp"
+#include "global/env.hpp"
 
 #include <fstream>
 
 namespace clover {
 namespace global {
 
-CfgMgr* gCfgMgr= nullptr;
+CfgMgr::CfgMgr()
+{
+	if (!global::g_env->cfg)
+		global::g_env->cfg= this;
 
-CfgMgr::CfgMgr(){
 	load();
 }
 
-CfgMgr::~CfgMgr(){
+CfgMgr::~CfgMgr()
+{
+	if (global::g_env->cfg == this)
+		global::g_env->cfg= nullptr;
 }
 
 void CfgMgr::load(){
@@ -22,17 +28,17 @@ void CfgMgr::load(){
 		print(debug::Ch::General, debug::Vb::Moderate, "No config file found!");
 		return;
 	}
-	
+
 	std::string content(	(std::istreambuf_iterator<char>(file)),
 							(std::istreambuf_iterator<char>()));
-	
+
 	try {
 		root.parseText(content);
 	}
 	catch (...){
 		print(debug::Ch::General, debug::Vb::Critical, "Settings loading failed");
 	}
-	
+
 	createVars();
 }
 

@@ -250,8 +250,8 @@ WorldMgr::~WorldMgr()
 
 void WorldMgr::update()
 {
-	if (global::gCfgMgr->get<bool>("game::useFixedTimeStep", false)) {
-		m->clock.setFixedDeltaTime(global::gCfgMgr->get<real64>("game::fixedTimeStep", 1.0/60.0));
+	if (global::g_env->cfg->get<bool>("game::useFixedTimeStep", false)) {
+		m->clock.setFixedDeltaTime(global::g_env->cfg->get<real64>("game::fixedTimeStep", 1.0/60.0));
 	} else {
 		m->clock.unsetFixedDeltaTime();
 	}
@@ -438,7 +438,7 @@ void WorldMgr::updateWorldIO(){
 	WorldVec priority_pos= camera.getPosition();
 	m->saveMgr.setPriorityPosition(priority_pos);
 	
-	util::Set<game::WorldChunk*> new_chunks= m->chunkMgr.inhabitChunksInRadius(camera.getPosition(), global::gCfgMgr->get<int32>("game::worldSimulationRadius", 20));
+	util::Set<game::WorldChunk*> new_chunks= m->chunkMgr.inhabitChunksInRadius(camera.getPosition(), global::g_env->cfg->get<int32>("game::worldSimulationRadius", 20));
 
 	for (auto ch : new_chunks){
 		//print(debug::Ch::WorldChunk, debug::Vb::Trivial, "New chunk (%i, %i)", m->getPosition().x, m->getPosition().y);
@@ -469,8 +469,8 @@ void WorldMgr::updateWorldIO(){
 
 	// Streaming
 
-	m->worldGen.generate(global::gCfgMgr->get<double>("game::maxWorldGeneratingTime"));
-	m->saveMgr.update(global::gCfgMgr->get<double>("game::maxWorldIoTime"));
+	m->worldGen.generate(global::g_env->cfg->get<double>("game::maxWorldGeneratingTime"));
+	m->saveMgr.update(global::g_env->cfg->get<double>("game::maxWorldIoTime"));
 
 	// Saving
 

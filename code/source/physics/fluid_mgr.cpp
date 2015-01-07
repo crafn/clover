@@ -20,18 +20,18 @@ static util::Vec2d cursorPos(){
 }
 
 FluidMgr::FluidMgr(util::Vec2d gravity)
-		: chunkSize(global::gCfgMgr->get("physics::fluidChunkSize", 16))
-		, maxChunkCount(global::gCfgMgr->get("physics::maxFluidChunkCount", 8))
+		: chunkSize(global::g_env->cfg->get("physics::fluidChunkSize", 16))
+		, maxChunkCount(global::g_env->cfg->get("physics::maxFluidChunkCount", 8))
 		, potFieldReso(
-				global::gCfgMgr->get("physics::fluidPotentialFieldReso", 256))
+				global::g_env->cfg->get("physics::fluidPotentialFieldReso", 256))
 		, distFieldReso(
-				global::gCfgMgr->get("physics::fluidDistanceFieldReso", 256))
+				global::g_env->cfg->get("physics::fluidDistanceFieldReso", 256))
 		, potField(potFieldReso, maxChunkCount)
 		, distField(distFieldReso, maxChunkCount)
 		, gravity(gravity.casted<util::Vec2f>())
 		, spawnListener("host", "dev", "fluid_spawn", [this] (){
 			const real32 particle_radius=
-				global::gCfgMgr->get("physics::protoParticleRadius", 1.0);
+				global::g_env->cfg->get("physics::protoParticleRadius", 1.0);
 
 			util::Vec2d rand= util::Vec2d{	util::Rand::continuous(-1.0, 1.0),
 								util::Rand::continuous(-1.0, 1.0) }*0.7;
@@ -48,7 +48,7 @@ FluidMgr::FluidMgr(util::Vec2d gravity)
 		})
 		, spawn2Listener("host", "dev", "fluid_spawn2", [this] (){
 			const real32 particle_radius=
-				global::gCfgMgr->get("physics::protoParticleRadius", 1.0);
+				global::g_env->cfg->get("physics::protoParticleRadius", 1.0);
 
 			util::DynArray<FluidParticle> data;
 			for (SizeType i= 0; i < 100; ++i){
@@ -92,9 +92,9 @@ FluidMgr::FluidMgr(util::Vec2d gravity)
 	// Particles
 	{
 		const SizeType max_particle_count=
-			global::gCfgMgr->get("physics::protoParticleCount", 100);
+			global::g_env->cfg->get("physics::protoParticleCount", 100);
 		const real32 particle_radius=
-			global::gCfgMgr->get("physics::protoParticleRadius", 1.0);
+			global::g_env->cfg->get("physics::protoParticleRadius", 1.0);
 
 		util::DynArray<FluidParticle> data;
 		data.resize(max_particle_count);

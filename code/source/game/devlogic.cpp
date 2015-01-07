@@ -45,12 +45,12 @@ util::Str8 stringifyProfilingResult(util::Profiler::Result result, std::thread::
 void profileFor(double time){
 	std::thread::id thread= std::this_thread::get_id();
 	std::thread t([time, thread] (){
-		util::Profiler profiler(global::gCfgMgr->get("dev::profilerSampleRate", 2.0));
+		util::Profiler profiler(global::g_env->cfg->get("dev::profilerSampleRate", 2.0));
 		std::this_thread::sleep_for(
 			std::chrono::milliseconds((int)(time*1000.0)));
 
 		util::Str8 results= stringifyProfilingResult(
-			profiler.popResult(global::gCfgMgr->get("dev::profilerMinShare", 0.01)),
+			profiler.popResult(global::g_env->cfg->get("dev::profilerMinShare", 0.01)),
 			thread);
 
 		print(debug::Ch::Dev, debug::Vb::Trivial, "%s", results.cStr());
@@ -62,7 +62,7 @@ void profileFor(double time){
 }
 
 DevLogic::DevLogic()
-	: profiler(global::gCfgMgr->get("dev::profilerSampleRate", 2.0))
+	: profiler(global::g_env->cfg->get("dev::profilerSampleRate", 2.0))
 	, fpsFrameCount(0)
 	, fpsTimer(0)
 	, fpsPrintFilter(0){
@@ -75,7 +75,7 @@ void DevLogic::update(){
 	
 	// SubSystem info update
 
-	if (fpsTimer > global::gCfgMgr->get<real32>("dev::perfMeasureInterval")) {
+	if (fpsTimer > global::g_env->cfg->get<real32>("dev::perfMeasureInterval")) {
 
 		// Print some statistics about subsystems
 		if (fpsPrintFilter == 0){
@@ -102,7 +102,7 @@ void DevLogic::update(){
 		uint32 strict_handle_count= StrictHandleConnection::countConnections();
 
 		util::Profiler::Result profiling_result=
-			profiler.popResult(global::gCfgMgr->get("dev::profilerMinShare", 0.01));
+			profiler.popResult(global::g_env->cfg->get("dev::profilerMinShare", 0.01));
 		performanceTimerResults.clear();
 		for (auto& item : profiling_result.getSortedLabels(std::this_thread::get_id())){
 			real32 average_time= (real32)item.share*fpsTimer/fpsFrameCount;

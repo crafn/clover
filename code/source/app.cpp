@@ -45,24 +45,24 @@ App::App(const util::Str8& executablePath)
 
 	// Initial cfg loading should be as early as possible, 
 	// as its needed for heap creation
-	global::gCfgMgr= new global::CfgMgr();
+	new global::CfgMgr();
 
 	// Creates custom heap if custom new is enabled in hardware/memory.cpp
 	hardware::createHeap(
-			global::gCfgMgr->get<SizeType>("hardware::heapSize"),
-			global::gCfgMgr->get<SizeType>("hardware::heapBlocks"));
+			global::g_env->cfg->get<SizeType>("hardware::heapSize"),
+			global::g_env->cfg->get<SizeType>("hardware::heapBlocks"));
 
 	global::createMemoryPools(
-			global::gCfgMgr->get<SizeType>("global::singleFrameMemory"));
+			global::g_env->cfg->get<SizeType>("global::singleFrameMemory"));
 
-	auto filemgr = new global::FileMgr();
+	auto filemgr= new global::FileMgr();
 	global::File bin(executablePath);
 	filemgr->add(bin.getAbsoluteDirname() + "/../../resources/gamedata", true, 10);
 	filemgr->add(bin.getAbsoluteDirname() + "/../resources/gamedata", true, 20);
 	filemgr->add(bin.getAbsoluteDirname() + "/data", false, 30);
 
 	/// @todo Add this when multiple cfg files are supported
-	//global::gCfgMgr->loadAdditionalCfgs();
+	//global::g_env->cfg->loadAdditionalCfgs();
 
 	new global::EventMgr();
 
@@ -96,11 +96,12 @@ App::~App()
 	delete global::g_env->realClock; global::g_env->realClock= nullptr;
 	delete global::g_env->device;
 	delete global::g_env->eventMgr;
-	delete global::gFileMgr;
+	delete global::g_env->fileMgr;
 
 	global::destroyMemoryPools();
 
-	delete global::gCfgMgr; global::gCfgMgr= nullptr;
+	delete global::g_env->cfg;
+	delete global::g_env->debugPrint;
 }
 
 void App::run()

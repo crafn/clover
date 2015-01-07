@@ -6,7 +6,7 @@ namespace clover {
 namespace game { namespace editor {
 
 EditorExtensionMgr::EditorExtensionMgr(){
-	if (global::gCfgMgr->get<bool>("dev::enableEditorExtensions", false))
+	if (global::g_env->cfg->get<bool>("dev::enableEditorExtensions", false))
 		createExtension<BlenderEE>();
 }
 

@@ -18,11 +18,11 @@ File::Error::Error(	const util::Str8& message,
 }
 
 File::File(const util::Str8& name)
-	: impl(gFileMgr->findFile(name, false)),
+	: impl(global::g_env->fileMgr->findFile(name, false)),
 	  name(name) {
 	/// @todo make full path
 	if (!impl)
-		impl = gFileMgr->create(name);
+		impl = global::g_env->fileMgr->create(name);
 }
 
 File::~File() {
@@ -95,7 +95,7 @@ util::Str8 File::extension(const util::Str8& name) {
 
 void File::openForWriting() {
 	if (impl->isReadOnly())
-		impl = gFileMgr->create(name);
+		impl = global::g_env->fileMgr->create(name);
 	ensure(!impl->isReadOnly());
 }
 

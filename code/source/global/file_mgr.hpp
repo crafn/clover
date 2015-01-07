@@ -36,8 +36,6 @@ private:
 	std::multimap<int, Path, std::greater<int>> paths;
 };
 
-extern FileMgr* gFileMgr;
-
 } // global
 } // clover
 
