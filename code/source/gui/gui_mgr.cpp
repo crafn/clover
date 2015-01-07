@@ -1,3 +1,4 @@
+#include "global/env.hpp"
 #include "gui_mgr.hpp"
 #include "element.hpp"
 #include "util/profiling.hpp"
@@ -5,9 +6,10 @@
 namespace clover {
 namespace gui {
 
-GuiMgr* gGuiMgr= nullptr;
-
 GuiMgr::GuiMgr(){
+	if (!global::g_env->guiMgr)
+		global::g_env->guiMgr= this;
+
 	Element::guiCursor= &guiCursor;
 	audioSource.assignNewSource(audio::AudioSource::Type::Global);
 	Element::audioSource= audioSource;
@@ -23,6 +25,9 @@ GuiMgr::~GuiMgr(){
 		"Gui visuals not destroyed: %i", BaseElementVisualEntity::getEntityCount());
 	
 	Element::audioSource= audio::AudioSourceHandle();
+
+	if (global::g_env->guiMgr == this)
+		global::g_env->guiMgr= nullptr;
 }
 
 void GuiMgr::onEvent(global::Event& e){

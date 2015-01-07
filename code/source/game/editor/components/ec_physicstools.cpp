@@ -1,6 +1,7 @@
 #include "ec_physicstools.hpp"
 #include "collision/query.hpp"
 #include "debug/draw.hpp"
+#include "global/env.hpp"
 #include "gui/cursor.hpp"
 #include "gui/gui_mgr.hpp"
 #include "hardware/mouse.hpp"
@@ -67,11 +68,11 @@ physics::Draw::Flag PhysicsToolsEc::getFlagEnum(int32 i) const {
 }
 
 void PhysicsToolsEc::onGrabAction(bool start){
-	gui::Cursor& guiCursor= gui::gGuiMgr->getCursor();
+	gui::Cursor& guiCursor= global::g_env->guiMgr->getCursor();
 
 	if (start){
 		if(		guiCursor.getTouchedElement() ==
-				&ui::game::gBaseUi->getInGameUi()->getWorldElement()){
+				&global::g_env->ui->getInGameUi()->getWorldElement()){
 
 			util::DynArray<physics::Object*> objects;
 
@@ -231,7 +232,7 @@ void PhysicsToolsEc::onChangeJointTypeAction(int32 dir){
 }
 
 util::Vec2d PhysicsToolsEc::cursorOnWorld() const {
-	return	gui::gGuiMgr->getCursor().getPosition().
+	return	global::g_env->guiMgr->getCursor().getPosition().
 			converted(util::Coord::World).getValue();
 }
 

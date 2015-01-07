@@ -39,8 +39,6 @@ private:
 	audio::AudioSourceHandle audioSource;
 };
 
-extern GuiMgr* gGuiMgr;
-
 } // gui
 } // clover
 

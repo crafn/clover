@@ -54,7 +54,7 @@ void InGameUi::updateCamera(){
 	/// @todo Remove hardcoded player entity behavior
 	auto camera_target= nodes::CameraTargetNodeInstance::findTarget("player0");
 
-	if (camera_target && !(ui::game::gBaseUi->getEditorUi() && ui::game::gBaseUi->getEditorUi()->hasActiveView())){
+	if (camera_target && !(global::g_env->ui->getEditorUi() && global::g_env->ui->getEditorUi()->hasActiveView())){
 		camera.setTargetPosition(camera_target->getTransform().translation);
 	}
 	else {

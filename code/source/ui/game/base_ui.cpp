@@ -2,6 +2,7 @@
 #include "audio/audio_mgr.hpp"
 #include "debug/draw.hpp"
 #include "hardware/device.hpp"
+#include "global/env.hpp"
 #include "global/event.hpp"
 #include "gui/element_button.hpp"
 #include "gui/element_layout_radial.hpp"
@@ -27,13 +28,13 @@
 namespace clover {
 namespace ui { namespace game {
 
-BaseUi* gBaseUi;
-
 BaseUi::BaseUi()
-	: guiCursor(gui::gGuiMgr->getCursor())
+	: guiCursor(global::g_env->guiMgr->getCursor())
 	, quit(false)
 	, quitListener("host", "emergency", "quit", [this] (){ quit= true; })
 	, devInputEntry("host", "hostBaseUi"){ // Host channel should be the first to receive input
+	if (!global::g_env->ui)
+		global::g_env->ui= this;
 
 	gUserInput= new UserInput;
 
@@ -41,10 +42,11 @@ BaseUi::BaseUi()
 	listenForEvent(global::Event::OnEditorDestroy);
 
 	inGameUi= std::unique_ptr<InGameUi>(new InGameUi());
-
 }
 
 BaseUi::~BaseUi(){
+	if (global::g_env->ui == this)
+		global::g_env->ui= nullptr;
 }
 
 void BaseUi::onEvent(global::Event& e){

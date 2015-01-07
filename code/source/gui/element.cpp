@@ -1,5 +1,6 @@
 #include "element.hpp"
 #include "debug/draw.hpp"
+#include "global/env.hpp"
 #include "gui_mgr.hpp"
 #include "ui/userinput.hpp"
 #include "visual/entity_def_model.hpp"
@@ -179,7 +180,7 @@ Element::~Element(){
 	if (guiCursor->getTouchedElement() == this)
 		guiCursor->stopTouching();
 	
-	gGuiMgr->onDestroy(*this);
+	global::g_env->guiMgr->onDestroy(*this);
 }
 
 void Element::setOffset(const util::Coord& p){

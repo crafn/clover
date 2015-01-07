@@ -8,24 +8,27 @@ namespace audio { class AudioMgr; }
 namespace debug { class Draw; class Print; }
 namespace game { class BaseGameLogic; class WorldMgr; }
 namespace global { class EventMgr; }
+namespace gui { class GuiMgr; }
 namespace hardware { class Device; }
 namespace physics { class PhysMgr; }
 namespace resources { class Cache; }
+namespace ui { namespace game { class BaseUi; }}
 namespace visual { class VisualMgr; }
 namespace global {
 
 /// Top level accessors for each subsystem
 struct Env {
-	/// @todo Add rest
 	audio::AudioMgr* audioMgr;
 	debug::Print* debugPrint;
 	debug::Draw* debugDraw;
 	game::BaseGameLogic* gameLogic;
-	game::WorldMgr* worldMgr;
+	game::WorldMgr* worldMgr; // Part of gameLogic
 	global::EventMgr* eventMgr;
+	gui::GuiMgr* guiMgr;
 	hardware::Device* device;
 	physics::PhysMgr* physMgr;
 	resources::Cache* resCache;
+	ui::game::BaseUi* ui;
 	visual::VisualMgr* visualMgr;
 };
 

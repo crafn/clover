@@ -58,8 +58,6 @@ protected:
 	util::DynArray<ui::hid::TagListEntry> disablePlayersTagListEntries; 
 };
 
-extern BaseUi* gBaseUi;
-
 }} // ui::game
 } // clover
 

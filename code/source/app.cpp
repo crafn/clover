@@ -78,21 +78,21 @@ App::App(const util::Str8& executablePath)
 	new visual::VisualMgr();
 	new debug::Draw();
 	new physics::PhysMgr();
-	gui::gGuiMgr= new gui::GuiMgr();
-	ui::game::gBaseUi= new ui::game::BaseUi();
+	new gui::GuiMgr();
+	new ui::game::BaseUi();
 	new game::BaseGameLogic();	
 }
 
 App::~App()
 {
 	delete global::g_env->gameLogic;
-	delete ui::game::gBaseUi; ui::game::gBaseUi= nullptr;
-	delete gui::gGuiMgr; gui::gGuiMgr= nullptr;
+	delete global::g_env->ui;
+	delete global::g_env->guiMgr;
 	delete global::g_env->physMgr;
 	delete global::g_env->debugDraw;
 	delete global::g_env->visualMgr;
 	delete global::g_env->audioMgr;
-	delete global::g_env->resCache; global::g_env->resCache= nullptr;
+	delete global::g_env->resCache;
 	delete util::gRealClock; util::gRealClock= nullptr;
 	delete global::g_env->device;
 	delete global::g_env->eventMgr;
@@ -140,7 +140,7 @@ void App::run()
 		// Could be after game logic, but does some debug-drawing and updating debug draw in the same frame is nice
 		// (if this is put after debugDraw update things are drawn twice in subsequent frames)
 		// (that problem could be resolved by not drawing debug-things before they're updated once)
-		if (!ui::game::gBaseUi->update())
+		if (!global::g_env->ui->update())
 			break;
 
 		global::g_env->physMgr->update();
@@ -149,7 +149,6 @@ void App::run()
 		nodes::gNodeEventMgr->dispatch();
 
 		// Update world logic
-		ensure(global::g_env->worldMgr);
 		global::g_env->gameLogic->update();
 		global::g_env->audioMgr->update();
 
@@ -158,7 +157,7 @@ void App::run()
 
 		global::g_env->resCache->update();
 
-		gui::gGuiMgr->update();
+		global::g_env->guiMgr->update();
 
 		global::g_env->physMgr->postFrameUpdate();
 		global::g_env->visualMgr->renderFrame();

@@ -15,7 +15,7 @@ namespace clover {
 namespace physics {
 
 static util::Vec2d cursorPos(){
-	return gui::gGuiMgr->getCursor().getPosition().converted(util::Coord::World).
+	return global::g_env->guiMgr->getCursor().getPosition().converted(util::Coord::World).
 			getValue().casted<util::Vec2d>();
 }
 
