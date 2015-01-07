@@ -14,9 +14,6 @@
 #include <json/json.h>
 #include <sstream>
 
-/// @todo Remove
-#include <boost/serialization/split_member.hpp>
-
 namespace clover {
 namespace util {
 
@@ -112,11 +109,8 @@ public:
 	const Json::Value& getJsonValue() const { return jsonValue(); }
 	
 	template <typename Archive>
-	void save(Archive& ar, uint32 version) const;
-	template <typename Archive>
-	void load(Archive& ar, uint32 version);
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
-	
+	void serialize(Archive& ar, uint32 version);
+
 private:
 
 	// Object of which reference this is
@@ -144,18 +138,16 @@ struct TypeStringTraits<ObjectNode> {
 };
 
 template <typename Archive>
-void ObjectNode::save(Archive& ar, uint32 version) const {
-	util::Str8 text= generateText();
-	ar & text;
+void ObjectNode::serialize(Archive& ar, uint32 version) {
+	if (Archive::is_saving::value) {
+		util::Str8 text= generateText();
+		ar & text;
+	} else {
+		util::Str8 text;
+		ar & text;
+		parseText(text);
+	}
 }
-
-template <typename Archive>
-void ObjectNode::load(Archive& ar, uint32 version){
-	util::Str8 text;
-	ar & text;
-	parseText(text);
-}
-
 
 /// IsObjectNodeSerializable<T>::value == true if T can be stored in ObjectNode, otherwise false
 template <typename T>

@@ -4,8 +4,6 @@
 #include "build.hpp"
 #include "worldentity_table.hpp"
 
-#include <boost/serialization/split_member.hpp>
-
 namespace clover {
 namespace game {
 
@@ -51,22 +49,18 @@ public:
 	bool isStrict() const { return strictConnection; }
 	
 	template <typename Archive>
-	void save(Archive& ar, const uint32 ver) const {
+	void serialize(Archive& ar, const uint32 ver) {
 		ensure_msg(!isStrict(), "Strict handle node-serialization not yet supported");
-
-		game::WorldEntityId id= getId();
-		ar & id;
+		if (Archive::is_saving::value) {
+			game::WorldEntityId id= getId();
+			ar & id;
+		} else {
+			game::WorldEntityId id;
+			ar & id;
+			setId(id);
+		}
 	}
 
-	template <typename Archive>
-	void load(Archive& ar, const uint32 ver){
-		game::WorldEntityId id;
-		ar & id;
-
-		setId(id);
-	}
-
-	BOOST_SERIALIZATION_SPLIT_MEMBER()	
 private:
 	game::WorldEntityId entityId;
 

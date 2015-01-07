@@ -6,8 +6,6 @@
 #include "util/dyn_array.hpp"
 #include "util/string.hpp"
 
-#include <boost/serialization/split_member.hpp>
-
 namespace clover {
 namespace animation {
 class Armature;
@@ -40,10 +38,7 @@ public:
 	/// Boost serialization
 
 	template <typename Archive>
-	void save(Archive& ar, uint32 version) const;
-	template <typename Archive>
-	void load(Archive& ar, uint32 version);
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+	void serialize(Archive& ar, uint32 version);
 
 private:
 	/// For serialization
@@ -66,18 +61,17 @@ animation::ArmaturePose::Pose lerp(	const animation::ArmaturePose::Pose& pose1,
 // Implementation
 
 template <typename Archive>
-void animation::ArmaturePose::save(Archive& ar, uint32 version) const {
-	ar & getArmatureName();
-	ar & localInBindPose;
-}
-
-template <typename Archive>
-void animation::ArmaturePose::load(Archive& ar, uint32 version){
-	util::Str8 armature_name;
-	ar & armature_name;
-	ar & localInBindPose;
-
-	setArmature(armature_name);
+void animation::ArmaturePose::serialize(Archive& ar, uint32 version) {
+	if (Archive::is_saving::value) {
+		auto name= getArmatureName();
+		ar & name;
+		ar & localInBindPose;
+	} else {
+		util::Str8 name;
+		ar & name;
+		ar & localInBindPose;
+		setArmature(name);
+	}
 }
 
 namespace util {

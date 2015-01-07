@@ -14,9 +14,6 @@
 #include "util/dyn_array.hpp"
 #include "util/callbacker.hpp"
 
-/// @todo Remove
-#include <boost/serialization/split_member.hpp>
-
 #define DECLARE_RESOURCE(type)																				   \
 	virtual util::Str8 getResourceTypeName() const {																 \
 		return resources::ResourceTraits<type>::typeName();													   \
@@ -120,10 +117,7 @@ public:
 	ResourceId getResourceId() const { return ResourceId(*this); }
 
 	template <typename Archive>
-	void save(Archive& ar, uint32 version) const;
-	template <typename Archive>
-	void load(Archive& ar, uint32 version);
-	BOOST_SERIALIZATION_SPLIT_MEMBER();
+	void serialize(Archive& ar, uint32 version);
 
 protected:
 
@@ -209,16 +203,15 @@ struct TypeStringTraits<resources::Resource> {
 // Implementation
 
 template <typename Archive>
-void resources::Resource::save(Archive& ar, uint32 version) const {
-	util::ObjectNode ob= util::ObjectNodeTraits<SerializedResource>::serialized(getSerializedResource());
-	ar & ob;
-}
-
-template <typename Archive>
-void resources::Resource::load(Archive& ar, uint32 version){
-	util::ObjectNode ob;
-	ar & ob;
-	applySerializedResource(ob.getValue<SerializedResource>());
+void resources::Resource::serialize(Archive& ar, uint32 version) {
+	if (Archive::is_saving::value) {
+		util::ObjectNode ob= util::ObjectNodeTraits<SerializedResource>::serialized(getSerializedResource());
+		ar & ob;
+	} else {
+		util::ObjectNode ob;
+		ar & ob;
+		applySerializedResource(ob.getValue<SerializedResource>());
+	}
 }
 
 } // clover

@@ -91,38 +91,33 @@ public:
 	bool isSet() const { return cacheRes || res; }
 	
 	template <typename Archive>
-	void save(Archive& ar, uint32 version) const {
-		bool in_cache= cacheRes != nullptr;
-		ar & in_cache;
-		if (in_cache){
-			// Need only to save identifier of a cached resource
-			ar & cacheRes->getIdentifier();
-		}
-		else {
-			ensure(res);
-			ar & *res;
-		}
-	}
-	
-	template <typename Archive>
-	void load(Archive& ar, uint32 version){
-		ensure(!res);
-		
-		bool in_cache;
-		ar & in_cache;
-		if (in_cache){
-			Identifier id;
-			ar & id;
-			cacheRes= &global::g_env.resCache->getResource<Res>(id);
-		}
-		else {
-			res= newRes();
-			ar & *res;
+	void serialize(Archive& ar, uint32 version) {
+		if (Archive::is_saving::value) {
+			bool in_cache= cacheRes != nullptr;
+			ar & in_cache;
+			if (in_cache){
+				// Need only to save identifier of a cached resource
+				auto id= cacheRes->getIdentifier();
+				ar & id;
+			} else {
+				ensure(res);
+				ar & *res;
+			}
+		} else {
+			ensure(!res);
+			bool in_cache;
+			ar & in_cache;
+			if (in_cache){
+				Identifier id;
+				ar & id;
+				cacheRes= &global::g_env.resCache->getResource<Res>(id);
+			} else {
+				res= newRes();
+				ar & *res;
+			}
 		}
 	}
-	
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
-	
+
 private:
 	static ResPtr newRes(){
 		return ResPtr(new Res());
