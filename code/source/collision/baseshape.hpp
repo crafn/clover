@@ -8,8 +8,6 @@
 #include "util/polygon.hpp"
 #include "util/transform.hpp"
 
-#include <Box2D/Box2D.h>
-
 class b2Shape;
 
 namespace clover {

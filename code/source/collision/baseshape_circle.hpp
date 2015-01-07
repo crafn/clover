@@ -4,6 +4,8 @@
 #include "build.hpp"
 #include "baseshape.hpp"
 
+#include <Box2D/Collision/Shapes/b2CircleShape.h>
+
 namespace clover {
 namespace collision {
 

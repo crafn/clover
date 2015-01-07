@@ -14,6 +14,9 @@
 #include "util/dyn_array.hpp"
 #include "util/callbacker.hpp"
 
+/// @todo Remove
+#include <boost/serialization/split_member.hpp>
+
 #define DECLARE_RESOURCE(type)																				   \
 	virtual util::Str8 getResourceTypeName() const {																 \
 		return resources::ResourceTraits<type>::typeName();													   \
@@ -120,7 +123,7 @@ public:
 	void save(Archive& ar, uint32 version) const;
 	template <typename Archive>
 	void load(Archive& ar, uint32 version);
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+	BOOST_SERIALIZATION_SPLIT_MEMBER();
 
 protected:
 

@@ -5,16 +5,17 @@
 #include "util/color.hpp"
 #include "util/ensure.hpp"
 #include "util/math.hpp"
+#include "util/optional.hpp"
 #include "util/set.hpp"
 #include "util/string.hpp"
 #include "util/traits.hpp"
 #include "util/vector.hpp"
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/optional.hpp>
 #include <json/json.h>
 #include <sstream>
+
+/// @todo Remove
+#include <boost/serialization/split_member.hpp>
 
 namespace clover {
 namespace util {
@@ -142,32 +143,6 @@ struct TypeStringTraits<ObjectNode> {
 	static util::Str8 type(){ return "::ObjectNode"; }
 };
 
-/// @todo IsTextSerializable
-/*
-template <typename T, typename std::enable_if<IsTextSerializable>>
-struct ObjectNodeTraits {
-	
-	/// Serialization for generic type is made by using normal text serialization
-	static ObjectNode serialized(const T& value){
-		ObjectNode ret;
-		
-		std::stringstream ss;
-		boost::archive::text_oarchive ar(ss);
-		ar << value;
-		ret.setInternalValue<util::Str8>(util::Str8(ss.str()));
-		
-		return (ret);
-	}
-	
-	static T deserialized(const ObjectNode& ob_node){
-		std::stringstream ss(ob_node.getInternalValue<util::Str8>().cStr());
-		boost::archive::text_iarchive ar(ss);
-		T ret;
-		ar >> ret;
-		return (ret);
-	}
-};*/
-
 template <typename Archive>
 void ObjectNode::save(Archive& ar, uint32 version) const {
 	util::Str8 text= generateText();
@@ -194,30 +169,6 @@ private:
 public:
 	static const bool value= sizeof(Test<T>(0)) == sizeof(Yes);
 };
-
-
-/// @todo boost::archives for ObjectNode serialization (then all serializations would have the same interface - switching is easy)
-/*
-template<class Archive>
-class ObjectNodeOutArchiveImpl
-	: public boost::archive::basic_text_oprimitive<std::ostream>
-	, public boost::archive::basic_text_oarchive<Archive> {
-public:
-	
-private:
-};
-
-
-template<class Archive>
-class ObjectNodeInArchiveImpl
-	: public boost::archive::basic_text_iprimitive<std::istream>
-	, public boost::archive::basic_text_iarchive<Archive> {
-public:
-
-private:
-}
-*/
-
 
 template <>
 struct ObjectNodeTraits<ObjectNode> {
@@ -364,8 +315,8 @@ struct ObjectNodeTraits<util::SrtTransform<S, Quaternion<R>, T>> {
 };
 
 template <typename T>
-struct ObjectNodeTraits<boost::optional<T>> {
-	using Value= boost::optional<T>;
+struct ObjectNodeTraits<util::Optional<T>> {
+	using Value= util::Optional<T>;
 	static ObjectNode serialized(const Value& value){
 		ObjectNode ret(ObjectNode::Value::Object);
 		if (value)

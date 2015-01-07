@@ -5,7 +5,7 @@
 #include "baseshape.hpp"
 #include "util/dyn_array.hpp"
 
-#include <Box2D/Box2D.h>
+#include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 namespace clover {
 namespace collision {

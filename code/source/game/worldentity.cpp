@@ -9,6 +9,9 @@
 #include "world_mgr.hpp"
 #include "worldentity.hpp"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 namespace clover {
 namespace game {
 
