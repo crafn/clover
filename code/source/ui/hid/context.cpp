@@ -23,7 +23,7 @@ Context::Context(const Tags& tags_, const Tags& enable_tags_)
 	}
 	
 	// Create channels before virtualControls are added, because virtualControls might need state controls from channels
-	for (const auto& ch : hardware::gDevice->getHidMgr().getChannelNames()){
+	for (const auto& ch : global::g_env->device->getHidMgr().getChannelNames()){
 		// get creates missing channel
 		getChannel(ch);
 	}
@@ -126,7 +126,7 @@ util::ObjectNode ObjectNodeTraits<ui::hid::Context::Ptr>::serialized(const Value
 }
 
 auto ObjectNodeTraits<ui::hid::Context::Ptr>::deserialized(const util::ObjectNode& ob) -> Value {
-	HidMgr& hid_mgr= hardware::gDevice->getHidMgr();
+	HidMgr& hid_mgr= global::g_env->device->getHidMgr();
 	
 	util::ObjectNode tags_ob= ob.get("tags");
 	util::ObjectNode enable_tags_ob= ob.get("enableTags", util::ObjectNode::Value::Null);

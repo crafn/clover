@@ -65,7 +65,7 @@ void Clock::update(){
 	}
 	else {
 
-		deltaTime= hardware::gDevice->getFrameTime()*timeScale;
+		deltaTime= global::g_env->device->getFrameTime()*timeScale;
 		timeFromStart += deltaTime*clockRes;
 		frameCount++;
 	}

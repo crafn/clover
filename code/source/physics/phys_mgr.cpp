@@ -96,7 +96,10 @@ PhysMgr::~PhysMgr(){
 	if (not_deleted)
 		print(debug::Ch::Phys, debug::Vb::Moderate, "PhysMgr::~PhysMgr(): objectTable contained %i PhysObjects", not_deleted);
 
+	world.reset();
 	rigidObjectPool.setMemory(nullptr);
+
+	fluidMgr.reset();
 
 	if (global::g_env->physMgr == this)
 		global::g_env->physMgr= nullptr;

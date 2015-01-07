@@ -8,6 +8,7 @@ namespace audio { class AudioMgr; }
 namespace debug { class Draw; class Print; }
 namespace game { class BaseGameLogic; class WorldMgr; }
 namespace global { class EventMgr; }
+namespace hardware { class Device; }
 namespace physics { class PhysMgr; }
 namespace resources { class Cache; }
 namespace visual { class VisualMgr; }
@@ -22,6 +23,7 @@ struct Env {
 	game::BaseGameLogic* gameLogic;
 	game::WorldMgr* worldMgr;
 	global::EventMgr* eventMgr;
+	hardware::Device* device;
 	physics::PhysMgr* physMgr;
 	resources::Cache* resCache;
 	visual::VisualMgr* visualMgr;

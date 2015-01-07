@@ -78,8 +78,6 @@ private:
 	HidMgrPtr hidMgr;
 };
 
-extern Device* gDevice;
-
 } // hardware
 } // clover
 

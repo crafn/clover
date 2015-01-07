@@ -10,7 +10,7 @@ namespace ui { namespace hid {
 
 VirtualControl::VirtualControl(const Action::Name& action_name, const util::DynArray<util::Str8>& splitted_source, ControlPtrs custom_controls)
 		: actionName(action_name){
-	HidMgr& hid_mgr= hardware::gDevice->getHidMgr();
+	HidMgr& hid_mgr= global::g_env->device->getHidMgr();
 	
 	if (splitted_source.size() < 3){
 		util::Str8 str;

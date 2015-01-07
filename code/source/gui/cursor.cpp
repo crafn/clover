@@ -52,7 +52,7 @@ void Cursor::preUpdate(){
 		delta= dif;
 	}
 
-	util::Vec2d pos= getPosition().getValue()*hardware::gDevice->getViewportSize()*0.5 + util::Vec2d({19,-19});
+	util::Vec2d pos= getPosition().getValue()*global::g_env->device->getViewportSize()*0.5 + util::Vec2d({19,-19});
 	cursorVisual.setPosition(pos.xyz());
 
 	touchElement= touchLockElement;

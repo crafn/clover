@@ -46,7 +46,7 @@ BlenderEE::BlenderEE()
 	
 	server.setOnConnectCallback([=] (){
 		// Tell where clover is
-		server.send<CloverPathMsgTraits>(hardware::gDevice->getWorkingDirectory());
+		server.send<CloverPathMsgTraits>(global::g_env->device->getWorkingDirectory());
 		
 		// Tell where resources are
 		server.send<ResourceRootMsgTraits>(global::g_env->resCache->getResourceRootPath());

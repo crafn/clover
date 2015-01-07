@@ -139,11 +139,11 @@ void Coord::convertTo(Type t){
 		 view_world_rad= util::Vec2d(1.0)/camscale;
 	}
 	
-	view_world_rad *= hardware::gDevice->getAspectVector().inversed();
+	view_world_rad *= global::g_env->device->getAspectVector().inversed();
 	
-	util::Vec2d viewport_pixel_rad= (util::Vec2d)hardware::gDevice->getViewportSize()*0.5;
+	util::Vec2d viewport_pixel_rad= (util::Vec2d)global::g_env->device->getViewportSize()*0.5;
 
-	util::Vec2d aspect_vector= hardware::gDevice->getAspectVector();
+	util::Vec2d aspect_vector= global::g_env->device->getAspectVector();
 	real64 aspect_component_dif= util::abs(aspect_vector.x-aspect_vector.y);
 	
 	util::Vec2d view_stretch_pos= value;

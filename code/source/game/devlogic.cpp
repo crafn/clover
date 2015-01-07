@@ -93,7 +93,7 @@ void DevLogic::update(){
 			print(debug::Ch::General, debug::Vb::Moderate, "SoundInstance count:  %lu", (unsigned long)global::g_env->audioMgr->getSoundInstanceCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "AudioSourceInstance count:	%lu", (unsigned long)global::g_env->audioMgr->getAudioSourceCount());
 			print(debug::Ch::General, debug::Vb::Moderate, "Free audio channel count:  %lu", (unsigned long)global::g_env->audioMgr->getFreeChannelCount());
-			print(debug::Ch::General, debug::Vb::Trivial, "Viewport: %i, %i", hardware::gDevice->getViewportSize().x, hardware::gDevice->getViewportSize().y);
+			print(debug::Ch::General, debug::Vb::Trivial, "Viewport: %i, %i", global::g_env->device->getViewportSize().x, global::g_env->device->getViewportSize().y);
 
 			print(debug::Ch::General, debug::Vb::Trivial, "Timers");
 		}

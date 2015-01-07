@@ -66,8 +66,8 @@ App::App(const util::Str8& executablePath)
 
 	new global::EventMgr();
 
-	hardware::gDevice= new hardware::Device();
-	hardware::gDevice->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
+	new hardware::Device();
+	global::g_env->device->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
 
 	util::gRealClock= new util::Clock();
 
@@ -94,7 +94,7 @@ App::~App()
 	delete global::g_env->audioMgr;
 	delete global::g_env->resCache; global::g_env->resCache= nullptr;
 	delete util::gRealClock; util::gRealClock= nullptr;
-	delete hardware::gDevice; hardware::gDevice= nullptr;
+	delete global::g_env->device;
 	delete global::g_env->eventMgr;
 	delete global::gFileMgr;
 
@@ -107,7 +107,7 @@ void App::run()
 {
 	PROFILE();
 
-	hardware::gDevice->updateFrameTime();
+	global::g_env->device->updateFrameTime();
 	util::Clock::updateAll();
 
 	util::Timer sleepTimer;
@@ -122,15 +122,15 @@ void App::run()
 			sleepTimer.run();
 
 			if (util::gRealClock->getDeltaTime() < 0.014)
-				hardware::gDevice->sleep(0.013-util::gRealClock->getDeltaTime());
+				global::g_env->device->sleep(0.013-util::gRealClock->getDeltaTime());
 			else
-				hardware::gDevice->sleep(0.0001);
+				global::g_env->device->sleep(0.0001);
 			
 			sleepTimer.pause();
 		}
 
-		hardware::gDevice->updateEvents();
-		hardware::gDevice->updateFrameTime();
+		global::g_env->device->updateEvents();
+		global::g_env->device->updateFrameTime();
 
 		util::Clock::updateAll();
 

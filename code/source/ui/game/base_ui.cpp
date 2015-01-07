@@ -70,7 +70,7 @@ bool BaseUi::update(){
 	
 	cursorOnWorld= hardware::gMouse->getPosition().converted(util::Coord::World).getValue();
 
-	if (quit || glfwWindowShouldClose(&hardware::gDevice->getWindow())){
+	if (quit || glfwWindowShouldClose(&global::g_env->device->getWindow())){
 		return false;
 	}
 

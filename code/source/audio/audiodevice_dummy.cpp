@@ -42,7 +42,7 @@ void DummyAudioDevice::outputSimulator()
 		}
 		
 		// Don't exhaust CPU
-		hardware::gDevice->sleep(0.01);
+		global::g_env->device->sleep(0.01);
 	}
 }
 

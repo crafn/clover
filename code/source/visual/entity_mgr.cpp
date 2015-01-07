@@ -67,7 +67,7 @@ void EntityMgr::draw(){
 
 		// Actual rendering of visual entities
 		hardware::gGlState->bindFbo(0);
-		hardware::gGlState->setViewport({0,0}, hardware::gDevice->getViewportSize());
+		hardware::gGlState->setViewport({0,0}, global::g_env->device->getViewportSize());
 
 		genericST.setCamera(*cfg.camera);
 		genericST.setLights(cfg.lights);
@@ -383,19 +383,19 @@ util::DynArray<EntityMgr::RenderEntity> EntityMgr::RenderEntityCache::query(
 
 	// Radius of viewport in world coordinates
 	util::Vec2d rad= util::Vec2d(1.0)/camera.getScale();
-	rad.x /= hardware::gDevice->getAspectVector().x;
-	rad.y /= hardware::gDevice->getAspectVector().y;
+	rad.x /= global::g_env->device->getAspectVector().x;
+	rad.y /= global::g_env->device->getAspectVector().y;
 
-	util::Vec2d aspectvector= hardware::gDevice->getAspectVector();
+	util::Vec2d aspectvector= global::g_env->device->getAspectVector();
 	util::Vec2d inverse_aspectvector= util::Vec2d{1.0/aspectvector.x, 1.0/aspectvector.y};
 	real64 aspect_component_dif= util::abs(aspectvector.x-aspectvector.y);
 
-	util::Vec2d viewport= util::Vec2d{(real32)hardware::gDevice->getViewportSize().x*0.5, (real32)hardware::gDevice->getViewportSize().y*0.5};
+	util::Vec2d viewport= util::Vec2d{(real32)global::g_env->device->getViewportSize().x*0.5, (real32)global::g_env->device->getViewportSize().y*0.5};
 
 	bool viewport_oddx= false;
 	bool viewport_oddy= false;
-	if (hardware::gDevice->getViewportSize().x % 2 == 1) viewport_oddx= true;
-	if (hardware::gDevice->getViewportSize().y % 2 == 1) viewport_oddy= true;
+	if (global::g_env->device->getViewportSize().x % 2 == 1) viewport_oddx= true;
+	if (global::g_env->device->getViewportSize().y % 2 == 1) viewport_oddy= true;
 
 	// Multiply by this to get from world size to pixel size
 	util::Vec2d pixelmul= {	1.0/viewport.x/aspectvector.x,

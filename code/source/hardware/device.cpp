@@ -8,6 +8,7 @@
 #include "hardware/mouse.hpp"
 #include "hardware/keyboard.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "ui/hid/hid_mgr.hpp"
 #include "global/exception.hpp"
 #include "util/math.hpp"
@@ -35,17 +36,19 @@
 namespace clover {
 namespace hardware {
 
-Device* gDevice;
-
 Device::Device()
-		: window(nullptr){
+		: window(nullptr)
+{
+	if (!global::g_env->device)
+		global::g_env->device= this;
 }
 
-Device::~Device(){
+Device::~Device()
+{
 	delete audio::gAudioDevice;
-	
+
 	hidMgr.reset();
-	
+
 	util::FileWatcher::globalShutdown();
 
 	delete hardware::gMouse;
@@ -53,17 +56,20 @@ Device::~Device(){
 
 	delete hardware::gKeyboard;
 	hardware::gKeyboard= nullptr;
-	
+
 	delete hardware::gGlState;
 	hardware::gGlState= nullptr;
-	
+
 	delete hardware::gClState;
 	hardware::gClState= nullptr;
-	
+
 	glfwDestroyWindow(window);
 	window= nullptr;
 	glfwTerminate();
-	
+
+	if (global::g_env->device == this)
+		global::g_env->device= nullptr;
+
 	print(debug::Ch::Device, debug::Vb::Moderate, "Device shutdown succeeded");
 }
 

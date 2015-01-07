@@ -24,7 +24,7 @@ MouseHidDevice::MouseHidDevice(const ConstructInfo& info)
 		popLockListeners.pushBack(ui::hid::ActionListener<>(channel, "mouseDevice", "Mouse.position.popLock", [this] (){ popLock(); }));
 	}
 	
-	glfwSetScrollCallback(&hardware::gDevice->getWindow(), scrollCallback);
+	glfwSetScrollCallback(&global::g_env->device->getWindow(), scrollCallback);
 
 	updateInputMode();
 }
@@ -32,7 +32,7 @@ MouseHidDevice::MouseHidDevice(const ConstructInfo& info)
 
 void MouseHidDevice::update(){
 	util::Vec2d last_raw_pos= rawPosition;
-	glfwGetCursorPos(&hardware::gDevice->getWindow(), &rawPosition.x, &rawPosition.y);
+	glfwGetCursorPos(&global::g_env->device->getWindow(), &rawPosition.x, &rawPosition.y);
 	
 	if (locks == 0 && last_raw_pos != rawPosition)
 		++moveCountAfterUnlock;
@@ -48,7 +48,7 @@ void MouseHidDevice::update(){
 	}
 	else {
 		// Mouse position locked, don't allow movement
-		glfwSetCursorPos(&hardware::gDevice->getWindow(), rawLockPosition.x, rawLockPosition.y);
+		glfwSetCursorPos(&global::g_env->device->getWindow(), rawLockPosition.x, rawLockPosition.y);
 		// Two setValue calls are needed (another one is below if block), so
 		// that deltas work but position remains ~same
 		posControl.setValue(rawToNormalized(rawLockPosition));
@@ -61,14 +61,14 @@ void MouseHidDevice::update(){
 	if (moveCountAfterUnlock > 1 || locks > 0)
 		posControl.setValue(rawToNormalized(rawPosition));
 		
-	lmbControl.setValue(glfwGetMouseButton(&hardware::gDevice->getWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
-	mmbControl.setValue(glfwGetMouseButton(&hardware::gDevice->getWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS);
-	rmbControl.setValue(glfwGetMouseButton(&hardware::gDevice->getWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS);
+	lmbControl.setValue(glfwGetMouseButton(&global::g_env->device->getWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
+	mmbControl.setValue(glfwGetMouseButton(&global::g_env->device->getWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS);
+	rmbControl.setValue(glfwGetMouseButton(&global::g_env->device->getWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS);
 	scrollControl.setValue(scroll);
 }
 
 util::Vec2d MouseHidDevice::rawToNormalized(util::Vec2d raw_pos){
-	util::Vec2i screen_size= hardware::gDevice->getViewportSize();
+	util::Vec2i screen_size= global::g_env->device->getViewportSize();
 	return util::Vec2d{	(real64)raw_pos.x/(real64)screen_size.x*2.0 - 1.0,
 					-(real64)raw_pos.y/(real64)screen_size.y*2.0 + 1.0};
 }
@@ -97,11 +97,11 @@ void MouseHidDevice::updateInputMode(){
 		if (global::gCfgMgr->get<bool>("hardware::showCursor", true))
 			input_mode= GLFW_CURSOR_NORMAL;
 		
-		glfwSetInputMode(&hardware::gDevice->getWindow(), GLFW_CURSOR, input_mode);
+		glfwSetInputMode(&global::g_env->device->getWindow(), GLFW_CURSOR, input_mode);
 	}
 	else {
 		// Prevent leaving from window when locked
-		glfwSetInputMode(&hardware::gDevice->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(&global::g_env->device->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 }
 

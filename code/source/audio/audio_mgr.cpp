@@ -259,7 +259,7 @@ void feedUpdate(OutputStream& stream);
 void AudioMgr::feedLoop(){
 	while (!quitFeedThread){
 		feedUpdate(outputStream);
-		hardware::gDevice->sleep(0.0001);
+		global::g_env->device->sleep(0.0001);
 	}
 }
 

@@ -118,7 +118,7 @@ void FluidST::render(Camera& cam){
 		hardware::gGlState->setBlendFunc(hardware::GlState::BlendFunc{
 				GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA});
 		hardware::gGlState->bindFbo(0);
-		hardware::gDevice->setViewport();
+		global::g_env->device->setViewport();
 
 		postProcess.shader.use();
 		postProcess.shader.setTexture(

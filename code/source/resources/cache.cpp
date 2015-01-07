@@ -141,7 +141,7 @@ void Cache::writeAllResources()
 		m->stopWatching();
 
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Writing all resources");
-	hardware::gDevice->sleep(0.1); // Safety
+	global::g_env->device->sleep(0.1); // Safety
 
 	for (auto& path : getResourceFilePaths()){
 		util::ObjectNode root(util::ObjectNode::Value::Object);
@@ -164,7 +164,7 @@ void Cache::writeAllResources()
 	}
 
 	print(debug::Ch::Resources, debug::Vb::Trivial, "Writing finished");
-	hardware::gDevice->sleep(0.1); // Safety
+	global::g_env->device->sleep(0.1); // Safety
 
 	for (auto& m : resourceFileWatchers)
 		m->startWatching();

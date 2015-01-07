@@ -84,11 +84,11 @@ void VisualMgr::renderFrame(){
 	{ PROFILE_("render");
 		global::g_env->debugDraw->update();
 		particleMgr->update();
-		hardware::gDevice->clearBuffers();
+		global::g_env->device->clearBuffers();
 		entityMgr->draw();
 	}
 	{ PROFILE_("swapBuffers");
-		hardware::gDevice->swapBuffers();
+		global::g_env->device->swapBuffers();
 	}
 }
 
