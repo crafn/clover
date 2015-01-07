@@ -34,8 +34,8 @@ void PerformanceEcUi::onEvent(global::Event& e){
 }
 
 void PerformanceEcUi::update(){
-	performanceGraph.clearBefore(util::gRealClock->getTime()-25);
-	performanceGraph.setViewport(util::gRealClock->getTime()-20, util::gRealClock->getTime());
+	performanceGraph.clearBefore(global::g_env->realClock->getTime()-25);
+	performanceGraph.setViewport(global::g_env->realClock->getTime()-20, global::g_env->realClock->getTime());
 }
 
 void PerformanceEcUi::onResize(){
@@ -73,7 +73,7 @@ void PerformanceEcUi::addToPerformanceGraph(const util::Str8& name, real64 value
 		id= it->second;
 	}
 
-	performanceGraph.appendPoint(id, util::Vec2d{ util::gRealClock->getTime(), value });
+	performanceGraph.appendPoint(id, util::Vec2d{ global::g_env->realClock->getTime(), value });
 }
 
 }}} // ui::game::editor

@@ -8,8 +8,6 @@ using std::chrono::milliseconds;
 using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
 
-Clock *gRealClock;
-
 /// @todo Remove
 PtrTable<Clock> gClockTable;
 PtrTable<Timer> gTimerTable;

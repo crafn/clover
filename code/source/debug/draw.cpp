@@ -341,7 +341,7 @@ void Draw::update(){
 	for (it= primitives.begin(); it!= primitives.end(); it++){
 		if (it->timeLeft < 0.0){
 			if (it->fade && it->color.a > 0.0){
-				it->color.a = util::limited(it->color.a-2.0*util::gRealClock->getDeltaTime(), 0.0, 1.0);
+				it->color.a = util::limited(it->color.a-2.0*global::g_env->realClock->getDeltaTime(), 0.0, 1.0);
 				it->updateGeometry();
 			}
 			else {
@@ -353,7 +353,7 @@ void Draw::update(){
 				continue;
 			}
 		}
-		it->timeLeft -= util::gRealClock->getDeltaTime();
+		it->timeLeft -= global::g_env->realClock->getDeltaTime();
 	}
 }
 

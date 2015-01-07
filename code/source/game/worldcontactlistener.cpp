@@ -174,12 +174,12 @@ void WorldContactListener::onPostSolveContact(const physics::PostSolveContact& c
 bool WorldContactListener::canBePlayed(const audio::Sound& sound, real64 amplitude){
 	auto it= recentSounds.find(&sound);
 	if (it == recentSounds.end()) return true;
-	return	it->second.time < util::gRealClock->getTime() - 0.1 ||
+	return	it->second.time < global::g_env->realClock->getTime() - 0.1 ||
 			it->second.amplitude < amplitude*0.5;
 }
 
 void WorldContactListener::notifyPlaying(const audio::Sound& sound, real64 amplitude){
-	recentSounds[&sound].time= util::gRealClock->getTime();
+	recentSounds[&sound].time= global::g_env->realClock->getTime();
 	recentSounds[&sound].amplitude= amplitude;
 }
 

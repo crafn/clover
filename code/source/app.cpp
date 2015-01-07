@@ -69,7 +69,7 @@ App::App(const util::Str8& executablePath)
 	new hardware::Device();
 	global::g_env->device->create(util::Str8::format("Clover Tech Preview - %s", getBuildStr()));
 
-	util::gRealClock= new util::Clock();
+	global::g_env->realClock= new util::Clock();
 
 	new resources::Cache();
 	global::g_env->resCache->update();
@@ -93,7 +93,7 @@ App::~App()
 	delete global::g_env->visualMgr;
 	delete global::g_env->audioMgr;
 	delete global::g_env->resCache;
-	delete util::gRealClock; util::gRealClock= nullptr;
+	delete global::g_env->realClock; global::g_env->realClock= nullptr;
 	delete global::g_env->device;
 	delete global::g_env->eventMgr;
 	delete global::gFileMgr;
@@ -121,8 +121,8 @@ void App::run()
 			// FPS limiter
 			sleepTimer.run();
 
-			if (util::gRealClock->getDeltaTime() < 0.014)
-				global::g_env->device->sleep(0.013-util::gRealClock->getDeltaTime());
+			if (global::g_env->realClock->getDeltaTime() < 0.014)
+				global::g_env->device->sleep(0.013-global::g_env->realClock->getDeltaTime());
 			else
 				global::g_env->device->sleep(0.0001);
 			

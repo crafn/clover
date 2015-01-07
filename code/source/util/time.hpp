@@ -94,9 +94,6 @@ private:
 	int32 tableIndex;
 };
 
-/// @todo This really shouldn't be global.
-extern Clock *gRealClock;
-
 } // util
 } // clover
 

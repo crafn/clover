@@ -13,6 +13,7 @@ namespace hardware { class Device; }
 namespace physics { class PhysMgr; }
 namespace resources { class Cache; }
 namespace ui { namespace game { class BaseUi; }}
+namespace util { class Clock; }
 namespace visual { class VisualMgr; }
 namespace global {
 
@@ -29,6 +30,7 @@ struct Env {
 	physics::PhysMgr* physMgr;
 	resources::Cache* resCache;
 	ui::game::BaseUi* ui;
+	util::Clock* realClock;
 	visual::VisualMgr* visualMgr;
 };
 

@@ -134,7 +134,7 @@ void DevLogic::update(){
 	}
 
 	++fpsFrameCount;
-	fpsTimer += util::gRealClock->getDeltaTime();
+	fpsTimer += global::g_env->realClock->getDeltaTime();
 	
 	editor.update();
 	

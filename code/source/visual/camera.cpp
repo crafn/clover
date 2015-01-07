@@ -103,7 +103,7 @@ bool Camera::isWorldBBInViewport(util::Vec2d p, util::Vec2d bb){
 
 void Camera::update(){
 
-	real32 dt= util::gRealClock->getDeltaTime();
+	real32 dt= global::g_env->realClock->getDeltaTime();
 	
 	
 	targetPosition += util::Vec2d{panningVelocity.x, panningVelocity.y}*dt;

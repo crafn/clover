@@ -40,7 +40,7 @@ Cursor::Cursor()
 
 void Cursor::preUpdate(){
 	if (mode == Mode::Analog){
-		const double dt= util::gRealClock->getDeltaTime();
+		const double dt= global::g_env->realClock->getDeltaTime();
 		const double sensitivity= 2.0;
 		util::Vec2d dif= drift*dt*sensitivity;
 
