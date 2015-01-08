@@ -6,6 +6,10 @@
 #include "util/misc.hpp"
 #include "util/string.hpp"
 
+#include <wchar.h>
+#include <ft2build.h>
+#include <freetype.h>
+
 namespace clover {
 namespace visual {
 
@@ -26,7 +30,8 @@ Font::Font(){
 Font::~Font(){
 }
 
-void Font::create(FT_Face& face){
+void Font::create(void* ft_face){
+	FT_Face& face= *(FT_Face*)ft_face;
 	FT_GlyphSlot slot= face->glyph;
 
 	util::Vec2i mapsize {1024,1024};

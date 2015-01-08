@@ -2,8 +2,8 @@
 #define CLOVER_GAME_WORLDENTITY_H
 
 #include "build.hpp"
-#include "nodes/nodeevent.hpp"
 #include "nodes/updateline.hpp"
+#include "util/any.hpp"
 #include "util/fh_save.hpp"
 #include "util/math.hpp"
 #include "util/map.hpp"
@@ -15,11 +15,8 @@
 #include "worldentity_type.hpp"
 
 namespace clover {
-namespace global {
-
-class Event;
-
-} // global
+namespace global { class Event; }
+namespace nodes { class NodeEvent; }
 namespace game {
 
 class WorldEntity;
@@ -125,7 +122,7 @@ public:
 	using ThisClass= WorldEntity;
 	
 	WorldEntity();
-	virtual ~WorldEntity(){}
+	virtual ~WorldEntity();
 	
 	void setType(const util::Str8& name);
 	const WeType& getType() const { return *NONULL(type); }
@@ -136,7 +133,7 @@ public:
 	void shallowUpdate();
 
 	nodes::UpdateLine getUpdateLine() const;
-	bool isUpdateNeeded() const { return isActive() && instance && !instance->isUpdateNoop(); }
+	bool isUpdateNeeded() const;
 	
 	void onEvent(global::Event& e);
 	void onEvent(const nodes::NodeEvent& e);
@@ -165,7 +162,7 @@ protected:
 	util::Vec2d position;
 	
 	/// In case of node group recreation attributes must remain
-	nodes::WeInterfaceNodeInstance::AttributeInfos savedAttributes;
+	util::Any savedAttributes;
 	
 	util::UniquePtr<nodes::NodeInstanceGroup> instance;
 	

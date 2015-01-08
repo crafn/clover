@@ -50,6 +50,7 @@ public:
 	Any& operator=(T&& v)
 	{ ptr= util::UniquePtr<BaseValue>(new V<T>{std::move(v)}); return *this; }
 
+	void reset() { ptr.reset(); }
 	bool empty() const { return ptr.get() == nullptr; }
 
 private:

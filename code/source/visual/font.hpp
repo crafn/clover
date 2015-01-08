@@ -7,10 +7,6 @@
 #include "visual/texture.hpp"
 #include "visual/material.hpp"
 
-#include <wchar.h>
-#include <ft2build.h>
-#include <freetype.h>
-
 namespace clover {
 namespace visual {
 
@@ -33,7 +29,7 @@ public:
 
 	virtual ~Font();
 
-	void create(FT_Face &face);
+	void create(void* ft_face);
 
 	/// 1 unit == 1 pixel
 	/// Upper left corner is origo

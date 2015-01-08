@@ -2,9 +2,8 @@
 #define CLOVER_GAME_WORLDENTITY_TYPE_HPP
 
 #include "build.hpp"
-#include "nodes/nodeinstancegroup.hpp"
-#include "nodes/native_instances/nodeinstance_we_interface.hpp"
 #include "resources/resource.hpp"
+#include "util/cb_listener.hpp"
 
 namespace clover {
 namespace game {

@@ -9,7 +9,6 @@
 #include "util/tidy.hpp"
 #include "vertexattribute.hpp"
 
-#include <GL/glew.h>
 #include <string>
 
 namespace clover {

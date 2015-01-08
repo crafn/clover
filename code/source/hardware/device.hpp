@@ -5,8 +5,7 @@
 #include "util/math.hpp"
 #include "util/unique_ptr.hpp"
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 namespace clover {
 namespace ui { namespace hid {

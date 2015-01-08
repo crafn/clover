@@ -2,6 +2,8 @@
 #include "global/event.hpp"
 #include "nodes/compositionnodelogicgroup.hpp"
 #include "nodes/native_instances/nodeinstance_we_interface.hpp"
+#include "nodes/nodeevent.hpp"
+#include "nodes/nodeinstancegroup.hpp"
 #include "nodes/nodetype.hpp"
 #include "physics/object.hpp"
 #include "resources/cache.hpp"
@@ -107,6 +109,9 @@ WorldEntity::WorldEntity()
 	DEF_WE_SET_FUNC(position, setPosition)
 }
 
+WorldEntity::~WorldEntity()
+{ }
+
 void WorldEntity::weInit(){
 	PROFILE();
 	ensure(type);
@@ -211,8 +216,10 @@ void WorldEntity::setType(const util::Str8& name){
 		
 		// Restore attributes
 		if (weInterface)
-			weInterface->setAttributes(savedAttributes);
-		savedAttributes.clear();
+			weInterface->setAttributes(
+				util::anyCast<nodes::WeInterfaceNodeInstance::AttributeInfos>(
+					savedAttributes));
+		savedAttributes.reset();
 		
 		if (type->getResourceState() != resources::Resource::State::Loaded)
 			errorState= true;
@@ -261,6 +268,9 @@ nodes::UpdateLine WorldEntity::getUpdateLine() const {
 	else
 		return nodes::UpdateLine();
 }
+
+bool WorldEntity::isUpdateNeeded() const
+{ return isActive() && instance && !instance->isUpdateNoop(); }
 
 void WorldEntity::onEvent(global::Event& e){
 }

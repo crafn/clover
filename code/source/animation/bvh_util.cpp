@@ -8,6 +8,7 @@
 #include "global/file.hpp"
 #include "global/file_stream.hpp"
 
+#include <stack>
 #include <string>
 #include <sstream>
 

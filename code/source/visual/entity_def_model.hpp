@@ -10,8 +10,6 @@
 #include "visual/model.hpp"
 #include "visual/entity_def.hpp"
 
-#include <GL/glew.h>
-
 namespace clover {
 namespace visual {
 

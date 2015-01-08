@@ -4,7 +4,6 @@
 #include "build.hpp"
 #include "util/string.hpp"
 
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 namespace clover {
@@ -42,7 +41,6 @@ protected:
 	//static void GLFWCALL keyCallback(int32 character, int32 action);
 };
 
-// Device hoitaa
 extern Keyboard *gKeyboard;
 
 } // hardware

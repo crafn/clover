@@ -48,12 +48,12 @@ struct RtTransform : public TTransform<T> {
 	bool operator==(const RtTransform& other) const {
 		return Base::operator==(other) && rotation == other.rotation;
 	}
-	
+
 	bool operator!=(const RtTransform& other) const { return !operator==(other); }
-	
+
 	template <typename RR, typename TT>
 	void commonReplaced(const RtTransform<RR, TT>& t){ return commonReplaced(*this, t); }
-	
+
 	/// @return *this transformed by other in order: rotate -> translate
 	This operator*(const This& other) const {
 		This t= *this;
@@ -61,7 +61,7 @@ struct RtTransform : public TTransform<T> {
 		t.translation= rotatedBy(t.translation, other.rotation) + other.translation;
 		return t;
 	}
-	
+
 	/// transform * transform.inversed() == identity
 	This inversed() const {
 		This t= *this;
@@ -69,13 +69,13 @@ struct RtTransform : public TTransform<T> {
 		t.translation= -rotatedBy(t.translation, t.rotation);
 		return t;
 	}
-	
+
 	template <typename Archive>
 	void serialize(Archive& ar, const uint32& ver){
 		ar & Base::translation;
 		ar & rotation;
 	}
-	
+
 	R rotation;
 };
 

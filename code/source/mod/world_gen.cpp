@@ -1,4 +1,5 @@
 #include "collision/baseshape_polygon.hpp"
+#include "collision/shape.hpp"
 #include "game/physics.hpp"
 #include "game/propertygrid.hpp"
 #include "game/world_mgr.hpp"
@@ -7,6 +8,7 @@
 #include "game/world_gen/world_gen.hpp"
 #include "global/env.hpp"
 #include "physics/grid.hpp"
+#include "resources/resource_ref.hpp"
 #include "util/dynamic.hpp"
 #include "util/math.hpp"
 #include "util/vector.hpp"

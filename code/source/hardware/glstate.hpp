@@ -7,7 +7,6 @@
 #include "util/math.hpp"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 #define BUFFER_OFFSET(i) ((int8 *)NULL + (i))
 

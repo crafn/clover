@@ -2,8 +2,6 @@
 #include "hardware/glstate.hpp"
 #include "resources/exception.hpp"
 
-#include <GL/glew.h>
-
 namespace clover {
 namespace resources {
 

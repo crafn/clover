@@ -1,6 +1,8 @@
 #include "objectnode.hpp"
 #include "resources/exception.hpp"
 
+#include <json/json.h>
+
 namespace clover {
 namespace util {
 

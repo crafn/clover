@@ -7,6 +7,7 @@
 #include "ui/hid/device.hpp"
 
 #include <array>
+#include <GLFW/glfw3.h>
 
 namespace clover {
 namespace hardware {
