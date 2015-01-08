@@ -57,6 +57,11 @@ private:
 	RESOURCE_ATTRIBUTE(String, classAttribute)
 
 	void tryStartReloading();
+
+	using NewNodeInst= NodeInstance* ();
+	using NewNodeComp= CompositionNodeLogic* ();
+	NewNodeInst* newNodeInst;
+	NewNodeComp* newNodeComp;
 };
 
 } // nodes

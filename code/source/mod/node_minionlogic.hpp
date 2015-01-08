@@ -1,18 +1,17 @@
 #ifndef CLOVER_NODES_NODEINSTANCE_MINIONLOGIC_HPP
 #define CLOVER_NODES_NODEINSTANCE_MINIONLOGIC_HPP
 
-#include "../nodeinstance.hpp"
+#include "nodes/nodeinstance.hpp"
 #include "build.hpp"
 #include "game/worldentity_handle.hpp"
 #include "util/unique_ptr.hpp"
 
 namespace clover {
-namespace physics {
+namespace physics { class RigidObject; }
+namespace mod {
 
-class RigidObject;
-
-} // physics
-namespace nodes {
+// I'm lazy
+using namespace clover::nodes;
 
 class MinionPhysicsEntity {
 public:
@@ -33,7 +32,8 @@ private:
 	bool awake= false;
 };
 
-class MinionLogicNodeInstance : public NodeInstance {
+DECLARE_NODE(MinionLogicNode);
+class MinionLogicNode : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 
@@ -55,15 +55,7 @@ private:
 	MinionPhysicsEntity physEntity;
 };
 
-} // nodes
-namespace util {
-
-template <>
-struct TypeStringTraits<nodes::MinionLogicNodeInstance> {
-	static util::Str8 type(){ return "::MinionLogicNodeInstance"; }
-};
-
-} // util
+} // mod
 } // clover
 
 #endif // CLOVER_NODES_NODEINSTANCE_MINIONLOGIC_HPP

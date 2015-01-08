@@ -3,12 +3,13 @@
 #include "game/world_mgr.hpp"
 #include "game/worldentity.hpp"
 #include "global/env.hpp"
-#include "nodeinstance_minionlogic.hpp"
+#include "node_minionlogic.hpp"
 
 namespace clover {
-namespace nodes {
+namespace mod {
 
-CompositionNodeLogic* MinionLogicNodeInstance::compNode()
+DEFINE_NODE(MinionLogicNode);
+CompositionNodeLogic* MinionLogicNode::compNode()
 {
 	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("active", SignalType::Boolean, false);
@@ -100,7 +101,7 @@ util::RtTransform2d MinionPhysicsEntity::getTransform() const
 util::RtTransform2d MinionPhysicsEntity::getEstimatedTransform() const
 { return bodyObject->getTransform(); }
 
-void MinionLogicNodeInstance::create()
+void MinionLogicNode::create()
 {
 	activeIn= addInputSlot<SignalType::Boolean>("active");
 	transformIn= addInputSlot<SignalType::RtTransform2>("transform");
@@ -160,7 +161,7 @@ void MinionLogicNodeInstance::create()
 	{ physEntity.setWe(weIn->get()); });
 }
 
-void MinionLogicNodeInstance::update()
+void MinionLogicNode::update()
 {
 	real64 dt= global::g_env.worldMgr->getDeltaTime();
 	phase += dt;
@@ -194,5 +195,5 @@ void MinionLogicNodeInstance::update()
 	estimatedTransformOut->send(estimated_t);
 }
 
-} // nodes
+} // mod
 } // clover

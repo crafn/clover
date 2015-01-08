@@ -4,14 +4,16 @@
 #include "game/physicalmaterial.hpp"
 #include "game/world_mgr.hpp"
 #include "global/env.hpp"
-#include "nodeinstance_playerlogic.hpp"
+#include "node_playerlogic.hpp"
 
 namespace clover {
-namespace nodes {
+namespace mod {
 
-CompositionNodeLogic* PlayerLogicNodeInstance::compNode()
+DEFINE_NODE(PlayerLogicNode);
+
+nodes::CompositionNodeLogic* PlayerLogicNode::compNode()
 {
-	auto n= new CompositionNodeLogic{};
+	auto n= new nodes::CompositionNodeLogic{};
 	n->addInputSlot("player", SignalType::String, util::Str8("player0"));
 	n->addInputSlot("movement", SignalType::Vec2);
 	n->addInputSlot("respawn", SignalType::Trigger);
@@ -341,7 +343,7 @@ void PlayerPhysicsEntity::onBodyContactPostSolve(const physics::PostSolveContact
 real64 PlayerPhysicsEntity::wheelOffset()
 { return -0.65; }
 
-void PlayerLogicNodeInstance::create()
+void PlayerLogicNode::create()
 {
 	playerStringIn= addInputSlot<SignalType::String>("player");
 	movementIn= addInputSlot<SignalType::Vec2>("movement");
@@ -406,7 +408,7 @@ void PlayerLogicNodeInstance::create()
 	setUpdateNeeded(true);
 }
 
-void PlayerLogicNodeInstance::update()
+void PlayerLogicNode::update()
 {
 	real64 dt= global::g_env.worldMgr->getDeltaTime();
 
@@ -437,7 +439,7 @@ void PlayerLogicNodeInstance::update()
 	normalizedJumpApexDistanceOut->send(physEntity.getNormalizedJumpApexDistance());
 }
 
-void PlayerLogicNodeInstance::setTagEntry(const util::Str8& s)
+void PlayerLogicNode::setTagEntry(const util::Str8& s)
 {
 	tagEntry= ui::hid::TagListEntry(
 		playerStringIn->get(),
@@ -445,12 +447,12 @@ void PlayerLogicNodeInstance::setTagEntry(const util::Str8& s)
 		"charCtrl");
 }
 
-void PlayerLogicNodeInstance::clearTagEntry()
+void PlayerLogicNode::clearTagEntry()
 {
 	tagEntry.reset();
 }
 
-void PlayerLogicNodeInstance::chooseActionState(util::Vec2d pos)
+void PlayerLogicNode::chooseActionState(util::Vec2d pos)
 {
 	if (physEntity.isHandAttached()) {
 		setTagEntry("inHand");
@@ -472,7 +474,7 @@ void PlayerLogicNodeInstance::chooseActionState(util::Vec2d pos)
 	}
 }
 
-void PlayerLogicNodeInstance::tryPickup(util::Vec2d pos)
+void PlayerLogicNode::tryPickup(util::Vec2d pos)
 {
 	physics::Object* obj= findPickableObject(pos);
 	if (obj) {
@@ -481,7 +483,7 @@ void PlayerLogicNodeInstance::tryPickup(util::Vec2d pos)
 	}
 }
 
-physics::Object* PlayerLogicNodeInstance::findPickableObject(util::Vec2d pos)
+physics::Object* PlayerLogicNode::findPickableObject(util::Vec2d pos)
 {
 	real32 max_dist= 0.5;
 
@@ -517,19 +519,19 @@ physics::Object* PlayerLogicNodeInstance::findPickableObject(util::Vec2d pos)
 	return closest_obj;
 }
 
-void PlayerLogicNodeInstance::die()
+void PlayerLogicNode::die()
 {
 	health= 0.0;
 	physEntity.reset(transform, true, poseIn->get(), *NONULL(weIn->get().get()));
 	deadOut->send(true);
 }
 
-void PlayerLogicNodeInstance::respawn()
+void PlayerLogicNode::respawn()
 {
 	health= 1.0;
 	physEntity.reset(transform, false, poseIn->get(), *NONULL(weIn->get().get()));
 	deadOut->send(false);
 }
 
-} // nodes
+} // mod
 } // clover

@@ -1,7 +1,7 @@
 #ifndef CLOVER_NODES_NODEINSTANCE_PLAYERLOGIC_HPP
 #define CLOVER_NODES_NODEINSTANCE_PLAYERLOGIC_HPP
 
-#include "../nodeinstance.hpp"
+#include "nodes/nodeinstance.hpp"
 #include "build.hpp"
 #include "physics/armaturesuit.hpp"
 #include "physics/contact.hpp"
@@ -13,12 +13,11 @@
 #include "util/optional.hpp"
 
 namespace clover {
-namespace physics {
+namespace physics { class Object; }
+namespace mod {
 
-class Object;
-
-} // physics
-namespace nodes {
+// I'm lazy
+using namespace clover::nodes;
 
 class PlayerPhysicsEntity {
 public:
@@ -74,9 +73,11 @@ private:
 	util::Dynamic<physics::HardWeldJoint> handJoint;
 };
 
-class PlayerLogicNodeInstance : public NodeInstance {
+DECLARE_NODE(PlayerLogicNode);
+
+class PlayerLogicNode : public nodes::NodeInstance {
 public:
-	static CompositionNodeLogic* compNode();
+	static nodes::CompositionNodeLogic* compNode();
 
 	virtual void create() override;
 	virtual void update() override;
@@ -91,6 +92,7 @@ private:
 	void respawn();
 
 private:
+
 	InputSlot<SignalType::String>* playerStringIn;
 	InputSlot<SignalType::Vec2>* movementIn;
 	InputSlot<SignalType::Trigger>* respawnIn;
@@ -124,15 +126,7 @@ private:
 	PlayerPhysicsEntity physEntity;
 };
 
-} // nodes
-namespace util {
-
-template <>
-struct TypeStringTraits<nodes::PlayerLogicNodeInstance> {
-	static util::Str8 type(){ return "::PlayerLogicNodeInstance"; }
-};
-
-} // util
+} // mod
 } // clover
 
 #endif // CLOVER_NODES_NODEINSTANCE_PLAYERLOGIC_HPP

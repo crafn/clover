@@ -13,8 +13,10 @@
 #include "util/math.hpp"
 #include "util/vector.hpp"
 
+namespace clover {
+namespace mod {
+
 namespace world_gen= clover::game::world_gen;
-using namespace clover;
 
 const real64 g_beginningOfTime= -1000.0;
 const uint32 chunkWidthInBlocks= game::WorldGrid::chunkWidthInBlocks;
@@ -448,3 +450,5 @@ MOD_API void protoWork(world_gen::WorldGen& gen, const world_gen::Worker& w){
 
 }
 
+} // mod
+} // clover

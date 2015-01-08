@@ -1,6 +1,5 @@
 #include "compositionnodelogic.hpp"
 #include "global/event.hpp"
-#include "nodefactory.hpp"
 #include "nodetype.hpp"
 
 namespace clover {

@@ -12,6 +12,17 @@
 
 #include <memory>
 
+#define DECLARE_NODE(x) \
+class x;\
+MOD_API nodes::NodeInstance* new_inst_ ## x(); \
+MOD_API nodes::CompositionNodeLogic* new_comp_ ## x(); \
+
+#define DEFINE_NODE(x) \
+nodes::NodeInstance* new_inst_ ## x() \
+{ return new x{}; } \
+nodes::CompositionNodeLogic* new_comp_ ## x() \
+{ return x::compNode(); } \
+
 namespace clover {
 namespace nodes {
 

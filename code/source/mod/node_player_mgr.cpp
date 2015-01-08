@@ -1,12 +1,14 @@
-#include "nodeinstance_player_mgr.hpp"
+#include "node_player_mgr.hpp"
 
 namespace clover {
-namespace nodes {
+namespace mod {
 
-CompositionNodeLogic* PlayerMgrNodeInstance::compNode()
+DEFINE_NODE(PlayerMgrNode)
+
+CompositionNodeLogic* PlayerMgrNode::compNode()
 { return new CompositionNodeLogic{}; }
 
-void PlayerMgrNodeInstance::create()
+void PlayerMgrNode::create()
 {
 	setUpdateNeeded(false);
 
@@ -18,5 +20,5 @@ void PlayerMgrNodeInstance::create()
 	}
 }
 
-} // nodes
+} // mod
 } // clover

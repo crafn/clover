@@ -13,10 +13,7 @@
 #include "nodeinstance_logicor.hpp"
 #include "nodeinstance_lerp_pose.hpp"
 #include "nodeinstance_lerp_vec2.hpp"
-#include "nodeinstance_minionlogic.hpp"
 #include "nodeinstance_multiply_real.hpp"
-#include "nodeinstance_player_mgr.hpp"
-#include "nodeinstance_playerlogic.hpp"
 #include "nodeinstance_pow_real.hpp"
 #include "nodeinstance_randomize_srttransform2.hpp"
 #include "nodeinstance_rollbot_ai.hpp"
@@ -44,9 +41,6 @@ NODEINSTANCE(GuiInputNodeInstance)
 NODEINSTANCE(EventFactoryNodeInstance)
 NODEINSTANCE(EventHandlerNodeInstance)
 NODEINSTANCE(LogicOrNodeInstance)
-NODEINSTANCE(MinionLogicNodeInstance)
-NODEINSTANCE(PlayerLogicNodeInstance)
-NODEINSTANCE(PlayerMgrNodeInstance)
 NODEINSTANCE(PoseLerpNodeInstance)
 NODEINSTANCE(RealAddNodeInstance)
 NODEINSTANCE(RealExpReleaseNodeInstance)
