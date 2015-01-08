@@ -125,7 +125,7 @@ void FileWatcherWindowsImpl::removeWatch(){
 
 void FileWatcherWindowsImpl::directoryChangeDetectionLoop(const util::Str8& dir_path){
 
-	auto dir_wpath= std::unique_ptr<WCHAR>(new WCHAR[dir_path.length()+1]);
+	auto dir_wpath= util::UniquePtr<WCHAR>(new WCHAR[dir_path.length()+1]);
 
 	int32 convert_ret=	MultiByteToWideChar(
 				CP_ACP,

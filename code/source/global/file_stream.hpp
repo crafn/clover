@@ -3,9 +3,9 @@
 
 #include "build.hpp"
 #include "util/dyn_array.hpp"
+#include "util/unique_ptr.hpp"
 
 #include <istream>
-#include <memory>
 
 namespace clover {
 namespace global {
@@ -21,7 +21,7 @@ public:
 
 private:
 	class Buffer;
-	std::unique_ptr<Buffer> buffer;
+	util::UniquePtr<Buffer> buffer;
 };
 
 } // global

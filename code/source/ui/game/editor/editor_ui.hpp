@@ -24,7 +24,7 @@ public:
 
 private:
 	Editor* editor;
-	util::DynArray<std::unique_ptr<EditorViewUi>> viewUis;
+	util::DynArray<util::UniquePtr<EditorViewUi>> viewUis;
 	util::Timer performanceTimer;
 };
 

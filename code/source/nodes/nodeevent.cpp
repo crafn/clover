@@ -33,7 +33,7 @@ NodeEvent& NodeEvent::operator=(const NodeEvent& other){
 	queued= other.queued;
 	
 	for (auto& m : other.receivers){
-		receivers.pushBack(std::unique_ptr<NodeEventReceiverProxy>(m->clone()));
+		receivers.pushBack(util::UniquePtr<NodeEventReceiverProxy>(m->clone()));
 	}
 	
 	return *this;
@@ -55,7 +55,7 @@ void NodeEvent::set(const util::Str8& name, const util::Any& value){
 
 void NodeEvent::addReceiver(const game::WorldEntity& recv){
 	receivers.pushBack(std::move(
-		std::unique_ptr<NodeEventReceiverProxy>(
+		util::UniquePtr<NodeEventReceiverProxy>(
 			new WeNodeEventReceiverProxy(game::WeHandle{&recv}))
 	));
 }

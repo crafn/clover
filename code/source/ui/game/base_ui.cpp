@@ -41,7 +41,7 @@ BaseUi::BaseUi()
 	listenForEvent(global::Event::OnEditorCreate);
 	listenForEvent(global::Event::OnEditorDestroy);
 
-	inGameUi= std::unique_ptr<InGameUi>(new InGameUi());
+	inGameUi= util::UniquePtr<InGameUi>(new InGameUi());
 }
 
 BaseUi::~BaseUi(){
@@ -53,7 +53,7 @@ void BaseUi::onEvent(global::Event& e){
 	switch(e.getType()){
 		case global::Event::OnEditorCreate:
 			ensure(!editorUi.get());
-			editorUi= std::unique_ptr<editor::EditorUi>(
+			editorUi= util::UniquePtr<editor::EditorUi>(
 				new editor::EditorUi(*e(global::Event::Object).getPtr<game::editor::Editor>()));
 		break;
 

@@ -65,7 +65,7 @@ private:
 	void startSending();
 	
 	struct SendMsgInfo {
-		using Ptr= std::unique_ptr<SendMsgInfo>;
+		using Ptr= util::UniquePtr<SendMsgInfo>;
 		
 		Msg msg;
 		TransferCallback callback;

@@ -21,8 +21,8 @@ class CompositionNodeSlot;
 class NodeType;
 
 class NodeInstance {
-	typedef std::unique_ptr<BaseInputSlot> InputSlotPtr;
-	typedef std::unique_ptr<BaseOutputSlot> OutputSlotPtr;
+	typedef util::UniquePtr<BaseInputSlot> InputSlotPtr;
+	typedef util::UniquePtr<BaseOutputSlot> OutputSlotPtr;
 public:
 	// External variables stored in NodeInstanceGroup
 	// Used for optimization and group behavior

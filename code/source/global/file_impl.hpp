@@ -3,8 +3,7 @@
 
 #include "build.hpp"
 #include "util/string.hpp"
-
-#include <memory>
+#include "util/unique_ptr.hpp"
 
 namespace clover {
 namespace global {
@@ -31,7 +30,7 @@ private:
 	bool read_only;
 };
 
-typedef std::unique_ptr<FileImpl> FileImplPtr;
+typedef util::UniquePtr<FileImpl> FileImplPtr;
 
 } // global
 } // clover

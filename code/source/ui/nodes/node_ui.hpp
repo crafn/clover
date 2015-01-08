@@ -18,7 +18,7 @@ namespace ui { namespace nodes {
 class NodeUi : public global::EventReceiver {
 public:
 
-	typedef std::unique_ptr<NodeSlotUi> NodeSlotUiPtr;
+	typedef util::UniquePtr<NodeSlotUi> NodeSlotUiPtr;
 	
 	NodeUi(CompositionNodeLogic&);
 	NodeUi(NodeUi&&);

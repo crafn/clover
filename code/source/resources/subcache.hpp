@@ -62,7 +62,7 @@ private:
 
 	T* findResourceImpl(const IdentifierValue& id);
 
-	util::HashMap<IdentifierValue, std::unique_ptr<T>> resources;
+	util::HashMap<IdentifierValue, util::UniquePtr<T>> resources;
 
 	util::HashMap<ResourceFilePath, util::HashMap<IdentifierValue, T*>> resourcesByFile;
 };

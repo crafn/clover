@@ -5,9 +5,6 @@
 #include "global/exception.hpp"
 #include "util/string.hpp"
 
-/// @todo Use util::Atomic
-#include <boost/atomic.hpp>
-
 namespace clover {
 namespace hardware {
 
@@ -125,7 +122,7 @@ PaAudioDevice::PaAudioDevice():
 	defaultDeviceDId(-1){
 	chooseWiselyAndCreateNicely();
 
-	paOutputStream= std::move(std::unique_ptr<PaOutputStream>(
+	paOutputStream= std::move(util::UniquePtr<PaOutputStream>(
 		new PaOutputStream(
 			getDefaultStreamParameters(),
 			getDefaultSampleRate(),

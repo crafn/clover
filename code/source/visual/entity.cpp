@@ -44,7 +44,7 @@ void Entity::setDef(const EntityDef& def){
 	m.definition= &def;
 	resetDefChangeListening();
 	
-	m.logic= std::unique_ptr<EntityLogic>(m.definition->createLogic());
+	m.logic= util::UniquePtr<EntityLogic>(m.definition->createLogic());
 	m.logic->setLayer(m.layer);
 	
 	setActive(was_active);
@@ -67,7 +67,7 @@ void Entity::changeDef(const EntityDef& def){
 		ensure(new_logic);
 		
 		new_logic->apply(*m.logic);
-		m.logic= std::move(std::unique_ptr<EntityLogic>(new_logic));
+		m.logic= std::move(util::UniquePtr<EntityLogic>(new_logic));
 		
 		setActive(was_active);
 	}
@@ -160,7 +160,7 @@ void Entity::resetDefChangeListening(){
 		EntityLogic* new_logic= m.definition->createLogic();
 		if (m.logic)
 			new_logic->apply(*m.logic);
-		m.logic= std::move(std::unique_ptr<EntityLogic>(new_logic));
+		m.logic= std::move(util::UniquePtr<EntityLogic>(new_logic));
 		
 		setActive(was_active);
 	});

@@ -24,7 +24,7 @@ void EditorUi::onEvent(global::Event& e){
 
 	switch(e.getType()){
 		case global::Event::OnEditorViewCreate:
-			viewUis.pushBack( std::unique_ptr<EditorViewUi>(new EditorViewUi(*e(global::Event::Object).getPtr<EditorView>())) );
+			viewUis.pushBack( util::UniquePtr<EditorViewUi>(new EditorViewUi(*e(global::Event::Object).getPtr<EditorView>())) );
 		break;
 
 		case global::Event::OnEditorViewDestroy: {

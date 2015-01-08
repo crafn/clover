@@ -9,7 +9,7 @@
 namespace clover {
 namespace util {
 
-/// std::unique_ptr equivalent (for script)
+/// util::UniquePtr equivalent (for script)
 /// Used to instantiate no-count ref types in script
 /// Usage: "UniquePtr<Type>", in script: UniquePtr<Type@>
 template <typename T>
@@ -33,7 +33,7 @@ public:
 	explicit operator bool() const { return ptr.get() != nullptr; }
 
 private:
-	/// @todo Replace with custom impl, because std::unique_ptr is broken;
+	/// @todo Replace with custom impl, because util::UniquePtr is broken;
 	///       Ptr can't be accessed during dtor -- with new & delete it can.
 	std::unique_ptr<T> ptr;
 };

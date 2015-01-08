@@ -4,8 +4,7 @@
 #include "build.hpp"
 #include "editorextension.hpp"
 #include "util/dyn_array.hpp"
-
-#include <memory>
+#include "util/unique_ptr.hpp"
 
 namespace clover {
 namespace game { namespace editor {
@@ -18,7 +17,7 @@ public:
 	void update();
 
 private:
-	using ExtensionPtr= std::unique_ptr<EditorExtension>;
+	using ExtensionPtr= util::UniquePtr<EditorExtension>;
 
 	template <typename T>
 	EditorExtension& createExtension(){

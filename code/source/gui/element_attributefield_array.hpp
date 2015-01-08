@@ -16,7 +16,7 @@ public:
 	using AttributeType= resources::AttributeType<PlainType, true>;
 	using Base= AttributeFieldWrapElement<AttributeType>;
 	using ArrayElement= AttributeFieldElement<resources::AttributeType<PlainType, false>>;
-	using ArrayElementPtr= std::unique_ptr<ArrayElement>;
+	using ArrayElementPtr= util::UniquePtr<ArrayElement>;
 	
 	AttributeFieldElement(const resources::AttributeDef& def)
 			: Base(def)

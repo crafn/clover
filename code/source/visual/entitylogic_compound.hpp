@@ -31,7 +31,7 @@ public:
 	util::DynArray<Entity*> getEntities() const;
 
 private:
-	using EntityPtr= std::unique_ptr<Entity>;
+	using EntityPtr= util::UniquePtr<Entity>;
 	struct AttachedEntity {
 		EntityPtr entity;
 		animation::JointId jointId;

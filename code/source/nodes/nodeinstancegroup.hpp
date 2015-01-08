@@ -45,7 +45,7 @@ private:
 	void create(const CompositionNodeLogicGroup& g);
 	NodeInstance& add(const CompositionNodeLogic& comp);
 	
-	using NodeInstancePtr= std::unique_ptr<NodeInstance>;
+	using NodeInstancePtr= util::UniquePtr<NodeInstance>;
 	util::DynArray<NodeInstancePtr> nodes;
 	util::CbListener<util::OnChangeCb> compGroupListener;
 	NodeInstance::GroupVars groupVars;

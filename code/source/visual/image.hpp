@@ -6,6 +6,7 @@
 #include "util/atomic.hpp"
 #include "util/ensure.hpp"
 #include "util/string.hpp"
+#include "util/unique_ptr.hpp"
 
 #include <thread>
 
@@ -69,7 +70,7 @@ private:
 	util::Atomic<bool> asyncLoading;
 	util::Atomic<bool> loaded;
 
-	std::unique_ptr<std::thread> asyncThread;
+	util::UniquePtr<std::thread> asyncThread;
 	std::exception_ptr asyncException;
 };
 

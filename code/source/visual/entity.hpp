@@ -85,7 +85,7 @@ protected:
 		const EntityDef* definition;
 		
 		util::CbListener<util::OnChangeCb> definitionChangeListener;
-		std::unique_ptr<EntityLogic> logic;
+		util::UniquePtr<EntityLogic> logic;
 	} m; // To make move cleaner	
 };
 

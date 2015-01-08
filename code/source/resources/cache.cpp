@@ -247,7 +247,7 @@ void Cache::createSubCache()
 {
 	util::Str8 section= ResourceTraits<T>::typeName();
 	BaseSubCache* cache= new typename ResourceTraits<T>::SubCacheType();
-	subCaches[section]= std::move(std::unique_ptr<BaseSubCache>(cache));
+	subCaches[section]= std::move(util::UniquePtr<BaseSubCache>(cache));
 }
 
 /// @todo Add every function template

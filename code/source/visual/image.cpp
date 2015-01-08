@@ -39,7 +39,7 @@ void Image::loadAsync(const util::Str8& path){
 	if (asyncThread)
 		asyncThread->join();
 	asyncException= nullptr;
-	asyncThread= std::unique_ptr<std::thread>(new std::thread(std::bind(&Image::asyncLoadingThread, this, path)));
+	asyncThread= util::UniquePtr<std::thread>(new std::thread(std::bind(&Image::asyncLoadingThread, this, path)));
 }
 
 bool Image::isLoaded() const {

@@ -109,7 +109,7 @@ private:
 			const ResourceFilePath& path_to_resource_file,
 			const util::Str8& only_this= "");
 
-	util::HashMap<util::Str8, std::unique_ptr<BaseSubCache>> subCaches;
+	util::HashMap<util::Str8, util::UniquePtr<BaseSubCache>> subCaches;
 	util::DynArray<ResourceFilePath> resourceFilePaths;
 	util::LinkedList<std::shared_ptr<util::FileWatcher>> resourceFileWatchers;
 

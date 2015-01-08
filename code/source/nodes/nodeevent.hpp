@@ -66,7 +66,7 @@ private:
 	util::HashMap<util::Str8, util::Any> arguments;
 	
 	bool queued;
-	util::DynArray<std::unique_ptr<NodeEventReceiverProxy>> receivers;
+	util::DynArray<util::UniquePtr<NodeEventReceiverProxy>> receivers;
 };
 
 } // nodes

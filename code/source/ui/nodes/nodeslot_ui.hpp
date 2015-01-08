@@ -118,7 +118,7 @@ private:
 	util::DynArray<NodeSlotGui*> arrivingLineSlots;
 	
 	// Default value
-	std::unique_ptr<BaseSignalValueUi> signalValueUi;
+	util::UniquePtr<BaseSignalValueUi> signalValueUi;
 };
 
 class NodeUi;
@@ -176,7 +176,7 @@ private:
 	gui::FloatingElement subSlotFloating;
 	gui::LinearLayoutElement subSlotLayout;
 	
-	typedef std::unique_ptr<NodeSlotGui> NodeSlotGuiPtr;
+	typedef util::UniquePtr<NodeSlotGui> NodeSlotGuiPtr;
 	util::DynArray<NodeSlotGuiPtr> subSlots;
 	
 	CallbackType onSubSlotsShow;

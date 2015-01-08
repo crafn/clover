@@ -60,7 +60,7 @@ NodeSlotGui::NodeSlotGui(NodeSlotUi& o, SubSignalType sub_type):
 	}
 	
 	if (!is_output && subType == SubSignalType::None){
-		signalValueUi= std::unique_ptr<BaseSignalValueUi>(
+		signalValueUi= util::UniquePtr<BaseSignalValueUi>(
 			SignalValueUiFactory::create(owner->getCompositionNodeSlot()->getSignalType()));
 		
 		contentLayout.addSubElement(signalValueUi->getViewGuiElement());

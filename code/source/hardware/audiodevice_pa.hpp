@@ -5,6 +5,7 @@
 #include "audio/outputstream.hpp"
 #include "build.hpp"
 #include "util/dyn_array.hpp"
+#include "util/unique_ptr.hpp"
 
 #include <portaudio.h>
 
@@ -53,7 +54,7 @@ private:
 
 	static constexpr uint32 defaultSampleRate= 44100;
 
-	std::unique_ptr<PaOutputStream> paOutputStream;
+	util::UniquePtr<PaOutputStream> paOutputStream;
 	int32 defaultDeviceDId;
 };
 

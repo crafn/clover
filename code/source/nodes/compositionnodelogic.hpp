@@ -22,8 +22,8 @@ class CompositionNodeLogicGroup;
 class CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
 public: // Copypasted from former BaseCompositionNodeScriptLogic
 
-	typedef std::unique_ptr<CompositionNodeSlot> CompositionNodeSlotPtr;
-	typedef std::unique_ptr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
+	typedef util::UniquePtr<CompositionNodeSlot> CompositionNodeSlotPtr;
+	typedef util::UniquePtr<CompositionNodeSlotTemplateGroup> CompositionNodeSlotTemplateGroupPtr;
 	
 	CompositionNodeSlot& addInputSlot(const SlotIdentifier& identifier, const util::Any& init_value);
 	

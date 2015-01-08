@@ -45,8 +45,8 @@ protected:
 	void enablePlayerInput();
 	void disablePlayerInput();
 	
-	std::unique_ptr<InGameUi> inGameUi;
-	std::unique_ptr<editor::EditorUi> editorUi;
+	util::UniquePtr<InGameUi> inGameUi;
+	util::UniquePtr<editor::EditorUi> editorUi;
 
 	gui::Cursor& guiCursor;
 

@@ -287,7 +287,7 @@ T& SubCache<T>::createNewResource(const IdentifierValue& id){
 	ensure(resources.count(id) == 0);
 	
 	T* ptr= new T();
-	resources[id]= std::unique_ptr<T>(ptr);
+	resources[id]= util::UniquePtr<T>(ptr);
 	ptr->getResourceAttribute(ResourceTraits<T>::identifierKey()).template set<IdentifierAttributeType>(id); // util::Set name
 	return *ptr;
 }

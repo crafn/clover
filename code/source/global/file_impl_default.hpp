@@ -20,7 +20,7 @@ public:
 
 	virtual util::Str8 getDirname() const override;
 	
-	static std::unique_ptr<DefaultFileImpl> stat(const util::Str8& path, bool readOnly);
+	static util::UniquePtr<FileImpl> stat(const util::Str8& path, bool readOnly);
 
 private:
 	enum OpenFlags {

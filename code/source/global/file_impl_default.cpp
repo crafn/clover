@@ -51,10 +51,10 @@ util::Str8 DefaultFileImpl::getDirname() const {
 	return ".";
 }
 
-std::unique_ptr<DefaultFileImpl> DefaultFileImpl::stat(const util::Str8& path, bool readOnly) {
+util::UniquePtr<FileImpl> DefaultFileImpl::stat(const util::Str8& path, bool readOnly) {
 	struct stat buf;
 	if (::stat(path.cStr(), &buf) == 0 && S_ISREG(buf.st_mode))
-		return std::unique_ptr<DefaultFileImpl>(new DefaultFileImpl(path, readOnly, buf.st_size, buf.st_mtime));
+		return util::UniquePtr<FileImpl>(new DefaultFileImpl(path, readOnly, buf.st_size, buf.st_mtime));
 
 	return nullptr;
 }
