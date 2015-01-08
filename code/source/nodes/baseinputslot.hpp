@@ -13,7 +13,7 @@ namespace nodes {
 template <SignalType S>
 class InputSlot;
 
-class BaseInputSlot : public BaseSlot {
+class ENGINE_API BaseInputSlot : public BaseSlot {
 public:
 	typedef std::function<void ()> CallbackType;
 	

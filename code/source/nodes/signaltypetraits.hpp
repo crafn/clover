@@ -25,7 +25,7 @@ struct SubSignalTypeTraits;
 
 
 /// Determines SubSignals' traits stuff at runtime
-struct RuntimeSubSignalTypeTraits {
+struct ENGINE_API RuntimeSubSignalTypeTraits {
 	static SignalType signalType(SubSignalType S);
 	static util::Str8 name(SubSignalType S);
 };
@@ -61,7 +61,7 @@ private:
 
 
 /// Determines Signals' traits stuff at runtime
-struct RuntimeSignalTypeTraits {
+struct ENGINE_API RuntimeSignalTypeTraits {
 	/// Possible SubTypes
 	static util::DynArray<SubSignalType> subTypes(SignalType S);
 
@@ -184,7 +184,7 @@ template <> struct SubSignalTypeTraits<SubSignalType::W> {
 
 
 /// Empty value type for SignalType::Trigger
-struct TriggerValue {
+struct ENGINE_API TriggerValue {
 	template <typename Archive>
 	void serialize(Archive& ar, uint32 version){}
 
@@ -203,13 +203,13 @@ struct TriggerValue {
 	default: throw global::Exception("SignalTypeTraits<SignalType::%s>::combine(..): SubSignalType not supported: %i", #signal_type, subsignal_type);
 
 template <>
-struct SignalTypeTraits<SignalType::None> {
+struct ENGINE_API SignalTypeTraits<SignalType::None> {
 	typedef void Value;
 	static util::Str8 enumString(){ return "None"; }
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Real> {
+struct ENGINE_API SignalTypeTraits<SignalType::Real> {
 	typedef real64 Value;
 	static util::Str8 enumString(){ return "Real"; }
 
@@ -234,7 +234,7 @@ struct SignalTypeTraits<SignalType::Real> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Integer> {
+struct ENGINE_API SignalTypeTraits<SignalType::Integer> {
 	typedef int64 Value;
 	static util::Str8 enumString(){ return "Integer"; }
 
@@ -258,7 +258,7 @@ struct SignalTypeTraits<SignalType::Integer> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::String> {
+struct ENGINE_API SignalTypeTraits<SignalType::String> {
 	typedef util::Str8 Value;
 	static util::Str8 enumString(){ return "String"; }
 
@@ -283,7 +283,7 @@ struct SignalTypeTraits<SignalType::String> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Boolean> {
+struct ENGINE_API SignalTypeTraits<SignalType::Boolean> {
 	typedef bool Value;
 	static util::Str8 enumString(){ return "Boolean"; }
 
@@ -307,7 +307,7 @@ struct SignalTypeTraits<SignalType::Boolean> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Vec2> {
+struct ENGINE_API SignalTypeTraits<SignalType::Vec2> {
 	typedef util::Vec2d Value;
 	static util::Str8 enumString(){ return "Vec2"; }
 
@@ -337,7 +337,7 @@ struct SignalTypeTraits<SignalType::Vec2> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Vec3> {
+struct ENGINE_API SignalTypeTraits<SignalType::Vec3> {
 	typedef util::Vec3d Value;
 	static util::Str8 enumString(){ return "Vec3"; }
 
@@ -370,7 +370,7 @@ struct SignalTypeTraits<SignalType::Vec3> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Vec4> {
+struct ENGINE_API SignalTypeTraits<SignalType::Vec4> {
 	typedef util::Vec4d Value;
 	static util::Str8 enumString(){ return "Vec4"; }
 
@@ -407,7 +407,7 @@ struct SignalTypeTraits<SignalType::Vec4> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::RtTransform2> {
+struct ENGINE_API SignalTypeTraits<SignalType::RtTransform2> {
 	typedef util::RtTransform2d Value;
 	static util::Str8 enumString(){ return "RtTransform2"; }
 
@@ -444,7 +444,7 @@ struct SignalTypeTraits<SignalType::RtTransform2> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Quaternion> {
+struct ENGINE_API SignalTypeTraits<SignalType::Quaternion> {
 	typedef util::Quatd Value;
 	static util::Str8 enumString(){ return "Quaternion"; }
 
@@ -469,7 +469,7 @@ struct SignalTypeTraits<SignalType::Quaternion> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::SrtTransform2> {
+struct ENGINE_API SignalTypeTraits<SignalType::SrtTransform2> {
 	typedef util::SrtTransform2d Value;
 	static util::Str8 enumString(){ return "SrtTransform2"; }
 
@@ -518,7 +518,7 @@ struct SignalTypeTraits<SignalType::SrtTransform2> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::SrtTransform3> {
+struct ENGINE_API SignalTypeTraits<SignalType::SrtTransform3> {
 	typedef util::SrtTransform3d Value;
 	static util::Str8 enumString(){ return "SrtTransform3"; }
 
@@ -583,7 +583,7 @@ struct SignalTypeTraits<SignalType::SrtTransform3> {
 class NodeEvent;
 
 template <>
-struct SignalTypeTraits<SignalType::Event> {
+struct ENGINE_API SignalTypeTraits<SignalType::Event> {
 	typedef NodeEvent Value;
 	static util::Str8 enumString(){ return "Event"; }
 
@@ -608,7 +608,7 @@ struct SignalTypeTraits<SignalType::Event> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::EventType> {
+struct ENGINE_API SignalTypeTraits<SignalType::EventType> {
 	typedef util::Str8 Value;
 	static util::Str8 enumString(){ return "EventType"; }
 
@@ -633,7 +633,7 @@ struct SignalTypeTraits<SignalType::EventType> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::Trigger> {
+struct ENGINE_API SignalTypeTraits<SignalType::Trigger> {
 	typedef TriggerValue Value;
 	static util::Str8 enumString(){ return "Trigger"; }
 
@@ -657,7 +657,7 @@ struct SignalTypeTraits<SignalType::Trigger> {
 };
 
 template <>
-struct SignalTypeTraits<SignalType::EventArray> {
+struct ENGINE_API SignalTypeTraits<SignalType::EventArray> {
 	typedef util::DynArray<SignalTypeTraits<SignalType::Event>::Value> Value;
 	static util::Str8 enumString(){ return "EventArray"; }
 
@@ -683,11 +683,11 @@ struct SignalTypeTraits<SignalType::EventArray> {
 
 #define DEFAULT_SIGNALTYPETRAITS(enum_name, type_name)								\
 template <>																			\
-struct SignalTypeTraits<SignalType::enum_name> {									\
+struct ENGINE_API SignalTypeTraits<SignalType::enum_name> {							\
 	typedef type_name Value;														\
-	static util::Str8 enumString(){ return #enum_name; }								  \
+	static util::Str8 enumString(){ return #enum_name; }							\
 																					\
-	static util::DynArray<SubSignalType> subTypes(){									  \
+	static util::DynArray<SubSignalType> subTypes(){								\
 		return {};																	\
 	}																				\
 																					\
@@ -710,7 +710,7 @@ struct SignalTypeTraits<SignalType::enum_name> {									\
 DEFAULT_SIGNALTYPETRAITS(ArmaturePose, animation::ArmaturePose)
 
 template <>
-struct SignalTypeTraits<SignalType::Shape> {
+struct ENGINE_API SignalTypeTraits<SignalType::Shape> {
 	typedef resources::ResourceRef<collision::Shape> Value;
 	static util::Str8 enumString(){ return "Shape"; }
 

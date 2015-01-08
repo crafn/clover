@@ -21,7 +21,7 @@ namespace physics {
 class EntityDef;
 
 /// A collection of objects, joints and shapes
-class Entity {
+class ENGINE_API Entity {
 public:
 
 	Entity()= default;

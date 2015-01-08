@@ -10,7 +10,7 @@ namespace clover {
 namespace animation {
 class Armature;
 
-class ArmaturePose {
+class ENGINE_API ArmaturePose {
 public:
 	using Pose= util::DynArray<JointPose>;
 

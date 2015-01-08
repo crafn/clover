@@ -9,9 +9,9 @@ namespace physics {
 
 class Object;
 
-class DistanceJoint : public B2Joint<b2DistanceJointDef, b2DistanceJoint>
-					, public JointTypeCrtp<	DistanceJoint,
-											JointType::Distance> {
+class ENGINE_API DistanceJoint : public B2Joint<b2DistanceJointDef, b2DistanceJoint>
+								, public JointTypeCrtp<	DistanceJoint,
+														JointType::Distance> {
 public:
 	void attach(Object& a, Object& b,
 				const WorldVec& anchor_a, const WorldVec& anchor_b);

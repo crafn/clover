@@ -10,7 +10,7 @@ namespace clover {
 namespace util {
 
 /// Memory pool for equally sized chunks
-class ChunkMemPool : public MemPool {
+class ENGINE_API ChunkMemPool : public MemPool {
 public:
 	ChunkMemPool(SizeType chunk_size);
 

@@ -13,7 +13,7 @@ namespace clover {
 namespace nodes {
 
 template <SignalType S>
-class InputSlot : public BaseInputSlot {
+class ENGINE_API InputSlot : public BaseInputSlot {
 public:
 	typedef typename SignalTypeTraits<S>::Value Value;
 

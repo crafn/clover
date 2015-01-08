@@ -19,7 +19,7 @@ namespace nodes {
 class CompositionNodeLogic;
 class CompositionNodeSlotTemplateGroup;
 
-class CompositionNodeSlot {
+class ENGINE_API CompositionNodeSlot {
 public:
 
 	struct AttachedSlotInfo {

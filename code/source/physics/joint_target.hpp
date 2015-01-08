@@ -12,7 +12,7 @@ namespace physics {
 
 /// A springlike joint between a point and object
 /// @warning Use only for testing, lacks functionality of normal joints
-class TargetJoint	: public B2Joint<b2MouseJointDef, b2MouseJoint> {
+class ENGINE_API TargetJoint : public B2Joint<b2MouseJointDef, b2MouseJoint> {
 public:
 	void attach(Object& o, WorldVec world_anchor_pos);
 

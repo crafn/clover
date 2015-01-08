@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class BaseSlot {
+class ENGINE_API BaseSlot {
 public:
 	BaseSlot(SignalType t);
 	virtual ~BaseSlot();

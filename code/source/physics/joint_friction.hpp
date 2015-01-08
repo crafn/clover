@@ -10,7 +10,7 @@ namespace physics {
 class Object;
 
 /// Unused
-class FrictionJoint : public B2Joint<b2FrictionJointDef, b2FrictionJoint> {
+class ENGINE_API FrictionJoint : public B2Joint<b2FrictionJointDef, b2FrictionJoint> {
 public:
 	void attach(Object& a, Object& b);
 	

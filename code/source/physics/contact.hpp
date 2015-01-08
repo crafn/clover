@@ -15,7 +15,7 @@ namespace physics {
 class Object;
 class Fixture;
 
-struct ContactManifold {
+struct ENGINE_API  ContactManifold {
 	util::Vec2d normal; // From surface of the first fixture
 	util::Vec2d averagePoint; // Can be used in many situations instead of accurate contact points. In world coordinates
 
@@ -23,17 +23,17 @@ struct ContactManifold {
 	//util::DynArray<util::Vec2d> points; // Contact points
 };
 
-struct ContactSide {
+struct ENGINE_API  ContactSide {
 	Fixture* fixture= nullptr;
 	Object* object= nullptr;
 };
 
-struct PostSolveContactSide : public ContactSide {
+struct ENGINE_API  PostSolveContactSide : public ContactSide {
 	util::Vec2d totalImpulse;
 };
 
 template <typename T>
-class BaseContact {
+class ENGINE_API BaseContact {
 public:
 	BaseContact()= default;
 	BaseContact(const b2Contact& c, bool is_new);
@@ -63,9 +63,7 @@ private:
 typedef BaseContact<ContactSide> Contact;
 typedef BaseContact<PostSolveContactSide> PostSolveContact;
 
-
-
-class ContactFilter {
+class ENGINE_API ContactFilter {
 public:
 	ContactFilter();
 

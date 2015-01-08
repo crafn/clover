@@ -13,7 +13,7 @@ class BaseInputSlot;
 template <SignalType S>
 class OutputSlot;
 
-class BaseOutputSlot : public BaseSlot {
+class ENGINE_API BaseOutputSlot : public BaseSlot {
 public:
 	BaseOutputSlot(SignalType t);
 	virtual ~BaseOutputSlot();

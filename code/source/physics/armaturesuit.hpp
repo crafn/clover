@@ -16,7 +16,7 @@ namespace physics {
 class PhysMgr;
 
 /// A set of empty objects which follow the joints of an armature
-class ArmatureSuit : public util::StaticListCrtp<ArmatureSuit> {
+class ENGINE_API ArmatureSuit : public util::StaticListCrtp<ArmatureSuit> {
 public:
 	ArmatureSuit()= default;
 	DELETE_COPY(ArmatureSuit);

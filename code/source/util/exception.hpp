@@ -10,7 +10,8 @@
 namespace clover {
 namespace util {
 
-class Exception : public virtual std::exception, public virtual boost::exception {
+class ENGINE_API Exception	: public virtual std::exception
+							, public virtual boost::exception {
 public:
 
 	Exception(const char8* s, ...);
@@ -29,7 +30,10 @@ private:
 };
 
 /// Can't be catched by catch (Exception& e)
-class FatalException : Exception, public virtual std::exception, public virtual boost::exception {
+/// @todo Remove. Just std::abort
+class ENGINE_API FatalException : Exception
+								, public virtual std::exception
+								, public virtual boost::exception {
 public:
 	FatalException(const char8* s, ...);
 	virtual ~FatalException() throw() {}

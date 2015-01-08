@@ -7,7 +7,7 @@
 namespace clover {
 namespace resources {
 
-class ResourceException : public global::Exception {
+class ENGINE_API ResourceException : public global::Exception {
 public:
 	ResourceException(const char8* s, ...);
 	virtual ~ResourceException() throw();

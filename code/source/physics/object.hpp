@@ -21,7 +21,7 @@ class Joint;
 class PhysMgr;
 
 /// Physics object
-class Object : public util::Callbacker<util::OnDestroyCb> {
+class ENGINE_API Object : public util::Callbacker<util::OnDestroyCb> {
 public:
 	using Transform= util::RtTransform2d;
 	using Transform3= util::SrtTransform3d;

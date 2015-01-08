@@ -11,7 +11,7 @@ namespace util {
 /// Requires function `pool` to avoid static state
 //// Requires function `pool` to avoid static state
 template <typename T, util::ChunkMemPool& (*pool)()>
-class PooledCrtp {
+class ENGINE_API PooledCrtp {
 public:
 	using View= PoolView<T>;
 

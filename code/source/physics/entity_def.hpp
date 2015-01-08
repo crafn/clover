@@ -37,7 +37,7 @@ struct ResourceTraits<physics::EntityDef> {
 } // resources
 namespace physics {
 
-class EntityDef : public resources::Resource {
+class ENGINE_API EntityDef : public resources::Resource {
 public:
 	DECLARE_RESOURCE(EntityDef);
 

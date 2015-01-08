@@ -15,7 +15,7 @@ namespace clover {
 namespace physics {
 
 /// Shape + properties which can be added to RigidObject
-class RigidFixtureDef final : public FixtureDef {
+class ENGINE_API RigidFixtureDef final : public FixtureDef {
 public:
 
 	RigidFixtureDef(real32 density=1, real32 friction=0.5, real32 restitution=0.5);
@@ -56,7 +56,7 @@ private:
 
 class RigidObject;
 
-class RigidFixture final : public Fixture {
+class ENGINE_API RigidFixture final : public Fixture {
 public:
 	using Transform= Fixture::Transform;
 	using Def= RigidFixtureDef;

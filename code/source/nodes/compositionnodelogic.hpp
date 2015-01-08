@@ -19,7 +19,7 @@ class NodeType;
 class CompositionNodeLogicGroup;
 
 /// Contains settings for a NodeType which'll be instantiated
-class CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
+class ENGINE_API CompositionNodeLogic : public util::Callbacker<util::OnChangeCb> {
 public: // Copypasted from former BaseCompositionNodeScriptLogic
 
 	typedef util::UniquePtr<CompositionNodeSlot> CompositionNodeSlotPtr;

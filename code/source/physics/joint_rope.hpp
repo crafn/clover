@@ -7,8 +7,8 @@
 namespace clover {
 namespace physics {
 
-class RopeJoint : public B2Joint<b2RopeJointDef, b2RopeJoint>
-				, public JointTypeCrtp<RopeJoint, JointType::Rope> {
+class ENGINE_API RopeJoint : public B2Joint<b2RopeJointDef, b2RopeJoint>
+							, public JointTypeCrtp<RopeJoint, JointType::Rope> {
 public:
 	void attach(Object& a, Object& b,
 				const WorldVec& anchor_a, const WorldVec& anchor_b);

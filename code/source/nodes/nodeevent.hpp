@@ -15,7 +15,7 @@ class WESet;
 } // game
 namespace nodes {
 
-class NodeEvent {
+class ENGINE_API NodeEvent {
 public:
 	NodeEvent(); /// Invalid state
 	NodeEvent(const util::Str8& type_name);

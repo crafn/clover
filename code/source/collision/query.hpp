@@ -13,14 +13,14 @@ namespace collision {
 
 /// For making derived traceable queries shorter
 template <typename T>
-struct SubQuery {
+struct ENGINE_API SubQuery {
 
 	static void rayCast(const Ray& ray, std::function<real64 (T&, const RayCastResult&)> report);
 	static void potentialRect(const util::Vec2d& pos, const util::Vec2d& rad, std::function<bool (T&)> report);
 	static void point(const util::Vec2d& pos, std::function<bool (T&)> report);
 };
 
-class Query {
+class ENGINE_API Query {
 public:
 	/// Enum-like special return values for rayCast report-function
 	struct Fraction {

@@ -31,7 +31,7 @@ class BaseOutputSlot;
 class CompositionNodeSlot;
 class NodeType;
 
-class NodeInstance {
+class ENGINE_API NodeInstance {
 	typedef util::UniquePtr<BaseInputSlot> InputSlotPtr;
 	typedef util::UniquePtr<BaseOutputSlot> OutputSlotPtr;
 public:

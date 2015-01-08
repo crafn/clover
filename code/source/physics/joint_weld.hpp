@@ -10,8 +10,8 @@ namespace physics {
 
 class Object;
 
-class WeldJoint : public B2Joint<b2WeldJointDef, b2WeldJoint>
-				, public JointTypeCrtp<WeldJoint, JointType::Weld> {
+class ENGINE_API WeldJoint : public B2Joint<b2WeldJointDef, b2WeldJoint>
+							, public JointTypeCrtp<WeldJoint, JointType::Weld> {
 public:
 	void attach(Object& a, Object& b);
 

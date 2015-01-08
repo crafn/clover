@@ -8,8 +8,8 @@ namespace clover {
 namespace physics {
 
 class Object;
-class WheelJoint	: public B2Joint<b2WheelJointDef, b2WheelJoint>
-					, public JointTypeCrtp<WheelJoint, JointType::Wheel> {
+class ENGINE_API WheelJoint	: public B2Joint<b2WheelJointDef, b2WheelJoint>
+							, public JointTypeCrtp<WheelJoint, JointType::Wheel> {
 public:
 	WheelJoint();
 	

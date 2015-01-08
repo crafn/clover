@@ -28,7 +28,7 @@ struct JointTypeCrtp;
 /// Constraint between Objects
 /// OnAttach called after objects and box2d joint are attached
 /// OnDetach called before objects are detached and box2d joint destroyed
-class Joint	: public util::Callbacker<OnAttachCb, OnDetachCb> {
+class ENGINE_API Joint	: public util::Callbacker<OnAttachCb, OnDetachCb> {
 public:
 	Joint();
 	DELETE_COPY(Joint);

@@ -16,7 +16,7 @@ SizeType alignedMemAdjustment(	uint8* addr,
 
 /// Base class for memory pools
 /// @todo Emergency heap allocations in dev build to prevent crashes
-class MemPool {
+class ENGINE_API MemPool {
 public:
 	MemPool()= default;
 	DELETE_COPY(MemPool);

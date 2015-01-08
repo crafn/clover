@@ -34,7 +34,7 @@ struct ResourceTraits<animation::Armature> {
 namespace animation {
 
 /// Contains a hierarchial set of joints
-class Armature : public resources::Resource {
+class ENGINE_API Armature : public resources::Resource {
 public:
 	DECLARE_RESOURCE(Armature)
 

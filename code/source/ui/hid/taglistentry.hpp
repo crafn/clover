@@ -9,7 +9,7 @@
 namespace clover {
 namespace ui { namespace hid {
 
-class TagListEntry {
+class ENGINE_API TagListEntry {
 public:
 	TagListEntry(	const ContextChannel::Name& channel_name,
 					const Context::Tag& tag);

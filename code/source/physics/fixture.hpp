@@ -27,7 +27,7 @@ struct FixtureCallbacks {
 
 class Material;
 class Fixture;
-class FixtureDef {
+class ENGINE_API FixtureDef {
 public:
 
 	FixtureDef();
@@ -60,7 +60,7 @@ private:
 
 class InternalContactListener;
 
-class Fixture : public collision::Traceable, public util::Callbacker<util::OnDestroyCb> {
+class ENGINE_API Fixture : public collision::Traceable, public util::Callbacker<util::OnDestroyCb> {
 public:
 	using Transform= collision::Traceable::Transform;
 	static constexpr collision::Traceable::TypeId staticTraceableTypeId= collision::Traceable::Fixture;

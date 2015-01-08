@@ -29,7 +29,7 @@ enum class RigidObjectType {
 };
 
 /// RigidObject's definition
-class RigidObjectDef {
+class ENGINE_API RigidObjectDef {
 public:
 
 	RigidObjectDef(util::Vec2d pos=util::Vec2d{0,0}, real32 rot=0, util::Vec2d vel=util::Vec2d{0,0}, real32 angularvel=0);
@@ -74,12 +74,12 @@ class RigidFixture;
 struct OnBreakCb : public util::SingleCallbacker<>{};
 
 /// Defined in phys_mgr.cpp
-util::ChunkMemPool& getRigidObjectPool();
+ENGINE_API util::ChunkMemPool& getRigidObjectPool();
 
 /// Should be only dynamically allocated because of pooling!
-class RigidObject	: public Object
-					, public util::Callbacker<OnBreakCb>
-					, public util::PooledCrtp<RigidObject, getRigidObjectPool> {
+class ENGINE_API RigidObject	: public Object
+								, public util::Callbacker<OnBreakCb>
+								, public util::PooledCrtp<RigidObject, getRigidObjectPool> {
 public:
 
 	typedef Object::Transform Transform;

@@ -12,9 +12,9 @@ namespace physics {
 class RigidObject;
 
 /// Joins two objects to form a single rigid body
-class HardWeldJoint : public Joint
-					, public JointTypeCrtp<	HardWeldJoint,
-											JointType::HardWeld> {
+class ENGINE_API HardWeldJoint	: public Joint
+								, public JointTypeCrtp<	HardWeldJoint,
+														JointType::HardWeld> {
 public:
 	using Base= Joint;
 
