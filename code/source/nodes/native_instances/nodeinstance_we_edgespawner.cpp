@@ -22,16 +22,16 @@ void WeEdgeSpawnerNodeInstance::create()
 	weIn= addInputSlot<SignalType::WeHandle>("we");
 	spawnIn= addInputSlot<SignalType::Trigger>("spawn");
 
-	edgeEntityIn->setOnReceiveCallback([&] ()
+	edgeEntityIn->setOnReceiveCallback(+[] (WeEdgeSpawnerNodeInstance* self)
 	{
-		edgeType=
-			&global::g_env.resCache->getResource<game::WeType>(edgeEntityIn->get());
+		self->edgeType=
+			&global::g_env.resCache->getResource<game::WeType>(self->edgeEntityIn->get());
 	});
 
-	spawnIn->setOnReceiveCallback([&] ()
+	spawnIn->setOnReceiveCallback(+[] (WeEdgeSpawnerNodeInstance* self)
 	{
-		spawnerType= &NONULL(weIn->get().get())->getType();
-		global::g_env.worldMgr->onEdgeSpawnTrigger(*this);
+		self->spawnerType= &NONULL(self->weIn->get().get())->getType();
+		global::g_env.worldMgr->onEdgeSpawnTrigger(*self);
 	});
 
 	setUpdateNeeded(false);

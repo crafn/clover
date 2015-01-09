@@ -237,7 +237,7 @@ util::Str8 WorldEntity::getTypeName() const {
 		return util::Str8();
 }
 
-void WorldEntity::update(){
+/*void WorldEntity::update(){
 	if (instance)
 		instance->update();
 	
@@ -251,7 +251,7 @@ void WorldEntity::update(){
 				util::Color{1.0, 0.0, 0.0, 1.0});
 	}
 }
-
+*/
 void WorldEntity::shallowUpdate(){
 	if (weInterface){
 		if (!weInterface->isGlobal())

@@ -18,6 +18,7 @@ public:
 	static CompositionNodeLogic* compNode();
 
 	virtual void create() override;
+	void update_novirtual(){}
 
 private:
 	util::DynArray<ui::hid::TagListEntry> tagEntries;

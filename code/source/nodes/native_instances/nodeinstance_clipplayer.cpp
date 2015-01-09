@@ -37,14 +37,14 @@ void ClipPlayerNodeInstance::create(){
 	onEndOut= addOutputSlot<SignalType::Trigger>("onEnd");
 	
 	clipIn->setValueReceived();
-	clipIn->setOnReceiveCallback([&] (){
-		clip= &global::g_env.resCache->getResource<animation::Clip>(clipIn->get());
+	clipIn->setOnReceiveCallback(+[] (ClipPlayerNodeInstance* self){
+		self->clip= &global::g_env.resCache->getResource<animation::Clip>(self->clipIn->get());
 	});
 	
-	playIn->setOnReceiveCallback([&] (){
-		time= playIn->get()*clip->getTime(); // Value is starting phase
-		currentLoop= 0;
-		setUpdateNeeded();
+	playIn->setOnReceiveCallback(+[] (ClipPlayerNodeInstance* self){
+		self->time= self->playIn->get()*self->clip->getTime(); // Value is starting phase
+		self->currentLoop= 0;
+		self->setUpdateNeeded();
 	});
 	
 	setUpdateNeeded(false);

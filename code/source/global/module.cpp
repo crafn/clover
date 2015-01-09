@@ -31,8 +31,16 @@ void Module::resourceUpdate(bool load, bool force)
 		clear();
 		file.get().setExt(hardware::dllExt());
 		auto path= file.get().whole();
+		print(	debug::Ch::Resources,
+				debug::Vb::Trivial,
+				"Loading DLL: %s",
+				path.cStr());
 		dll= hardware::loadDll(path.cStr());
 		if (dll) {
+			print(	debug::Ch::Resources,
+					debug::Vb::Trivial,
+					"DLL loaded at addr: %p",
+					dll);
 			setResourceState(State::Loaded);	
 		} else {
 			print(	debug::Ch::Resources,
@@ -42,6 +50,11 @@ void Module::resourceUpdate(bool load, bool force)
 			createErrorResource();
 		}
 	} else {
+		auto path= file.get().whole();
+		print(	debug::Ch::Resources,
+				debug::Vb::Trivial,
+				"Unloading DLL: %s",
+				path.cStr());
 		clear();
 		setResourceState(State::Unloaded);
 	}

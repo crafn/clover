@@ -23,7 +23,7 @@ void PoseLerpNodeInstance::create(){
 	
 	resultOut= addOutputSlot<SignalType::ArmaturePose>("result");
 	
-	auto cb= [&] (){ setUpdateNeeded(); };
+	auto cb= +[] (PoseLerpNodeInstance* self){ self->setUpdateNeeded(); };
 	input1->setOnReceiveCallback(cb);
 	input2->setOnReceiveCallback(cb);
 	factorIn->setOnReceiveCallback(cb);

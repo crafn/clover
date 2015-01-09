@@ -153,9 +153,9 @@ void CompositionNodeLogic::sendOnSlotRemoveEvent(const SlotIdentifier& id_){
 }
 
 void CompositionNodeLogic::addOnResourceChangeCallback(const resources::Resource& res){
-	resourceChangeListener.listen(res, [&] () {
+	/*resourceChangeListener.listen(res, [&] () {
 		onResourceChange(res);
-	});
+	});*/
 }
 
 //
@@ -177,10 +177,10 @@ CompositionNodeLogic::~CompositionNodeLogic()
 void CompositionNodeLogic::setType(const NodeType& type_)
 {
 	type= &type_;
-	typeChangeListener.listen(*type, [&] () {
+	/*typeChangeListener.listen(*type, [&] () {
 		recreate();
 		util::OnChangeCb::trigger();
-	});
+	});*/
 }
 
 void CompositionNodeLogic::recreate(){

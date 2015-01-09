@@ -20,8 +20,8 @@ void LogicOrNodeInstance::create()
 	input2= addInputSlot<SignalType::Boolean>("input2");
 	output= addOutputSlot<SignalType::Boolean>("output");
 
-	auto recv = [&] () {
-		setUpdateNeeded();
+	auto recv= +[] (LogicOrNodeInstance* self) {
+		self->setUpdateNeeded();
 	};
 
 	input1->setOnReceiveCallback(recv);

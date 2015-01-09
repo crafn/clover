@@ -66,46 +66,46 @@ void WePhysicsObjectNodeInstance::create(){
 	object.emplace(def);
 
 	shapeInput->setValueReceived();
-	shapeInput->setOnReceiveCallback([&] (){
-		recreateObject();
-		sendShape();
+	shapeInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->recreateObject();
+		self->sendShape();
 	});
 
 	materialInput->setValueReceived();
-	materialInput->setOnReceiveCallback([&] (){
-		recreateObject();
+	materialInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->recreateObject();
 	});
 
-	activeInput->setOnReceiveCallback([&] (){
-		object->setActive(activeInput->get());
-		if (activeInput->get())
-			setUpdateNeeded();
+	activeInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->object->setActive(self->activeInput->get());
+		if (self->activeInput->get())
+			self->setUpdateNeeded();
 	});
 
-	transformInput->setOnReceiveCallback([&] (){
-		object->set3dTransform(transformInput->get());
+	transformInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->object->set3dTransform(self->transformInput->get());
 		// Forward transform if inactive
-		if (!activeInput->get() || object->isStatic()){
-			transformOutput->send(transformInput->get());
-			estimatedTransformOutput->send(transformInput->get());
+		if (!self->activeInput->get() || self->object->isStatic()){
+			self->transformOutput->send(self->transformInput->get());
+			self->estimatedTransformOutput->send(self->transformInput->get());
 		}
 	});
 
-	impulseInput->setOnReceiveCallback([&] (){
-		object->applyImpulse(impulseInput->get().translation, object->getPosition());
-		object->applyAngularImpulse(impulseInput->get().rotation);
+	impulseInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->object->applyImpulse(self->impulseInput->get().translation, self->object->getPosition());
+		self->object->applyAngularImpulse(self->impulseInput->get().rotation);
 	});
 
-	staticInput->setOnReceiveCallback([&] (){
-		object->setStatic(staticInput->get());
+	staticInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->object->setStatic(self->staticInput->get());
 	});
 
-	partialBreakingInput->setOnReceiveCallback([&] (){
-		object->setPartiallyBreakable(partialBreakingInput->get());
+	partialBreakingInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		self->object->setPartiallyBreakable(self->partialBreakingInput->get());
 	});
 
-	weInput->setOnReceiveCallback([&] (){
-		game::setOwnerWe(object.ref(), weInput->get().get());
+	weInput->setOnReceiveCallback(+[] (WePhysicsObjectNodeInstance* self){
+		game::setOwnerWe(self->object.ref(), self->weInput->get().get());
 	});
 
 	breakListener.listen(*object, [this] (){

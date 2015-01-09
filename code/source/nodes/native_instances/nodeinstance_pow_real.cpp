@@ -19,8 +19,8 @@ void RealPowNodeInstance::create()
 
 	realOut= addOutputSlot<SignalType::Real>("output");
 
-	auto recv= [&] ()
-	{ realOut->send(pow(baseInput->get(), exponentInput->get())); };
+	auto recv= +[] (RealPowNodeInstance* self)
+	{ self->realOut->send(pow(self->baseInput->get(), self->exponentInput->get())); };
 	baseInput->setOnReceiveCallback(recv);
 	exponentInput->setOnReceiveCallback(recv);
 

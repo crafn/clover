@@ -22,8 +22,8 @@ void TriggerToSignalNodeInstance::create()
 
 	signalOut= addOutputSlot<SignalType::Real>("signal");
 
-	triggerIn->setOnReceiveCallback([&] ()
-	{ triggerReceived= true; });
+	triggerIn->setOnReceiveCallback(+[] (TriggerToSignalNodeInstance* self)
+	{ self->triggerReceived= true; });
 	triggerReceived= false;
 
 	setUpdateNeeded(true);

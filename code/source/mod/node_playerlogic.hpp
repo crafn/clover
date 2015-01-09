@@ -80,7 +80,7 @@ public:
 	static nodes::CompositionNodeLogic* compNode();
 
 	virtual void create() override;
-	virtual void update() override;
+	void update_novirtual();
 
 private:
 	void setTagEntry(const util::Str8& s);

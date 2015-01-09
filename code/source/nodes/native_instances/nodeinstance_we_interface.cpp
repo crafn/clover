@@ -41,8 +41,8 @@ void WeInterfaceNodeInstance::create(){
 	eventsOutput= addOutputSlot<SignalType::EventArray>("events");
 	weOutput= addOutputSlot<SignalType::WeHandle>("we");
 	
-	removeInput->setOnReceiveCallback([this] (){
-		removed= true;
+	removeInput->setOnReceiveCallback(+[] (WeInterfaceNodeInstance* self){
+		self->removed= true;
 	});
 	
 	// Create attribute slots

@@ -7,20 +7,21 @@ namespace nodes {
 	
 BaseInputSlot::BaseInputSlot(SignalType t)
 	: BaseSlot(t)
-	, valueReceived(false){
-}
+	, valueReceived(false)
+	, onReceiveCallback(nullptr)
+{ }
 
 BaseInputSlot::~BaseInputSlot(){
 }
 
-void BaseInputSlot::setOnReceiveCallback(const CallbackType& c){
+void BaseInputSlot::setOnReceiveCallback(CallbackType c){
 	onReceiveCallback= c;
 }
 
-void BaseInputSlot::update(){
+void BaseInputSlot::update(NodeInstance& inst){
 	if (valueReceived && onReceiveCallback) {
 		PROFILE();
-		onReceiveCallback();
+		onReceiveCallback(&inst);
 	}
 		
 	valueReceived= false;

@@ -1,18 +1,22 @@
 #ifndef CLOVER_NODES_NODEINSTANCE_ROLLBOT_AI_HPP
 #define CLOVER_NODES_NODEINSTANCE_ROLLBOT_AI_HPP
 
-#include "../nodeinstance.hpp"
+#include "nodes/nodeinstance.hpp"
 #include "build.hpp"
 
 namespace clover {
-namespace nodes {
+namespace mod {
 
-class RollBotAiNodeInstance : public NodeInstance {
+// I'm lazy
+using namespace clover::nodes;
+
+DECLARE_NODE(RollBotAiNode);
+class RollBotAiNode : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 
 	virtual void create() override;
-	virtual void update() override;
+	void update_novirtual();
 
 private:
 	InputSlot<SignalType::RtTransform2>* aIn;
@@ -37,15 +41,7 @@ private:
 	bool sleeping;
 };
 
-} // nodes
-namespace util {
-
-template <>
-struct TypeStringTraits<nodes::RollBotAiNodeInstance> {
-	static util::Str8 type(){ return "::RollBotAiNodeInstance"; }
-};
-
-} // util
+} // mod
 } // clover
 
 #endif // CLOVER_NODES_NODEINSTANCE_ROLLBOT_AI_HPP

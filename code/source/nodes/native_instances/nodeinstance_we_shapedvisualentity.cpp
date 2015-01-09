@@ -25,32 +25,32 @@ void WeShapedVisualEntityNodeInstance::create(){
 	shapeInput= addInputSlot<SignalType::Shape>("shape");
 	shadowCastingInput= addInputSlot<SignalType::Boolean>("shadowCasting");
 	
-	activeInput->setOnReceiveCallback([&] (){
-		entity.setActive(activeInput->get());
+	activeInput->setOnReceiveCallback(+[] (WeShapedVisualEntityNodeInstance* self){
+		self->entity.setActive(self->activeInput->get());
 	});
 	
 	// Always receive signal before first update
 	materialInput->setValueReceived();
-	materialInput->setOnReceiveCallback([&] (){
-		model.setMaterial(materialInput->get());
+	materialInput->setOnReceiveCallback(+[] (WeShapedVisualEntityNodeInstance* self){
+		self->model.setMaterial(self->materialInput->get());
 	});
 	
-	transformInput->setOnReceiveCallback([&] (){
-		entity.setTransform(transformInput->get());
+	transformInput->setOnReceiveCallback(+[] (WeShapedVisualEntityNodeInstance* self){
+		self->entity.setTransform(self->transformInput->get());
 	});
 	
-	shapeInput->setOnReceiveCallback([&] (){
-		mesh.clear();
-		util::DynArray<util::Polygon> polys= shapeInput->get().get().asPolygons(0.01);
+	shapeInput->setOnReceiveCallback(+[] (WeShapedVisualEntityNodeInstance* self){
+		self->mesh.clear();
+		util::DynArray<util::Polygon> polys= self->shapeInput->get().get().asPolygons(0.01);
 		for (const util::Polygon& poly : polys){
-			mesh.add(poly.triangulated().converted<visual::TriMesh>());
+			self->mesh.add(poly.triangulated().converted<visual::TriMesh>());
 		}
 		util::UniformUv uv;
-		mesh.applyUniformUv(uv);
+		self->mesh.applyUniformUv(uv);
 	});
 	
-	shadowCastingInput->setOnReceiveCallback([&] (){
-		def.setShadowCasting(shadowCastingInput->get());
+	shadowCastingInput->setOnReceiveCallback(+[] (WeShapedVisualEntityNodeInstance* self){
+		self->def.setShadowCasting(self->shadowCastingInput->get());
 	});
 	
 	model.setMesh(mesh);

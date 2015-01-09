@@ -22,8 +22,8 @@ void Vec2LerpNodeInstance::create()
 
 	resultOut= addOutputSlot<SignalType::Vec2>("result");
 
-	auto recv= [&] ()
-	{ setUpdateNeeded(true); };
+	auto recv= +[] (Vec2LerpNodeInstance* self)
+	{ self->setUpdateNeeded(true); };
 	in1->setOnReceiveCallback(recv);
 	in2->setOnReceiveCallback(recv);
 	factorIn->setOnReceiveCallback(recv);

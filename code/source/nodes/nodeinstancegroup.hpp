@@ -27,7 +27,7 @@ public:
 	virtual ~NodeInstanceGroup();
 	
 	/// Updates every node once in order in which they were added
-	void update();
+	//void update();
 
 	/// Alternative way to update
 	nodes::UpdateLine getUpdateLine() const;

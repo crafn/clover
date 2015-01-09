@@ -29,7 +29,7 @@ void NodeInstance::receiveSignals()
 {
 	PROFILE();
 	for (auto& m : inputSlots) {
-		m.slot->update();
+		m.slot->update(*this);
 	}
 }
 
@@ -48,7 +48,7 @@ void NodeInstance::baseUpdate()
 
 	if (isUpdateNeeded()) {
 		PROFILE();
-		update();
+		type->updateInstance(*this);
 	}
 
 	if (groupVars->lastOfGroup == this)

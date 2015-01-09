@@ -37,28 +37,28 @@ void WeAttachedPhysicsObjectNodeInstance::create()
 
 	setUpdateNeeded(true);
 
-	activeIn->setOnReceiveCallback([&] ()
+	activeIn->setOnReceiveCallback(+[] (WeAttachedPhysicsObjectNodeInstance* self)
 	{
-		if (object)
-			object->setActive(activeIn->get());
-		setUpdateNeeded(true);
+		if (self->object)
+			self->object->setActive(self->activeIn->get());
+		self->setUpdateNeeded(true);
 	});
 
-	transformIn->setOnReceiveCallback([&] ()
+	transformIn->setOnReceiveCallback(+[] (WeAttachedPhysicsObjectNodeInstance* self)
 	{
-		attach();
-		setUpdateNeeded(true);
+		self->attach();
+		self->setUpdateNeeded(true);
 	});
 
-	anchorIn->setOnReceiveCallback([&] ()
+	anchorIn->setOnReceiveCallback(+[] (WeAttachedPhysicsObjectNodeInstance* self)
 	{
-		attach();
-		setUpdateNeeded(true);
+		self->attach();
+		self->setUpdateNeeded(true);
 	});
 
-	weInput->setOnReceiveCallback([&] (){
-		if (object)
-			game::setOwnerWe(object.ref(), weInput->get().get());
+	weInput->setOnReceiveCallback(+[] (WeAttachedPhysicsObjectNodeInstance* self){
+		if (self->object)
+			game::setOwnerWe(self->object.ref(), self->weInput->get().get());
 	});
 }
 

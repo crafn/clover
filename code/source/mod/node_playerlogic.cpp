@@ -375,40 +375,40 @@ void PlayerLogicNode::create()
 
 	transformIn->setValueReceived();
 
-	transformIn->setOnReceiveCallback([&] ()
+	transformIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
 	{
-		transform= transformIn->get();
-		respawn();
+		self->transform= self->transformIn->get();
+		self->respawn();
 	});
 
-	respawnIn->setOnReceiveCallback([&] ()
-	{ respawn(); });
+	respawnIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
+	{ self->respawn(); });
 
-	killIn->setOnReceiveCallback([&] ()
-	{ die(); });
+	killIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
+	{ self->die(); });
 
-	activeIn->setOnReceiveCallback([&] ()
-	{ physEntity.setActive(activeIn->get()); });
+	activeIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
+	{ self->physEntity.setActive(self->activeIn->get()); });
 
-	hitEndedIn->setOnReceiveCallback([&] ()
-	{ physEntity.setHandGhostliness(1.0); });
+	hitEndedIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
+	{ self->physEntity.setHandGhostliness(1.0); });
 
-	tryPickupIn->setOnReceiveCallback([&] ()
-	{ tryPickup(actionPointIn->get()); });
+	tryPickupIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
+	{ self->tryPickup(self->actionPointIn->get()); });
 
-	tryDropIn->setOnReceiveCallback([&] ()
-	{ physEntity.detachHand(); });
+	tryDropIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
+	{ self->physEntity.detachHand(); });
 
-	tryUseInHandIn->setOnReceiveCallback([&] ()
+	tryUseInHandIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
 	{
-		swingHitOut->send();
-		physEntity.setHandGhostliness(0.2);
+		self->swingHitOut->send();
+		self->physEntity.setHandGhostliness(0.2);
 	});
 
 	setUpdateNeeded(true);
 }
 
-void PlayerLogicNode::update()
+void PlayerLogicNode::update_novirtual()
 {
 	real64 dt= global::g_env.worldMgr->getDeltaTime();
 

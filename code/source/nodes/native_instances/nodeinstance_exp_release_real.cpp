@@ -24,10 +24,10 @@ void RealExpReleaseNodeInstance::create()
 	realLimitIn= addInputSlot<SignalType::Real>("upperLimit");
 	valueOut= addOutputSlot<SignalType::Real>("value");
 
-	accumIn->setOnReceiveCallback([&] ()
+	accumIn->setOnReceiveCallback(+[] (RealExpReleaseNodeInstance* self)
 	{
-		value += accumIn->get()*global::g_env.worldMgr->getDeltaTime();
-		setUpdateNeeded(true);
+		self->value += self->accumIn->get()*global::g_env.worldMgr->getDeltaTime();
+		self->setUpdateNeeded(true);
 	});
 
 	value= 0.0;

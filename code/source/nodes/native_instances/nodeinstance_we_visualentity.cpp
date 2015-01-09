@@ -34,39 +34,39 @@ void WeVisualEntityNodeInstance::create(){
 	colorMulInput= addInputSlot<SignalType::Vec4>("colorMul");
 	eventsInput= addInputSlot<SignalType::EventArray>("events");
 	
-	activeInput->setOnReceiveCallback([&] (){
-		entity->setActive(activeInput->get());
+	activeInput->setOnReceiveCallback(+[] (WeVisualEntityNodeInstance* self){
+		self->entity->setActive(self->activeInput->get());
 	});
 	
 	// Always receive signal before first update
 	entityInput->setValueReceived();
-	entityInput->setOnReceiveCallback([&] (){
-		entity->changeDef(entityInput->get());
+	entityInput->setOnReceiveCallback(+[] (WeVisualEntityNodeInstance* self){
+		self->entity->changeDef(self->entityInput->get());
 	});
 	
-	transformInput->setOnReceiveCallback([&] (){
-		entity->setTransform(transformInput->get());
+	transformInput->setOnReceiveCallback(+[] (WeVisualEntityNodeInstance* self){
+		self->entity->setTransform(self->transformInput->get());
 	});
 	
-	colorMulInput->setOnReceiveCallback([&] (){
-		if (	entity->getDef() && entity->getLogic() &&
-				entity->getDef()->getType() == visual::EntityDef::Type::Model){
+	colorMulInput->setOnReceiveCallback(+[] (WeVisualEntityNodeInstance* self){
+		if (	self->entity->getDef() && self->entity->getLogic() &&
+				self->entity->getDef()->getType() == visual::EntityDef::Type::Model){
 			
-			util::Vec4f c= colorMulInput->get().casted<util::Vec4f>();
+			util::Vec4f c= self->colorMulInput->get().casted<util::Vec4f>();
 			
-			static_cast<visual::ModelEntityLogic*>(entity->getLogic())
+			static_cast<visual::ModelEntityLogic*>(self->entity->getLogic())
 				->setColorMul(util::Color{c.x, c.y, c.z, c.w});
 		}
 	});
 	
-	poseInput->setOnReceiveCallback([&] (){
-		const visual::EntityDef* def= entity->getDef();
-		visual::EntityLogic* logic= entity->getLogic();
+	poseInput->setOnReceiveCallback(+[] (WeVisualEntityNodeInstance* self){
+		const visual::EntityDef* def= self->entity->getDef();
+		visual::EntityLogic* logic= self->entity->getLogic();
 		
 		if (def && logic && def->getType() == visual::EntityDef::Type::Compound){
 			auto compound_logic= static_cast<visual::CompoundEntityLogic*>(logic);
-			if (poseInput->get().getArmature().getJoints().size() > 0){
-				compound_logic->setPose(poseInput->get());
+			if (self->poseInput->get().getArmature().getJoints().size() > 0){
+				compound_logic->setPose(self->poseInput->get());
 			}
 			else {
 				print(debug::Ch::Nodes, debug::Vb::Moderate, "WeVisualEntityNodeInstance received an empty pose");
@@ -74,11 +74,11 @@ void WeVisualEntityNodeInstance::create(){
 		}
 	});
 
-	eventsInput->setOnReceiveCallback([&] (){
-		for (auto&& e : eventsInput->get()){
+	eventsInput->setOnReceiveCallback(+[] (WeVisualEntityNodeInstance* self){
+		for (auto&& e : self->eventsInput->get()){
 			if (e.getName() == "highlight"){
-				highlightLerp= 1.0;
-				setUpdateNeeded(true);
+				self->highlightLerp= 1.0;
+				self->setUpdateNeeded(true);
 			}
 		}
 	});

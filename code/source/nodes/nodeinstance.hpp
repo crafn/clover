@@ -12,16 +12,20 @@
 
 #include <memory>
 
+// Macros to cope with the poor choice of using classes
 #define DECLARE_NODE(x) \
 class x;\
 MOD_API nodes::NodeInstance* new_inst_ ## x(); \
 MOD_API nodes::CompositionNodeLogic* new_comp_ ## x(); \
+MOD_API void update_ ## x(NodeInstance*);
 
 #define DEFINE_NODE(x) \
 nodes::NodeInstance* new_inst_ ## x() \
 { return new x{}; } \
 nodes::CompositionNodeLogic* new_comp_ ## x() \
 { return x::compNode(); } \
+void update_ ## x(NodeInstance* inst) \
+{ ((x*)inst)->update_novirtual(); }
 
 namespace clover {
 namespace nodes {
@@ -61,7 +65,8 @@ public:
 	const NodeType& getType() const { ensure(type); return *type; }
 	
 	virtual void create(){}
-	
+
+	/// @warning Should be called by NodeType to be safe with DLLs
 	/// Called after input signals are received and before output signals are sent
 	/// Used to implement custom logic in derived types. Use fullUpdate()
 	/// to update a node

@@ -20,10 +20,10 @@ void DelayedTriggerNodeInstance::create()
 	timeIn= addInputSlot<SignalType::Real>("delay");
 	triggerOut= addOutputSlot<SignalType::Trigger>("trigger");
 	
-	triggerIn->setOnReceiveCallback([&] ()
+	triggerIn->setOnReceiveCallback(+[] (DelayedTriggerNodeInstance* self)
 	{
-		timer= timeIn->get();
-		setUpdateNeeded(true);
+		self->timer= self->timeIn->get();
+		self->setUpdateNeeded(true);
 	});
 
 	timer= 0.1;

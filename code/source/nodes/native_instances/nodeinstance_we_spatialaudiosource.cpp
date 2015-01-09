@@ -21,16 +21,16 @@ void WeSpatialAudioSourceNodeInstance::create(){
 	
 	sourceHandle.assignNewSource(audio::AudioSource::Type::Spatial);
 	
-	positionIn->setOnReceiveCallback([this] (){
-		sourceHandle.setPosition(positionIn->get());
+	positionIn->setOnReceiveCallback(+[] (WeSpatialAudioSourceNodeInstance* self){
+		self->sourceHandle.setPosition(self->positionIn->get());
 	});
 	
-	volumeIn->setOnReceiveCallback([this] (){
-		sourceHandle.setVolume(volumeIn->get());
+	volumeIn->setOnReceiveCallback(+[] (WeSpatialAudioSourceNodeInstance* self){
+		self->sourceHandle.setVolume(self->volumeIn->get());
 	});
 	
-	playIn->setOnReceiveCallback([this] (){
-		sourceHandle.playSound(soundNameIn->get());
+	playIn->setOnReceiveCallback(+[] (WeSpatialAudioSourceNodeInstance* self){
+		self->sourceHandle.playSound(self->soundNameIn->get());
 	});
 }
 

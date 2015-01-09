@@ -92,7 +92,7 @@ NodeInstance& NodeInstanceGroup::add(const CompositionNodeLogic& comp){
 	return *nodes.back();
 }
 
-void NodeInstanceGroup::update(){
+/*void NodeInstanceGroup::update(){
 	if (isUpdateNoop())
 		return;
 	
@@ -107,7 +107,7 @@ void NodeInstanceGroup::update(){
 		}
 	}
 }
-
+*/
 UpdateLine NodeInstanceGroup::getUpdateLine() const {
 	PROFILE();
 	util::DynArray<NodeInstance*> ptrs;

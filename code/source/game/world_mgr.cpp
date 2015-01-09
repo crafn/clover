@@ -142,7 +142,7 @@ void createEdges(
 					/// to become visible at the same frame..!
 					if (edge->isSpawningAllowed()) {
 						edge->spawn();
-						edge->update();
+						edge->getUpdateLine().run();
 					}
 				}
 			}

@@ -24,8 +24,8 @@ void SrtTransform2RandomizeNodeInstance::create()
 
 	transformOut= addOutputSlot<SignalType::SrtTransform2>("randomized");
 
-	auto recv= [&] ()
-	{ setUpdateNeeded(true); };
+	auto recv= +[] (SrtTransform2RandomizeNodeInstance* self)
+	{ self->setUpdateNeeded(true); };
 	transformIn->setOnReceiveCallback(recv);
 	rotBiasIn->setOnReceiveCallback(recv);
 	scaleBiasIn->setOnReceiveCallback(recv);

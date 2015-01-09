@@ -128,7 +128,7 @@ public:
 	const WeType& getType() const { return *NONULL(type); }
 	util::Str8 getTypeName() const;
 	
-	void update();
+	//void update();
 	/// Use this if nodes are updated with UpdateLine
 	void shallowUpdate();
 

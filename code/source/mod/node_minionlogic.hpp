@@ -38,7 +38,7 @@ public:
 	static CompositionNodeLogic* compNode();
 
 	virtual void create() override;
-	virtual void update() override;
+	void update_novirtual();
 
 private:
 	InputSlot<SignalType::Boolean>* activeIn;

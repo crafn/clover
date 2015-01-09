@@ -35,9 +35,10 @@ class CompositionNodeLogic;
 class CompositionNodeUi;
 
 /// Defines behavior of CompositionNode and NodeInstance
-class NodeType : public resources::Resource {
+class ENGINE_API NodeType : public resources::Resource {
 public:
 	DECLARE_RESOURCE(NodeType)
+	static uint32 invalidCount;
 
 	NodeType();
 	virtual ~NodeType();
@@ -48,6 +49,9 @@ public:
 	CompositionNodeLogic* createCompositionLogic() const;
 	CompositionNodeUi createCompositionUi() const;
 	NodeInstance* createInstanceLogic(const CompositionNodeLogic& comp) const;
+
+	/// Called from NodeInstance. Uses correct func addr even when dll is reloaded
+	void updateInstance(NodeInstance& inst) const;
 
 	const util::Str8& getName() const { return nameAttribute.get(); }
 
@@ -60,8 +64,11 @@ private:
 
 	using NewNodeInst= NodeInstance* ();
 	using NewNodeComp= CompositionNodeLogic* ();
+	using UpdNodeInst= void (NodeInstance*);
 	NewNodeInst* newNodeInst;
 	NewNodeComp* newNodeComp;
+	UpdNodeInst* updNodeInst;
+	util::CbListener<util::OnChangeCb> moduleChangeListener;
 };
 
 } // nodes

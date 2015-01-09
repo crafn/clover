@@ -86,20 +86,20 @@ void EventHandlerNodeInstance::create(){
 	
 	setUpdateNeeded(false);
 	
-	eventsInput->setOnReceiveCallback([&] () {
-		if (eventsInput->get().empty())
+	eventsInput->setOnReceiveCallback(+[] (EventHandlerNodeInstance* self) {
+		if (self->eventsInput->get().empty())
 			return;
 		
-		const auto& name= eventType->getName();
-		for (const auto& event : eventsInput->get()){
+		const auto& name= self->eventType->getName();
+		for (const auto& event : self->eventsInput->get()){
 			if (event.getName() != name) // Accept only events of corresponding type
 				continue;
 			
-			events.pushBack(event);
+			self->events.pushBack(event);
 		}
 		
-		if (!events.empty())
-			setUpdateNeeded(); // Send some events in the next update
+		if (!self->events.empty())
+			self->setUpdateNeeded(); // Send some events in the next update
 	});
 	
 }

@@ -34,14 +34,14 @@ void WeGridGrowingNodeInstance::create()
 
 	stateOut= addOutputSlot<SignalType::Real>("state");
 	
-	checkIn->setOnReceiveCallback([&] ()
+	checkIn->setOnReceiveCallback(+[] (WeGridGrowingNodeInstance* self)
 	{
-		util::Vec2d check_pos= transformIn->get().translation;
+		util::Vec2d check_pos= self->transformIn->get().translation;
 		auto& grid= global::g_env.physMgr->getWorld().getGrid();
 		physics::Grid::Cell& cell= grid.getCell(check_pos);
-		grow= cell.staticPortion + cell.dynamicPortion < 0.5;
+		self->grow= cell.staticPortion + cell.dynamicPortion < 0.5;
 
-		setUpdateNeeded(true);
+		self->setUpdateNeeded(true);
 	});
 
 	setUpdateNeeded(true);

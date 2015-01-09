@@ -39,23 +39,23 @@ void WePhysicsEntityNodeInstance::create(){
 
 	setUpdateNeeded();
 
-	activeInput->setOnReceiveCallback([&] (){
-		entity.setActive(activeInput->get());
-		if (activeInput->get())
-			setUpdateNeeded();
+	activeInput->setOnReceiveCallback(+[] (WePhysicsEntityNodeInstance* self){
+		self->entity.setActive(self->activeInput->get());
+		if (self->activeInput->get())
+			self->setUpdateNeeded();
 	});
 
-	transformInput->setOnReceiveCallback([&] (){
-		recreateEntity();
+	transformInput->setOnReceiveCallback(+[] (WePhysicsEntityNodeInstance* self){
+		self->recreateEntity();
 		// Forward transform if inactive
-		if (!activeInput->get()){
-			transformOutput->send(transformInput->get());
-			estimatedTransformOutput->send(transformInput->get());
+		if (!self->activeInput->get()){
+			self->transformOutput->send(self->transformInput->get());
+			self->estimatedTransformOutput->send(self->transformInput->get());
 		}
 	});
 
-	weInput->setOnReceiveCallback([&] (){
-		game::setOwnerWe(entity, weInput->get().get());
+	weInput->setOnReceiveCallback(+[] (WePhysicsEntityNodeInstance* self){
+		game::setOwnerWe(self->entity, self->weInput->get().get());
 	});
 }
 

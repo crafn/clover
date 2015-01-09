@@ -26,17 +26,17 @@ void WeSpatialEventDispatcherNodeInstance::create(){
 	
 	forwardOutput= addOutputSlot<SignalType::Event>("forward");
 	
-	eventInput->setOnReceiveCallback([&] () {
-		NodeEvent event= eventInput->get();
+	eventInput->setOnReceiveCallback(+[] (WeSpatialEventDispatcherNodeInstance* self) {
+		NodeEvent event= self->eventInput->get();
 		
 		game::WESet set=
 			global::g_env.worldMgr->getQuery().getEntitiesInRadius(
-				transformInput->get().translation, radiusInput->get());
+				self->transformInput->get().translation, self->radiusInput->get());
 		
 		event.addReceiver(set);
 		
-		if (forwardOutput->isAttached()){
-			forwardOutput->send(event);
+		if (self->forwardOutput->isAttached()){
+			self->forwardOutput->send(event);
 		}
 		else {
 			event.queue();

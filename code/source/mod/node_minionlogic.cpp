@@ -114,26 +114,26 @@ void MinionLogicNode::create()
 	transformIn->setValueReceived();
 	setUpdateNeeded(true);
 
-	transformIn->setOnReceiveCallback([&] ()
+	transformIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
 	{
-		transform= transformIn->get();
-		physEntity.reset(transform);
-		physEntity.setTarget(transform.translation); // Test
+		self->transform= self->transformIn->get();
+		self->physEntity.reset(self->transform);
+		self->physEntity.setTarget(self->transform.translation); // Test
 	});
 
-	activeIn->setOnReceiveCallback([&] ()
+	activeIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
 	{
-		physEntity.setActive(activeIn->get());
+		self->physEntity.setActive(self->activeIn->get());
 	});
 
-	wakeIn->setOnReceiveCallback([&] ()
+	wakeIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
 	{
-		if (!targetWe.get()) {
+		if (!self->targetWe.get()) {
 			/// @todo Skip if triggered again in a short period
 			const real64 max_dist= 4;
 
 			util::DynArray<physics::Fixture*> fixtures;
-			collision::Query::fixture.potentialRect(transform.translation, util::Vec2d(max_dist),
+			collision::Query::fixture.potentialRect(self->transform.translation, util::Vec2d(max_dist),
 			[&] (physics::Fixture& t)
 			{ fixtures.pushBack(&t); return true; });
 
@@ -149,25 +149,25 @@ void MinionLogicNode::create()
 				if (we->getTypeName() != "testCharacter")
 					continue;
 
-				targetWe.setId(we->getId());
-				phase= util::Rand::continuous(0.0, 100.0);
-				physEntity.setAwake(true);
+				self->targetWe.setId(we->getId());
+				self->phase= util::Rand::continuous(0.0, 100.0);
+				self->physEntity.setAwake(true);
 				break;
 			}
 		}
 	});
 
-	weIn->setOnReceiveCallback([&] ()
-	{ physEntity.setWe(weIn->get()); });
+	weIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
+	{ self->physEntity.setWe(self->weIn->get()); });
 }
 
-void MinionLogicNode::update()
+void MinionLogicNode::update_novirtual()
 {
 	real64 dt= global::g_env.worldMgr->getDeltaTime();
 	phase += dt;
 
 	if (targetWe.get()) {
-		util::Vec2d pos= targetWe->getPosition() + util::Vec2d{0, 2};
+		util::Vec2d pos= targetWe->getPosition() + util::Vec2d{0, 3};
 		pos.x += std::sin(phase)*1.3;
 		pos.y += std::cos(phase*0.7)*0.8;
 

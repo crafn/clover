@@ -43,6 +43,7 @@ void WorkerType::callChunkInit(ChunkGen& gen) const
 
 void WorkerType::callWork(WorldGen& gen, const Worker& w) const
 {
+	/// @todo Return false if no work was done -- important to handle at reloading
 	if (workFunc)
 		workFunc(gen, &w);
 }
@@ -79,7 +80,7 @@ void WorkerType::updateFromAttributes()
 
 	moduleChangeListener.clear();
 	moduleChangeListener.listen(mod, [this] ()
-	{ setResourceState(State::Unloaded); }); // Reload on change
+	{ resourceUpdate(false); }); // Reload on change
 
 	if (!globalInitFuncAttribute.get().empty()) {
 		auto fname= globalInitFuncAttribute.get().cStr();

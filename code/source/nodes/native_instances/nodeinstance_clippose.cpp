@@ -25,17 +25,17 @@ void ClipPoseNodeInstance::create(){
 	poseOut= addOutputSlot<SignalType::ArmaturePose>("pose");
 	
 	clipIn->setValueReceived();
-	clipIn->setOnReceiveCallback([&] (){
-		clip= &global::g_env.resCache->getResource<animation::Clip>(clipIn->get());
-		setUpdateNeeded();
+	clipIn->setOnReceiveCallback(+[] (ClipPoseNodeInstance* self){
+		self->clip= &global::g_env.resCache->getResource<animation::Clip>(self->clipIn->get());
+		self->setUpdateNeeded();
 	});
 	
-	interpolateIn->setOnReceiveCallback([&] (){
-		setUpdateNeeded();
+	interpolateIn->setOnReceiveCallback(+[] (ClipPoseNodeInstance* self){
+		self->setUpdateNeeded();
 	});
 	
-	phaseIn->setOnReceiveCallback([&] (){
-		setUpdateNeeded();
+	phaseIn->setOnReceiveCallback(+[] (ClipPoseNodeInstance* self){
+		self->setUpdateNeeded();
 	});
 	
 	setUpdateNeeded(false);

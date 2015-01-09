@@ -18,8 +18,8 @@ void RealMultiplyNodeInstance::create()
 	input2= addInputSlot<SignalType::Real>("input2");
 	realOut= addOutputSlot<SignalType::Real>("result");
 
-	auto recv= [&]
-	{ realOut->send(input1->get()*input2->get()); };
+	auto recv= +[] (RealMultiplyNodeInstance* self)
+	{ self->realOut->send(self->input1->get()*self->input2->get()); };
 
 	input1->setOnReceiveCallback(recv);
 	input2->setOnReceiveCallback(recv);

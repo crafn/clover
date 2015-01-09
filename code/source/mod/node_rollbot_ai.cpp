@@ -1,12 +1,13 @@
 #include "game/world_mgr.hpp"
 #include "global/env.hpp"
-#include "nodeinstance_rollbot_ai.hpp"
+#include "node_rollbot_ai.hpp"
 #include "util/time.hpp"
 
 namespace clover {
-namespace nodes {
+namespace mod {
 
-CompositionNodeLogic* RollBotAiNodeInstance::compNode()
+DEFINE_NODE(RollBotAiNode);
+CompositionNodeLogic* RollBotAiNode::compNode()
 {
 	auto n= new CompositionNodeLogic{};
 	n->addInputSlot("acceleration", SignalType::RtTransform2);
@@ -22,7 +23,7 @@ CompositionNodeLogic* RollBotAiNodeInstance::compNode()
 	return n;
 }
 
-void RollBotAiNodeInstance::create()
+void RollBotAiNode::create()
 {
 	aIn= addInputSlot<SignalType::RtTransform2>("acceleration");
 	omegaIn= addInputSlot<SignalType::Real>("angularVelocity");
@@ -46,17 +47,17 @@ void RollBotAiNodeInstance::create()
 
 	wakeUpTimer= 0.0;
 
-	wakeUpIn->setOnReceiveCallback([&] ()
+	wakeUpIn->setOnReceiveCallback(+[] (RollBotAiNode* self)
 	{
-		thinkingTimeout= 0.0;
-		sleeping= false;
-		wakeUpTimer= timeAwakeIn->get(); // Start sleeping when this goes to zero
+		self->thinkingTimeout= 0.0;
+		self->sleeping= false;
+		self->wakeUpTimer= self->timeAwakeIn->get(); // Start sleeping when this goes to zero
 	});
 
 	setUpdateNeeded(true);
 }
 
-void RollBotAiNodeInstance::update()
+void RollBotAiNode::update_novirtual()
 {
 	real32 dt= global::g_env.worldMgr->getDeltaTime();
 
@@ -156,5 +157,5 @@ void RollBotAiNodeInstance::update()
 	lastOmega= omegaIn->get();
 }
 
-} // nodes
+} // mod
 } // clover

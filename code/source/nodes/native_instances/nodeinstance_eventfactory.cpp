@@ -86,18 +86,18 @@ void EventFactoryNodeInstance::create(){
 	
 	setUpdateNeeded(false);
 	
-	triggerInput->setOnReceiveCallback([&] () {
-		ensure(eventType);
-		NodeEvent event(*eventType);
+	triggerInput->setOnReceiveCallback(+[] (EventFactoryNodeInstance* self) {
+		ensure(self->eventType);
+		NodeEvent event(*self->eventType);
 		
 		//print(debug::Ch::WE, debug::Vb::Trivial, "NodeEvent %s signal sent",
 		//	eventType->getName().cStr());
 		
-		for (auto& m : argumentInputs){
+		for (auto& m : self->argumentInputs){
 			event.set(m.first, m.second->getAny());
 		}
 		
-		eventOutput->send(event);
+		self->eventOutput->send(event);
 	});
 }
 
