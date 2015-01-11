@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "baseslot.hpp"
+#include "global/module_util.hpp"
 #include "util/any.hpp"
 
 #include <functional>
@@ -15,7 +16,8 @@ class InputSlot;
 class NodeInstance;
 class ENGINE_API BaseInputSlot : public BaseSlot {
 public:
-	using CallbackType= void (*)(NodeInstance*);
+	using RawCallbackType= void (*)(NodeInstance*);
+	using CallbackType= MOD_FPTR_TYPE(RawCallbackType);
 
 	BaseInputSlot(SignalType t);
 	virtual ~BaseInputSlot();
@@ -30,9 +32,14 @@ public:
 	template <SubSignalType S>
 	typename SignalTypeTraits<SubSignalTypeTraits<S>::signalType>::Value subGet() const;
 
+	/// @warning Technically, casting to a different fptr and later calling is UB
 	template <typename T>
-	void setOnReceiveCallback(void (*c)(T*)) { setOnReceiveCallback((CallbackType)c); };
-	void setOnReceiveCallback(CallbackType c);
+	void setOnReceiveCallback(void (*c)(T*))
+	{ onReceiveCallback= (RawCallbackType)c; }
+
+	template <typename T>
+	void setOnReceiveCallback(MOD_FPTR_TYPE(void (*)(T*)) c)
+	{ onReceiveCallback= (CallbackType)c; } 
 
 	/// Call callback if signal has been received
 	void update(NodeInstance& inst);

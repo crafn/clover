@@ -3,7 +3,10 @@
 #include "game/world_mgr.hpp"
 #include "game/worldentity.hpp"
 #include "global/env.hpp"
+#include "global/module_util.hpp"
 #include "node_minionlogic.hpp"
+
+DECLARE_MOD(mod);
 
 namespace clover {
 namespace mod {
@@ -101,6 +104,50 @@ util::RtTransform2d MinionPhysicsEntity::getTransform() const
 util::RtTransform2d MinionPhysicsEntity::getEstimatedTransform() const
 { return bodyObject->getTransform(); }
 
+MOD_API void minion_callback_transform(MinionLogicNode* self)
+{
+	self->transform= self->transformIn->get();
+	self->physEntity.reset(self->transform);
+	self->physEntity.setTarget(self->transform.translation); // Test
+}
+
+MOD_API void minion_callback_active(MinionLogicNode* self)
+{ self->physEntity.setActive(self->activeIn->get()); }
+
+MOD_API void minion_callback_wake(MinionLogicNode* self)
+{
+	if (!self->targetWe.get()) {
+		/// @todo Skip if triggered again in a short period
+		const real64 max_dist= 4;
+
+		util::DynArray<physics::Fixture*> fixtures;
+		collision::Query::fixture.potentialRect(self->transform.translation, util::Vec2d(max_dist),
+		[&] (physics::Fixture& t)
+		{ fixtures.pushBack(&t); return true; });
+
+		for (SizeType i= 0; i < fixtures.size(); ++i){
+			physics::Object& obj= fixtures[i]->getObject();
+			if (obj.isStatic())
+				continue;
+
+			game::WorldEntity* we= game::getOwnerWe(obj);
+			if (!we)
+				continue;
+
+			if (we->getTypeName() != "testCharacter")
+				continue;
+
+			self->targetWe.setId(we->getId());
+			self->phase= util::Rand::continuous(0.0, 100.0);
+			self->physEntity.setAwake(true);
+			break;
+		}
+	}
+}
+
+MOD_API void minion_callback_we(MinionLogicNode* self)
+{ self->physEntity.setWe(self->weIn->get()); }
+
 void MinionLogicNode::create()
 {
 	activeIn= addInputSlot<SignalType::Boolean>("active");
@@ -114,51 +161,10 @@ void MinionLogicNode::create()
 	transformIn->setValueReceived();
 	setUpdateNeeded(true);
 
-	transformIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
-	{
-		self->transform= self->transformIn->get();
-		self->physEntity.reset(self->transform);
-		self->physEntity.setTarget(self->transform.translation); // Test
-	});
-
-	activeIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
-	{
-		self->physEntity.setActive(self->activeIn->get());
-	});
-
-	wakeIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
-	{
-		if (!self->targetWe.get()) {
-			/// @todo Skip if triggered again in a short period
-			const real64 max_dist= 4;
-
-			util::DynArray<physics::Fixture*> fixtures;
-			collision::Query::fixture.potentialRect(self->transform.translation, util::Vec2d(max_dist),
-			[&] (physics::Fixture& t)
-			{ fixtures.pushBack(&t); return true; });
-
-			for (SizeType i= 0; i < fixtures.size(); ++i){
-				physics::Object& obj= fixtures[i]->getObject();
-				if (obj.isStatic())
-					continue;
-
-				game::WorldEntity* we= game::getOwnerWe(obj);
-				if (!we)
-					continue;
-
-				if (we->getTypeName() != "testCharacter")
-					continue;
-
-				self->targetWe.setId(we->getId());
-				self->phase= util::Rand::continuous(0.0, 100.0);
-				self->physEntity.setAwake(true);
-				break;
-			}
-		}
-	});
-
-	weIn->setOnReceiveCallback(+[] (MinionLogicNode* self)
-	{ self->physEntity.setWe(self->weIn->get()); });
+	transformIn->setOnReceiveCallback(MAKE_MOD_FPTR(minion_callback_transform));
+	activeIn->setOnReceiveCallback(MAKE_MOD_FPTR(minion_callback_active));
+	wakeIn->setOnReceiveCallback(MAKE_MOD_FPTR(minion_callback_wake));
+	weIn->setOnReceiveCallback(MAKE_MOD_FPTR(minion_callback_we));
 }
 
 void MinionLogicNode::update_novirtual()

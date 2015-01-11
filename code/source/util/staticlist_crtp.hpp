@@ -9,7 +9,7 @@ namespace util {
 
 /// CRTP for keeping track of instances of a single class with a static list
 template <typename T>
-class StaticListCrtp {
+class ENGINE_API StaticListCrtp {
 public:
 	using This= StaticListCrtp<T>;
 	using List= util::LinkedList<T*>;
@@ -17,7 +17,7 @@ public:
 	StaticListCrtp(){ add(); }
 	StaticListCrtp(const This&){ add(); }
 	StaticListCrtp(This&& other){ other.remove(); add(); }
-	virtual ~StaticListCrtp(){ remove(); }
+	~StaticListCrtp(){ remove(); }
 
 	This& operator=(const This&)= default;
 	This& operator=(This&& other){ other.remove(); return *this; }

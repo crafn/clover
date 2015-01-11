@@ -33,7 +33,7 @@ private:
 };
 
 DECLARE_NODE(MinionLogicNode);
-class MinionLogicNode : public NodeInstance {
+class MinionLogicNode final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 
@@ -41,6 +41,7 @@ public:
 	void update_novirtual();
 
 private:
+public: // For callbacks
 	InputSlot<SignalType::Boolean>* activeIn;
 	InputSlot<SignalType::RtTransform2>* transformIn;
 	InputSlot<SignalType::Trigger>* wakeIn;

@@ -17,7 +17,15 @@ NodeInstance::NodeInstance()
 { }
 
 NodeInstance::~NodeInstance()
-{ }
+{
+	for (auto& wrap : inputSlots) {
+		delete wrap.slot;
+	}
+
+	for (auto& wrap : outputSlots) {
+		delete wrap.slot;
+	}
+}
 
 void NodeInstance::setCompositionNodeLogic(const CompositionNodeLogic& comp)
 { compositionNodeLogic= &comp; }
@@ -58,7 +66,8 @@ void NodeInstance::baseUpdate()
 BaseInputSlot* NodeInstance::getInputSlot(const SlotIdentifier& id) const
 {
 	for (auto& m : inputSlots) {
-		if (util::hash32(id) == m.hash) return m.slot.get();
+		if (util::hash32(id) == m.hash)
+			return m.slot;
 	}
 	return nullptr;
 }
@@ -66,7 +75,8 @@ BaseInputSlot* NodeInstance::getInputSlot(const SlotIdentifier& id) const
 BaseOutputSlot* NodeInstance::getOutputSlot(const SlotIdentifier& id) const
 {
 	for (auto& m : outputSlots) {
-		if (util::hash32(id) == m.hash) return m.slot.get();
+		if (util::hash32(id) == m.hash)
+			return m.slot;
 	}
 	return nullptr;
 }

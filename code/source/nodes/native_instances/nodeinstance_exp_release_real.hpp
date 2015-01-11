@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class RealExpReleaseNodeInstance : public NodeInstance {
+class RealExpReleaseNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

@@ -9,7 +9,7 @@
 namespace clover {
 namespace util {
 
-class Any {
+class ENGINE_API Any {
 public:
 	struct BaseValue {
 		virtual ~BaseValue() { }

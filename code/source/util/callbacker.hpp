@@ -27,7 +27,7 @@ namespace util {
 /// e.g. class ChangingThingy : public Callbacker<all_supported_callback_type-classes_here>
 /// Making use of deadly diamond of death here..!
 template <typename... CbTypes>
-class Callbacker : public CbTypes... {
+class ENGINE_API Callbacker : public CbTypes... {
 public:
 	Callbacker()= default;
 	Callbacker(const Callbacker&)= default;

@@ -13,7 +13,7 @@ class WorldEntity;
 typedef uint64 WorldEntityId;
 
 /// @todo Remove. Ids should be managed by WeMgr
-class WETable : public util::PtrTable<game::WorldEntity> {
+class ENGINE_API WETable : public util::PtrTable<game::WorldEntity> {
 public:
 	WETable();
 

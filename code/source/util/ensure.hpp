@@ -49,6 +49,9 @@ T* noNullFlowsThrough(T* ptr){
 }
 
 } // util
+
+void fail(const char* format, ...);
+
 } // clover
 
 #ifndef RELEASE

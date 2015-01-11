@@ -8,7 +8,7 @@
 namespace clover {
 namespace nodes {
 
-class WeSpatialAudioSourceNodeInstance : public NodeInstance {
+class WeSpatialAudioSourceNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

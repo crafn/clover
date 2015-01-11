@@ -10,7 +10,7 @@
 namespace clover {
 namespace nodes {
 
-class WeVisualEntityNodeInstance : public NodeInstance {
+class WeVisualEntityNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

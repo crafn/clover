@@ -13,7 +13,7 @@ using namespace clover::nodes;
 
 DECLARE_NODE(PlayerMgrNode)
 
-class PlayerMgrNode : public NodeInstance {
+class PlayerMgrNode final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

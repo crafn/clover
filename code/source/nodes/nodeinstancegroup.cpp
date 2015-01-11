@@ -15,16 +15,17 @@ NodeInstanceGroup::NodeInstanceGroup(const CompositionNodeLogicGroup& group){
 NodeInstanceGroup::~NodeInstanceGroup(){
 	//print(debug::Ch::General, debug::Vb::Trivial, "Destroying instance group: %p", this);
 	compGroupListener.clear();
+
+	for (NodeInstance* inst : nodes) {
+		ensure(inst);
+		inst->getType().deleteInstance(*inst);
+	}
 }
 
 void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
 	PROFILE();
 	compositionGroup= &group;
 
-	while (!nodes.empty()){
-		nodes.erase(nodes.begin());
-	}
-	
 	compGroupListener.clear();
 	compGroupListener.listen(group, [&] () {
 		print(debug::Ch::Dev, debug::Vb::Trivial, "NodeInstanceGroup recreation: %s, %p", group.getName().cStr(), this);
@@ -73,8 +74,8 @@ void NodeInstanceGroup::create(const CompositionNodeLogicGroup& group){
 	}
 
 	if (!nodes.empty()){
-		groupVars.firstOfGroup= nodes.front().get();
-		groupVars.lastOfGroup= nodes.back().get();
+		groupVars.firstOfGroup= nodes.front();
+		groupVars.lastOfGroup= nodes.back();
 	}
 
 	util::OnChangeCb::trigger();
@@ -87,7 +88,7 @@ NodeInstance& NodeInstanceGroup::add(const CompositionNodeLogic& comp){
 	logic->setGroupVars(&groupVars);
 	logic->create();
 
-	nodes.pushBack(std::move(NodeInstancePtr(logic)));
+	nodes.pushBack(logic);
 	
 	return *nodes.back();
 }
@@ -111,8 +112,8 @@ NodeInstance& NodeInstanceGroup::add(const CompositionNodeLogic& comp){
 UpdateLine NodeInstanceGroup::getUpdateLine() const {
 	PROFILE();
 	util::DynArray<NodeInstance*> ptrs;
-	for (const NodeInstancePtr& node : nodes){
-		ptrs.pushBack(node.get());
+	for (NodeInstance* node : nodes){
+		ptrs.pushBack(node);
 	}
 	return UpdateLine(ptrs, *this);
 }

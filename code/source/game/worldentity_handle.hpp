@@ -14,7 +14,7 @@ class StrictHandleConnection;
 class ENGINE_API WeHandle {
 public:
 	WeHandle(const game::WorldEntity* e=0);
-	virtual ~WeHandle();
+	~WeHandle();
 	
 	WeHandle(const WeHandle& h);
 	WeHandle(WeHandle&& h);

@@ -18,10 +18,15 @@ template <typename T>
 NodeInstance* newNativeNodeInst()
 { return new T{}; }
 
+template <typename T>
+void delNativeNodeInst(NodeInstance* inst)
+{
+	T* deriv= static_cast<T*>(inst);
+	return delete deriv;
+}
+
 void updNativeNodeInst(NodeInstance* inst)
 { return inst->update(); }
-
-uint32 NodeType::invalidCount= 0;
 
 NodeType::NodeType()
 		: INIT_RESOURCE_ATTRIBUTE(nameAttribute, "name", "")
@@ -39,20 +44,16 @@ NodeType::~NodeType()
 
 void NodeType::resourceUpdate(bool load, bool force)
 {
-	if (	getResourceState() == State::Error ||
-			getResourceState() == State::Unloaded) {
-		ensure(invalidCount > 0);
-		--invalidCount;
-	}
-
 	if (load || getResourceState() == State::Uninit) {
 		newNodeInst= nullptr;
+		delNodeInst= nullptr;
 		newNodeComp= nullptr;
 		updNodeInst= nullptr;
 
 #define NODEINSTANCE(x) \
 		if (classAttribute.get() == util::TypeStringTraits<x>::type()) { \
 			newNodeInst= newNativeNodeInst<x>; \
+			delNodeInst= delNativeNodeInst<x>; \
 			newNodeComp= x::compNode; \
 			updNodeInst= updNativeNodeInst; \
 		}
@@ -67,12 +68,19 @@ void NodeType::resourceUpdate(bool load, bool force)
 				global::g_env.resCache->getResource<global::Module>(
 					moduleAttribute.get());
 			moduleChangeListener.clear();
-			moduleChangeListener.listen(module, [this] ()
-			{ resourceUpdate(false); }); // Reload on change
+			moduleChangeListener.listen(module, [this, &module] ()
+			{
+				// Reload on change
+				if (module.getResourceState() == State::Loaded) 
+					resourceUpdate(true);
+			});
 
 			newNodeInst=
 				(NewNodeInst*)module.getSym(
 						("new_inst_" + classAttribute.get()).cStr());
+			delNodeInst=
+				(DelNodeInst*)module.getSym(
+						("del_inst_" + classAttribute.get()).cStr());
 			newNodeComp=
 				(NewNodeComp*)module.getSym(
 						("new_comp_" + classAttribute.get()).cStr());
@@ -82,7 +90,6 @@ void NodeType::resourceUpdate(bool load, bool force)
 		}
 
 		if (!newNodeInst || !newNodeComp || !updNodeInst) {
-			++invalidCount;
 			createErrorResource();
 			print(	debug::Ch::Resources,
 					debug::Vb::Critical,
@@ -96,7 +103,6 @@ void NodeType::resourceUpdate(bool load, bool force)
 				debug::Vb::Trivial,
 				"Unloading NodeType: %s",
 				nameAttribute.get().cStr());
-		++invalidCount;
 		setResourceState(State::Unloaded);
 	}
 }
@@ -127,6 +133,12 @@ void NodeType::updateInstance(NodeInstance& inst) const
 {
 	ensure(updNodeInst);
 	updNodeInst(&inst);
+}
+
+void NodeType::deleteInstance(NodeInstance& inst) const
+{
+	ensure(delNodeInst);
+	delNodeInst(&inst);
 }
 
 void NodeType::tryStartReloading()

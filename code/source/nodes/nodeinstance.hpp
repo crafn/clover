@@ -10,18 +10,19 @@
 #include "util/linkedlist.hpp"
 #include "util/traits.hpp"
 
-#include <memory>
-
 // Macros to cope with the poor choice of using classes
 #define DECLARE_NODE(x) \
 class x;\
 MOD_API nodes::NodeInstance* new_inst_ ## x(); \
+MOD_API void del_inst_ ## x(nodes::NodeInstance* inst); \
 MOD_API nodes::CompositionNodeLogic* new_comp_ ## x(); \
 MOD_API void update_ ## x(NodeInstance*);
 
 #define DEFINE_NODE(x) \
 nodes::NodeInstance* new_inst_ ## x() \
 { return new x{}; } \
+void del_inst_ ## x(nodes::NodeInstance* inst) \
+{ delete (x*)inst; } \
 nodes::CompositionNodeLogic* new_comp_ ## x() \
 { return x::compNode(); } \
 void update_ ## x(NodeInstance* inst) \
@@ -36,8 +37,8 @@ class CompositionNodeSlot;
 class NodeType;
 
 class ENGINE_API NodeInstance {
-	typedef util::UniquePtr<BaseInputSlot> InputSlotPtr;
-	typedef util::UniquePtr<BaseOutputSlot> OutputSlotPtr;
+	typedef BaseInputSlot* InputSlotPtr;
+	typedef BaseOutputSlot* OutputSlotPtr;
 public:
 	// External variables stored in NodeInstanceGroup
 	// Used for optimization and group behavior
@@ -56,7 +57,10 @@ public:
 	};
 
 	NodeInstance();
-	virtual ~NodeInstance();
+protected:
+	/// @note No virtual! Not a problem because every node is destroyed through NodeType
+	~NodeInstance();
+public:
 	
 	void setCompositionNodeLogic(const CompositionNodeLogic& comp);
 	const CompositionNodeLogic& getCompositionNodeLogic() const;
@@ -134,8 +138,8 @@ protected:
 	void setUpdateNeeded(bool b= true);
 	
 	template <typename Ptr>
-	struct SlotWrap {
-		SlotWrap(const SlotIdentifier& id, Ptr&& p):
+	struct ENGINE_API SlotWrap {
+		ENGINE_API SlotWrap(const SlotIdentifier& id, Ptr&& p):
 			hash(util::hash32(id)),
 			slot(std::move(p)){
 		}

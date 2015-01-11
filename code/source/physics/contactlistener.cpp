@@ -15,29 +15,15 @@ bool isBreakingContact(const T& c){
 }
 
 template <typename T, typename... Args>
-void tryInvokeCallback(const std::function<T>& cb, Args... args){
-	if (!cb)
-		return;
-	
-	try {
-		cb(args...);
-	}
-	catch (global::Exception& e){
-		print(debug::Ch::Phys, debug::Vb::Critical, "Contact callback failed: %s", e.what());
-	}
-}
+void tryInvokeCallback(T cb, Args... args)
+{ if (cb) (*cb)(args...); }
 
-void tryInvokePreSolveCallback(const std::function<bool (const Contact&)>& cb, const Contact& c, b2Contact* b2_c){
-	if (!cb)
+void tryInvokePreSolveCallback(FixtureCallbacks& cb, const Contact& c, b2Contact* b2_c){
+	if (!cb.onPreSolveContact)
 		return;
-	
-	try {
-		if (!cb(c))
-			b2_c->SetEnabled(false);
-	}
-	catch (global::Exception& e){
-		print(debug::Ch::Phys, debug::Vb::Critical, "OnPreSolveCallback callback failed: %s", e.what());
-	}
+
+	if (!(*cb.onPreSolveContact)(c, cb.userData))
+		b2_c->SetEnabled(false);
 }
 
 BaseContactListener::BaseContactListener(){
@@ -100,8 +86,11 @@ void InternalContactListener::BeginContact(b2Contact* box2d_contact){
 				breakingContacts.pushBack(post_c);
 		}
 
-		tryInvokeCallback(c.getSide(0).fixture->callbacks.onBeginContact, c);
-		tryInvokeCallback(c.getSide(1).fixture->callbacks.onBeginContact, c.switchedSides());
+
+		auto& c0_cb= c.getSide(0).fixture->callbacks;
+		auto& c1_cb= c.getSide(1).fixture->callbacks;
+		tryInvokeCallback(c0_cb.onBeginContact, c, c0_cb.userData);
+		tryInvokeCallback(c1_cb.onBeginContact, c.switchedSides(), c1_cb.userData);
 
 		for (auto& m : subContactListeners)
 			m->onBeginContact(c);
@@ -122,8 +111,10 @@ void InternalContactListener::EndContact(b2Contact* box2d_contact){
 		ghostlyRecords.erase(ghost_it);
 
 	if (!contact_ignored){
-		tryInvokeCallback(c.getSide(0).fixture->callbacks.onEndContact, c);
-		tryInvokeCallback(c.getSide(1).fixture->callbacks.onEndContact, c.switchedSides());
+		auto& c0_cb= c.getSide(0).fixture->callbacks;
+		auto& c1_cb= c.getSide(1).fixture->callbacks;
+		tryInvokeCallback(c0_cb.onEndContact, c, c0_cb.userData);
+		tryInvokeCallback(c1_cb.onEndContact, c.switchedSides(), c1_cb.userData);
 
 		for (auto& m : subContactListeners)
 			m->onEndContact(c);
@@ -177,9 +168,10 @@ void InternalContactListener::PreSolve(b2Contact* box2d_contact, const b2Manifol
 	}
 
 	// Callbacks
-	
-	tryInvokePreSolveCallback(c.getSide(0).fixture->callbacks.onPreSolveContact, c, box2d_contact);
-	tryInvokePreSolveCallback(c.getSide(1).fixture->callbacks.onPreSolveContact, c.switchedSides(), box2d_contact);
+	auto& c0_cb= c.getSide(0).fixture->callbacks;
+	auto& c1_cb= c.getSide(1).fixture->callbacks;
+	tryInvokePreSolveCallback(c0_cb, c, box2d_contact);
+	tryInvokePreSolveCallback(c1_cb, c.switchedSides(), box2d_contact);
 
 	if (!box2d_contact->IsEnabled())
 		return;
@@ -210,8 +202,10 @@ void InternalContactListener::PostSolve(b2Contact* box2d_contact, const b2Contac
 			breakingContacts.pushBack(c);
 		}
 
-		tryInvokeCallback(c.getSide(0).fixture->callbacks.onPostSolveContact, c);
-		tryInvokeCallback(c.getSide(1).fixture->callbacks.onPostSolveContact, c.switchedSides());
+		auto& c0_cb= c.getSide(0).fixture->callbacks;
+		auto& c1_cb= c.getSide(1).fixture->callbacks;
+		tryInvokeCallback(c0_cb.onPostSolveContact, c, c0_cb.userData);
+		tryInvokeCallback(c1_cb.onPostSolveContact, c.switchedSides(), c1_cb.userData);
 
 		for (auto& m : subContactListeners)
 			m->onPostSolveContact(c);

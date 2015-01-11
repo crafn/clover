@@ -50,8 +50,6 @@ void UpdateLine::sort(){
 
 void UpdateLine::run(){
 	PROFILE();
-	if (NodeType::invalidCount > 0)
-		return;
 
 	for (const NodeInfo& info : list){
 		try {

@@ -38,7 +38,6 @@ class CompositionNodeUi;
 class ENGINE_API NodeType : public resources::Resource {
 public:
 	DECLARE_RESOURCE(NodeType)
-	static uint32 invalidCount;
 
 	NodeType();
 	virtual ~NodeType();
@@ -52,6 +51,7 @@ public:
 
 	/// Called from NodeInstance. Uses correct func addr even when dll is reloaded
 	void updateInstance(NodeInstance& inst) const;
+	void deleteInstance(NodeInstance& inst) const;
 
 	const util::Str8& getName() const { return nameAttribute.get(); }
 
@@ -63,9 +63,11 @@ private:
 	void tryStartReloading();
 
 	using NewNodeInst= NodeInstance* ();
+	using DelNodeInst= void (NodeInstance*);
 	using NewNodeComp= CompositionNodeLogic* ();
 	using UpdNodeInst= void (NodeInstance*);
 	NewNodeInst* newNodeInst;
+	DelNodeInst* delNodeInst;
 	NewNodeComp* newNodeComp;
 	UpdNodeInst* updNodeInst;
 	util::CbListener<util::OnChangeCb> moduleChangeListener;

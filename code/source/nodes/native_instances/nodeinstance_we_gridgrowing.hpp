@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class WeGridGrowingNodeInstance : public NodeInstance {
+class WeGridGrowingNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

@@ -14,14 +14,10 @@ BaseInputSlot::BaseInputSlot(SignalType t)
 BaseInputSlot::~BaseInputSlot(){
 }
 
-void BaseInputSlot::setOnReceiveCallback(CallbackType c){
-	onReceiveCallback= c;
-}
-
 void BaseInputSlot::update(NodeInstance& inst){
 	if (valueReceived && onReceiveCallback) {
 		PROFILE();
-		onReceiveCallback(&inst);
+		(*onReceiveCallback)(&inst);
 	}
 		
 	valueReceived= false;

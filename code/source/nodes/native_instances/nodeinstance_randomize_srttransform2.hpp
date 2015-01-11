@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class SrtTransform2RandomizeNodeInstance : public NodeInstance {
+class SrtTransform2RandomizeNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

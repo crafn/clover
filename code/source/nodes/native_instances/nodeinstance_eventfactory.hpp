@@ -9,7 +9,7 @@ namespace nodes {
 
 class NodeEventType;
 
-class EventFactoryNodeInstance : public NodeInstance {
+class EventFactoryNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

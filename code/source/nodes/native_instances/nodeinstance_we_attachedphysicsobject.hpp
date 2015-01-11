@@ -11,7 +11,7 @@
 namespace clover {
 namespace nodes {
 
-class WeAttachedPhysicsObjectNodeInstance : public NodeInstance {
+class WeAttachedPhysicsObjectNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

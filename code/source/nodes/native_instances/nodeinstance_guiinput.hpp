@@ -8,7 +8,7 @@ namespace clover {
 namespace nodes {
 
 /// Provides information of gui interactions
-class GuiInputNodeInstance : public NodeInstance {
+class GuiInputNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

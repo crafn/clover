@@ -9,7 +9,7 @@ namespace nodes {
 
 class NodeEventType;
 
-class WeSpatialEventDispatcherNodeInstance : public NodeInstance {
+class WeSpatialEventDispatcherNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

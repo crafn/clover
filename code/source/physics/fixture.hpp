@@ -4,6 +4,7 @@
 #include "build.hpp"
 #include "collision/traceable.hpp"
 #include "global/eventreceiver.hpp"
+#include "global/module_util.hpp"
 #include "physics/object.hpp"
 #include "physics/contact.hpp"
 #include "physics/material.hpp"
@@ -19,10 +20,16 @@ class Shape;
 namespace physics {
 
 struct FixtureCallbacks {
-	std::function<void (const Contact&)> onBeginContact;
-	std::function<void (const Contact&)> onEndContact;
-	std::function<bool (const Contact&)> onPreSolveContact; /// Return false if contact should be discarded
-	std::function<void (const PostSolveContact&)> onPostSolveContact;
+	using OnBeginContact= MOD_FPTR_TYPE(void (*)(const Contact&, void*));
+	using OnEndContact= MOD_FPTR_TYPE(void (*)(const Contact&, void*));
+	using OnPreSolveContact= MOD_FPTR_TYPE(bool (*)(const Contact&, void*));
+	using OnPostSolveContact= MOD_FPTR_TYPE(void (*)(const PostSolveContact&, void*));
+
+	OnBeginContact onBeginContact= nullptr;
+	OnEndContact onEndContact= nullptr;
+	OnPreSolveContact onPreSolveContact= nullptr; /// Return false if contact should be discarded
+	OnPostSolveContact onPostSolveContact= nullptr;
+	void* userData= nullptr; /// This is passed to callbacks
 };
 
 class Material;

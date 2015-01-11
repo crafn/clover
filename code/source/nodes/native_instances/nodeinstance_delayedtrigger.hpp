@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class DelayedTriggerNodeInstance : public NodeInstance {
+class DelayedTriggerNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

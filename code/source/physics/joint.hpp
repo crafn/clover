@@ -17,8 +17,8 @@ class Object;
 class RigidObject;
 class PhysMgr;
 
-struct OnAttachCb : public util::SingleCallbacker<>{};
-struct OnDetachCb : public util::SingleCallbacker<>{};
+struct ENGINE_API OnAttachCb : public util::SingleCallbacker<>{};
+struct ENGINE_API OnDetachCb : public util::SingleCallbacker<>{};
 
 using WorldVec= util::Vec2d;
 
@@ -87,7 +87,7 @@ private:
 };
 
 template <typename T, JointType Type>
-struct JointTypeCrtp {
+struct ENGINE_API JointTypeCrtp {
 	JointTypeCrtp(){
 		static_cast<T*>(this)->setType(Type);
 	}

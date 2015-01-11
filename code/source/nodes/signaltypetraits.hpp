@@ -31,7 +31,7 @@ struct ENGINE_API RuntimeSubSignalTypeTraits {
 };
 
 /// Used for subsignalling
-class SignalValue {
+class ENGINE_API SignalValue {
 public:
 	SignalValue(){ set(SignalType::None, 0); }
 	SignalValue(SignalType t, const util::Any& v){ set(t, v); }

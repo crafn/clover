@@ -9,7 +9,7 @@
 namespace clover {
 namespace nodes {
 
-class ActionListenerNodeInstance : public NodeInstance {
+class ActionListenerNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

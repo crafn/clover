@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class Vec2LerpNodeInstance : public NodeInstance {
+class Vec2LerpNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

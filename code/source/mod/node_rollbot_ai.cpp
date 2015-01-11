@@ -1,7 +1,10 @@
 #include "game/world_mgr.hpp"
 #include "global/env.hpp"
+#include "global/module_util.hpp"
 #include "node_rollbot_ai.hpp"
 #include "util/time.hpp"
+
+DECLARE_MOD(mod);
 
 namespace clover {
 namespace mod {
@@ -21,6 +24,13 @@ CompositionNodeLogic* RollBotAiNode::compNode()
 	n->addOutputSlot("torque", SignalType::Real);
 	n->addOutputSlot("awake", SignalType::Boolean);
 	return n;
+}
+
+MOD_API void callback_wakeUp(RollBotAiNode* self)
+{
+	self->thinkingTimeout= 0.0;
+	self->sleeping= false;
+	self->wakeUpTimer= self->timeAwakeIn->get(); // Start sleeping when this goes to zero
 }
 
 void RollBotAiNode::create()
@@ -47,12 +57,7 @@ void RollBotAiNode::create()
 
 	wakeUpTimer= 0.0;
 
-	wakeUpIn->setOnReceiveCallback(+[] (RollBotAiNode* self)
-	{
-		self->thinkingTimeout= 0.0;
-		self->sleeping= false;
-		self->wakeUpTimer= self->timeAwakeIn->get(); // Start sleeping when this goes to zero
-	});
+	wakeUpIn->setOnReceiveCallback(MAKE_MOD_FPTR(callback_wakeUp));
 
 	setUpdateNeeded(true);
 }

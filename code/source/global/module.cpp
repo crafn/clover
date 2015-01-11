@@ -1,4 +1,7 @@
+#include "global/env.hpp"
+#include "hardware/device.hpp"
 #include "module.hpp"
+#include "module_util.hpp"
 
 namespace clover {
 namespace global {
@@ -11,7 +14,7 @@ Module::Module()
 	auto refresh= [&] ()
 	{
 		if (getResourceState() != State::Uninit)
-			resourceUpdate(false);
+			resourceUpdate(true);
 	};
 
 	file.setOnChangeCallback(refresh);
@@ -29,26 +32,34 @@ void Module::resourceUpdate(bool load, bool force)
 {
 	if (getResourceState() == State::Uninit || load) {
 		clear();
+
 		file.get().setExt(hardware::dllExt());
 		auto path= file.get().whole();
-		print(	debug::Ch::Resources,
-				debug::Vb::Trivial,
-				"Loading DLL: %s",
-				path.cStr());
-		dll= hardware::loadDll(path.cStr());
-		if (dll) {
+
+		// Can't continue without dll being (re)loaded as we don't want
+		// function pointers to dll become invalid
+		while (!dll) {
 			print(	debug::Ch::Resources,
 					debug::Vb::Trivial,
-					"DLL loaded at addr: %p",
-					dll);
-			setResourceState(State::Loaded);	
-		} else {
-			print(	debug::Ch::Resources,
-					debug::Vb::Critical,
-					"Couldn't load DLL: %s, %s", 
-					path.cStr(), hardware::dllError());
-			createErrorResource();
+					"Loading DLL: %s",
+					path.cStr());
+
+			dll= hardware::loadDll(path.cStr());
+			if (!dll) {
+				print(	debug::Ch::Resources,
+						debug::Vb::Critical,
+						"Couldn't load a DLL: %s, %s\nTrying again...", 
+						path.cStr(), hardware::dllError());
+				global::g_env.device->sleep(0.1);
+			}
 		}
+
+		print(debug::Ch::Resources, debug::Vb::Trivial, "DLL loaded");
+		onModuleLoad(path.cStr(), dll);
+
+		// Notify
+		setResourceState(State::Unloaded);
+		setResourceState(State::Loaded);
 	} else {
 		auto path= file.get().whole();
 		print(	debug::Ch::Resources,
@@ -69,6 +80,7 @@ void Module::createErrorResource()
 void Module::clear()
 {
 	if (dll) {
+		onModuleUnload(dll);
 		hardware::unloadDll(dll);
 		dll= nullptr;
 	}

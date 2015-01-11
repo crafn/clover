@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class TriggerToSignalNodeInstance : public NodeInstance {
+class TriggerToSignalNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

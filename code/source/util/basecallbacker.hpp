@@ -14,7 +14,7 @@ namespace util {
 template <typename T>
 class CbListener;
 
-class BaseCallbacker {
+class ENGINE_API BaseCallbacker {
 public:
 	virtual ~BaseCallbacker(){}
 protected:
@@ -22,7 +22,7 @@ protected:
 
 /// Calls callbacks of a certain type
 template <typename... Args>
-class SingleCallbacker : public BaseCallbacker {
+class ENGINE_API SingleCallbacker : public BaseCallbacker {
 public:
 
 	using Cb= std::function<void (Args...)>;
@@ -113,8 +113,8 @@ private:
 };
 
 // Some common callbacks
-struct OnChangeCb : public SingleCallbacker<>{};
-struct OnDestroyCb : public SingleCallbacker<>{};
+struct ENGINE_API OnChangeCb : public SingleCallbacker<>{};
+struct ENGINE_API OnDestroyCb : public SingleCallbacker<>{};
 	
 } // util
 } // clover

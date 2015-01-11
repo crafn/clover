@@ -12,7 +12,7 @@ class Clip;
 } // animation
 namespace nodes {
 
-class ClipPoseNodeInstance : public NodeInstance {
+class ClipPoseNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 	

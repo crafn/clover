@@ -11,7 +11,7 @@ namespace mod {
 using namespace clover::nodes;
 
 DECLARE_NODE(RollBotAiNode);
-class RollBotAiNode : public NodeInstance {
+class RollBotAiNode final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 
@@ -19,6 +19,7 @@ public:
 	void update_novirtual();
 
 private:
+public:
 	InputSlot<SignalType::RtTransform2>* aIn;
 	InputSlot<SignalType::Real>* omegaIn;
 	InputSlot<SignalType::Real>* torqueMulIn;

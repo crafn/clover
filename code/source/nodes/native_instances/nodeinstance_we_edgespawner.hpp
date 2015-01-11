@@ -13,7 +13,7 @@ class WeType;
 } // game
 namespace nodes {
 
-class WeEdgeSpawnerNodeInstance : public NodeInstance {
+class WeEdgeSpawnerNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

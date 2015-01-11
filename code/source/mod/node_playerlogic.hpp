@@ -46,10 +46,7 @@ public:
 	void applyVelocityChange(util::Vec2d i);
 
 private:
-	void onGroundContactBegin(const physics::Contact& c);
-	void onGroundContactEnd(const physics::Contact& c);
-	bool onGroundContactPreSolve(const physics::Contact& c);
-	void onBodyContactPostSolve(const physics::PostSolveContact& c);
+public: // For callbacks
 	real64 wheelOffset();
 
 	int32 touchingGroundCounter= 0;
@@ -75,7 +72,7 @@ private:
 
 DECLARE_NODE(PlayerLogicNode);
 
-class PlayerLogicNode : public nodes::NodeInstance {
+class PlayerLogicNode final : public nodes::NodeInstance {
 public:
 	static nodes::CompositionNodeLogic* compNode();
 
@@ -83,6 +80,7 @@ public:
 	void update_novirtual();
 
 private:
+public: // For callbacks
 	void setTagEntry(const util::Str8& s);
 	void clearTagEntry();
 	void chooseActionState(util::Vec2d pos);
@@ -90,8 +88,6 @@ private:
 	physics::Object* findPickableObject(util::Vec2d pos);
 	void die();
 	void respawn();
-
-private:
 
 	InputSlot<SignalType::String>* playerStringIn;
 	InputSlot<SignalType::Vec2>* movementIn;

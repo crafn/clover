@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class CameraTargetNodeInstance : public NodeInstance {
+class CameraTargetNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

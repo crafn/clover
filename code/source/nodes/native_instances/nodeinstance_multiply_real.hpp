@@ -7,7 +7,7 @@
 namespace clover {
 namespace nodes {
 
-class RealMultiplyNodeInstance : public NodeInstance {
+class RealMultiplyNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

@@ -6,6 +6,8 @@
 #include "global/env.hpp"
 #include "node_playerlogic.hpp"
 
+DECLARE_MOD(mod);
+
 namespace clover {
 namespace mod {
 
@@ -51,6 +53,24 @@ void PlayerPhysicsEntity::setActive(bool active)
 		wheelObject->setActive(active);
 }
 
+MOD_API void callback_onPostSolveContact(const physics::PostSolveContact& c, void* self)
+{ ((PlayerPhysicsEntity*)self)->accumImpulse += c.getSide(0).totalImpulse.length(); };
+
+MOD_API void callback_onBeginContact(const physics::Contact& c, void* self)
+{ ++((PlayerPhysicsEntity*)self)->touchingGroundCounter; };
+
+MOD_API void callback_onEndContact(const physics::Contact& c, void* self)
+{ --((PlayerPhysicsEntity*)self)->touchingGroundCounter; };
+
+MOD_API bool callback_onPreSolveContact(const physics::Contact& c, void* self)
+{
+	/// @todo Velocity should be updated every frame, not only when contact is formed
+	((PlayerPhysicsEntity*)self)->lastContactVelocityOnGround=
+		NONULL(c.getSide(1).object)->getVelocity(
+				NONULL(c.getSide(0).object)->getPosition());
+	return true;
+};
+
 void PlayerPhysicsEntity::reset(util::RtTransform2d transform,
 								bool is_ragdoll,
 								animation::ArmaturePose ragdoll_pose,
@@ -87,15 +107,22 @@ void PlayerPhysicsEntity::reset(util::RtTransform2d transform,
 		fix_def.setShape("player_collision");
 		fix_def.setMaterial("player_collision");
 		physics::RigidFixture& body_fix= bodyObject->add(fix_def);
-		body_fix.getCallbacks().onPostSolveContact= std::bind(&This::onBodyContactPostSolve, this, _1);
+
+		body_fix.getCallbacks().userData= this;
+		body_fix.getCallbacks().onPostSolveContact=
+			MAKE_MOD_FPTR(callback_onPostSolveContact);
 
 		fix_def.setShape("player_sensor_ground");
 		fix_def.setAsSensor(true);
 		physics::RigidFixture& ground_fix= bodyObject->add(fix_def);
 
-		ground_fix.getCallbacks().onBeginContact= std::bind(&This::onGroundContactBegin, this, _1);
-		ground_fix.getCallbacks().onEndContact= std::bind(&This::onGroundContactEnd, this, _1);
-		ground_fix.getCallbacks().onPreSolveContact= std::bind(&This::onGroundContactPreSolve, this, _1);
+		ground_fix.getCallbacks().userData= this;
+		ground_fix.getCallbacks().onBeginContact=
+			MAKE_MOD_FPTR(callback_onBeginContact);
+		ground_fix.getCallbacks().onEndContact=
+			MAKE_MOD_FPTR(callback_onEndContact);
+		ground_fix.getCallbacks().onPreSolveContact=
+			MAKE_MOD_FPTR(callback_onPreSolveContact);
 
 		// Wheel joint
 		wheelJoint.emplace();
@@ -322,26 +349,38 @@ void PlayerPhysicsEntity::applyVelocityChange(util::Vec2d i)
 	bodyObject->applyImpulse(i*bodyObject->getMass());
 }
 
-void PlayerPhysicsEntity::onGroundContactBegin(const physics::Contact& c)
-{ ++touchingGroundCounter; }
-
-void PlayerPhysicsEntity::onGroundContactEnd(const physics::Contact& c)
-{ --touchingGroundCounter; }
-
-bool PlayerPhysicsEntity::onGroundContactPreSolve(const physics::Contact& c)
-{
-		/// @todo Velocity should be updated every frame, not only when contact is formed
-		lastContactVelocityOnGround=
-			NONULL(c.getSide(1).object)->getVelocity(
-					NONULL(c.getSide(0).object)->getPosition());
-		return true;
-}
-
-void PlayerPhysicsEntity::onBodyContactPostSolve(const physics::PostSolveContact& c)
-{ accumImpulse += c.getSide(0).totalImpulse.length(); }
-
 real64 PlayerPhysicsEntity::wheelOffset()
 { return -0.65; }
+
+MOD_API void player_callback_transform(PlayerLogicNode* self)
+{
+	self->transform= self->transformIn->get();
+	self->respawn();
+};
+
+MOD_API void player_callback_respawn(PlayerLogicNode* self)
+{ self->respawn(); }
+
+MOD_API void player_callback_kill(PlayerLogicNode* self)
+{ self->die(); }
+
+MOD_API void player_callback_active(PlayerLogicNode* self)
+{ self->physEntity.setActive(self->activeIn->get()); }
+
+MOD_API void player_callback_hitEnded(PlayerLogicNode* self)
+{ self->physEntity.setHandGhostliness(1.0); }
+
+MOD_API void player_callback_tryPickup(PlayerLogicNode* self)
+{ self->tryPickup(self->actionPointIn->get()); }
+
+MOD_API void player_callback_tryDrop(PlayerLogicNode* self)
+{ self->physEntity.detachHand(); }
+
+MOD_API void player_callback_tryUseInHand(PlayerLogicNode* self)
+{
+	self->swingHitOut->send();
+	self->physEntity.setHandGhostliness(0.2);
+}
 
 void PlayerLogicNode::create()
 {
@@ -375,35 +414,14 @@ void PlayerLogicNode::create()
 
 	transformIn->setValueReceived();
 
-	transformIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{
-		self->transform= self->transformIn->get();
-		self->respawn();
-	});
-
-	respawnIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{ self->respawn(); });
-
-	killIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{ self->die(); });
-
-	activeIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{ self->physEntity.setActive(self->activeIn->get()); });
-
-	hitEndedIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{ self->physEntity.setHandGhostliness(1.0); });
-
-	tryPickupIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{ self->tryPickup(self->actionPointIn->get()); });
-
-	tryDropIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{ self->physEntity.detachHand(); });
-
-	tryUseInHandIn->setOnReceiveCallback(+[] (PlayerLogicNode* self)
-	{
-		self->swingHitOut->send();
-		self->physEntity.setHandGhostliness(0.2);
-	});
+	transformIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_transform));
+	respawnIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_respawn));
+	killIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_kill));
+	activeIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_active));
+	hitEndedIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_hitEnded));
+	tryPickupIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_tryPickup));
+	tryDropIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_tryDrop));
+	tryUseInHandIn->setOnReceiveCallback(MAKE_MOD_FPTR(player_callback_tryUseInHand));
 
 	setUpdateNeeded(true);
 }

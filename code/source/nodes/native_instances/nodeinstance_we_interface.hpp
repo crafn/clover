@@ -12,7 +12,7 @@ class WorldEntity;
 } // game
 namespace nodes {
 
-class WeInterfaceNodeInstance : public NodeInstance {
+class WeInterfaceNodeInstance final : public NodeInstance {
 public:
 	static CompositionNodeLogic* compNode();
 

@@ -14,7 +14,7 @@ namespace clover {
 namespace nodes {
 
 template <SignalType S>
-class OutputSlot : public BaseOutputSlot {
+class ENGINE_API OutputSlot : public BaseOutputSlot {
 public:
 	typedef typename SignalTypeTraits<S>::Value Value;
 

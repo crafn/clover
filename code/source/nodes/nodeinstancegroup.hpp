@@ -5,6 +5,7 @@
 #include "nodeinstance.hpp"
 #include "updateline.hpp"
 #include "util/cb_listener.hpp"
+#include "util/class_preproc.hpp"
 #include "util/linkedlist.hpp"
 
 #include <memory>
@@ -18,13 +19,11 @@ class CompositionNodeLogic;
 class NodeInstanceGroup : public util::Callbacker<util::OnChangeCb> {
 public:
 	NodeInstanceGroup(const CompositionNodeLogicGroup& g);
-	
-	NodeInstanceGroup(const NodeInstanceGroup&)= delete;
-	NodeInstanceGroup(NodeInstanceGroup&&)= delete;
-	NodeInstanceGroup& operator=(const NodeInstanceGroup&)= delete;
-	NodeInstanceGroup& operator=(NodeInstanceGroup&&)= delete;
-	
-	virtual ~NodeInstanceGroup();
+
+	DELETE_MOVE(NodeInstanceGroup);
+	DELETE_COPY(NodeInstanceGroup);
+
+	~NodeInstanceGroup();
 	
 	/// Updates every node once in order in which they were added
 	//void update();
@@ -45,8 +44,7 @@ private:
 	void create(const CompositionNodeLogicGroup& g);
 	NodeInstance& add(const CompositionNodeLogic& comp);
 	
-	using NodeInstancePtr= util::UniquePtr<NodeInstance>;
-	util::DynArray<NodeInstancePtr> nodes;
+	util::DynArray<NodeInstance*> nodes;
 	util::CbListener<util::OnChangeCb> compGroupListener;
 	NodeInstance::GroupVars groupVars;
 	const CompositionNodeLogicGroup* compositionGroup= nullptr;
