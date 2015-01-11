@@ -98,17 +98,17 @@ void onModuleUnload(hardware::DllHandle handle);
 
 /// @todo Replace these when using my own template generation
 
-void ENGINE_API makeModuleFPtr(VoidModuleFPtr* call, VoidFPtr ptr, const char* sym, PersistentModInfo* info);
+ENGINE_API void makeModuleFPtr(VoidModuleFPtr* call, VoidFPtr ptr, const char* sym, PersistentModInfo* info);
 template <typename Ptr>
 ModuleFPtr<Ptr> makeModuleFPtr(Ptr ptr, const char* sym, PersistentModInfo* info)
 { ModuleFPtr<Ptr> call; makeModuleFPtr((VoidModuleFPtr*)&call, (VoidFPtr)ptr, sym, info); return call; }
 
-VoidFPtr ENGINE_API relocatedModuleFPtr(const VoidModuleFPtr* call);
+ENGINE_API VoidFPtr relocatedModuleFPtr(const VoidModuleFPtr* call);
 template <typename Ptr>
 Ptr relocatedModuleFPtr(const ModuleFPtr<Ptr>* call)
 { return (Ptr)relocatedModuleFPtr((const VoidModuleFPtr*)call); }
 
-void copyModuleFPtr(char* dst, char* src);
+ENGINE_API void copyModuleFPtr(char* dst, char* src);
 
 template <typename Ptr>
 ModuleFPtr<Ptr>::ModuleFPtr(Ptr ptr)

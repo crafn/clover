@@ -139,7 +139,7 @@ protected:
 	
 	template <typename Ptr>
 	struct ENGINE_API SlotWrap {
-		ENGINE_API SlotWrap(const SlotIdentifier& id, Ptr&& p):
+		SlotWrap(const SlotIdentifier& id, Ptr&& p):
 			hash(util::hash32(id)),
 			slot(std::move(p)){
 		}
