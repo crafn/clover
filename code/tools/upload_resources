@@ -9,7 +9,9 @@ exclude= [
 	"*~",
 	"*~*",
 	"*.swp",
-	"*.swo"
+	"*.swo",
+        "*.dll",
+        "*.so"
 ]
 
 res_dir= "resources"

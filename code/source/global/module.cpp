@@ -57,7 +57,10 @@ void Module::resourceUpdate(bool load, bool force)
 		print(debug::Ch::Resources, debug::Vb::Trivial, "DLL loaded");
 		onModuleLoad(path.cStr(), dll);
 
-		// Notify
+		// Notify change-listeners
+		// This behaviour is quite tightly coupled with the listeners;
+		// They expect module to always resolve its status to `Loaded`
+		// before letting main thread to continue elsewhere
 		setResourceState(State::Unloaded);
 		setResourceState(State::Loaded);
 	} else {

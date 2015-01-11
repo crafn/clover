@@ -70,7 +70,6 @@ void NodeType::resourceUpdate(bool load, bool force)
 			moduleChangeListener.clear();
 			moduleChangeListener.listen(module, [this, &module] ()
 			{
-				// Reload on change
 				if (module.getResourceState() == State::Loaded) 
 					resourceUpdate(true);
 			});
