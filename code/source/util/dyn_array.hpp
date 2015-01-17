@@ -224,11 +224,11 @@ public:
 	Iter erase(Iter it) { return erase(it, it + 1); }
 	Iter erase(Iter b, Iter e)
 	{
+		if (b == e)
+			return b;
 		SizeType gap= e - b;
-		for (auto it= b; it + gap != end(); ++it) {
-			new (it) Value(std::move(*(it + gap)));
-			(it + gap)->~Value();
-		}
+		for (auto it= b; it + gap != end(); ++it)
+			*it= std::move(*(it + gap));
 		for (auto it= end() - gap; it != end(); ++it)
 			it->~Value();
 		size_ -= gap;
