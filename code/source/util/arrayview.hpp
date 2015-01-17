@@ -15,12 +15,12 @@ namespace util {
 template <typename T>
 class ArrayView {
 public:
-	ArrayView(T* begin, T* end)
+	ArrayView(T* const begin, T* const end)
 			: beginPtr(begin)
 			, endPtr(end){
 	}
 
-	ArrayView(T* ptr, SizeType size)
+	ArrayView(T* const ptr, SizeType size)
 			: beginPtr(ptr)
 			, endPtr(ptr + size){
 	}
@@ -58,7 +58,6 @@ private:
 	T* endPtr;
 };
 
-/// @todo begin & end version
 template <typename T>
 auto asArrayView(const T& t) ->
 decltype(ArrayView<RemoveRef<decltype(*t.data())>>(t.data(), t.size())){

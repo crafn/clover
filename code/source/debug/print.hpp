@@ -4,9 +4,9 @@
 #include "build.hpp"
 #include "global/env.hpp"
 #include "log.hpp"
+#include "util/dyn_array.hpp"
 #include "util/mutex.hpp"
 #include <bitset>
-#include <vector>
 
 #ifdef __GNUC__
 #define PRINTF_FORMAT(stringIndex, firstToCheck) \
@@ -78,7 +78,7 @@ public:
 
 	void updateBuffer();
 
-	typedef std::vector<Message> Buffer;
+	typedef util::DynArray<Message> Buffer;
 private:
 	mutable util::Mutex mutex;
 	std::bitset<static_cast<SizeType>(Ch::Last)> filter;

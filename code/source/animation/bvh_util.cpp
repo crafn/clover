@@ -54,8 +54,10 @@ util::DynArray<ArmaturePose::Pose> initializedPoses(SizeType joint_count, SizeTy
 	init_pose.resize(joint_count);
 	for (JointId i= 0; i < joint_count; ++i)
 		init_pose[i].jointId= i;
-	poses.insert(poses.begin(), pose_count, init_pose);
-	
+	poses.resize(pose_count);
+	for (auto& m : poses)
+		m= init_pose;
+
 	return poses;
 }
 

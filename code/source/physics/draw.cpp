@@ -114,7 +114,7 @@ void Draw::draw(){
 
 			drawChunk(	vec,
 						grid.getChunkWidth(),
-						grid.getChunkCells(vec));
+						asArrayView(grid.getChunkCells(vec)));
 		}
 	}
 

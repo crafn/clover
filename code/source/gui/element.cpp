@@ -386,8 +386,8 @@ void Element::postUpdate(){
 	if (!isActive()) return;
 	
 	// Last is on top
-	for (auto it = subElements.rBegin(); it != subElements.rEnd(); ++it)
-		(*it)->postUpdate();
+	for (int i= subElements.size() - 1; i >= 0; --i)
+		subElements[i]->postUpdate();
 	
 	prevBbState= curBbState;
 	

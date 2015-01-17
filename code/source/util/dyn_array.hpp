@@ -2,180 +2,299 @@
 #define CLOVER_UTIL_DYN_ARRAY_HPP
 
 #include "build.hpp"
-#include "util/arrayview.hpp"
-#include "util/bool_wrap.hpp"
-#include "util/containeralgorithms.hpp"
 #include "util/ensure.hpp"
 #include "util/hash.hpp"
-
-#include <vector>
-#include <algorithm>
 
 namespace clover {
 namespace util {
 
-/// Substitute for std::vector
-/// T2 should never be altered, it's a part of std::vector<bool> workaround
-template <typename T, template <typename> class Ator= std::allocator, typename T2=T>
+/// Substituting std::vector with `DynArray` was a good choice, because
+/// - std::vector<bool> is broken, needed a workaround
+/// - replacing std::vector with this reduced compile time by 40s (j8)
+template <typename T, template <typename> class Ator= std::allocator>
 class DynArray {
 public:
-	using Value= T2;
+	using Value= T;
 
-	typedef Ator<T2> AtorT;
-	typedef DynArray<T, Ator, T2> This;
-	typedef typename std::vector<Value, AtorT>::iterator Iter;
+	using AtorT= Ator<T>;
+	using This= DynArray<T, Ator>;
+	using Iter= T*;
 	/// @todo Rename to match naming conventions
-	typedef typename std::vector<Value, AtorT>::reverse_iterator rIter;
-	typedef typename std::vector<Value, AtorT>::const_iterator cIter;
-	typedef typename std::vector<Value, AtorT>::const_reverse_iterator crIter;
+	using cIter= const T*;
 
 	DynArray()= default;
+	~DynArray()
+	{
+		ensure(capacity_ >= size_);
+		for (auto& m : *this)
+			m.~Value();
+		ator.deallocate(data_, capacity_);
+	}
 
 	DynArray(SizeType size)
-			: c(size){
+	{ resize(size); }
+
+	DynArray(std::initializer_list<T> l)
+	{ reserve(l.size()); for (auto& m : l) pushBack(m); }
+
+	DynArray(const AtorT& ator)
+		: ator(ator) { }
+
+	DynArray(const DynArray& other)
+	{ operator=(other); }
+	DynArray(DynArray&& other)
+	{ operator=(std::move(other)); }
+
+	DynArray& operator=(const DynArray& t)
+	{
+		clear(); /// @todo Don't clear
+		reserve(t.size_);
+		for (SizeType i= 0; i < t.size_; ++i)
+			new (data_ + i) Value(t.data_[i]);
+		size_= t.size_;
+		return *this;
 	}
 
-	DynArray(std::initializer_list<T> l){
-		c.insert(c.begin(), l.begin(), l.end());
+	DynArray& operator=(DynArray&& t)
+	{
+		if (this != &t) {
+			data_= t.data_;
+			size_= t.size_;
+			capacity_= t.capacity_;
+
+			t.data_= nullptr;
+			t.size_= 0;
+			t.capacity_= 0;
+		}
+		return *this;
 	}
 
-	DynArray(const AtorT& alloc)
-			: c(alloc){
+	Value& operator[](SizeType i){ return data_[i]; }
+	const Value& operator[](SizeType i) const { return data_[i]; }
+
+	Value& at(SizeType i)
+	{ ensure(i < size_); return data_[i]; }
+	const Value& at(SizeType i) const
+	{ ensure(i < size_); return data_[i]; }
+
+private:
+	void enlarge()
+	{
+		SizeType new_capacity= 0;
+		if (capacity_ == 0)
+			new_capacity= 16;
+		else
+			new_capacity= capacity_*2;
+
+		ensure(new_capacity >= size_ + 1);
+		T* new_data= ator.allocate(new_capacity);
+		for (SizeType i= 0; i < size_; ++i)
+			new (new_data + i) Value(std::move(data_[i]));
+
+		ator.deallocate(data_, capacity_);
+		data_= new_data;
+		capacity_= new_capacity;
+	}
+public:
+
+	void pushBack(const Value& t)
+	{
+		if (size_ == capacity_)
+			enlarge();
+		new (data_ + size_) Value(t);
+		++size_;
 	}
 
-	DynArray(const DynArray&)= default;
-	DynArray(DynArray&&)= default;
-	
-	DynArray& operator=(const DynArray& t)= default;
-	DynArray& operator=(DynArray&& t)= default;
-
-	Value& operator[](SizeType i){ return c[i]; }
-	const Value& operator[](SizeType i) const { return c[i]; }
-
-	Value& at(SizeType i){ return c.at(i); }
-	const Value& at(SizeType i) const { return c.at(i); }
-
-	void pushBack(const T& t){ c.push_back(t); }
-	
-	void pushBack(T&& t){
-		c.push_back(std::forward<T>(t));
+	void pushBack(Value&& t)
+	{
+		if (size_ == capacity_)
+			enlarge();
+		new (data_ + size_) Value(std::forward<T>(t));
+		++size_;
 	}
 
-	void pushBack(const DynArray& v){
-		for (auto& m : v)
-			pushBack(m);
-	}
-	
-	DynArray<T> pushBacked(const DynArray& v) const {
-		DynArray<T> ret(*this);
-		ret.pushBack(v);
-		return (ret);
-	}
+	void pushBack(const DynArray& v)
+	{ for (auto& m : v) pushBack(m); }
 
 	template<typename... Args>
-	void emplaceBack(Args&&... args){
-		c.emplace_back(std::forward<Args>(args)...);
+	void emplaceBack(Args&&... args)
+	{
+		if (size_ == capacity_)
+			enlarge();
+		new (data_ + size_) Value(std::forward<Args>(args)...);
+		++size_;
 	}
-	
-	SizeType size() const { return c.size(); }
-	bool empty() const { return c.empty(); }
-	void clear(){ c.clear(); }
-	void resize(uint32 s){ c.resize(s); }
-	void resize(uint32 s, const T& value){ c.resize(s, value); }
-	void reserve(uint32 s){ c.reserve(s); }
 
-	void sort(){ std::sort(c.begin(), c.end()); }
-	
-	Iter begin(){ return c.begin(); }
-	Iter end(){ return c.end(); }
-	cIter begin() const { return c.cbegin(); }
-	cIter end() const { return c.cend(); }
-
-	rIter rBegin(){ return c.rbegin(); }
-	rIter rEnd(){ return c.rend(); }
-	crIter rBegin() const { return c.crbegin(); }
-	crIter rEnd() const { return c.crend(); }
-
-	T* data(){ return c.data(); }
-	const T* data() const { return c.data(); }
-
-	T& front(){ return c.front(); }
-	T& back(){ return c.back(); }
-	const T& front() const { return c.front(); }
-	const T& back() const {	return c.back(); }
-	
-	void insert(Iter it, const T& t){ c.insert(it, t); }
-	void insert(Iter it, SizeType n, const T& t){ c.insert(it, n, t); }
-	
-	template <typename InputIter>
-	void insert(Iter position, InputIter first, InputIter last){
-		c.insert(position, first, last);
+	SizeType size() const { return size_; }
+	bool empty() const { return size_ == 0; }
+	void clear()
+	{
+		// Following std::vector, although separate destruct() and
+		// clear() would be better
+		for (auto& m : *this)
+			m.~T();
+		size_= 0;
 	}
-	
-	Iter erase(Iter it){ return c.erase(it); }
-	Iter erase(Iter it, Iter it2){ return c.erase(it, it2); }
-	
-	void popBack(){ c.pop_back(); }
-	void popFront(){ c.erase(begin()); }
-	
-	SizeType count(const T& t) const {
-		uint32 a=0;
-		for (uint32 i=0; i<c.size(); ++i)
-			if(c[i] == t) ++a;
+
+private:
+	void resizeCapacity(SizeType new_capacity)
+	{
+		if (capacity_ == new_capacity)
+			return;
+
+		Value* new_data= ator.allocate(new_capacity);
+		for (SizeType i= 0; i < new_capacity && i < size_; ++i)
+			new (new_data + i) Value(std::move(data_[i])); // Copy objects to new buffer
+		for (SizeType i= new_capacity; i < size_; ++i)
+			data_[i].~Value(); // Destroy those who didn't fit
+
+		ator.deallocate(data_, capacity_);
+		data_= new_data;
+		capacity_= new_capacity;
+	}
+
+public:
+
+	void resize(SizeType new_size)
+	{ 
+		if (new_size == size_)
+			return;
+		resizeCapacity(new_size);
+		if (new_size > size_) {
+			for (SizeType i= size_; i < new_size; ++i)
+				new (data_ + i) Value();
+		}
+		size_= new_size;
+	}
+	void resize(SizeType new_size, const Value& value)
+	{
+		if (new_size == size_)
+			return;
+		resizeCapacity(new_size);
+		if (new_size > size_) {
+			for (SizeType i= size_; i < new_size; ++i)
+				new (data_ + i) Value(value);
+		}
+		size_= new_size;
+	}
+
+	void reserve(SizeType new_capacity)
+	{
+		if (new_capacity <= size_)
+			return;
+
+		resizeCapacity(new_capacity);
+	}
+
+	Iter begin() { return data_; }
+	Iter end() { return data_ + size_; }
+	cIter begin() const { return data_; }
+	cIter end() const { return data_ + size_; }
+
+	T* data() { return data_; }
+	const T* data() const { return data_; }
+
+	T& front() { return *data_; }
+	T& back() { return *(data_ + size_ - 1); }
+	const T& front() const { return *data_; }
+	const T& back() const { return *(data_ + size_ - 1); }
+
+	Iter insert(Iter it, const T& t)
+	{
+		if (empty() || it == end()) {
+			pushBack(t);
+			return end() - 1;
+		}
+
+		SizeType i_to_inserted= it - data_;
+		if (size_ == capacity_)
+			enlarge(); // This is inefficient (but simple)
+
+		it= data_ + i_to_inserted;
+		new (data_ + size_) Value(std::move(data_[size_ - 1]));
+		for (SizeType i= size_ - 1; i > i_to_inserted; --i)
+			data_[i]= std::move(data_[i - 1]);
+
+		it->~Value();
+		new (it) Value(t);
+		++size_;
+		return data_ + i_to_inserted;
+	}
+
+	Iter erase(Iter it) { return erase(it, it + 1); }
+	Iter erase(Iter b, Iter e)
+	{
+		SizeType gap= e - b;
+		for (auto it= b; it + gap != end(); ++it) {
+			new (it) Value(std::move(*(it + gap)));
+			(it + gap)->~Value();
+		}
+		for (auto it= end() - gap; it != end(); ++it)
+			it->~Value();
+		size_ -= gap;
+		return b;
+	}
+
+	void popBack() { erase(end() - 1); }
+	void popFront() { erase(begin()); }
+
+	/// @todo Remove these, can be implemented outside
+	SizeType count(const T& t) const
+	{
+		SizeType a= 0;
+		for (SizeType i= 0; i < size_; ++i)
+			if(data_[i] == t)
+				++a;
 		return a;
 	}
-	
-	cIter find(const T& t) const {
-		for (cIter it= c.begin(); it != c.end(); ++it)
+	cIter find(const T& t) const
+	{
+		for (cIter it= begin(); it != end(); ++it)
 			if (*it == t) return it;
-		return c.end();
+		return end();
 	}
-	
-	Iter find(const T& t) {
-		for (Iter it= c.begin(); it != c.end(); ++it)
+	Iter find(const T& t)
+	{
+		for (Iter it= begin(); it != end(); ++it)
 			if (*it == t) return it;
-		return c.end();
+		return end();
 	}
-	
-	void remove(const T& t){
+	void remove(const T& t)
+	{
 		auto it= find(t);
 		debug_ensure(it != end());
 		erase(it);
 	}
-	
-	void append(const This& other){
-		insert(end(), other.begin(), other.end());
-	}
+
+	DynArray<T> appended(const This& v) const
+	{ DynArray<T> ret(*this); ret.pushBack(v); return ret; }
+	void append(const This& other)
+	{ *this= appended(other); }
 
 	template <typename Archive>
-	void serialize(Archive& ar, const uint32 version){
-		ar & c;
-	}
-	
-	This duplicates(const This& other) const {
-		return (util::duplicates(*this, other));
-	}
-	
-	This removed(const This& other) const {
-		return (util::removed(*this, other));
-	}
-	
-	operator typename util::ArrayView<Value>(){
-		return typename util::ArrayView<Value>(&*begin(), &*end());
-	}
-
-	operator typename util::ArrayView<const Value>() const {
-		return util::ArrayView<const Value>(&*begin(), &*end());
+	void serialize(Archive& ar, const uint32 version)
+	{
+		if (Archive::is_saving::value) {
+			ar & size_;
+			for (auto& m : *this)
+				ar & m;
+		} else {
+			SizeType s;
+			ar & s;
+			resize(s);
+			for (auto& m : *this)
+				ar & m;
+		}
 	}
 
 private:
-	std::vector<Value, AtorT> c;
+	Value* data_= nullptr;
+	SizeType size_= 0;
+	SizeType capacity_= 0;
+	AtorT ator;
 };
 
-/// std::vector<bool> workaround
-template <template <typename> class Ator>
-class DynArray<bool, Ator,	bool> : public DynArray<bool, Ator, BoolWrap> {
-};
+
 
 template<typename T, template <typename> class Ator>
 struct Hash32<DynArray<T, Ator>> {
@@ -192,5 +311,4 @@ void fastInsert(DynArray<T, Ator>& container, T value){
 
 } // util
 } // clover
-
 #endif // CLOVER_UTIL_DYN_ARRAY_HPP

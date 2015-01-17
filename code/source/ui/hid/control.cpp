@@ -10,7 +10,7 @@ void Control::addChannel(const ContextChannelName& channel_name){
 
 Control::ContextChannelNames Control::getChannelNames() const {
 	if (device)
-		return util::duplicatesRemoved(device->getChannelNames().pushBacked(additionalChannelNames));
+		return util::duplicatesRemoved(device->getChannelNames().appended(additionalChannelNames));
 	else
 		return additionalChannelNames;
 }

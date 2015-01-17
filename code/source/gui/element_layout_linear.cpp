@@ -143,7 +143,7 @@ void LinearLayoutElement::updateNodes(){
 	}
 	
 	// Järjetellään nodet niiden positioneiden mukaan
-	nodes.sort();
+	std::sort(nodes.begin(), nodes.end());
 	
 	auto radius_type= radius.getType();
 	

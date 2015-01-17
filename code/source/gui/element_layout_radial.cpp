@@ -18,7 +18,7 @@ void RadialLayoutElement::preUpdate(){
 void RadialLayoutElement::updateNodes(){
 	if (nodes.empty()) return;
 	
-	nodes.sort();
+	std::sort(nodes.begin(), nodes.end());
 	
 	real64 angle_addition= util::tau/nodes.size();
 	real64 angle= -util::pi*0.5 + angle_addition*0.5;

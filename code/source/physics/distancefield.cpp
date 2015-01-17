@@ -209,7 +209,7 @@ void DistanceField::update(
 	PolyGenResult world= genPolys(chunk_size, pos_to_id);
 
 	visual::VertexArrayObject<PolyVertex> poly_vao(hardware::GlState::Primitive::Point);
-	poly_vao.submit(world.polys);
+	poly_vao.submit(asArrayView(world.polys));
 
 	mesh.setUsage(hardware::GlState::VaoUsage::StreamDraw);
 	mesh.reserveVertices(world.distMeshTriCount*3);
@@ -304,7 +304,7 @@ void DistanceField::update(
 			vertices.pushBack(quad[3]);
 		}
 
-		mappedFieldMesh.submit(vertices);
+		mappedFieldMesh.submit(asArrayView(vertices));
 	}
 
 }

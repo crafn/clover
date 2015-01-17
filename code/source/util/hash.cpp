@@ -1,5 +1,6 @@
 #include "hash.hpp"
 #include "profiling.hpp"
+#include "util/bit.hpp"
 
 namespace clover {
 namespace util {

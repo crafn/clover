@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdarg>
 #include <cstdlib>
+#include <algorithm>
 
 #include <utf8.h>
 

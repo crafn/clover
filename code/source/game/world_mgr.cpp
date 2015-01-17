@@ -267,8 +267,7 @@ void WorldMgr::update()
 		uint32 width_c= grid.getChunkWidth()*grid.getCellsInUnit();
 		real32 half_cell= 0.5f/grid.getCellsInUnit();
 		for (auto& ch_pos : chunk_positions) {
-			util::ArrayView<const physics::Grid::Cell> cells=
-				grid.getChunkCells(ch_pos);
+			auto& cells= grid.getChunkCells(ch_pos);
 			for (SizeType i= 0; i < cells.size(); ++i) {
 				if (cells[i].worldEdge)
 					continue;
@@ -306,7 +305,9 @@ void WorldMgr::update()
 		global::g_env.physMgr->getWorld().getGrid().touchCells(p, -1.0);
 	m->loadedChunks.clear();
 
-	detail::createEdges(m->edgeSpawns, m->lastUpdTime);
+	detail::createEdges(
+			util::ArrayView<const nodes::WeEdgeSpawnerNodeInstance*>(m->edgeSpawns.begin(), m->edgeSpawns.end()),
+			m->lastUpdTime);
 	m->edgeSpawns.clear();
 
 	m->weMgr.spawnNewEntities();

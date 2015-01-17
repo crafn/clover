@@ -22,7 +22,7 @@ struct ResourceTraits<visual::LightEntityDef> {
 	
 	static util::DynArray<AttributeDef> getAttributeDefs(){
 		return	std::move(
-					BaseTraits::getAttributeDefs().pushBacked(util::DynArray<AttributeDef> {
+					BaseTraits::getAttributeDefs().appended(util::DynArray<AttributeDef> {
 						AttributeDef::Real("halfValueRadius"),
 						AttributeDef::Real("intensity"),
 						AttributeDef::Boolean("shadows")

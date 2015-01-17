@@ -117,7 +117,7 @@ void GpuMesh<V,I>::flush() const {
 		if (vao && info.vertexCount == vertices.size() && info.indexCount == indices.size()){
 			// Overwrite external vao
 			//print(debug::Ch::General,debug::Vb::Trivial, "subV: %i, subI: %i, %i %i", subVertexOffset, subIndexOffset, vertices.size(), indices.size());
-			vao->overwrite(vertices, subVertexOffset);
+			vao->overwrite(asArrayView(vertices), subVertexOffset);
 
 			util::DynArray<IndexType> offset_indices= indices;
 
@@ -125,7 +125,7 @@ void GpuMesh<V,I>::flush() const {
 				m += subVertexOffset;
 			}
 			if (vao->isIndexed())
-				vao->overwrite(offset_indices, subIndexOffset);
+				vao->overwrite(asArrayView(offset_indices), subIndexOffset);
 		}
 		else {
 			// Super mesh has not created buffer yet or own size has changed
@@ -159,9 +159,9 @@ void GpuMesh<V,I>::flush() const {
 		uint32 vertex_offset= 0;
 		uint32 index_offset= 0;
 
-		vao->overwrite(vertices);
+		vao->overwrite(asArrayView(vertices));
 		if (vao->isIndexed())
-			vao->overwrite(indices);
+			vao->overwrite(asArrayView(indices));
 
 		vertex_offset += vertices.size();
 		index_offset += indices.size();

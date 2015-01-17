@@ -234,9 +234,8 @@ void EditorViewUi::limitComponents(){
 		
 		const auto& subelements= layout.getSubElements();
 		
-		for (auto element_it= subelements.rBegin(); element_it != subelements.rEnd(); ++element_it){
-			
-			auto& element= *element_it;
+		for (int i= subelements.size() - 1; i >= 0; --i) {
+			auto& element= subelements[i];
 			
 			for (auto it = componentUis.begin(); it != componentUis.end(); ++it){
 				if (element == &it->get()->getSuperGuiElement()){

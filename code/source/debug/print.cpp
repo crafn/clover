@@ -99,7 +99,7 @@ void Print::operator()(Ch c, Vb v, const char8 * str, ...){
 	message.verbosity= v;
 	message.string= msg_str.cStr();
 
-	buffer.push_back(std::move(message));
+	buffer.pushBack(std::move(message));
 }
 
 void Print::updateBuffer(){

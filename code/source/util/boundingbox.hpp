@@ -4,6 +4,7 @@
 #include "build.hpp"
 #include "vector.hpp"
 #include "coord.hpp"
+#include "traits.hpp"
 
 namespace clover {
 namespace util {

@@ -33,11 +33,54 @@
 #include <thread>
 #include <list>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <vector>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+
 namespace clover {
 
 App::App(const util::Str8& executablePath)
 {
+
+/*	{
+		std::ofstream f("test.txt");
+		std::vector<SizeType> v= {444, 555, 666, 777, 888};
+		boost::archive::text_oarchive oa(f);
+		oa << v;
+	}
+
+	util::DynArray<SizeType> dyn;
+	{
+		std::ifstream f("test.txt");
+		boost::archive::text_iarchive ia(f);
+		ia >> dyn;
+	}
+
+	debug::print("\nSize %i", (int)dyn.size());
+	for (auto& m : dyn)
+		debug::print("\n%i", (int)m);
+*/
 	new debug::Print();
+	{
+		util::DynArray<util::Str8> t;
+		{
+			util::DynArray<util::Str8> test;
+			test.pushBack("asdfg");
+			test.pushBack("uuiiuiu");
+			test.reserve(10);
+			test.pushBack("kolmas");
+			test.resize(5);
+			test[test.size() - 1]= "hoob";
+			test.insert(test.begin() + 1, "insert");
+			test.insert(test.end(), "insert_end");
+			test.erase(test.begin() + 1, test.end() - 1);
+			test.insert(test.begin(), "beginning");
+			t= test;
+		}
+		for (auto& m : t)
+			debug::print("str: %s", m.cStr());
+	}
 	print(debug::Ch::General, debug::Vb::Trivial, getBuildStr());
 
 	// Initial cfg loading should be as early as possible, 

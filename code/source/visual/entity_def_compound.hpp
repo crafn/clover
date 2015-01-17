@@ -21,7 +21,7 @@ struct ResourceTraits<visual::CompoundEntityDef> {
 	typedef ResourceTraits<visual::EntityDef> BaseTraits;
 	
 	static util::DynArray<AttributeDef> getAttributeDefs(){
-		return	BaseTraits::getAttributeDefs().pushBacked(util::DynArray<AttributeDef> {
+		return	BaseTraits::getAttributeDefs().appended(util::DynArray<AttributeDef> {
 						AttributeDef::Resource("armature")
 				});
 	}

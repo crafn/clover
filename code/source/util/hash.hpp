@@ -2,7 +2,6 @@
 #define CLOVER_UTIL_HASH_HPP
 
 #include "build.hpp"
-#include "util/bit.hpp"
 
 #include <array>
 

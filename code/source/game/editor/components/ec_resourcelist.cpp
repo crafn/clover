@@ -30,8 +30,9 @@ util::DynArray<resources::Resource*> ResourceListEc::search(const util::Str8& se
 	}
 	
 	util::DynArray<resources::Resource*> ret;
+	std::reverse(hits_by_count.begin(), hits_by_count.end());
 	// Most hits first
-	for (auto it= hits_by_count.rBegin(); it != hits_by_count.rEnd(); ++it){
+	for (auto it= hits_by_count.begin(); it != hits_by_count.end(); ++it){
 		for (auto& m : *it){
 			ret.pushBack(m);
 			if (ret.size() >= max_results) break;
