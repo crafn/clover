@@ -91,7 +91,10 @@ private:
 		for (SizeType i= 0; i < size_; ++i)
 			new (new_data + i) Value(std::move(data_[i]));
 
+		for (auto& m : *this)
+			m.~Value();
 		ator.deallocate(data_, capacity_);
+
 		data_= new_data;
 		capacity_= new_capacity;
 	}
@@ -132,7 +135,7 @@ public:
 		// Following std::vector, although separate destruct() and
 		// clear() would be better
 		for (auto& m : *this)
-			m.~T();
+			m.~Value();
 		size_= 0;
 	}
 
@@ -145,10 +148,11 @@ private:
 		Value* new_data= ator.allocate(new_capacity);
 		for (SizeType i= 0; i < new_capacity && i < size_; ++i)
 			new (new_data + i) Value(std::move(data_[i])); // Copy objects to new buffer
-		for (SizeType i= new_capacity; i < size_; ++i)
-			data_[i].~Value(); // Destroy those who didn't fit
 
+		for (auto& m : *this)
+			m.~Value(); // Destroy old, including those who didn't fit
 		ator.deallocate(data_, capacity_);
+
 		data_= new_data;
 		capacity_= new_capacity;
 	}
