@@ -65,7 +65,10 @@ DevLogic::DevLogic()
 	: profiler(global::g_env.cfg->get("dev::profilerSampleRate", 2.0))
 	, fpsFrameCount(0)
 	, fpsTimer(0)
-	, fpsPrintFilter(0){
+	, fpsPrintFilter(0)
+	, profileListener("host", "dev", "profile", [this] ()
+	{ profileFor(global::g_env.cfg->get("dev::profileTime", 1.0)); })
+{
 }
 
 void DevLogic::update(){

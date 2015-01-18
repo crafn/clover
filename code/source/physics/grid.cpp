@@ -255,12 +255,17 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 	if (!fix.getShape())
 		return;
 	Object& obj= fix.getObject();
-	collision::Shape shape= *NONULL(fix.getShape());
-	shape.transform(t);
+	collision::Shape shape;
+	{ PROFILE();
+		shape= *NONULL(fix.getShape());
+		shape.transform(t);
+	}
 	bool is_static= fix.getObject().isStatic();
 	util::BoundingBox<Grid::CellVec> bb;
-
-	for (auto&& p : shape.asConvexPolygons(imprecision())) {
+	
+	util::DynArray<util::Polygon> polys= shape.asConvexPolygons(imprecision());
+	for (auto&& p : polys) {
+		PROFILE();
 		auto&& polycells= detail::rasterized(p, def.cellsInUnit);
 		for (SizeType i= 0; i < polycells.size(); ++i) {
 			auto&& cell= getCell(polycells[i].position);
@@ -301,6 +306,7 @@ void Grid::modify(Action a, const physics::Fixture& fix, util::RtTransform2d t)
 	//   - recalculate normals
 	//   - falsify cells.staticEdge which really aren't edges
 	for (int32 y= bb.getMin().y - 1; y < bb.getMax().y + 1; ++y) {
+		PROFILE();
 		for (int32 x= bb.getMin().x - 1; x < bb.getMax().x + 1; ++x) {
 			util::Vec2i coord{x, y};
 			const std::array<util::Vec2i, 4> dirs= {

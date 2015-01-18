@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "game/editor/editor.hpp"
+#include "ui/hid/actionlistener.hpp"
 #include "util/dyn_array.hpp"
 #include "util/profiler.hpp"
 #include "util/string.hpp"
@@ -39,6 +40,7 @@ private:
 	util::DynArray<PerformanceTimerResult> performanceTimerResults;
 
 	editor::Editor editor;
+	ui::hid::ActionListener<> profileListener;
 };
 
 } // game
