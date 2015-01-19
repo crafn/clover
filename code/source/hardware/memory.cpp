@@ -8,7 +8,7 @@
 #include <thread>
 #include <mutex>
 
-#define OVERRIDE_DEFAULT_NEW 0
+#define OVERRIDE_DEFAULT_NEW 1
 
 void* operator new(size_t size)
 { return clover::hardware::heapAllocate(size); }
@@ -58,21 +58,22 @@ static const SizeType megabyte= 1024*1024;
 static std::mutex g_memMutex;
 static const SizeType firstBlockSize= 32;
 static const SizeType blockPoolCount= 14;
+// Experimental values
 static const SizeType memPerBlockPool[blockPoolCount]= {
-	megabyte*10, // 0
-	megabyte*20, // 1
-	megabyte*20, // 2
-	megabyte*50, // 3
-	megabyte*10, // 4
-	megabyte*10, // 5
+	megabyte*20, // 0
+	megabyte*80, // 1
+	megabyte*90, // 2
+	megabyte*150, // 3
+	megabyte*40, // 4
+	megabyte*20, // 5
 	megabyte*10, // 6
-	megabyte*50, // 7
+	megabyte*80, // 7
 	megabyte*50, // 8
-	megabyte*200, // 9
-	megabyte*400, // 10
-	megabyte*1000, // 11
-	megabyte*500, // 12
-	megabyte*50, // 13
+	megabyte*350, // 9
+	megabyte*40, // 10
+	megabyte*10, // 11
+	megabyte*20, // 12
+	megabyte*150, // 13
 };
 
 enum class AllocStatus : char {
@@ -145,7 +146,6 @@ void initBlockPools()
 
 #endif
 
-static uint64 counter;
 void* heapAllocate(SizeType size)
 {
 	if (size == 0)
@@ -158,9 +158,6 @@ void* heapAllocate(SizeType size)
 
 	if (!blockPoolsInitialized())
 		initBlockPools();
-
-	if (counter++ % 100000 == 0)
-		printPoolStats();
 
 	volatile SizeType pool_i= ceil_log2(size);
 	if (size < firstBlockSize)
@@ -180,14 +177,8 @@ void* heapAllocate(SizeType size)
 			fail("Heap pool out of memory");
 		}
 
-		if (pool.nextBlock >= pool.blockCount)
-			fail("Internal error");
-
 		while (pool.allocStatus[pool.nextBlock] != AllocStatus::free)
 			pool.nextBlock= (pool.nextBlock + 1) % pool.blockCount;
-
-		if (pool.nextBlock >= pool.blockCount)
-			fail("Internal error2");
 
 		pool.allocStatus[pool.nextBlock]= AllocStatus::alloc;
 		++pool.allocCount;
