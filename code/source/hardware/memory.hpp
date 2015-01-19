@@ -10,13 +10,11 @@ void operator delete(void* mem) noexcept;
 namespace clover {
 namespace hardware {
 
-void createHeap(SizeType size, SizeType max_blocks);
-
 // Allocate from heap
-void* allocate(SizeType size);
+void* heapAllocate(SizeType size);
 
 // Free from heap
-void deallocate(void* mem);
+void heapDeallocate(void* mem);
 
 } // hardware
 } // clover

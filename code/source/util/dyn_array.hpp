@@ -47,17 +47,20 @@ public:
 
 	DynArray& operator=(const DynArray& t)
 	{
-		clear(); /// @todo Don't clear
-		reserve(t.size_);
-		for (SizeType i= 0; i < t.size_; ++i)
-			new (data_ + i) Value(t.data_[i]);
-		size_= t.size_;
+		if (this != &t) {
+			clear(); /// @todo Don't clear
+			reserve(t.size_);
+			for (SizeType i= 0; i < t.size_; ++i)
+				new (data_ + i) Value(t.data_[i]);
+			size_= t.size_;
+		}
 		return *this;
 	}
 
 	DynArray& operator=(DynArray&& t)
 	{
 		if (this != &t) {
+			clear(); /// @todo Don't clear
 			data_= t.data_;
 			size_= t.size_;
 			capacity_= t.capacity_;

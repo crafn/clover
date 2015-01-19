@@ -10,285 +10,226 @@
 
 #define OVERRIDE_DEFAULT_NEW 0
 
-// Memory used before actual heap creation
-#define INIT_MEM_SIZE 1024*1024*50
-#define INIT_MEM_MAX_BLOCKS 1024*10
-
 void* operator new(size_t size)
-{ return clover::hardware::allocate(size); }
+{ return clover::hardware::heapAllocate(size); }
 
 void operator delete(void* mem) noexcept
-{ clover::hardware::deallocate(mem); }
+{ clover::hardware::heapDeallocate(mem); }
 
 namespace clover {
 namespace hardware {
-namespace detail {
 
-struct MemBlock {
-	uint8* base= nullptr;
-	SizeType size= 0;
-	bool free= false;
-
-	uint8* end() const { return base + size; }
-};
-
-/// Unfinished heap implementation (really slow and probably buggy)
-/// @todo Buddy/slab allocation to speed up
-class Heap {
-public:
-	void create(SizeType heap_size, SizeType max_blocks){
-		if (isValid())
-			throw std::bad_alloc{};
-
-		void* mem= std::malloc(heap_size);
-		if (!mem)
-			throw std::bad_alloc{};
-
-		size= heap_size;
-
-		// Space for tracking blocks is taken from beginning of the heap
-		blocks= static_cast<MemBlock*>(mem);
-		blockCount= 0;
-		maxBlockCount= max_blocks;
-
-		storageBase= base() + maxBlockCount*sizeof(MemBlock);
-
-		if (storageBase >= base() + size)
-			throw std::bad_alloc{};
-
-		if (maxBlockCount == 0)
-			throw std::bad_alloc{};
-
-		// Create initial free block
-		blocks[0].base= storageBase;
-		blocks[0].size= storageSize();
-		blocks[0].free= true;
-		blockCount= 1;
-		freeBlockFinder= &blocks[0];
-	}
-
-	void destroy(){
-		std::free(base());
-		size= 0;
-		blocks= nullptr;
-	}
-
-	void* allocate(SizeType size){
-		if (size == 0)
-			throw std::bad_alloc{};
-
-		++allocCounter;
-
-		SizeType block_i= findFreeBlock(size);
-		void* mem= allocateFromBlock(block_i, size);
-
-		return mem;
-	}
-
-	void deallocate(void* mem){
-		SizeType block_i= findAllocatedBlock(mem);
-		deallocateBlock(block_i);
-	}
-
-	bool contains(void* mem) const noexcept {
-		return mem >= base() && mem < base() + size;
-	}
-
-	bool isValid() const noexcept { return base() != nullptr; }
-
-private:
-	uint8* base(){ return reinterpret_cast<uint8*>(blocks); }
-	const uint8* base() const { return reinterpret_cast<const uint8*>(blocks); }
-	SizeType storageSize() const { return size - (storageBase - base()); }
-
-	SizeType findFreeBlock(SizeType size){
-		/// @todo Alignment
-		for (SizeType i= 0; i < blockCount; ++i){
-			if (freeBlockFinder->free && freeBlockFinder->size >= size)
-				return freeBlockFinder - &blocks[0];
-			++freeBlockFinder;
-			if (freeBlockFinder >= blocks + blockCount)
-				freeBlockFinder= &blocks[0];
-		}
-
-		throw std::bad_alloc{};
-	}
-
-	SizeType findAllocatedBlock(void* mem) const {
-		/// @todo Better search algorithm
-		for (SizeType i= 0; i < blockCount; ++i){
-			if (blocks[i].base == mem)
-				return i;
-		}
-
-		throw std::bad_alloc{};
-	}
-
-	uint8* allocateFromBlock(SizeType block_i, SizeType size){
-		assert(size <= blocks[block_i].size);
-		/// @todo Alignment
-
-		SizeType wasted_bytes= blocks[block_i].size - size;
-
-		if (wasted_bytes > 1){
-			divideBlock(block_i, size);
-		}
-
-		blocks[block_i].free= false;
-		return blocks[block_i].base;
-	}
-
-	void deallocateBlock(SizeType block_i){
-		if (block_i >= blockCount)
-			throw std::bad_alloc{};
-
-		blocks[block_i].free= true;
-
-		mergeAround(block_i);
-	}
-
-	void divideBlock(SizeType block_i, SizeType new_size){
-		SizeType old_size= blocks[block_i].size;
-		SizeType created_block_size= old_size - new_size;
-		assert(old_size > new_size);
-
-		addBlock();
-		assert(block_i + 1 < blockCount);
-		std::memmove(
-				&blocks[block_i + 1],
-				&blocks[block_i],
-				sizeof(MemBlock)*(blockCount - block_i - 1));
-
-		blocks[block_i].size= new_size;
-		blocks[block_i + 1].base= blocks[block_i].end();
-		blocks[block_i + 1].size= created_block_size;
-
-		assert(blocks[block_i].size + blocks[block_i + 1].size == old_size);
-	}
-
-	void mergeAround(SizeType block_i){
-		assert(blocks[block_i].free);
-
-		if (block_i > 0 && blocks[block_i - 1].free){
-			mergeBlocks(block_i - 1);
-			--block_i;
-		}
-
-		if (block_i + 1 < blockCount && blocks[block_i + 1].free){
-			mergeBlocks(block_i);
-		}
-	}
-
-	void mergeBlocks(SizeType first_i){
-		assert(blockCount > 0);
-
-		SizeType second_i= first_i + 1;
-		blocks[first_i].size += blocks[second_i].size;
-
-		std::memmove(
-				&blocks[second_i],
-				&blocks[second_i + 1],
-				sizeof(MemBlock)*(blockCount - second_i - 1));
-
-		--blockCount;
-		if ((SizeType)(freeBlockFinder - &blocks[0]) >= blockCount)
-			freeBlockFinder= &blocks[0];
-	}
-
-	void addBlock(){
-		if (blockCount >= maxBlockCount)
-			throw std::bad_alloc{};
-
-		++blockCount;
-	}
-
-	bool isCorrupt() const {
-		SizeType total_mem= 0;
-		uint8* prev_base= nullptr;
-		uint8* prev_end= nullptr;
-		for (SizeType i= 0; i < blockCount; ++i){
-			total_mem += blocks[i].size;
-
-			bool condition1= contains(blocks[i].base);
-			bool condition2= contains(blocks[i].end() - 1);
-			bool condition3= prev_end <= blocks[i].base;
-			bool condition4= prev_base < blocks[i].base;
-			bool condition5= blocks[i].size > 0;
-			assert(condition1);
-			assert(condition2);
-			assert(condition3);
-			assert(condition4);
-			assert(condition5);
-
-			if (	!condition1 || !condition2 || !condition3 ||
-					!condition4 || !condition5)
-				return true;
-
-			prev_base= blocks[i].base;
-			prev_end= blocks[i].end();
-		}
-		
-		assert(total_mem == storageSize());
-		return total_mem != storageSize();
-	}
-
-	SizeType size= 0;
-	uint8* storageBase= nullptr;
-
-	MemBlock* blocks= nullptr;
-	SizeType blockCount= 0;
-	SizeType maxBlockCount= 0;
-
-	MemBlock* freeBlockFinder= nullptr;
-
-	SizeType allocCounter= 0;
-
-};
-
-static Heap g_initHeap;
-static Heap g_heap;
-std::mutex g_memMutex;
-
-} // detail
-using namespace detail;
-
-void createHeap(SizeType size, SizeType max_allocations)
+/// @todo use util/ensure.hpp's fail when it doesn't allocate anymore
+void fail(const char* msg)
 {
-#if OVERRIDE_DEFAULT_NEW
-	std::lock_guard<std::mutex> g(g_memMutex);
-	g_heap.create(size, max_allocations);
-#endif
+	std::printf("Memory failure: %s\n", msg);
+	std::abort();
 }
 
-void* allocate(SizeType size)
+// http://stackoverflow.com/questions/3272424/compute-fast-log-base-2-ceiling
+int ceil_log2(unsigned long long x)
 {
+  static const unsigned long long t[6] = {
+    0xFFFFFFFF00000000ull,
+    0x00000000FFFF0000ull,
+    0x000000000000FF00ull,
+    0x00000000000000F0ull,
+    0x000000000000000Cull,
+    0x0000000000000002ull
+  };
+
+  int y = (((x & (x - 1)) == 0) ? 0 : 1);
+  int j = 32;
+  int i;
+
+  for (i = 0; i < 6; i++) {
+    int k = (((x & t[i]) == 0) ? 0 : j);
+    y += k;
+    x >>= k;
+    j >>= 1;
+  }
+
+  return y;
+}
+
+#if OVERRIDE_DEFAULT_NEW
+
+static const SizeType megabyte= 1024*1024;
+static std::mutex g_memMutex;
+static const SizeType firstBlockSize= 32;
+static const SizeType blockPoolCount= 14;
+static const SizeType memPerBlockPool[blockPoolCount]= {
+	megabyte*10, // 0
+	megabyte*20, // 1
+	megabyte*20, // 2
+	megabyte*50, // 3
+	megabyte*10, // 4
+	megabyte*10, // 5
+	megabyte*10, // 6
+	megabyte*50, // 7
+	megabyte*50, // 8
+	megabyte*200, // 9
+	megabyte*400, // 10
+	megabyte*1000, // 11
+	megabyte*500, // 12
+	megabyte*50, // 13
+};
+
+enum class AllocStatus : char {
+	free= 0,
+	alloc
+};
+
+struct BlockPool {
+	uint32 allocCount;
+	uint32 blockSize;
+	uint32 blockCount;
+	char* beginAddr;
+	char* endAddr;
+	uint32 nextBlock;
+	AllocStatus* allocStatus; // AllocStatus[blockCount]
+};
+
+static BlockPool blockPools[blockPoolCount];
+static char* blockPoolMem;
+static SizeType blockPoolMemSize;
+static int64 outsidePoolAllocs;
+
+inline
+bool blockPoolsInitialized() { return blockPools[0].allocStatus != nullptr; }
+
+static
+void printPoolStats()
+{
+	for (SizeType i= 0; i < blockPoolCount; ++i) {
+		std::printf("pool[%i], %i: %i/%i = %.2f\n",
+				(int)i,
+				(int)blockPools[i].blockSize,
+				(int)blockPools[i].allocCount,
+				(int)blockPools[i].blockCount,
+				(float)blockPools[i].allocCount/blockPools[i].blockCount);
+	}
+	std::printf("outside: %i\n", (int)outsidePoolAllocs);
+}
+
+/// @todo deinit
+static
+void initBlockPools()
+{
+	blockPoolMemSize= 0;
+	for (SizeType i= 0; i < blockPoolCount; ++i)
+		blockPoolMemSize += memPerBlockPool[i];
+	blockPoolMem= (char*)std::malloc(blockPoolMemSize);
+
+	SizeType block_size= firstBlockSize;
+	char* block_begin_addr= blockPoolMem;
+	for (SizeType i= 0; i < blockPoolCount; ++i) {
+		auto& pool= blockPools[i];
+		pool.allocCount= 0;
+		pool.blockSize= block_size;
+		pool.blockCount= memPerBlockPool[i]/block_size;
+		pool.beginAddr= block_begin_addr;
+		pool.endAddr= block_begin_addr + memPerBlockPool[i];
+		pool.nextBlock= 0;
+		pool.allocStatus= (AllocStatus*)std::calloc(pool.blockCount, sizeof(*pool.allocStatus));
+
+		if (pool.beginAddr + pool.blockSize*pool.blockCount > blockPoolMem + blockPoolMemSize)
+			fail("blockPool init failed");
+
+		std::memset(pool.beginAddr, 0x95, pool.blockSize*pool.blockCount);
+
+		block_begin_addr += memPerBlockPool[i];
+		block_size *= 2;
+	}
+}
+
+#endif
+
+static uint64 counter;
+void* heapAllocate(SizeType size)
+{
+	if (size == 0)
+		return nullptr;
+
 	util::profileSystemMemAlloc();
+
 #if OVERRIDE_DEFAULT_NEW
 	std::lock_guard<std::mutex> g(g_memMutex);
-	if (g_heap.isValid()) {
-		return g_heap.allocate(size);
-	} else {
-		if (!g_initHeap.isValid())
-			g_initHeap.create(INIT_MEM_SIZE, INIT_MEM_MAX_BLOCKS);
 
-		return g_initHeap.allocate(size);
+	if (!blockPoolsInitialized())
+		initBlockPools();
+
+	if (counter++ % 100000 == 0)
+		printPoolStats();
+
+	volatile SizeType pool_i= ceil_log2(size);
+	if (size < firstBlockSize)
+		pool_i= 0;
+	else
+		pool_i -= ceil_log2(firstBlockSize);
+
+	if (pool_i >= blockPoolCount) {
+		++outsidePoolAllocs;
+		return std::malloc(size);
+	} else {
+		// Allocate from pool
+		auto& pool= blockPools[pool_i];
+		//std::printf("alloc[%i]: %i\n", (int)pool_i, (int)size);
+		if (pool.blockCount <= pool.allocCount) {
+			printPoolStats();
+			fail("Heap pool out of memory");
+		}
+
+		if (pool.nextBlock >= pool.blockCount)
+			fail("Internal error");
+
+		while (pool.allocStatus[pool.nextBlock] != AllocStatus::free)
+			pool.nextBlock= (pool.nextBlock + 1) % pool.blockCount;
+
+		if (pool.nextBlock >= pool.blockCount)
+			fail("Internal error2");
+
+		pool.allocStatus[pool.nextBlock]= AllocStatus::alloc;
+		++pool.allocCount;
+		return pool.beginAddr + pool.nextBlock*pool.blockSize;
 	}
+
 #else
 	return std::malloc(size);
 #endif
 }
 
-void deallocate(void* mem)
+void heapDeallocate(void* mem)
 {
 #if OVERRIDE_DEFAULT_NEW
-	std::lock_guard<std::mutex> g(g_memMutex);
 	if (!mem)
 		return;
 
-	if (g_initHeap.contains(mem))
-		g_initHeap.deallocate(mem);
-	else
-		g_heap.deallocate(mem);
+	std::lock_guard<std::mutex> g(g_memMutex);
+	if (!blockPoolsInitialized())
+		initBlockPools();
+
+	if (mem < blockPoolMem || mem >= blockPoolMem + blockPoolMemSize) {
+		--outsidePoolAllocs;
+		std::free(mem);
+	} else {
+		SizeType pool_i= blockPoolCount;
+
+		for (SizeType i= 0; i < blockPoolCount; ++i) {
+			if (mem < blockPools[i].endAddr) {
+				pool_i= i;
+				break;
+			}
+		}
+		if (pool_i >= blockPoolCount)
+			fail("Invalid pool_i");
+		auto& pool= blockPools[pool_i];
+		SizeType block_i= ((char*)mem - pool.beginAddr)/pool.blockSize;
+		if (block_i > pool.blockCount)
+			fail("Invalid block_i");
+		pool.allocStatus[block_i]= AllocStatus::free;
+		--pool.allocCount;
+	}
 #else
 	std::free(mem);
 #endif

@@ -4,7 +4,7 @@
 
 namespace clover {
 namespace animation {
-	
+
 //
 // JointDef util
 //
