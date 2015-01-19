@@ -52,7 +52,7 @@ void tryEnableProfiling();
 /// Should be called on system memory allocation
 void profileSystemMemAlloc();
 #else
-void profileSystemMemAlloc() {};
+inline void profileSystemMemAlloc() {};
 #endif
 
 } // util

@@ -564,35 +564,33 @@ void CompositionNodeLogicGroup::loadFromFile(){
 		throw resources::ResourceException(util::Str8::format("Couldn't open file: %s", fileAttribute.get().whole().cStr()).cStr());
 	
 	SerializationGraph graph;
-	
+
 	try {
 		boost::archive::text_iarchive ia(stream);
 		ia >> graph;
-		
+		stream.close();
+
 		applySerializationGraph(graph);
 	}
 	catch (const std::exception& e){
 		throw resources::ResourceException(util::Str8::format("Error deserializing a graph for %s: %s", getName().cStr(), e.what()).cStr());
 	}
-	
 }
 
 void CompositionNodeLogicGroup::saveToFile() const {
 	std::ofstream stream(fileAttribute.get().whole().cStr(), std::ios::binary);
 	if (!stream)
 		throw resources::ResourceException(util::Str8::format("Couldn't open file: %s", fileAttribute.get().whole().cStr()).cStr());
-	
+
 	try {
 		boost::archive::text_oarchive oa(stream);
 		const SerializationGraph& graph= generateSerializationGraph();
 
 		oa << graph;
-
 	}
 	catch (const std::exception& e){
 		throw resources::ResourceException(util::Str8::format("Error serializing a graph for %s: %s", getName().cStr(), e.what()).cStr());
 	}
-	
 }
 
 

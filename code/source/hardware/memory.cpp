@@ -8,7 +8,9 @@
 #include <thread>
 #include <mutex>
 
-#define OVERRIDE_DEFAULT_NEW 1
+// For some reason causes crashes in ntdll on windows.
+// Seems like someone tries to std::free() memory allocated with our overloaded new
+#define OVERRIDE_DEFAULT_NEW (OS != OS_WINDOWS)
 
 void* operator new(size_t size)
 { return clover::hardware::heapAllocate(size); }
@@ -91,13 +93,14 @@ struct BlockPool {
 	AllocStatus* allocStatus; // AllocStatus[blockCount]
 };
 
-static BlockPool blockPools[blockPoolCount];
-static char* blockPoolMem;
-static SizeType blockPoolMemSize;
-static int64 outsidePoolAllocs;
+BlockPool g_blockPools[blockPoolCount];
+char* g_blockPoolMem;
+SizeType g_blockPoolMemSize;
+int64 g_outsidePoolAllocs;
 
 inline
-bool blockPoolsInitialized() { return blockPools[0].allocStatus != nullptr; }
+bool heapInitialized()
+{ return g_blockPools[0].allocStatus != nullptr; }
 
 static
 void printPoolStats()
@@ -105,27 +108,30 @@ void printPoolStats()
 	for (SizeType i= 0; i < blockPoolCount; ++i) {
 		std::printf("pool[%i], %i: %i/%i = %.2f\n",
 				(int)i,
-				(int)blockPools[i].blockSize,
-				(int)blockPools[i].allocCount,
-				(int)blockPools[i].blockCount,
-				(float)blockPools[i].allocCount/blockPools[i].blockCount);
+				(int)g_blockPools[i].blockSize,
+				(int)g_blockPools[i].allocCount,
+				(int)g_blockPools[i].blockCount,
+				(float)g_blockPools[i].allocCount/g_blockPools[i].blockCount);
 	}
-	std::printf("outside: %i\n", (int)outsidePoolAllocs);
+	std::printf("outside: %i\n", (int)g_outsidePoolAllocs);
 }
 
 /// @todo deinit
-static
-void initBlockPools()
+void createHeap()
 {
-	blockPoolMemSize= 0;
+	std::lock_guard<std::mutex> g(g_memMutex);
+
+	g_blockPoolMemSize= 0;
 	for (SizeType i= 0; i < blockPoolCount; ++i)
-		blockPoolMemSize += memPerBlockPool[i];
-	blockPoolMem= (char*)std::malloc(blockPoolMemSize);
+		g_blockPoolMemSize += memPerBlockPool[i];
+	g_blockPoolMem= (char*)std::malloc(g_blockPoolMemSize);
+	if (!g_blockPoolMem)
+		fail("Allocating heap storage failed");
 
 	SizeType block_size= firstBlockSize;
-	char* block_begin_addr= blockPoolMem;
+	char* block_begin_addr= g_blockPoolMem;
 	for (SizeType i= 0; i < blockPoolCount; ++i) {
-		auto& pool= blockPools[i];
+		auto& pool= g_blockPools[i];
 		pool.allocCount= 0;
 		pool.blockSize= block_size;
 		pool.blockCount= memPerBlockPool[i]/block_size;
@@ -134,15 +140,18 @@ void initBlockPools()
 		pool.nextBlock= 0;
 		pool.allocStatus= (AllocStatus*)std::calloc(pool.blockCount, sizeof(*pool.allocStatus));
 
-		if (pool.beginAddr + pool.blockSize*pool.blockCount > blockPoolMem + blockPoolMemSize)
-			fail("blockPool init failed");
-
+#ifdef DEBUG
 		std::memset(pool.beginAddr, 0x95, pool.blockSize*pool.blockCount);
+#endif
 
 		block_begin_addr += memPerBlockPool[i];
 		block_size *= 2;
 	}
 }
+
+#else
+
+void createHeap() {}
 
 #endif
 
@@ -156,23 +165,20 @@ void* heapAllocate(SizeType size)
 #if OVERRIDE_DEFAULT_NEW
 	std::lock_guard<std::mutex> g(g_memMutex);
 
-	if (!blockPoolsInitialized())
-		initBlockPools();
-
-	volatile SizeType pool_i= ceil_log2(size);
+	SizeType pool_i= ceil_log2(size);
 	if (size < firstBlockSize)
 		pool_i= 0;
 	else
 		pool_i -= ceil_log2(firstBlockSize);
 
-	if (pool_i >= blockPoolCount) {
-		++outsidePoolAllocs;
+	if (!heapInitialized() || pool_i >= blockPoolCount) {
+		++g_outsidePoolAllocs;
 		return std::malloc(size);
 	} else {
 		// Allocate from pool
-		auto& pool= blockPools[pool_i];
+		auto& pool= g_blockPools[pool_i];
 		//std::printf("alloc[%i]: %i\n", (int)pool_i, (int)size);
-		if (pool.blockCount <= pool.allocCount) {
+		if (pool.allocCount >= pool.blockCount) {
 			printPoolStats();
 			fail("Heap pool out of memory");
 		}
@@ -182,6 +188,11 @@ void* heapAllocate(SizeType size)
 
 		pool.allocStatus[pool.nextBlock]= AllocStatus::alloc;
 		++pool.allocCount;
+
+#ifdef DEBUG
+		std::memset(pool.beginAddr + pool.nextBlock*pool.blockSize, 0x96, size);
+#endif
+		
 		return pool.beginAddr + pool.nextBlock*pool.blockSize;
 	}
 
@@ -197,30 +208,35 @@ void heapDeallocate(void* mem)
 		return;
 
 	std::lock_guard<std::mutex> g(g_memMutex);
-	if (!blockPoolsInitialized())
-		initBlockPools();
 
-	if (mem < blockPoolMem || mem >= blockPoolMem + blockPoolMemSize) {
-		--outsidePoolAllocs;
+	if (	!heapInitialized() ||
+			mem < g_blockPoolMem ||
+			mem >= g_blockPoolMem + g_blockPoolMemSize) {
+		--g_outsidePoolAllocs;
 		std::free(mem);
 	} else {
 		SizeType pool_i= blockPoolCount;
 
 		for (SizeType i= 0; i < blockPoolCount; ++i) {
-			if (mem < blockPools[i].endAddr) {
+			if (mem < g_blockPools[i].endAddr) {
 				pool_i= i;
 				break;
 			}
 		}
 		if (pool_i >= blockPoolCount)
 			fail("Invalid pool_i");
-		auto& pool= blockPools[pool_i];
+		auto& pool= g_blockPools[pool_i];
 		SizeType block_i= ((char*)mem - pool.beginAddr)/pool.blockSize;
 		if (block_i > pool.blockCount)
 			fail("Invalid block_i");
+
+#ifdef DEBUG
+		std::memset(mem, 0x94, pool.blockSize);
+#endif
 		pool.allocStatus[block_i]= AllocStatus::free;
 		--pool.allocCount;
 	}
+
 #else
 	std::free(mem);
 #endif
