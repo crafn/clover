@@ -24,12 +24,7 @@ public:
 
 	DynArray()= default;
 	~DynArray()
-	{
-		ensure(capacity_ >= size_);
-		for (auto& m : *this)
-			m.~Value();
-		ator.deallocate(data_, capacity_);
-	}
+	{ realClear(); }
 
 	DynArray(SizeType size)
 	{ resize(size); }
@@ -48,7 +43,7 @@ public:
 	DynArray& operator=(const DynArray& t)
 	{
 		if (this != &t) {
-			clear(); /// @todo Don't clear
+			realClear(); /// @todo Don't clear
 			reserve(t.size_);
 			for (SizeType i= 0; i < t.size_; ++i)
 				new (data_ + i) Value(t.data_[i]);
@@ -60,7 +55,7 @@ public:
 	DynArray& operator=(DynArray&& t)
 	{
 		if (this != &t) {
-			clear(); /// @todo Don't clear
+			realClear(); /// @todo Don't clear
 			data_= t.data_;
 			size_= t.size_;
 			capacity_= t.capacity_;
@@ -140,6 +135,14 @@ public:
 		for (auto& m : *this)
 			m.~Value();
 		size_= 0;
+	}
+
+	void realClear()
+	{
+		clear();
+		ator.deallocate(data_, capacity_);
+		data_= nullptr;
+		capacity_= 0;
 	}
 
 private:
