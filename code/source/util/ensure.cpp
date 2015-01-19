@@ -7,6 +7,7 @@
 namespace clover {
 namespace util {
 
+/// @todo Remove memory allocations from these
 void ensureImpl(
 		bool cond, const char* file, const char* func, int line,
 		const char* cond_str)

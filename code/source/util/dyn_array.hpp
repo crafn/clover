@@ -24,12 +24,7 @@ public:
 
 	DynArray()= default;
 	~DynArray()
-	{
-		ensure(capacity_ >= size_);
-		for (auto& m : *this)
-			m.~Value();
-		ator.deallocate(data_, capacity_);
-	}
+	{ realClear(); }
 
 	DynArray(SizeType size)
 	{ resize(size); }
@@ -47,17 +42,20 @@ public:
 
 	DynArray& operator=(const DynArray& t)
 	{
-		clear(); /// @todo Don't clear
-		reserve(t.size_);
-		for (SizeType i= 0; i < t.size_; ++i)
-			new (data_ + i) Value(t.data_[i]);
-		size_= t.size_;
+		if (this != &t) {
+			realClear(); /// @todo Don't clear
+			reserve(t.size_);
+			for (SizeType i= 0; i < t.size_; ++i)
+				new (data_ + i) Value(t.data_[i]);
+			size_= t.size_;
+		}
 		return *this;
 	}
 
 	DynArray& operator=(DynArray&& t)
 	{
 		if (this != &t) {
+			realClear(); /// @todo Don't clear
 			data_= t.data_;
 			size_= t.size_;
 			capacity_= t.capacity_;
@@ -91,7 +89,10 @@ private:
 		for (SizeType i= 0; i < size_; ++i)
 			new (new_data + i) Value(std::move(data_[i]));
 
+		for (auto& m : *this)
+			m.~Value();
 		ator.deallocate(data_, capacity_);
+
 		data_= new_data;
 		capacity_= new_capacity;
 	}
@@ -132,8 +133,16 @@ public:
 		// Following std::vector, although separate destruct() and
 		// clear() would be better
 		for (auto& m : *this)
-			m.~T();
+			m.~Value();
 		size_= 0;
+	}
+
+	void realClear()
+	{
+		clear();
+		ator.deallocate(data_, capacity_);
+		data_= nullptr;
+		capacity_= 0;
 	}
 
 private:
@@ -145,10 +154,11 @@ private:
 		Value* new_data= ator.allocate(new_capacity);
 		for (SizeType i= 0; i < new_capacity && i < size_; ++i)
 			new (new_data + i) Value(std::move(data_[i])); // Copy objects to new buffer
-		for (SizeType i= new_capacity; i < size_; ++i)
-			data_[i].~Value(); // Destroy those who didn't fit
 
+		for (auto& m : *this)
+			m.~Value(); // Destroy old, including those who didn't fit
 		ator.deallocate(data_, capacity_);
+
 		data_= new_data;
 		capacity_= new_capacity;
 	}

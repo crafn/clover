@@ -41,11 +41,6 @@ App::App(const util::Str8& executablePath)
 	// as its needed for heap creation
 	new global::CfgMgr();
 
-	// Creates custom heap if custom new is enabled in hardware/memory.cpp
-	hardware::createHeap(
-			global::g_env.cfg->get<SizeType>("hardware::heapSize"),
-			global::g_env.cfg->get<SizeType>("hardware::heapBlocks"));
-
 	global::createMemoryPools(
 			global::g_env.cfg->get<SizeType>("global::singleFrameMemory"));
 
