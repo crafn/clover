@@ -24,7 +24,9 @@ bool ResourceFilePath::operator==(const ResourceFilePath& other) const {
 }
 
 util::Str8 ResourceFilePath::relative() const {
-	return relativePath + extPart();
+	// Don't include `ext` in relative path to avoid saving with extension
+	// Reason: "mymod" is mymod.dll on windows and mymod.so on linux
+	return relativePath;
 }
 
 void ResourceFilePath::setRelative(const util::Str8& r){
