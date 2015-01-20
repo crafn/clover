@@ -5,6 +5,7 @@
 #include "jointpose.hpp"
 #include "util/dyn_array.hpp"
 #include "util/string.hpp"
+#include "util/typestringtraits.hpp"
 
 namespace clover {
 namespace animation {

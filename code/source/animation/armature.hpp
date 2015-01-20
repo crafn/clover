@@ -77,14 +77,6 @@ JointNameToIdMap jointNameToIdMap(const Armature& a);
 util::DynArray<JointId> jointIdMapForArmatures(const Armature& from, const Armature& to);
 
 } // animation
-namespace util {
-
-template <>
-struct TypeStringTraits<animation::Armature> {
-	static util::Str8 type(){ return "animation::Armature"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_ANIMATION_ARMATURE_HPP

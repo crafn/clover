@@ -5,7 +5,7 @@
 #include "util/color.hpp"
 #include "util/hash.hpp"
 #include "util/mesh.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/vector.hpp"
 #include "vertexattribute.hpp"
 
@@ -45,21 +45,8 @@ struct MeshVertexTraits<visual::Vertex> {
 template <>
 struct ObjectNodeTraits<visual::Vertex> {
 	using Value= visual::Vertex;
-	static util::ObjectNode serialized(const Value& value)
-	{
-		util::ObjectNode ob;
-		ob["position"].setValue(value.position);
-		ob["uv"].setValue(value.uv);
-		return (ob);
-	}
-
-	static Value deserialized(const util::ObjectNode& ob)
-	{
-		Value v;
-		v.position= ob.get("position").getValue<util::Vec3f>();
-		v.uv= ob.get("uv").getValue<util::Vec2f>();
-		return (v);
-	}
+	static util::ObjectNode serialized(const Value& value);
+	static Value deserialized(const util::ObjectNode& ob);
 };
 
 template <>

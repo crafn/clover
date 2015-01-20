@@ -3,7 +3,7 @@
 
 #include "build.hpp"
 #include "util/hash.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/string.hpp"
 
 namespace clover {
@@ -62,17 +62,8 @@ public:
 template <>
 struct ObjectNodeTraits<resources::ResourceFilePath> {
 	using Value= resources::ResourceFilePath;
-	static util::ObjectNode serialized(const Value& value){
-		util::ObjectNode ob;
-		ob[0].setValue(value.directoryFromRoot());
-		ob[1].setValue(value.relative());
-		return (ob);
-	}
-	
-	static Value deserialized(const util::ObjectNode& ob){
-		Value v(ob.get(0).getValue<util::Str8>(), ob.get(1).getValue<util::Str8>());
-		return (v);
-	}
+	static util::ObjectNode serialized(const Value& value);
+	static Value deserialized(const util::ObjectNode& ob);
 };
 
 } // util

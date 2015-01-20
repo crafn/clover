@@ -121,14 +121,6 @@ private:
 };
 
 } // resources
-namespace util {
-
-template <>
-struct TypeStringTraits<resources::Cache> {
-	static util::Str8 type(){ return "resources::Cache"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_RESOURCES_CACHE_HPP

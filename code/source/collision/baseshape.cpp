@@ -5,6 +5,7 @@
 #include "collision/box2d.hpp"
 #include "resources/exception.hpp"
 #include "util/dyn_array.hpp"
+#include "util/objectnode.hpp"
 #include "util/vector.hpp"
 
 #include <Box2D/Box2D.h>

@@ -104,19 +104,6 @@ void add(Grid::Cell& cell, Object& obj);
 void remove(Grid::Cell& cell, Object& obj);
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::Grid> {
-	static util::Str8 type() { return "physics::Grid"; }
-};
-
-template <>
-struct TypeStringTraits<physics::Grid::Cell> {
-	static util::Str8 type() { return "physics::GridCell"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_GRID_HPP

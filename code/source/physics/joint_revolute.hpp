@@ -53,14 +53,6 @@ private:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::RevoluteJoint> {
-	static util::Str8 type(){ return "physics::RevoluteJoint"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_JOINT_REVOLUTE_HPP

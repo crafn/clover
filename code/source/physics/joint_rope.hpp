@@ -18,14 +18,6 @@ public:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::RopeJoint> {
-	static util::Str8 type(){ return "physics::RopeJoint"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_JOINT_ROPE_HPP

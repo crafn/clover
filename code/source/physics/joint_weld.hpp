@@ -28,14 +28,6 @@ private:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::WeldJoint> {
-	static util::Str8 type(){ return "physics::WeldJoint"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_JOINT_WELD_HPP

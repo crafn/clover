@@ -36,14 +36,6 @@ private:
 };
 
 } // collision
-namespace util {
-
-template <>
-struct TypeStringTraits<collision::CircleBaseShape> {
-	static util::Str8 type(){ return "collision::CircleBaseShape"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_COLLISION_BASESHAPE_CIRCLE_HPP

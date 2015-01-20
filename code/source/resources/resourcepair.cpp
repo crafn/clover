@@ -1,5 +1,6 @@
 #include "resourcepair.hpp"
 #include "resource.hpp"
+#include "util/objectnode.hpp"
 
 namespace clover {
 namespace resources {
@@ -25,4 +26,22 @@ bool StrResourcePair::operator==(const StrResourcePair& o) const {
 }
 
 } // resources
+namespace util {
+
+util::ObjectNode ObjectNodeTraits<resources::StrResourcePair>::
+serialized(const Value& value)
+{
+	util::ObjectNode ret;
+	ret.append(value.first);
+	ret.append(value.second);
+	return (ret);
+}
+
+auto ObjectNodeTraits<resources::StrResourcePair>::
+deserialized(const util::ObjectNode& ob_node) -> Value
+{
+	return Value(ob_node.get(0).getValue<util::Str8>(), ob_node.get(1).getValue<util::Str8>());
+}
+
+} // util
 } // clover

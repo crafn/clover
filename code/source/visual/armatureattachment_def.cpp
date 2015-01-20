@@ -1,10 +1,12 @@
 #include "armatureattachment_def.hpp"
 #include "global/exception.hpp"
+#include "util/objectnode.hpp"
 
 namespace clover {
 namespace util {
 
-util::ObjectNode ObjectNodeTraits<visual::ArmatureAttachmentDef>::serialized(const Value& value){
+util::ObjectNode ObjectNodeTraits<visual::ArmatureAttachmentDef>::
+serialized(const Value& value){
 	util::ObjectNode ob;
 	ob["entity"].setValue(value.entityName);
 	ob["joint"].setValue(value.jointName);
@@ -13,7 +15,8 @@ util::ObjectNode ObjectNodeTraits<visual::ArmatureAttachmentDef>::serialized(con
 	return ob;
 }
 
-auto ObjectNodeTraits<visual::ArmatureAttachmentDef>::deserialized(const util::ObjectNode& ob) -> Value {
+auto ObjectNodeTraits<visual::ArmatureAttachmentDef>::
+deserialized(const util::ObjectNode& ob) -> Value {
 	if (!ob.isObject())
 		throw global::Exception("Invalid ArmatureAttachmentDef");
 	

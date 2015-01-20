@@ -37,14 +37,6 @@ private:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::HardWeldJoint> {
-	static util::Str8 type(){ return "physics::HardWeldJoint"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_JOINT_HARDWELD_HPP

@@ -41,14 +41,6 @@ private:
 };
 
 } // collision
-namespace util {
-
-template <>
-struct TypeStringTraits<collision::PolygonBaseShape> {
-	static util::Str8 type(){ return "collision::PolygonBaseShape"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_COLLISION_BASESHAPE_POLYGON_HPP

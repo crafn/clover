@@ -41,14 +41,6 @@ public:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::WheelJoint> {
-	static util::Str8 type(){ return "physics::WheelJoint"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_JOINT_WHEEL_HPP

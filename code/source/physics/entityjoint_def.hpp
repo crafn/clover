@@ -3,7 +3,8 @@
 
 #include "build.hpp"
 #include "jointtype.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
+#include "util/vector.hpp"
 
 namespace clover {
 namespace physics {

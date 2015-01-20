@@ -4,9 +4,11 @@
 #include "build.hpp"
 #include "collision/ray.hpp"
 #include "util/dyn_array.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/polygon.hpp"
 #include "util/transform.hpp"
+
+#include <memory>
 
 class b2Shape;
 
@@ -57,11 +59,6 @@ struct ObjectNodeTraits<std::shared_ptr<collision::BaseShape>> {
 	typedef std::shared_ptr<collision::BaseShape> Value;
 	static util::ObjectNode serialized(const Value& value);
 	static Value deserialized(const util::ObjectNode& ob_node);
-};
-
-template <>
-struct TypeStringTraits<collision::BaseShape> {
-	static util::Str8 type(){ return "collision::BaseShape"; }
 };
 
 } // util

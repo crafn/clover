@@ -5,9 +5,7 @@
 #include "hash.hpp"
 #include "dyn_array.hpp"
 #include "util/printf_format.hpp"
-#include "util/traits.hpp"
 
-#include <cstdarg>
 #include <string>
 
 namespace clover {
@@ -152,12 +150,6 @@ public:
 	uint32 operator()(const Str8& str) const {
 		return rawArrayHash32(str.cStr(), str.sizeBytes());
 	}
-
-};
-
-template <>
-struct TypeStringTraits<Str8> {
-	static Str8 type(){ return "::Str8"; }
 };
 
 } // util

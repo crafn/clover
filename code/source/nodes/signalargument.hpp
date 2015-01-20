@@ -3,9 +3,9 @@
 
 #include "build.hpp"
 #include "signaltype.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/string.hpp"
-#include "util/traits.hpp"
+#include "util/typestringtraits.hpp"
 
 namespace clover {
 namespace nodes {

@@ -3,7 +3,7 @@
 
 #include "build.hpp"
 #include "jointpose.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/string.hpp"
 
 namespace clover {

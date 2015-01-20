@@ -1,4 +1,6 @@
+#include "util/objectnode.hpp"
 #include "vertex.hpp"
+
 #include <cstddef>
 
 namespace clover {
@@ -41,4 +43,25 @@ util::DynArray<VertexAttribute> Vertex::getAttributes()
 }
 
 } // visual
+namespace util {
+
+util::ObjectNode ObjectNodeTraits<visual::Vertex>::
+serialized(const Value& value)
+{
+	util::ObjectNode ob;
+	ob["position"].setValue(value.position);
+	ob["uv"].setValue(value.uv);
+	return (ob);
+}
+
+auto ObjectNodeTraits<visual::Vertex>::
+deserialized(const util::ObjectNode& ob) -> Value
+{
+	Value v;
+	v.position= ob.get("position").getValue<util::Vec3f>();
+	v.uv= ob.get("uv").getValue<util::Vec2f>();
+	return (v);
+}
+
+} // util
 } // clover

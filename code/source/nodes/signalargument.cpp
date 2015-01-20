@@ -1,5 +1,6 @@
 #include "signalargument.hpp"
 #include "nodes/signaltypetraits.hpp"
+#include "util/objectnode.hpp"
 
 namespace clover {
 namespace util {

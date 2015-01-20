@@ -247,19 +247,6 @@ private:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::RigidFixtureDef> {
-	static util::Str8 type(){ return "physics::RigidFixtureDef"; }
-};
-
-template <>
-struct TypeStringTraits<physics::RigidObject> {
-	static util::Str8 type(){ return "physics::RigidObject"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_OBJECT_RIGID_IMPL_HPP

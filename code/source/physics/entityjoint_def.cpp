@@ -1,4 +1,5 @@
 #include "entityjoint_def.hpp"
+#include "util/objectnode.hpp"
 
 namespace clover {
 namespace util {

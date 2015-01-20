@@ -2,7 +2,7 @@
 #define CLOVER_RESOURCES_RESOURCE_PAIR_HPP
 
 #include "build.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/hash.hpp"
 #include "util/string.hpp"
 
@@ -38,16 +38,8 @@ public:
 template <>
 struct ObjectNodeTraits<resources::StrResourcePair> {
 	typedef resources::StrResourcePair Value;
-	static util::ObjectNode serialized(const Value& value){
-		util::ObjectNode ret;
-		ret.append(value.first);
-		ret.append(value.second);
-		return (ret);
-	}
-	
-	static Value deserialized(const util::ObjectNode& ob_node){
-		return Value(ob_node.get(0).getValue<util::Str8>(), ob_node.get(1).getValue<util::Str8>());
-	}
+	static util::ObjectNode serialized(const Value& value);
+	static Value deserialized(const util::ObjectNode& ob_node);
 };
 
 } // util

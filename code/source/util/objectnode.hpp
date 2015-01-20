@@ -9,7 +9,7 @@
 #include "util/optional.hpp"
 #include "util/set.hpp"
 #include "util/string.hpp"
-#include "util/traits.hpp"
+#include "util/typestringtraits.hpp"
 #include "util/vector.hpp"
 
 #include <json/value.h>

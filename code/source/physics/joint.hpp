@@ -94,24 +94,6 @@ struct ENGINE_API JointTypeCrtp {
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::OnAttachCb> {
-	static util::Str8 type(){ return "physics::OnAttachCb"; }
-};
-
-template <>
-struct TypeStringTraits<physics::OnDetachCb> {
-	static util::Str8 type(){ return "physics::OnDetachCb"; }
-};
-
-template <>
-struct TypeStringTraits<physics::Joint> {
-	static util::Str8 type(){ return "physics::Joint"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_JOINT_HPP

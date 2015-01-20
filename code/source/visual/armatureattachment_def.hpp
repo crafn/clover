@@ -2,9 +2,10 @@
 #define CLOVER_VISUAL_ARMATUREATTACHMENT_DEF_HPP
 
 #include "build.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/optional.hpp"
 #include "util/transform.hpp"
+#include "util/string.hpp"
 
 namespace clover {
 namespace visual {

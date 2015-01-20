@@ -191,14 +191,6 @@ struct ResourceTraits;/* {
 };*/
 
 } // resources
-namespace util {
-
-template <>
-struct TypeStringTraits<resources::Resource> {
-	static util::Str8 type(){ return "::Resource"; }
-};
-
-} // util
 
 // Implementation
 

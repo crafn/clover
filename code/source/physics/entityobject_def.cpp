@@ -1,7 +1,8 @@
-#include "entityobject_def.hpp"
 #include "collision/shape.hpp"
-#include "resources/cache.hpp"
+#include "entityobject_def.hpp"
 #include "game/physicalmaterial.hpp"
+#include "resources/cache.hpp"
+#include "util/objectnode.hpp"
 
 namespace clover {
 namespace util {

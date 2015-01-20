@@ -2,7 +2,7 @@
 #define CLOVER_PHYSICS_ENTITYOBJECT_DEF_HPP
 
 #include "build.hpp"
-#include "util/objectnode.hpp"
+#include "util/objectnodetraits.hpp"
 
 namespace clover {
 namespace physics {

@@ -102,19 +102,6 @@ protected:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::FixtureCallbacks> {
-	static util::Str8 type(){ return "physics::FixtureCallbacks"; }
-};
-
-template <>
-struct TypeStringTraits<physics::Fixture> {
-	static util::Str8 type(){ return "physics::Fixture"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_FIXTURE_HPP

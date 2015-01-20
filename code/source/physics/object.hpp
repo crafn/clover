@@ -173,14 +173,6 @@ private:
 };
 
 } // physics
-namespace util {
-
-template <>
-struct TypeStringTraits<physics::Object> {
-	static util::Str8 type(){ return "physics::Object"; }
-};
-
-} // util
 } // clover
 
 #endif // CLOVER_PHYSICS_OBJECT_HPP

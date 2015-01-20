@@ -1,6 +1,7 @@
+#include "cache.hpp"
 #include "global/env.hpp"
 #include "resourcefilepath.hpp"
-#include "cache.hpp"
+#include "util/objectnode.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -68,4 +69,23 @@ util::Str8 ResourceFilePath::extPart() const
 }
 
 } // resources
+namespace util {
+
+util::ObjectNode ObjectNodeTraits<resources::ResourceFilePath>::
+serialized(const Value& value)
+{
+	util::ObjectNode ob;
+	ob[0].setValue(value.directoryFromRoot());
+	ob[1].setValue(value.relative());
+	return (ob);
+}
+
+auto ObjectNodeTraits<resources::ResourceFilePath>::
+deserialized(const util::ObjectNode& ob) -> Value
+{
+	Value v(ob.get(0).getValue<util::Str8>(), ob.get(1).getValue<util::Str8>());
+	return (v);
+}
+
+} // util
 } // clover
