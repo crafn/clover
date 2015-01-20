@@ -1,5 +1,7 @@
-#include "hardware/glstate.hpp"
+#include "debug/print.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
+#include "hardware/glstate.hpp"
 #include "util/string.hpp"
 
 // Use this when wondering where error occurs

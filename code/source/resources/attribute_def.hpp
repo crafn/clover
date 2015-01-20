@@ -2,6 +2,7 @@
 #define CLOVER_RESOURCES_ATTRIBUTE_DEF_HPP
 
 #include "animation/joint_def.hpp"
+#include "animation/clipchannel.hpp"
 #include "attributeparseinfo.hpp"
 #include "attributetype.hpp"
 #include "build.hpp"
@@ -36,6 +37,7 @@ struct AttributeDefImpl; //{
 
 /// Contains information for attribute usage and restrictions in editor
 /// @todo Rename *Impl to something more describing
+/// @todo No, remove this overly complicated construction
 struct BaseAttributeDefImpl {
 	virtual ~BaseAttributeDefImpl(){}
 
@@ -303,6 +305,7 @@ GENERIC_ATTRIBUTE_DEF_IMPL(ArmatureAttachmentDefAttributeType, visual::ArmatureA
 GENERIC_ATTRIBUTE_DEF_IMPL(SrtTransform3AttributeType, util::SrtTransform3d);
 GENERIC_ATTRIBUTE_DEF_IMPL(PhysObjectDefAttributeType, physics::EntityObjectDef);
 GENERIC_ATTRIBUTE_DEF_IMPL(PhysJointDefAttributeType, physics::EntityJointDef);
+GENERIC_ATTRIBUTE_DEF_IMPL(ClipChannelAttributeType, animation::ClipChannel);
 
 /// Array
 template <PlainAttributeType A>

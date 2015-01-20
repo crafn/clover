@@ -5,15 +5,9 @@
 #include "global/env.hpp"
 #include "log.hpp"
 #include "util/dyn_array.hpp"
+#include "util/printf_format.hpp"
 #include "util/mutex.hpp"
 #include <bitset>
-
-#ifdef __GNUC__
-#define PRINTF_FORMAT(stringIndex, firstToCheck) \
-  __attribute__ ((format (printf, (stringIndex), (firstToCheck))))
-#else
-#define PRINTF_FORMAT(a, b)
-#endif
 
 namespace clover {
 namespace debug {

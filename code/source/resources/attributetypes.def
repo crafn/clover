@@ -35,5 +35,6 @@ PLAIN_ATTRIBUTE(ArmatureAttachmentDef)
 PLAIN_ATTRIBUTE(SrtTransform3)
 PLAIN_ATTRIBUTE(PhysObjectDef)
 PLAIN_ATTRIBUTE(PhysJointDef)
+PLAIN_ATTRIBUTE(ClipChannel)
 
 #endif

@@ -1,3 +1,4 @@
+#include "debug/print.hpp"
 #include "filewatcher_impl.hpp"
 #include "util/ensure.hpp"
 
@@ -17,7 +18,6 @@ void FileWatcherImpl::setPath(const util::Str8& _path){
 	try {
 		boost::filesystem::path p= boost::filesystem::canonical(_path.cStr());
 		path= p.string();
-		debug::print("FileWatcher setPath: %s", path.cStr());
 	}
 	catch(...){
 		debug::print("FileWatcher got invalid path: %s", _path.cStr());

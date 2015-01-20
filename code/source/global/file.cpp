@@ -1,3 +1,4 @@
+#include "global/env.hpp"
 #include "file.hpp"
 #include "file_mgr.hpp"
 #include "file_impl_default.hpp"

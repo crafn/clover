@@ -10,6 +10,8 @@
 #include "util/transform.hpp"
 #include "util/vector.hpp"
 
+#include <limits>
+
 namespace clover {
 namespace physics {
 

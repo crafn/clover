@@ -5,6 +5,7 @@
 #include "util/color.hpp"
 #include "util/ensure.hpp"
 #include "util/math.hpp"
+#include "util/objectnodetraits.hpp"
 #include "util/optional.hpp"
 #include "util/set.hpp"
 #include "util/string.hpp"
@@ -16,10 +17,6 @@
 
 namespace clover {
 namespace util {
-
-/// Enable is used to switch traits on/off depending on T
-template <typename T, typename Enable= void>
-struct ObjectNodeTraits;
 
 template <typename T>
 struct IsObjectNodeSerializable;

@@ -1,5 +1,6 @@
 #include "audiodevice_dummy.hpp"
 #include "global/cfg_mgr.hpp"
+#include "global/env.hpp"
 #include "hardware/device.hpp"
 
 namespace clover {

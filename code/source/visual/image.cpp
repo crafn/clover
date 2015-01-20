@@ -1,3 +1,4 @@
+#include "debug/print.hpp"
 #include "image.hpp"
 #include "resources/exception.hpp"
 #include "global/file.hpp"

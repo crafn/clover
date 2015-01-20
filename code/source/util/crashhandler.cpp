@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <exception>
 #include <fstream>
+#include <iostream>
 
 #if OS == OS_WINDOWS
 	#include <signal.h>
