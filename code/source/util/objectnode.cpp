@@ -145,6 +145,12 @@ util::Str8 ObjectNode::generateText() const {
 	return (output_str);
 }
 
+void ObjectNode::assign(Json::Value& dst, const Json::Value& src) const
+{ dst= src; }
+
+void ObjectNode::assignEmptyJsonArray(Json::Value& dst) const
+{ assign(dst, Json::Value(Json::arrayValue)); }
+
 void ObjectNode::createReference(ObjectNode& other, Json::Value& value){
 	if (isReference()){
 		// Create reference to owner if we have one, so that 'auto a= v[0][0]; a= something' modifies v
@@ -182,6 +188,64 @@ void ObjectNode::detachSubReferences(){
 		destroyReference(*references.back());
 	}
 }
+
+// InternalTraits
+
+auto ObjectNode::InternalTraits<util::Str8>::
+deserialized(const Json::Value& v) -> Value
+{ return util::Str8(v.asString()); }
+Json::Value ObjectNode::InternalTraits<util::Str8>::
+serialized(const Value& v)
+{ return Json::Value(v.cStr()); }
+
+auto ObjectNode::InternalTraits<int64>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asInt(); }
+Json::Value ObjectNode::InternalTraits<int64>::
+serialized(const Value& v)
+{ return Json::Value((Value)v); }
+
+auto ObjectNode::InternalTraits<int32>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asInt(); }
+Json::Value ObjectNode::InternalTraits<int32>::
+serialized(const Value& v)
+{ return Json::Value((int64)v); }
+
+auto ObjectNode::InternalTraits<uint32>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asInt(); }
+Json::Value ObjectNode::InternalTraits<uint32>::
+serialized(const Value& v)
+{ return Json::Value((int64)v); }
+
+auto ObjectNode::InternalTraits<uint64>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asInt(); }
+Json::Value ObjectNode::InternalTraits<uint64>::
+serialized(const Value& v)
+{ return Json::Value(v); }
+
+auto ObjectNode::InternalTraits<real64>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asDouble(); }
+Json::Value ObjectNode::InternalTraits<real64>::
+serialized(const Value& v)
+{ return Json::Value(v); }
+
+auto ObjectNode::InternalTraits<real32>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asDouble(); }
+Json::Value ObjectNode::InternalTraits<real32>::
+serialized(const Value& v)
+{ return Json::Value((real64)v); }
+
+auto ObjectNode::InternalTraits<bool>::
+deserialized(const Json::Value& v) -> Value
+{ return v.asBool(); }
+Json::Value ObjectNode::InternalTraits<bool>::
+serialized(const Value& v)
+{ return Json::Value(v); }
 
 #define INTEGRAL_TRAITS(x) \
 ObjectNode ObjectNodeTraits<x>::serialized(const x& value){ \

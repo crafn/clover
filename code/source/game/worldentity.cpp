@@ -13,6 +13,7 @@
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <sstream>
 
 namespace clover {
 namespace game {
@@ -135,21 +136,19 @@ void WorldEntity::saveFieldSerialize(WEPack& p) const {
 	PROFILE();
 	util::Str8 type_name, serialized_attribs;
 
-	
 	if (type)
 		type_name= type->getName();
-	
+
 	if (weInterface){
 		PROFILE_("boost");
+		/// @todo This is bad.
 		std::stringstream ss;
 		boost::archive::text_oarchive oa(ss);
-		
 		const auto& attribs= weInterface->getAttributeInfos();
 		oa << attribs;
-		
 		serialized_attribs= util::Str8(ss.str());
 	}
-	
+
 	Base::saveFieldSerialize(p);
 	p.getVarPack() << type_name;
 	p.getVarPack() << serialized_attribs;
@@ -171,6 +170,7 @@ void WorldEntity::saveFieldDeserialize(WEPack& p){
 	if (!serialized_attribs.empty()){
 		nodes::WeInterfaceNodeInstance::AttributeInfos attribs;
 		{ PROFILE();
+			/// @todo This is bad.
 			std::stringstream ss(serialized_attribs.cStr());
 			boost::archive::text_iarchive ia(ss);
 			ia >> attribs;

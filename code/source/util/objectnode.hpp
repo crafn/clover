@@ -3,6 +3,7 @@
 
 #include "build.hpp"
 #include "util/color.hpp"
+#include "util/dynamic.hpp"
 #include "util/ensure.hpp"
 #include "util/math.hpp"
 #include "util/objectnodetraits.hpp"
@@ -12,8 +13,10 @@
 #include "util/typestringtraits.hpp"
 #include "util/vector.hpp"
 
+/// @todo Remove
 #include <json/value.h>
-#include <sstream>
+
+namespace Json { class Value; }
 
 namespace clover {
 namespace util {
@@ -28,10 +31,11 @@ class ObjectNode {
 public:
 	typedef util::DynArray<util::Str8> MemberNames;
 
+	/// Matches with Json::ValueType from json/value.h
 	enum class Value {
-		Null= Json::nullValue,
-		Array= Json::arrayValue,
-		Object= Json::objectValue
+		Null= 0,
+		Array= 6,
+		Object= 7
 	};
 
 	ObjectNode(Value t= Value::Null);
@@ -109,15 +113,17 @@ public:
 	void serialize(Archive& ar, uint32 version);
 
 private:
+	void assign(Json::Value& dst, const Json::Value& src) const;
+	void assignEmptyJsonArray(Json::Value& dst) const;
 
 	// Object of which reference this is
 	ObjectNode* owner;
 
 	Json::Value* ownerJsonValue;
-	Json::Value localJsonValue;
-	
-	Json::Value& jsonValue(){ return isReference() ? *ownerJsonValue : localJsonValue; }
-	const Json::Value& jsonValue() const { return isReference() ? *ownerJsonValue : localJsonValue; }
+	util::Dynamic<Json::Value> localJsonValue;
+
+	Json::Value& jsonValue(){ return isReference() ? *ownerJsonValue : localJsonValue.get(); }
+	const Json::Value& jsonValue() const { return isReference() ? *ownerJsonValue : localJsonValue.get(); }
 	
 	// Ugly way to achieve reference-like behaviour
 	void createReference(ObjectNode& other, Json::Value& value);
@@ -338,7 +344,7 @@ T ObjectNode::getValue() const {
 
 template <typename T>
 void ObjectNode::setValue(const T& value){
-	jsonValue()= ObjectNodeTraits<T>::serialized(value).jsonValue();
+	assign(jsonValue(), ObjectNodeTraits<T>::serialized(value).jsonValue());
 }
 
 /// Value as it is stored in json
@@ -357,7 +363,7 @@ void ObjectNode::append(const T& value){
 	ensure(jsonValue().isNull() || jsonValue().isArray());
 	
 	if (jsonValue().isNull())
-		jsonValue()= Json::Value(Json::arrayValue);
+		assignEmptyJsonArray(jsonValue()); 
 		
 	jsonValue().append(ObjectNodeTraits<T>::serialized(value).jsonValue());
 }
@@ -368,7 +374,6 @@ ObjectNode ObjectNode::get(const util::Str8& key, T value) const {
 	if (v.isNull())
 		return ObjectNode(ObjectNodeTraits<T>::serialized(value).jsonValue());
 	return ObjectNode(v);
-	
 }
 
 // InternalTraits
@@ -376,98 +381,58 @@ ObjectNode ObjectNode::get(const util::Str8& key, T value) const {
 template <>
 struct ObjectNode::InternalTraits<util::Str8> {
 	typedef util::Str8 Value;
-	static Value deserialized(const Json::Value& v){
-		return util::Str8(v.asString());
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value(v.cStr());
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 
 template <>
 struct ObjectNode::InternalTraits<int64> {
 	typedef int64 Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asInt();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value((Value)v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 template <>
 struct ObjectNode::InternalTraits<int32> {
 	typedef int32 Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asInt();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value((int64)v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 template <>
 struct ObjectNode::InternalTraits<uint32> {
 	typedef uint32 Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asInt();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value((int64)v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 template <>
 struct ObjectNode::InternalTraits<uint64> {
 	typedef uint64 Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asInt();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value(v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 template <>
 struct ObjectNode::InternalTraits<real64> {
 	typedef real64 Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asDouble();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value(v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 template <>
 struct ObjectNode::InternalTraits<real32> {
 	typedef real32 Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asDouble();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value((real64)v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 template <>
 struct ObjectNode::InternalTraits<bool> {
 	typedef bool Value;
-	static Value deserialized(const Json::Value& v){
-		return v.asBool();
-	}
-	
-	static Json::Value serialized(const Value& v){
-		return Json::Value(v);
-	}
+	static Value deserialized(const Json::Value& v);
+	static Json::Value serialized(const Value& v);
 };
 
 // Integral types

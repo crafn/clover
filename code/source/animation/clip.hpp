@@ -66,6 +66,7 @@ private:
 	RESOURCE_ATTRIBUTE(String, nameAttribute)
 	RESOURCE_ATTRIBUTE(Path, fileAttribute)
 	RESOURCE_ATTRIBUTE(Resource, armatureAttribute)
+	RESOURCE_ATTRIBUTE(ClipChannelArray, channels)
 
 	util::CbListener<util::OnChangeCb> armatureChangeListener;
 

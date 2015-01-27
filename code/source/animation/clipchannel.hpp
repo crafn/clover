@@ -19,8 +19,11 @@ enum class ClipChannelType {
 struct ClipChannel {
 	ClipChannelType type;
 	util::Str8 joint;
-	util::DynArray<real32> times;
-	util::DynArray<util::Vec3f> samples;
+	struct Key {
+		real32 time;
+		real32 value[4];
+	};
+	util::DynArray<Key> keys;
 };
 
 } // animation

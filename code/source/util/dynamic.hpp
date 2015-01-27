@@ -5,8 +5,6 @@
 #include "util/class_preproc.hpp"
 #include "util/unique_ptr.hpp"
 
-#include <type_traits>
-
 namespace clover {
 namespace util {
 
@@ -21,14 +19,12 @@ public:
 		: value(util::makeUniquePtr<T>(std::forward<Args>(args)...))
 	{ }
 
-	template<	typename U= T,
-				class= typename std::enable_if<std::is_copy_constructible<U>::value>::type>
+	template<typename U= T>
 	Dynamic(const Dynamic& other)
 			: value(util::makeUniquePtr<T>(*other)){
 	}
 
-	template<	typename U= T,
-				class= typename std::enable_if<std::is_copy_assignable<U>::value>::type>
+	template<typename U= T>
 	Dynamic& operator=(const Dynamic& other){
 		*value= *other.value;
 		return *this;

@@ -1,5 +1,7 @@
 #include "element_textlabel.hpp"
 
+#include <sstream>
+
 namespace clover {
 namespace gui {
 

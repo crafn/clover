@@ -316,26 +316,10 @@ void GlState::errorCheck(const util::Str8& where){
 		return;
 
 	uint32 err= glGetError();
-
-
 	if (err != GL_NO_ERROR){
-		util::Str8 msg= "OpenGL error: " + where;
-		msg += ": ";
-
-
-		std::stringstream tc;
-		tc << err;
-
-
-
-		util::Str8 error= tc.str().c_str();
-		error += " ";
-		error += (const char*)gluErrorString(err);
-
-		msg +=	error;
-
+		auto msg= util::Str8::format("OpenGL error: %s: %i, %s",
+				where.cStr(), err, (const char*)gluErrorString(err));
 		print(debug::Ch::OpenGL, debug::Vb::Moderate, msg.cStr());
-
 	}
 }
 

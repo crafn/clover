@@ -24,6 +24,7 @@ Clip::Clip()
 		: INIT_RESOURCE_ATTRIBUTE(nameAttribute, "name", "")
 		, INIT_RESOURCE_ATTRIBUTE(fileAttribute, "file", "")
 		, INIT_RESOURCE_ATTRIBUTE(armatureAttribute, "armature", "")
+		, INIT_RESOURCE_ATTRIBUTE(channels, "channels", {})
 		, fps(30.0){
 	
 	fileAttribute.setOnChangeCallback([&] () {
@@ -85,9 +86,66 @@ void Clip::load(){
 	});
 
 	util::Str8 path= fileAttribute.get().whole();
-	BvhData bvh_data= parseBvhAnimation(global::File::readText(path));
-	fps= 1.0/bvh_data.frameTime;
-	samples= calcLocalPosesFromBvh(bvh_data, jointNameToIdMap(getArmature()));
+	auto file_contents= global::File::readText(path);
+	if (!file_contents.empty()) {
+		BvhData bvh_data= parseBvhAnimation(file_contents);
+		fps= 1.0/bvh_data.frameTime;
+		samples= calcLocalPosesFromBvh(bvh_data, jointNameToIdMap(getArmature()));
+	} else { // Custom format loading
+		fps= 30.0;
+		real32 duration= 0.0;
+		for (auto& ch : channels.get()) {
+			if (ch.keys.empty())
+				continue;
+			duration= std::max(ch.keys.back().time, duration);
+		}
+
+		auto& armature= getArmature();
+		SizeType joint_count= armature.getJoints().size();
+		const LocalPose& default_pose= armature.getBindPose().getLocalInBindPose();
+		// Looping animation works by having last key == first key. 
+		// The one additional sample serves as interp. target for the "last" sample
+		samples.resize(std::floor(duration*fps + 0.5) + 1, default_pose);
+
+		// Extract values from keyframes to LocalPose samples
+		for (auto& ch : channels.get()) {
+			auto joint_id= armature.getJointId(ch.joint);
+			if (joint_id == JointIdNone)
+				throw resources::ResourceException(
+					"animation::Clip invalid joint: %s, %s",
+					getName().cStr(), ch.joint.cStr());
+
+			if (ch.keys.empty())
+				continue;
+
+			auto next_key_it= ch.keys.begin();
+			auto prev_key_it= ch.keys.begin();
+			for (SizeType s_i= 0; s_i < samples.size(); ++s_i) {
+				real32 sample_time= s_i/fps;
+				while (	next_key_it != ch.keys.end() &&
+						next_key_it + 1 != ch.keys.end() &&
+						next_key_it->time <= sample_time)
+					prev_key_it= next_key_it++;
+
+				JointPose::Transform& t= samples[s_i][joint_id].transform;
+				real32* prev_v= prev_key_it->value; // 4 floats
+				real32* next_v= next_key_it->value; // 4 floats
+				real32 frac=
+					(sample_time - prev_key_it->time)/
+					(next_key_it->time - prev_key_it->time);
+				util::clamp(frac, 0.0f, 1.0f);
+
+				switch (ch.type) {
+					case ClipChannelType::translation:
+						t.translation[0]= util::lerp(prev_v[0], next_v[0], frac);
+						t.translation[1]= util::lerp(prev_v[1], next_v[1], frac);
+						t.translation[2]= util::lerp(prev_v[2], next_v[2], frac);
+					break;
+					default: fail("Unknown ClipChannelType");
+				}
+			}
+		}
+	}
 
 	if (samples.empty()){
 		throw resources::ResourceException(
