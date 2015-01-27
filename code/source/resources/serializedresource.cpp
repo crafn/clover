@@ -1,3 +1,4 @@
+#include "debug/print.hpp"
 #include "serializedresource.hpp"
 #include "resource.hpp"
 #include "resourcefilepath.hpp"

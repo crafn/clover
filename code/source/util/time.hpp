@@ -4,7 +4,6 @@
 #include "build.hpp"
 #include "math.hpp"
 #include "ptrtable.hpp"
-#include "string.hpp"
 
 #include <ctime>
 #include <chrono>
@@ -61,25 +60,18 @@ private:
 
 class Timer {
 public:
-	Timer(const util::Str8& name= util::Str8(""));
+	Timer(const char* name= "");
 	virtual ~Timer();
 
-	util::Str8 getName();
+	const char* getName();
 
 	void run();
 	bool isRunning() const { return running; }
 	void pause();
-
 	void nextFrame();
-
 	static void nextFrames();
-
 	void reset();
-
-	// Palauttaa start():n ja stop():n välisen ajan (keskiarvo, jos suoritettu monta kertaa peräkkäin ilman resettiä)
 	real32 getAverage();
-	
-	// Palauttaa kokonaisajan, ei saa kutsua pausettamatta
 	real32 getTime();
 
 private:
@@ -89,7 +81,7 @@ private:
 
 	std::chrono::high_resolution_clock::time_point start;
 
-	util::Str8 name;
+	const char* name;
 
 	int32 tableIndex;
 };

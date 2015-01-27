@@ -51,7 +51,7 @@ Attribute<T>::~Attribute(){
 		
 		if (it == initializer.getContainer()->end()){
 			for (auto& m : *initializer.getContainer()){
-				print(debug::Ch::Resources, debug::Vb::Trivial, "Attribute: %s", m.second->getKey().cStr());
+				//print(debug::Ch::Resources, debug::Vb::Trivial, "Attribute: %s", m.second->getKey().cStr());
 			}
 		}
 		

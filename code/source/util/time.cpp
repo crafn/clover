@@ -1,6 +1,8 @@
 #include "time.hpp"
 #include "hardware/device.hpp"
 
+#include <cstring>
+
 namespace clover {
 namespace util {
 
@@ -105,14 +107,14 @@ bool Clock::isPaused() const {
 ///
 /// @todo Separate PerformanceTimer from Timer
 
-Timer::Timer(const util::Str8& n):
+Timer::Timer(const char* n):
 	running(false),
 	frameCount(0),
 	totalTime(0),
 	name(n),
 	tableIndex(-1){
 	
-	if (!n.empty()){
+	if (std::strlen(name) > 0){
 		tableIndex= gTimerTable.findFreeIndex();
 		gTimerTable[tableIndex]= this;
 	}
@@ -123,10 +125,8 @@ Timer::~Timer(){
 		gTimerTable.remove(tableIndex);
 }
 
-util::Str8 Timer::getName(){
-	return name;
-}
-
+const char* Timer::getName()
+{ return name; }
 
 void Timer::run(){
 	start= std::chrono::high_resolution_clock::now();

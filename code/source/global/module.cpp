@@ -1,3 +1,4 @@
+#include "debug/print.hpp"
 #include "global/env.hpp"
 #include "hardware/device.hpp"
 #include "module.hpp"
