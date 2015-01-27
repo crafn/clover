@@ -21,6 +21,9 @@ struct ClipChannel {
 	util::Str8 joint;
 	struct Key {
 		real32 time;
+		/// For translation: XYZ_
+		/// For rotation: XYZR
+		/// For scale: S___
 		real32 value[4];
 	};
 	util::DynArray<Key> keys;

@@ -275,6 +275,7 @@ template <typename T>
 struct ObjectNodeTraits<Quaternion<T>> {
 	using Value= Quaternion<T>;
 	static ObjectNode serialized(const Value& value){
+		/// @todo Change to simpler form: [x, y, z, rot]
 		ObjectNode ret;
 		ret["axis"].setValue(value.axis());
 		ret["rotation"].setValue(value.rotation());

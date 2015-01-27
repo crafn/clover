@@ -17,6 +17,9 @@ serialized(const Value& channel)
 			ob["type"].
 				setValue(util::Str8("translation"));
 		break;
+		case animation::ClipChannelType::rotation:
+			ob["type"].
+				setValue(util::Str8("rotation"));
 		default: fail("Unknown ClipChannelType");
 	}
 	ob["joint"].setValue(channel.joint);
@@ -31,6 +34,12 @@ serialized(const Value& channel)
 				values.append(m.value[0]);
 				values.append(m.value[1]);
 				values.append(m.value[2]);
+			break;
+			case animation::ClipChannelType::rotation:
+				values.append(m.value[0]);
+				values.append(m.value[1]);
+				values.append(m.value[2]);
+				values.append(m.value[3]);
 			break;
 			default: fail("Unknown ClipChannelType");
 		}
@@ -48,6 +57,8 @@ deserialized(const util::ObjectNode& ob) -> Value
 
 	if (type_str == "translation")
 		v.type= animation::ClipChannelType::translation;
+	else if (type_str == "rotation")
+		v.type= animation::ClipChannelType::rotation;
 	else
 		fail("Unknown ClipChannelType");
 
@@ -56,13 +67,19 @@ deserialized(const util::ObjectNode& ob) -> Value
 	auto&& ob_keys= ob.get("keys");
 	v.keys.resize(ob_keys.size());
 	for (SizeType i= 0; i < ob_keys.size(); ++i) {
+		v.keys[i].time= ob_keys.get(i).get("t").getValue<real32>();
+		auto&& ob_v= ob_keys.get(i).get("v");
 		switch (v.type) {
 			case animation::ClipChannelType::translation: {
-				v.keys[i].time= ob_keys.get(i).get("t").getValue<real32>();
-				auto&& ob_v= ob_keys.get(i).get("v");
 				v.keys[i].value[0]= ob_v.get(0).getValue<real32>();
 				v.keys[i].value[1]= ob_v.get(1).getValue<real32>();
 				v.keys[i].value[2]= ob_v.get(2).getValue<real32>();
+			} break;
+			case animation::ClipChannelType::rotation: {
+				v.keys[i].value[0]= ob_v.get(0).getValue<real32>();
+				v.keys[i].value[1]= ob_v.get(1).getValue<real32>();
+				v.keys[i].value[2]= ob_v.get(2).getValue<real32>();
+				v.keys[i].value[3]= ob_v.get(3).getValue<real32>();
 			} break;
 			default: fail("Unknown ClipChannelType");
 		}

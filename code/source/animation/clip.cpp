@@ -136,11 +136,18 @@ void Clip::load(){
 				util::clamp(frac, 0.0f, 1.0f);
 
 				switch (ch.type) {
-					case ClipChannelType::translation:
+					case ClipChannelType::translation: {
 						t.translation[0]= util::lerp(prev_v[0], next_v[0], frac);
 						t.translation[1]= util::lerp(prev_v[1], next_v[1], frac);
 						t.translation[2]= util::lerp(prev_v[2], next_v[2], frac);
-					break;
+					} break;
+					case ClipChannelType::rotation: {
+						util::Quatf p= util::Quatf::byRotationAxis(
+									{prev_v[0], prev_v[1], prev_v[2]}, prev_v[3]);
+						util::Quatf n= util::Quatf::byRotationAxis(
+									{next_v[0], next_v[1], next_v[2]}, next_v[3]);
+						t.rotation= util::lerp(p, n, frac);
+					} break;
 					default: fail("Unknown ClipChannelType");
 				}
 			}
