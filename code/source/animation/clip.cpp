@@ -148,6 +148,9 @@ void Clip::load(){
 									{next_v[0], next_v[1], next_v[2]}, next_v[3]);
 						t.rotation= util::lerp(p, n, frac);
 					} break;
+					case ClipChannelType::scale: {
+						t.scale= util::lerp(prev_v[0], next_v[0], frac);
+					} break;
 					default: fail("Unknown ClipChannelType");
 				}
 			}
