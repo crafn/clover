@@ -13,11 +13,7 @@
 #include "util/typestringtraits.hpp"
 #include "util/vector.hpp"
 
-/// @todo Remove
-#include <json/value.h>
-
 namespace Json { class Value; }
-
 namespace clover {
 namespace util {
 
@@ -115,6 +111,11 @@ public:
 private:
 	void assign(Json::Value& dst, const Json::Value& src) const;
 	void assignEmptyJsonArray(Json::Value& dst) const;
+	bool jsonIsNull(const Json::Value& v) const;
+	bool jsonIsArray(const Json::Value& v) const;
+	void jsonAppend(Json::Value& dst, const Json::Value& src) const;
+	bool isNullJsonMember(const Json::Value& v, const char* key) const;
+	ObjectNode objNodeFromJsonMember(const Json::Value& v, const char* key) const;
 
 	// Object of which reference this is
 	ObjectNode* owner;
@@ -122,8 +123,8 @@ private:
 	Json::Value* ownerJsonValue;
 	util::Dynamic<Json::Value> localJsonValue;
 
-	Json::Value& jsonValue(){ return isReference() ? *ownerJsonValue : localJsonValue.get(); }
-	const Json::Value& jsonValue() const { return isReference() ? *ownerJsonValue : localJsonValue.get(); }
+	Json::Value& jsonValue();
+	const Json::Value& jsonValue() const;
 	
 	// Ugly way to achieve reference-like behaviour
 	void createReference(ObjectNode& other, Json::Value& value);
@@ -361,20 +362,19 @@ void ObjectNode::setInternalValue(const T& value){
 
 template <typename T>
 void ObjectNode::append(const T& value){
-	ensure(jsonValue().isNull() || jsonValue().isArray());
-	
-	if (jsonValue().isNull())
+	ensure(jsonIsNull(jsonValue()) || jsonIsArray(jsonValue()));
+
+	if (jsonIsNull(jsonValue()))
 		assignEmptyJsonArray(jsonValue()); 
-		
-	jsonValue().append(ObjectNodeTraits<T>::serialized(value).jsonValue());
+
+	jsonAppend(jsonValue(), ObjectNodeTraits<T>::serialized(value).jsonValue());
 }
 
 template <typename T>
 ObjectNode ObjectNode::get(const util::Str8& key, T value) const {
-	const Json::Value& v= jsonValue().get(key.cStr(), Json::nullValue);
-	if (v.isNull())
+	if (isNullJsonMember(jsonValue(), key.cStr()))
 		return ObjectNode(ObjectNodeTraits<T>::serialized(value).jsonValue());
-	return ObjectNode(v);
+	return objNodeFromJsonMember(jsonValue(), key.cStr());
 }
 
 // InternalTraits

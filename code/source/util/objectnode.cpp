@@ -151,6 +151,26 @@ void ObjectNode::assign(Json::Value& dst, const Json::Value& src) const
 void ObjectNode::assignEmptyJsonArray(Json::Value& dst) const
 { assign(dst, Json::Value(Json::arrayValue)); }
 
+bool ObjectNode::jsonIsNull(const Json::Value& v) const
+{ return v.isNull(); }
+bool ObjectNode::jsonIsArray(const Json::Value& v) const
+{ return v.isArray(); }
+
+void ObjectNode::jsonAppend(Json::Value& dst, const Json::Value& src) const
+{ dst.append(src); }
+
+bool ObjectNode::isNullJsonMember(const Json::Value& v, const char* key) const
+{ return v.get(key, Json::nullValue).isNull(); }
+
+ObjectNode ObjectNode::objNodeFromJsonMember(const Json::Value& v, const char* key) const
+{ return ObjectNode(v.get(key, Json::nullValue)); }
+
+Json::Value& ObjectNode::jsonValue()
+{ return isReference() ? *ownerJsonValue : localJsonValue.get(); }
+
+const Json::Value& ObjectNode::jsonValue() const
+{ return isReference() ? *ownerJsonValue : localJsonValue.get(); }
+
 void ObjectNode::createReference(ObjectNode& other, Json::Value& value){
 	if (isReference()){
 		// Create reference to owner if we have one, so that 'auto a= v[0][0]; a= something' modifies v
