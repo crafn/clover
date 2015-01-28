@@ -1,5 +1,7 @@
 #include "regiondata.hpp"
 
+#include <cstring> // memcpy
+
 namespace clover {
 namespace game {
 
@@ -76,7 +78,7 @@ void RegionData::loadData(util::DynArray<uint8> data) const {
 			continue;
 		
 		d.resize(chunk_data_size);
-		memcpy(&d[0], &data_pack[data_pack.tellg()], chunk_data_size);
+		std::memcpy(&d[0], &data_pack[data_pack.tellg()], chunk_data_size);
 		data_pack.seekg(data_pack.tellg() + chunk_data_size);
 	}
 }

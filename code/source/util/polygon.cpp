@@ -1,6 +1,9 @@
 #include "polygon.hpp"
 #include "debug/print.hpp"
 #include "util/profiling.hpp"
+
+#include <algorithm>
+#include <clipper/clipper.hpp>
 #include <polypartition.h>
 
 /// For test
@@ -110,29 +113,24 @@ Polygon Polygon::extrudedLineSegment(const util::DynArray<util::Vec2d>& points, 
 Polygon::Polygon(){
 }
 
-Polygon::Polygon(ClipperLib::ExPolygon&& p):
-		poly(std::move(p)){
-
-}
-
 void Polygon::append(util::Vec2d point){
-	poly.outer.push_back(toFixed(point));
+	poly.pushBack(point);
 }
 
 void Polygon::append(util::DynArray<util::Vec2d> vertices){
 	for (auto &m : vertices){
-		poly.outer.push_back(toFixed(m));
+		poly.pushBack(m);
 	}
 }
 
 void Polygon::popBack(){
-	ensure(!poly.outer.empty());
-	poly.outer.pop_back();
+	ensure(!poly.empty());
+	poly.popBack();
 }
 
 void Polygon::erase(SizeType i){
-	ensure(i < poly.outer.size());
-	poly.outer.erase(poly.outer.begin() + i);
+	ensure(i < poly.size());
+	poly.erase(poly.begin() + i);
 }
 
 void Polygon::appendRect(util::Vec2d center, util::Vec2d rad){
@@ -146,95 +144,87 @@ void Polygon::appendRect(util::Vec2d center, util::Vec2d rad){
 }
 
 void Polygon::transform(util::RtTransform2d t){
-	for (auto& v : poly.outer){
-		v= toFixed(toFloating(v)*t);
+	for (auto& v : poly){
+		v= v*t;
 	}
 }
 
 void Polygon::translate(util::Vec2d t){
-	for (auto& v : poly.outer){
-		v= toFixed(toFloating(v) + t);
+	for (auto& v : poly){
+		v= v + t;
 	}
 }
 
 void Polygon::rotate(real64 angle){
-	for (auto& m : poly.outer){
-		util::Vec2l rot=  util::Vec2l{m.X, m.Y}.rotated(angle);
-		m.X= rot.x;
-		m.Y= rot.y;
+	for (auto& m : poly){
+		m= m.rotated(angle);
 	}
 }
 
 void Polygon::scale(real64 mul){
-	for (auto& m : poly.outer){
-		m.X *= mul;
-		m.Y *= mul;
-	}
+	for (auto& m : poly)
+		m *= mul;
 }
 
 void Polygon::scaleAround(util::Vec2d p, real64 mul){
-	for (auto& m : poly.outer){
-		util::Vec2d scaled= (toFloating(m) - p)*mul + p;
-		m= toFixed(scaled);
+	for (auto& m : poly){
+		util::Vec2d scaled= (m - p)*mul + p;
+		m= scaled;
 	}
 }
 
 void Polygon::clear(){
-	poly.outer.clear();
-	poly.holes.clear();
+	poly.clear();
 }
 
 void Polygon::subdivide(){
-	if (poly.outer.size() < 3) return;
-	ClipperLib::Polygon vec;
-
-	for (uint32 i=0; i<poly.outer.size()-1; i++){
-		vec.push_back(poly.outer[i]);
-		vec.push_back(ClipperLib::IntPoint(poly.outer[i]+poly.outer[i+1])/2.0);
+	if (poly.size() < 3) return;
+	util::DynArray<util::Vec2d> vec;
+	for (uint32 i=0; i<poly.size()-1; i++){
+		vec.pushBack(poly[i]);
+		vec.pushBack((poly[i]+poly[i+1])/2.0);
 	}
-	vec.push_back(poly.outer.back());
-	vec.push_back(ClipperLib::IntPoint(poly.outer.back()+poly.outer[0])/2.0);
+	vec.pushBack(poly.back());
+	vec.pushBack((poly.back()+poly[0])/2.0);
 
-	clear();
-
-	poly.outer= vec;
+	poly= std::move(vec);
 }
 
 
 void Polygon::addNoise(real64 amount){
-	for (auto &m : poly.outer){
-		m.X += util::Rand::discrete<int64>(-amount*precisionMul, amount*precisionMul);
-		m.Y += util::Rand::discrete<int64>(-amount*precisionMul, amount*precisionMul);
+	for (auto &m : poly){
+		m.x += util::Rand::continuous<real64>(-amount, amount);
+		m.y += util::Rand::continuous<real64>(-amount, amount);
 	}
 }
 
 void Polygon::setVertex(SizeType i, util::Vec2d v){
 	ensure(i < getVertexCount());
-	poly.outer[i]= toFixed(v);
+	poly[i]= v;
 }
 
 
 util::Vec2d Polygon::getVertex(SizeType i) const {
 	ensure(i < getVertexCount());
-	return toFloating(poly.outer[i]);
+	return poly[i];
 }
 
 util::DynArray<util::Vec2d> Polygon::getVertices() const {
-	util::DynArray<util::Vec2d> result(poly.outer.size());
+	util::DynArray<util::Vec2d> result(poly.size());
 	for (uint32 i=0; i<result.size(); ++i){
-		result[i]= toFloating(poly.outer[i]);
+		result[i]= poly[i];
 	}
-	return (result);
+	return result;
 }
 
 util::Vec2d Polygon::getCenter() const {
 	ensure(!empty());
 
 	util::Vec2d ret;
-	for (SizeType i= 0; i < poly.outer.size(); ++i){
-		ret += toFloating(poly.outer[i]);
+	for (SizeType i= 0; i < poly.size(); ++i){
+		ret += poly[i];
 	}
-	return ret/(real64)poly.outer.size();
+	return ret/(real64)poly.size();
 }
 
 util::Vec2d Polygon::getBoundingRadius() const {
@@ -252,7 +242,14 @@ util::Vec2d Polygon::getBoundingRadius() const {
 }
 
 real64 Polygon::getArea() const {
-	return ClipperLib::Area(poly.outer)/(precisionMul*precisionMul);
+	real64 area= 0.0;
+	for (SizeType i= 0; i < getVertexCount(); ++i) {
+		auto first= getVertex(i);
+		auto second= getVertex((i + 1) % getVertexCount());
+		real64 dx= second.x - first.x;
+		area += dx*first.y + dx*second.y;
+	}
+	return std::abs(area/2.0);
 }
 
 real64 Polygon::getDistance(SizeType i, SizeType k) const {
@@ -285,7 +282,7 @@ util::GenericMesh<util::Vec2d, uint32> Polygon::triangulated() const {
 	util::GenericMesh<util::Vec2d, uint32> result;
 	util::DynArray<uint32> indices;
 
-	int32 n = poly.outer.size();
+	int32 n = poly.size();
 	if ( n < 3 ) return result;
 
 	int32 *V = new int[n];
@@ -319,7 +316,7 @@ util::GenericMesh<util::Vec2d, uint32> Polygon::triangulated() const {
 		v = u+1; if (nv <= v) v = 0;	 /* new v	 */
 		int32 w = v+1; if (nv <= w) w = 0;	   /* next	   */
 
-		if ( snip(poly.outer, u, v, w, nv, V) )
+		if ( snip(poly, u, v, w, nv, V) )
 		{
 			int32 a,b,c,s,t;
 
@@ -342,8 +339,8 @@ util::GenericMesh<util::Vec2d, uint32> Polygon::triangulated() const {
 	}
 	delete [] V;
 
-	for (auto& m : poly.outer)
-		result.addVertex(toFloating(m));
+	for (auto& m : poly)
+		result.addVertex(m);
 
 	return result;
 }
@@ -368,9 +365,9 @@ util::DynArray<Polygon> Polygon::splittedToConvex(SizeType max_vert_count) const
 	p= p.simplified(0.0);
 
 	TPPLPoly input;
-	input.Init(p.poly.outer.size());
-	for (SizeType i= 0; i < p.poly.outer.size(); ++i) {
-		auto v= p.toFloating(p.poly.outer[i]);	
+	input.Init(p.poly.size());
+	for (SizeType i= 0; i < p.poly.size(); ++i) {
+		auto v= p.poly[i];
 		input[i].x= v.x;
 		input[i].y= v.y;
 	}
@@ -589,7 +586,7 @@ Polygon Polygon::offsetted(real64 offset) const {
 		return Polygon{};
 
 	ClipperLib::Polygons out_polys;
-	ClipperLib::OffsetPolygons({poly.outer}, out_polys, offset*precisionMul);
+	ClipperLib::OffsetPolygons({toClipperPoly()}, out_polys, offset*precisionMul);
 	ensure(!out_polys.empty());
 
 	SizeType largest_i= 0;
@@ -603,7 +600,7 @@ Polygon Polygon::offsetted(real64 offset) const {
 	}
 
 	Polygon offsetted;
-	offsetted.poly.outer= out_polys[largest_i];
+	offsetted.fromClipperPoly(out_polys[largest_i]);
 	return offsetted.simplified(util::epsilon);
 }
 
@@ -613,21 +610,17 @@ void Polygon::offset(real64 offset){
 
 
 bool Polygon::isClockwise() const {
-	std::vector<ClipperLib::IntPoint>::const_iterator it;
-
 	real64 sum=0;
-
-	for (it= poly.outer.begin(); it!= poly.outer.end(); ++it){
-
+	for (auto it= poly.begin(); it!= poly.end(); ++it){
 		util::Vec2d a, b;
 
-		if (it == poly.outer.begin()){
-			a = toFloating(*it - poly.outer.back());
-		} else a = toFloating(*it - *(it-1));
+		if (it == poly.begin()){
+			a = *it - poly.back();
+		} else a = *it - *(it-1);
 
-		if ((it+1) == poly.outer.end()){
-			b = toFloating(poly.outer.front() - *it);
-		} else b= toFloating(*(it+1) - *it);
+		if ((it+1) == poly.end()){
+			b = poly.front() - *it;
+		} else b= *(it+1) - *it;
 
 		real64 l1,l2;
 		l1= a.length();
@@ -653,9 +646,8 @@ bool Polygon::isClockwise() const {
 	return false;
 }
 
-void Polygon::reverse(){
-	ClipperLib::ReversePoints(poly.outer);
-}
+void Polygon::reverse()
+{ std::reverse(poly.begin(), poly.end()); }
 
 bool Polygon::isConvex() const {
 	if (getVertexCount() < 4)
@@ -710,8 +702,8 @@ uint32 Polygon::getInsideRectCount(util::Vec2d center, util::Vec2d rad) const {
 	uint32 count=0;
 	util::Vec2d l= center - rad;
 	util::Vec2d r = center + rad;
-	for (uint32 i=0; i<poly.outer.size(); ++i){
-		util::Vec2d v= toFloating(poly.outer[i]);
+	for (uint32 i=0; i<poly.size(); ++i){
+		util::Vec2d v= poly[i];
 
 		if (v.x >= l.x && v.x < r.x &&
 			v.y >= l.y && v.y < r.y){
@@ -726,8 +718,8 @@ uint32 Polygon::getInsideRectCount(util::Vec2d center, util::Vec2d rad) const {
 uint32 Polygon::getInsideRadiusCount(util::Vec2d center, real64 rad) const {
 	uint32 count=0;
 
-	for (uint32 i=0; i<poly.outer.size(); ++i){
-		util::Vec2d v= toFloating(poly.outer[i]);
+	for (uint32 i=0; i<poly.size(); ++i){
+		util::Vec2d v= poly[i];
 		if ( (v - center).lengthSqr() < rad*rad){
 				++count;
 		}
@@ -737,12 +729,12 @@ uint32 Polygon::getInsideRadiusCount(util::Vec2d center, real64 rad) const {
 }
 
 bool Polygon::crossesRadius(util::Vec2d center, real64 rad) const {
-	for (uint32 i=0; i<poly.outer.size(); ++i){
+	for (uint32 i=0; i<poly.size(); ++i){
 		util::Vec2d v;
-		if (i == poly.outer.size()-1) v= toFloating(poly.outer[0]);
-		else v= toFloating(poly.outer[i+1]);
+		if (i == poly.size()-1) v= poly[0];
+		else v= poly[i+1];
 
-		if ( !util::geom::circleEdgeIntersection(center, rad, toFloating(poly.outer[i]), v).empty() ){
+		if ( !util::geom::circleEdgeIntersection(center, rad, poly[i], v).empty() ){
 				return true;
 		}
 	}
@@ -750,34 +742,58 @@ bool Polygon::crossesRadius(util::Vec2d center, real64 rad) const {
 	return false;
 }
 
-bool Polygon::snip(const ClipperLib::Polygon &contour, int32 u, int32 v, int32 w, int32 n, int32 *V) const {
+ClipperLib::Polygon Polygon::toClipperPoly() const
+{
+	ClipperLib::Polygon p;
+	p.reserve(poly.size());
+	for (auto& v : poly)
+		p.push_back(toFixed(v));
+	return p;
+}
+
+void Polygon::fromClipperPoly(const ClipperLib::Polygon& p)
+{
+	clear();
+	poly.reserve(p.size());
+	for (auto& v : p)
+		poly.pushBack(toFloating(v));
+}
+
+bool Polygon::snip(const util::DynArray<util::Vec2d>& contour, int32 u, int32 v, int32 w, int32 n, int32 *V) const {
 	int32 p;
 	real64 Ax, Ay, Bx, By, Cx, Cy, Px, Py;
 
-	Ax = contour[V[u]].X;
-	Ay = contour[V[u]].Y;
+	Ax = contour[V[u]].x;
+	Ay = contour[V[u]].y;
 
-	Bx = contour[V[v]].X;
-	By = contour[V[v]].Y;
+	Bx = contour[V[v]].x;
+	By = contour[V[v]].y;
 
-	Cx = contour[V[w]].X;
-	Cy = contour[V[w]].Y;
+	Cx = contour[V[w]].x;
+	Cy = contour[V[w]].y;
 
 	if ( util::epsilon > (((Bx-Ax)*(Cy-Ay)) - ((By-Ay)*(Cx-Ax))) ) return false;
 
 	for (p=0;p<n;p++)
 	{
 		if( (p == u) || (p == v) || (p == w) ) continue;
-		Px = contour[V[p]].X;
-		Py = contour[V[p]].Y;
+		Px = contour[V[p]].x;
+		Py = contour[V[p]].y;
 		if (util::geom::isPointInsideTriangle(util::Vec2d{Px,Py},util::Vec2d{Ax,Ay},util::Vec2d{Bx,By},util::Vec2d{Cx,Cy})) return false;
 	}
 
 	return true;
 }
 
+PolyClipper::PolyClipper()
+	: clipper(new ClipperLib::Clipper())
+{ }
+
+PolyClipper::~PolyClipper()
+{ delete clipper; }
+
 void PolyClipper::addSubject(const Polygon& p){
-	clipper.AddPolygon(p.poly.outer, ClipperLib::ptSubject);
+	clipper->AddPolygon(p.toClipperPoly(), ClipperLib::ptSubject);
 }
 
 void PolyClipper::addSubjects(const util::DynArray<Polygon>& pp){
@@ -787,7 +803,7 @@ void PolyClipper::addSubjects(const util::DynArray<Polygon>& pp){
 }
 
 void PolyClipper::addClipper(const Polygon& p){
-	clipper.AddPolygon(p.poly.outer, ClipperLib::ptClip);
+	clipper->AddPolygon(p.toClipperPoly(), ClipperLib::ptClip);
 }
 
 void PolyClipper::addClippers(const util::DynArray<Polygon>& pp){
@@ -798,7 +814,7 @@ void PolyClipper::addClippers(const util::DynArray<Polygon>& pp){
 
 void PolyClipper::addCircleClipper(util::Vec2d pos, real64 rad, uint32 ppu){
 	Polygon circle;
-	uint32 steps= util::tau*rad*ppu;;
+	uint32 steps= util::tau*rad*ppu;
 	for (uint32 i=0; i<steps; ++i){
 		real64 angle= util::tau * (real64)i/steps;
 		circle.append(pos + util::Vec2d{cos(angle), sin(angle)}*rad );
@@ -808,18 +824,24 @@ void PolyClipper::addCircleClipper(util::Vec2d pos, real64 rad, uint32 ppu){
 
 util::DynArray<Polygon> PolyClipper::execute(ClipType t){
 	ClipperLib::ExPolygons solution;
-	bool success= clipper.Execute(	(ClipperLib::ClipType)t,
+	bool success= clipper->Execute(	(ClipperLib::ClipType)t,
 									solution,
 									ClipperLib::pftNonZero);
 	ensure(success);
 
 	util::DynArray<Polygon> result;
-	for (auto &m : solution){
-		result.pushBack(std::move(m));
-		result.back().simplify(util::epsilon);
+	result.reserve(solution.size());
+	for (auto& m : solution){
+		Polygon p;
+		p.fromClipperPoly(m.outer);
+		p.simplify(util::epsilon);
+		result.pushBack(std::move(p));
 	}
-	return (result);
+	return result;
 }
+
+void PolyClipper::clear()
+{ clipper->Clear(); }
 
 } // util
 } // clover

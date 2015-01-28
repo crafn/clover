@@ -3,20 +3,28 @@
 
 #include "build.hpp"
 #include "dyn_array.hpp"
-#include "math.hpp"
-#include "mesh.hpp"
+#include "class_preproc.hpp"
+#include "math.hpp" /// @todo Remove
+#include "mesh.hpp" /// @todo Remove
 #include "transform.hpp"
 #include "vector.hpp"
 
-#include <clipper/clipper.hpp>
+#include <vector> // ClipperLib::Polygon
 
+namespace ClipperLib {
+
+struct Clipper;
+struct ExPolygon;
+struct IntPoint;
+typedef std::vector<IntPoint> Polygon;
+
+} // ClipperLib
 namespace clover {
 namespace util {
 
 class PolyClipper;
 
-/// 2d polygon
-/// @todo Support for holes
+/// Simple 2d polygon
 class Polygon {
 public:
 	// Doesn't handle tight curves well
@@ -24,7 +32,6 @@ public:
 
 	Polygon();
 
-	// Lisää ulkokehään
 	void append(util::Vec2d point);
 	void append(util::DynArray<util::Vec2d> vertices);
 	void popBack();
@@ -40,15 +47,13 @@ public:
 	void scale(real64 mul);
 	void scaleAround(util::Vec2d p, real64 mul);
 
-	// Pätkäsee jokasen edgen kahtia
 	void subdivide();
 
-	// Randomoi verteksien sijainteja 0 - amount etäisyydelle
 	void addNoise(real64 amount);
 
 	void setVertex(SizeType i, util::Vec2d v);
 	util::Vec2d getVertex(SizeType i) const;
-	uint32 getVertexCount() const { return poly.outer.size(); }
+	uint32 getVertexCount() const { return poly.size(); }
 	bool empty() const { return getVertexCount() == 0; }
 
 	util::DynArray<util::Vec2d> getVertices() const;
@@ -88,8 +93,6 @@ public:
 	//bool crossesRect(util::Vec2d center, util::Vec2d rad) const;
 	bool crossesRadius(util::Vec2d center, real64 rad) const;
 
-
-	// Onko koko edgelooppi säteen ulkopuolella
 	bool isOutsideRadius(util::Vec2d center, real64 rad) const {
 		return !crossesRadius(center, rad) && !getInsideRadiusCount(center, rad);
 	}
@@ -109,19 +112,24 @@ private:
 
 	util::Vec2d toFloating(const ClipperLib::IntPoint&) const;
 	ClipperLib::IntPoint toFixed(const util::Vec2d&) const;
-	
-	Polygon(ClipperLib::ExPolygon&& p);
-	
+	ClipperLib::Polygon toClipperPoly() const;
+	void fromClipperPoly(const ClipperLib::Polygon& p);
+
 	friend class PolyClipper;
 
-	// For truangulation
-	bool snip(const ClipperLib::Polygon& contour, int32 u, int32 v, int32 w, int32 n, int32 *V) const;
+	// For triangulation
+	bool snip(const util::DynArray<util::Vec2d>& contour, int32 u, int32 v, int32 w, int32 n, int32 *V) const;
 
-	ClipperLib::ExPolygon poly;
+	util::DynArray<util::Vec2d> poly;
 };
 
 class PolyClipper {
 public:
+	PolyClipper();
+	~PolyClipper();
+
+	DELETE_MOVE(PolyClipper);
+	DELETE_COPY(PolyClipper);
 
 	void addSubject(const Polygon& p);
 	void addSubjects(const util::DynArray<Polygon>& p);
@@ -132,19 +140,20 @@ public:
 	/// ppu: points per unit
 	void addCircleClipper(util::Vec2d pos, real64 rad, uint32 ppu=10);
 
+	/// Matches with ClipperLib::ClipType
 	enum ClipType {
-		Intersection= ClipperLib::ctIntersection,
-		Union= ClipperLib::ctUnion,
-		Difference= ClipperLib::ctDifference,
-		Xor= ClipperLib::ctXor
+		Intersection= 0,
+		Union= 1,
+		Difference= 2,
+		Xor= 3
 	};
 
 	util::DynArray<Polygon> execute(ClipType t);
 
-	void clear(){ clipper.Clear(); }
+	void clear();
 
 private:
-	ClipperLib::Clipper clipper;
+	ClipperLib::Clipper* clipper;
 };
 
 } // util
