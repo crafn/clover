@@ -8,7 +8,6 @@ namespace clover {
 namespace global {
 
 using util::Exception;
-using util::FatalException;
 
 } // global
 } // clover

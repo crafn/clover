@@ -34,9 +34,6 @@ void Server::update(){
 		}
 		
 	}
-	catch (const global::FatalException& e){
-		throw e; // Can't handle fatal exceptions
-	}
 	catch (const boost::exception& e){
 		print(debug::Ch::Net, debug::Vb::Critical, "%s: Network error", info.name.cStr());
 		disconnect();

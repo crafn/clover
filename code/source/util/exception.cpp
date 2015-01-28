@@ -37,12 +37,5 @@ const char* Exception::what() const throw() {
 	return error;
 }
 
-FatalException::FatalException(const char* str, ...){
-	va_list args;
-	va_start(args, str);
-	Exception::constructor(str, args);
-	va_end(args);
-}
-
 } // util
 } // clover

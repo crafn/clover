@@ -16,9 +16,7 @@ void ensureImpl(
 	if (cond)
 		return;
 
-	/// @todo fail
-	throw util::FatalException(
-			"	in file %s\n	in method %s\n	  "
+	fail(	"ensure failed in file %s\n	in method %s\n	  "
 			"at line %i\n	  %s failed\nBacktrace:\n%s",
 			util::getFilenameFromPath(file).c_str(),
 			util::getReducedFunctionName(func).c_str(),
@@ -37,9 +35,8 @@ void ensureMsgImpl(bool cond, const char* file, const char* func, int line,
 	msg.setFormattedArgList(format, args);
     va_end(args);
 
-	/// @todo fail
-	throw util::FatalException(
-			"	in file %s\n	in method %s:\n	   at line %i\n	   %s\nBacktrace:\n%s",
+	fail(	"ensure_msg failed in file %s\n	in method %s \n	   "
+			"at line %i\n	   %s\nBacktrace:\n%s",
 			util::getFilenameFromPath(__FILE__).c_str(),
 			util::getReducedFunctionName(__PRETTY_FUNCTION__).c_str(),
 			line, msg.cStr(), util::CrashHandler::getBacktrace(1).c_str());

@@ -29,19 +29,6 @@ private:
 
 };
 
-/// Can't be catched by catch (Exception& e)
-/// @todo Remove. Just std::abort
-class ENGINE_API FatalException : Exception
-								, public virtual std::exception
-								, public virtual boost::exception {
-public:
-	FatalException(const char8* s, ...);
-	virtual ~FatalException() throw() {}
-
-protected:
-	using Exception::constructor;
-};
-
 } // util
 } // clover
 
