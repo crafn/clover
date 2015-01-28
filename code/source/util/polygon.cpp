@@ -1,5 +1,7 @@
 #include "polygon.hpp"
 #include "debug/print.hpp"
+#include "util/math.hpp"
+#include "util/mesh.hpp"
 #include "util/profiling.hpp"
 
 #include <algorithm>

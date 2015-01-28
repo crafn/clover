@@ -4,8 +4,6 @@
 #include "build.hpp"
 #include "dyn_array.hpp"
 #include "class_preproc.hpp"
-#include "math.hpp" /// @todo Remove
-#include "mesh.hpp" /// @todo Remove
 #include "transform.hpp"
 #include "vector.hpp"
 
@@ -23,6 +21,8 @@ namespace clover {
 namespace util {
 
 class PolyClipper;
+template <typename V, typename I>
+class GenericMesh;
 
 /// Simple 2d polygon
 class Polygon {
