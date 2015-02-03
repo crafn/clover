@@ -275,19 +275,8 @@ struct ObjectNodeTraits<util::Color> {
 template <typename T>
 struct ObjectNodeTraits<Quaternion<T>> {
 	using Value= Quaternion<T>;
-	static ObjectNode serialized(const Value& value){
-		/// @todo Change to simpler form: [x, y, z, rot]
-		ObjectNode ret;
-		ret["axis"].setValue(value.axis());
-		ret["rotation"].setValue(value.rotation());
-		return ret;
-	}
-	static Value deserialized(const ObjectNode& node){
-		return	Value::byRotationAxis(
-						node.get("axis").getValue<typename Value::Vec>(),
-						node.get("rotation").getValue<T>()
-				);
-	}
+	static ObjectNode serialized(const Value& value);
+	static Value deserialized(const ObjectNode& node);
 };
 
 template <typename S, typename R, typename T>

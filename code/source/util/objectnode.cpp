@@ -209,6 +209,33 @@ void ObjectNode::detachSubReferences(){
 	}
 }
 
+template <typename T>
+ObjectNode ObjectNodeTraits<Quaternion<T>>::serialized(const Value& value)
+{
+	ObjectNode ret(ObjectNode::Value::Array);
+	auto&& axis= value.axis();
+	ret.append(axis.x);
+	ret.append(axis.y);
+	ret.append(axis.z);
+	ret.append(value.rotation());
+	return ret;
+}
+
+template <typename T>
+auto ObjectNodeTraits<Quaternion<T>>::deserialized(const ObjectNode& node)
+-> Value
+{
+	typename Value::Vec axis;
+	for (int i= 0; i < 3; ++i)
+		axis[i]= node.get(i).getValue<typename Value::Vec::Value>();
+	return Value::byRotationAxis(
+			axis,
+			node.get(3).getValue<T>());
+}
+
+template class ObjectNodeTraits<Quaternion<real32>>;
+template class ObjectNodeTraits<Quaternion<real64>>;
+
 // InternalTraits
 
 auto ObjectNode::InternalTraits<util::Str8>::
