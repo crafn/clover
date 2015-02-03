@@ -10,3 +10,5 @@ builds
 resources
 backup
 resources.zip
+*.blend1
+*.blend2

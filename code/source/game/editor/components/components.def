@@ -1,5 +1,6 @@
 #if defined(EC_HEADERS)
 	
+	#include "animation/armature.hpp"
 	#include "audio/sound.hpp"
 	#include "collision/shape.hpp"
 	#include "ec_performance.hpp"
@@ -48,6 +49,7 @@ EC(ui::game::editor::ResourceEcUi<ResourceEc<game::PhysicalMaterialPair>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::LightEntityDef>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<visual::ModelEntityDef>>)
 EC(ui::game::editor::ResourceEcUi<ResourceEc<game::WeType>>)
+EC(ui::game::editor::ResourceEcUi<ResourceEc<animation::Armature>>)
 EC(ui::game::editor::PerformanceEcUi)
 EC(ui::game::editor::ConsoleEcUi)
 EC(ui::game::editor::NodesEcUi)

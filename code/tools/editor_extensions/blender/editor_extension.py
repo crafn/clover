@@ -54,7 +54,7 @@ def bmeshObjectToPolygon(ob):
 
 	return poly
 
-debugPrintEnabled= False
+debugPrintEnabled= True
 def debugPrint(*arg, **kwargs):
 	if debugPrintEnabled:
 		print("CloverEE:", *arg, **kwargs)
@@ -127,7 +127,7 @@ class Connection(asyncore.dispatcher):
 		elif self.receivingState == self.ReceivingState_ValueSize:
 			self.inMsgValueSizeBuffer += self.recv(4 - len(self.inMsgValueSizeBuffer))
 			if len(self.inMsgValueSizeBuffer) == 4: # Value size received
-				self.inMsgValueSize= struct.unpack(">L", self.inMsgValueSizeBuffer)[0]
+				self.inMsgValueSize= struct.unpack("<L", self.inMsgValueSizeBuffer)[0]
 				debugPrint("Value size: ", self.inMsgValueSize)
 				if self.inMsgValueSize == 0:
 					self.triggerOnMsgReceive()
@@ -156,7 +156,7 @@ class Connection(asyncore.dispatcher):
 	def sendMsg(self, msg_name, value_str):
 		self.buffer += bytes(msg_name, "ascii")
 		debugPrint("sendMsg:", msg_name, len(bytes(msg_name, "ascii")))
-		self.buffer += struct.pack(">L", len(value_str))
+		self.buffer += struct.pack("<L", len(value_str))
 		self.buffer += bytes(value_str, "ascii")
 	
 	def update(self, dt):
